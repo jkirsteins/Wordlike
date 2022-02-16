@@ -5,12 +5,11 @@ struct Tile: View {
     @State var rotateOut: Double = 0
     
     @State var flip = false
-    
     @State var type: TileBackgroundType = .maskedEmpty
     
     let letter: String?
-    
-    let delay: Int
+    let delay: Int 
+    let revealState: TileBackgroundType?
     
     let halfDuration = 1.0 / 2.0
     
@@ -53,6 +52,7 @@ struct Tile: View {
             value: self.rotateOut)
         .onAppear {      
             Task {
+                guard let revealState = self.revealState else { return }
                 try? await Task.sleep(
                     nanoseconds: UInt64(
                         Double(delay) * halfDuration * 500_000_000))
@@ -61,7 +61,7 @@ struct Tile: View {
                     nanoseconds: UInt64(halfDuration * 1_000_000_000))
                 self.rotateOut = 90
                 self.flip = true
-                self.type = .rightPlace
+                self.type = revealState
             }
         }
     }
@@ -82,8 +82,9 @@ extension EnvironmentValues {
 struct Tile_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            Tile(letter: "q", delay: 0)
-            Tile(letter: "q", delay: 1)
+            Tile(letter: "q", delay: 0, revealState: .rightPlace)
+            Tile(letter: "q", delay: 1, revealState: .wrongPlace)
+            Tile(letter: "q", delay: 0, revealState: nil)
         }.environment(\.palette, DarkPalette())
     }
 }

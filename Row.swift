@@ -1,19 +1,57 @@
 import SwiftUI
 
 struct Row: View {
+    let expected = "FUELS"
+    
+    @State var word: String?
+    
+    func revealState(_ ix: Int) -> TileBackgroundType?
+    {
+        guard let word = word?.uppercased(), word.count == 5, ix < 5 else {
+            return nil
+        }
+        
+        if Array(word)[ix] == Array(expected)[ix] {
+            return .rightPlace
+        }
+        
+        if expected.contains(Array(word)[ix]) {
+            return .wrongPlace
+        }
+        
+        return .wrongLetter
+    }
+    
     var body: some View {
-        HStack {
-            Tile(letter: "F", delay: 0)
-            Tile(letter: "U", delay: 1)
-            Tile(letter: "E", delay: 2)
-            Tile(letter: "L", delay: 3)
-            Tile(letter: "S", delay: 4)
+        if let word = word {
+            HStack {
+                ForEach(0..<5) { ix in
+                    Tile(
+                        letter: word.count > ix ? String(Array(word)[ix]) : nil, 
+                        delay: ix,
+                        revealState: revealState(ix))
+                }
+            }
+        } else {
+            HStack {
+                ForEach(0..<5) { _ in
+                    Tile(
+                        letter: nil, 
+                        delay: 0,
+                        revealState: nil)
+                }
+            }
         }
     }
 }
 
 struct Row_Previews: PreviewProvider {
     static var previews: some View {
-        Row()
+        VStack {
+            Row(word: "fuels")
+            Row(word: "halos")
+            Row(word: "fur")  
+            Row(word: nil)
+        }
     }
 }
