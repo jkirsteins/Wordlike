@@ -1,15 +1,24 @@
 import SwiftUI
 
-struct KeyboardInput : View 
+struct KeyboardInput<Content: View> : View 
 {
-    @State var text: String = ""
+    @Binding var text: String?
     @State var isActive: Bool = false
     
+    let content: Content 
+        
+    init(text: Binding<String?>, @ViewBuilder _ content: ()->Content) {
+        self._text = text
+        self.content = content()
+    }
+    
     var body: some View {
-        VStack {
+        ZStack {
+            content
+            
             KeyboardInputUIKit(text: $text, isActive: $isActive)
-            Text("Text: \(self.text)")
-            Text("Active: \(String(describing: self.isActive))")
+            
+            
         }.border(self.isActive ? .red : .green)
     }
 }
@@ -18,10 +27,10 @@ struct KeyboardInputUIKit: UIViewRepresentable {
     
     class InternalView: UIControl, UIKeyInput
     {
-        @Binding var text: String
+        @Binding var text: String?
         @Binding var isActive: Bool
         
-        init(text: Binding<String>, isActive: Binding<Bool>) {
+        init(text: Binding<String?>, isActive: Binding<Bool>) {
             self._text = text
             self._isActive = isActive
             super.init(frame: CGRect.zero)
@@ -50,24 +59,32 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         }
         
         @objc private func onTap(_: AnyObject) {
-            self.becomeFirstResponder()
+            _ = self.becomeFirstResponder()
         }
         
         var hasText: Bool {
-            print("Is empty?", text.isEmpty)
-            return text.isEmpty == false
+            return text?.isEmpty == false
         } 
         
         func insertText(_ text: String) {
-            self.text += text
+            let set = CharacterSet.letters
+            for chr in text { 
+                guard chr.isLetter else {
+                    print("\(chr) not allowed")
+                    return
+                }
+            }
+            
+            self.text = (self.text ?? "") + text 
+            self.text = String(self.text!.prefix(5))
         }
         
         func deleteBackward() {
-            _ = self.text.popLast()
+            _ = self.text?.popLast()
         }
     }
     
-    @Binding var text: String
+    @Binding var text: String? 
     @Binding var isActive: Bool
     
     func makeUIView(context: Context) -> InternalView {
@@ -81,18 +98,22 @@ struct KeyboardInputUIKit: UIViewRepresentable {
     }
 }
 
+struct EditableRow : View
+{
+    @State var word: String? = "2"
+    
+    var body: some View { 
+        KeyboardInput(text: self.$word) {
+            VStack {  
+                Row(word: self.$word)
+                Text(self.word ?? "none")
+            }
+        }
+    }
+}
+
 struct KeyboardInput_Previews: PreviewProvider {
     static var previews: some View {
-        let ki = KeyboardInput()
-        return VStack {
-            ki
-                .background(.green)
-                .frame(maxWidth: 100, maxHeight: 100)
-            
-            TextField("Hello", text: Binding(
-                get: { "Hello" },
-                set: { _ in }
-            ))
-        }
+        EditableRow()
     }
 }

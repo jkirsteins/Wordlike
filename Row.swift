@@ -3,7 +3,7 @@ import SwiftUI
 struct Row: View {
     let expected = "FUELS"
     
-    @State var word: String?
+    @Binding var word: String?
     
     func revealState(_ ix: Int) -> TileBackgroundType?
     {
@@ -47,11 +47,11 @@ struct Row: View {
 
 struct Row_Previews: PreviewProvider {
     static var previews: some View {
-        VStack {
-            Row(word: "fuels")
-            Row(word: "halos")
-            Row(word: "fur")  
-            Row(word: nil)
+        return VStack {
+            Row(word: Binding(get: { "fuels" }, set: { _ in }))
+            Row(word: Binding(get: { "halos" }, set: { _ in }))
+            Row(word: Binding(get: { "fur" }, set: { _ in }))  
+            Row(word: Binding(get: { nil }, set: { _ in }))
         }
     }
 }
