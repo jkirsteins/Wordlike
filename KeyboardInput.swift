@@ -2,14 +2,14 @@ import SwiftUI
 
 struct KeyboardInput<Content: View> : View 
 {
-    @Binding var text: String?
+    @Binding var text: String
     @Binding var submitted: Bool
     
     @State var isActive: Bool = false
     
     let content: Content 
-        
-    init(text: Binding<String?>, submitted: Binding<Bool>, @ViewBuilder _ content: ()->Content) {
+    
+    init(text: Binding<String>, submitted: Binding<Bool>, @ViewBuilder _ content: ()->Content) {
         self._text = text
         self._submitted = submitted
         self.content = content()
@@ -32,11 +32,11 @@ struct KeyboardInputUIKit: UIViewRepresentable {
     
     class InternalView: UIControl, UIKeyInput
     {
-        @Binding var text: String?
+        @Binding var text: String
         @Binding var submitted: Bool
         @Binding var isActive: Bool
         
-        init(text: Binding<String?>, submitted: Binding<Bool>, isActive: Binding<Bool>) {
+        init(text: Binding<String>, submitted: Binding<Bool>, isActive: Binding<Bool>) {
             self._text = text
             self._submitted = submitted
             self._isActive = isActive
@@ -69,13 +69,13 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         }
         
         var hasText: Bool {
-            return text?.isEmpty == false
+            return text.isEmpty == false
         } 
         
         func insertText(_ text: String) {
             for chr in text { 
                 guard chr.isLetter else {
-                    if chr == "\n" && self.text?.count == 5 {
+                    if chr == "\n" && self.text.count == 5 {
                         self.submitted = true
                     }
                     
@@ -83,16 +83,16 @@ struct KeyboardInputUIKit: UIViewRepresentable {
                 }
             }
             
-            self.text = (self.text ?? "") + text 
-            self.text = String(self.text!.prefix(5))
+            self.text = self.text + text 
+            self.text = String(self.text.prefix(5))
         }
         
         func deleteBackward() {
-            _ = self.text?.popLast()
+            _ = self.text.popLast()
         }
     }
     
-    @Binding var text: String? 
+    @Binding var text: String 
     @Binding var isActive: Bool
     @Binding var submitted: Bool
     
@@ -110,22 +110,31 @@ struct KeyboardInputUIKit: UIViewRepresentable {
 
 struct EditableRow : View
 {
-    @State var word: String? = nil
+    @State var word: String = ""
     @State var submitted: Bool = false
+    
+    let expected: String
     
     var body: some View { 
         if !submitted {
             KeyboardInput(text: self.$word, submitted: self.$submitted) {
-                Row(word: self.$word)
+                Row(model: RowModel(
+                    word: self.word, 
+                    expected: self.expected,
+                    isSubmitted: self.submitted))
+                
             }
         } else {
-            Row(word: self.$word)
+            Row(model: RowModel(
+                word: self.word,
+                expected: self.expected,
+                isSubmitted: self.submitted))
         }
     }
 }
 
 struct KeyboardInput_Previews: PreviewProvider {
     static var previews: some View {
-        EditableRow()
+        EditableRow(expected: "fuels")
     }
 }

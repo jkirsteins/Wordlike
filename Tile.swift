@@ -13,6 +13,9 @@ struct Tile: View {
     
     let halfDuration = 1.0 / 2.0
     
+    @State var scaleSize = CGSize(width: 1.0, height: 1.0)
+    let pulseHalfDuration = 0.25 / 2.0
+    
     var body: some View {
         ZStack {
             TileBackgroundView( 
@@ -25,7 +28,7 @@ struct Tile: View {
             
             if let letter = letter {
                 Text(letter) 
-//                    .padding(8)
+                //                    .padding(8)
                     .font(.system(size: 200))
                     .textCase(.uppercase)
                     .scaledToFit()
@@ -42,7 +45,10 @@ struct Tile: View {
         } 
         .aspectRatio(1, contentMode: .fit)
         .frame(maxWidth: 150)
-//        .background(.green)
+        
+        .scaleEffect(self.scaleSize)
+        
+        //        .background(.green)
         
         .animation(
             Animation.easeIn(duration: halfDuration),
@@ -50,19 +56,37 @@ struct Tile: View {
         .animation(
             Animation.easeOut(duration: halfDuration),
             value: self.rotateOut)
-        .onAppear {      
+        .animation(
+            Animation.easeInOut(duration: pulseHalfDuration),
+            value: self.scaleSize)
+        .onChange(of: self.letter) { new in
+            guard self.revealState == nil, new != nil, new != "" else {
+                print("Not scaling", new)
+                return
+            } 
+            
+            print("Scaling from", new)
+            
             Task {
-                guard let revealState = self.revealState else { return }
-                try? await Task.sleep(
-                    nanoseconds: UInt64(
-                        Double(delay) * halfDuration * 500_000_000))
-                self.rotate = 90
-                try? await Task.sleep(
-                    nanoseconds: UInt64(halfDuration * 1_000_000_000))
-                self.rotateOut = 90
-                self.flip = true
-                self.type = revealState
+                defer {
+                    self.scaleSize = CGSize(width: 1.0, height: 1.0)
+                }
+                
+                self.scaleSize = CGSize(width: 1.1, height: 1.1)
+                try? await Task.sleep(nanoseconds: UInt64(pulseHalfDuration * 500_000_000))
             }
+        }
+        .task { 
+            guard let revealState = self.revealState else { return }
+            try? await Task.sleep(
+                nanoseconds: UInt64(
+                    Double(delay) * halfDuration * 500_000_000))
+            self.rotate = 90
+            try? await Task.sleep(
+                nanoseconds: UInt64(halfDuration * 1_000_000_000))
+            self.rotateOut = 90
+            self.flip = true
+            self.type = revealState
         }
     }
 }
@@ -85,6 +109,8 @@ struct Tile_Previews: PreviewProvider {
             Tile(letter: "q", delay: 0, revealState: .rightPlace)
             Tile(letter: "q", delay: 1, revealState: .wrongPlace)
             Tile(letter: "q", delay: 0, revealState: nil)
-        }.environment(\.palette, DarkPalette())
+            Tile(letter: "", delay: 0, revealState: nil)
+        }
+        .environment(\.palette, DarkPalette())
     }
 }

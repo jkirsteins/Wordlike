@@ -1,45 +1,69 @@
 import SwiftUI
 
-struct Row: View {
-    let expected = "FUELS"
+struct RowModel 
+{
+    let word: String
+    let expected: String
+    let isSubmitted: Bool
     
-    @Binding var word: String?
+    var expectedArray: [String.Element] {
+        Array(expected.uppercased())
+    }
+    
+    var wordArray: [String.Element] {
+        Array(word.uppercased())
+    }
+    
+    var canReveal: Bool {
+        isSubmitted
+    }
+    
+    func char(guessAt pos: Int) -> String
+    {
+        guard wordArray.count > pos else { return "" }
+        return String(wordArray[pos])
+    }
+    
+    func char(expectAt pos: Int) -> String
+    {
+        guard expectedArray.count > pos else { return "" }
+        return String(expectedArray[pos])
+    }
     
     func revealState(_ ix: Int) -> TileBackgroundType?
     {
-        guard let word = word?.uppercased(), word.count == 5, ix < 5 else {
+        guard canReveal else { return nil }
+        
+        let wordArray = Array(word)
+        let expectedArray = Array(expected)
+        
+        guard wordArray.count > ix, expectedArray.count > ix else {
             return nil
         }
         
-        if Array(word)[ix] == Array(expected)[ix] {
+        if wordArray[ix] == expectedArray[ix] {
             return .rightPlace
         }
         
-        if expected.contains(Array(word)[ix]) {
+        if expected.contains(wordArray[ix]) {
             return .wrongPlace
         }
         
         return .wrongLetter
     }
+}
+
+struct Row: View {
+    
+    var model: RowModel
     
     var body: some View {
-        if let word = word {
-            HStack {
-                ForEach(0..<5) { ix in
-                    Tile(
-                        letter: word.count > ix ? String(Array(word)[ix]) : nil, 
-                        delay: ix,
-                        revealState: revealState(ix))
-                }
-            }
-        } else {
-            HStack {
-                ForEach(0..<5) { _ in
-                    Tile(
-                        letter: nil, 
-                        delay: 0,
-                        revealState: nil)
-                }
+        HStack {
+            ForEach(0..<5) { ix in
+                Tile(
+                    letter: model.char(guessAt: ix), 
+                    delay: ix,
+                    revealState: model.revealState(ix))
             }
         }
     }
@@ -48,10 +72,18 @@ struct Row: View {
 struct Row_Previews: PreviewProvider {
     static var previews: some View {
         return VStack {
-            Row(word: Binding(get: { "fuels" }, set: { _ in }))
-            Row(word: Binding(get: { "halos" }, set: { _ in }))
-            Row(word: Binding(get: { "fur" }, set: { _ in }))  
-            Row(word: Binding(get: { nil }, set: { _ in }))
+            Row(model: RowModel(
+                word: "fuels",
+                expected: "fuels",
+                isSubmitted: true))
+            Row(model: RowModel(
+                word: "fuels",
+                expected: "hales",
+                isSubmitted: true))
+            Row(model: RowModel(
+                word: "fuels",
+                expected: "fuels",
+                isSubmitted: false))
         }
     }
 }
