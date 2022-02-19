@@ -60,6 +60,16 @@ struct KeyboardInputUIKit: UIViewRepresentable {
             return super.becomeFirstResponder()
         }
         
+        var _inputAccessoryView: UIView?
+        override var inputAccessoryView: UIView? {
+            get {
+                _inputAccessoryView
+            }
+            set {
+                _inputAccessoryView = newValue
+            }
+        }
+        
         override var canBecomeFirstResponder: Bool {
             return true
         }
@@ -97,10 +107,51 @@ struct KeyboardInputUIKit: UIViewRepresentable {
     @Binding var submitted: Bool
     
     func makeUIView(context: Context) -> InternalView {
-        return InternalView(
+        let result = InternalView(
             text: self.$text,
             submitted: self.$submitted,
             isActive: self.$isActive)
+        
+        let v = VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                
+                Tile(
+                    letter: "A", 
+                    delay: 0, 
+                    revealState: .rightPlace)
+                Tile(
+                    letter: "B", 
+                    delay: 0, 
+                    revealState: .wrongPlace)
+                
+                Spacer()
+            } 
+            Spacer()
+        }.background(Color(UIColor.systemFill))
+        //            .padding(0)
+        //            .frame(width: 100, height: 44)
+        //            .background(Color(UIColor.systemFill))
+        
+        let accView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: result.bounds.size.width, height: 44))
+//        accView.autoresizingMask = [.flexibleWidth] // important! allows it to resize
+//        accView.backgroundColor = .red // .systemFill
+        
+        
+        let vc = UIHostingController(rootView: v)
+        //        accView.addSubview(vc.view)
+        
+        vc.view.translatesAutoresizingMaskIntoConstraints = false
+        accView.addSubview(vc.view)
+        vc.view.leadingAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        vc.view.trailingAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        vc.view.topAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.topAnchor).isActive = true
+        vc.view.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        result.inputAccessoryView = accView
+        
+        return result
     }
     
     func updateUIView(_ uiView: InternalView, context: Context) {

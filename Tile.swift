@@ -1,28 +1,5 @@
 import SwiftUI
 
-public struct BoundsPreferenceKey: PreferenceKey {
-    public static var defaultValue: CGRect = CGRect.zero
-    
-    public static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
-        let nextValue = nextValue()
-        value = nextValue
-    }
-}
-
-extension View {
-    public func getBounds(coordinates: CoordinateSpace = .global, rect: Binding<CGRect>) -> some View {
-        self
-            .background(
-                GeometryReader { geo in
-                    Color.clear.preference(key: BoundsPreferenceKey.self, value: geo.frame(in: coordinates))
-                }
-            )
-            .onPreferenceChange(BoundsPreferenceKey.self, perform: { value in
-                rect.wrappedValue = value
-            })
-    }
-}
-
 struct Tile: View {
     @Environment(\.palette) var palette: Palette
     
@@ -56,6 +33,28 @@ struct Tile: View {
         return type
     }
     
+    func fontSize(_ gr: GeometryProxy) -> Double {
+        if gr.size.height < 50 {
+            // Hardcode some value which is used for
+            // small previews (like in a keyboard
+            // accessory view)
+            return 20
+        }
+        
+        return gr.size.height/1.5
+    }
+    
+    func padding(_ gr: GeometryProxy) -> Double {
+        if gr.size.height < 50 {
+            // Hardcode some value which is used for
+            // small previews (like in a keyboard
+            // accessory view)
+            return 0
+        }
+        
+        return 8
+    }
+    
     var body: some View {
         GeometryReader { gr in 
             ZStack {
@@ -70,9 +69,9 @@ struct Tile: View {
                 if let letter = letter {
                     Text(letter) 
                         .font( 
-                            .system(size: gr.size.height/1.5, weight: .bold))
+                            .system(size: fontSize(gr), weight: .bold))
                         .textCase(.uppercase)
-                        .padding(8)
+                        .padding(padding(gr))
                         .scaledToFit()
                                         
                     /* We need a small minimumScaleFactor 
@@ -92,8 +91,15 @@ struct Tile: View {
                 }
             } 
         }
+        // frame w maxWidth must come before aspectRatio
+        // (otherwise bounds will be off in small environments, e.g. keyboard accessory)
+        
+        // aspectRatio must come after maxWidth
+        // (otherwise bounds will be off in small environments, e.g. keyboard accessory)
+        
+        .frame(maxWidth: 150, maxHeight: 150)
+        .frame(minWidth: 10, minHeight: 10)
         .aspectRatio(1, contentMode: .fit)
-        .frame(maxWidth: 150)
         
         .scaleEffect(self.scaleSize)
         

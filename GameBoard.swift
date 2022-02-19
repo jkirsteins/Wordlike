@@ -4,7 +4,10 @@ struct GameBoardView: View {
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        Row(model: RowModel(word: "Hello", expected: "Hella", isSubmitted: true))
+        VStack {
+            Row(model: RowModel(word: "Hello", expected: "Hella", isSubmitted: true))
+            EditableRow(expected: "fuels")
+        }
             .environment(\.palette, 
                           colorScheme == .dark ? DarkPalette() : DarkPalette())
     }
@@ -12,6 +15,12 @@ struct GameBoardView: View {
 
 struct GameBoardView_Previews: PreviewProvider {
     static var previews: some View {
-        GameBoardView()
+        NavigationView {
+            VStack {
+                Text("Hello")
+                GameBoardView()
+                    .navigationTitle("French")
+            }
+        }
     }
 }
