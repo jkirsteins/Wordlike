@@ -3,12 +3,15 @@ import SwiftUI
 struct KeyboardInput<Content: View> : View 
 {
     @Binding var text: String?
+    @Binding var submitted: Bool
+    
     @State var isActive: Bool = false
     
     let content: Content 
         
-    init(text: Binding<String?>, @ViewBuilder _ content: ()->Content) {
+    init(text: Binding<String?>, submitted: Binding<Bool>, @ViewBuilder _ content: ()->Content) {
         self._text = text
+        self._submitted = submitted
         self.content = content()
     }
     
@@ -16,8 +19,10 @@ struct KeyboardInput<Content: View> : View
         ZStack {
             content
             
-            KeyboardInputUIKit(text: $text, isActive: $isActive)
-            
+            KeyboardInputUIKit(
+                text: $text, 
+                isActive: $isActive,
+                submitted: $submitted)
             
         }.border(self.isActive ? .red : .green)
     }
@@ -28,10 +33,12 @@ struct KeyboardInputUIKit: UIViewRepresentable {
     class InternalView: UIControl, UIKeyInput
     {
         @Binding var text: String?
+        @Binding var submitted: Bool
         @Binding var isActive: Bool
         
-        init(text: Binding<String?>, isActive: Binding<Bool>) {
+        init(text: Binding<String?>, submitted: Binding<Bool>, isActive: Binding<Bool>) {
             self._text = text
+            self._submitted = submitted
             self._isActive = isActive
             super.init(frame: CGRect.zero)
             addTarget(self, 
@@ -54,7 +61,6 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         }
         
         override var canBecomeFirstResponder: Bool {
-            print("Can become?")
             return true
         }
         
@@ -67,10 +73,12 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         } 
         
         func insertText(_ text: String) {
-            let set = CharacterSet.letters
             for chr in text { 
                 guard chr.isLetter else {
-                    print("\(chr) not allowed")
+                    if chr == "\n" && self.text?.count == 5 {
+                        self.submitted = true
+                    }
+                    
                     return
                 }
             }
@@ -86,10 +94,12 @@ struct KeyboardInputUIKit: UIViewRepresentable {
     
     @Binding var text: String? 
     @Binding var isActive: Bool
+    @Binding var submitted: Bool
     
     func makeUIView(context: Context) -> InternalView {
         return InternalView(
             text: self.$text,
+            submitted: self.$submitted,
             isActive: self.$isActive)
     }
     
@@ -100,14 +110,16 @@ struct KeyboardInputUIKit: UIViewRepresentable {
 
 struct EditableRow : View
 {
-    @State var word: String? = "2"
+    @State var word: String? = nil
+    @State var submitted: Bool = false
     
     var body: some View { 
-        KeyboardInput(text: self.$word) {
-            VStack {  
+        if !submitted {
+            KeyboardInput(text: self.$word, submitted: self.$submitted) {
                 Row(word: self.$word)
-                Text(self.word ?? "none")
             }
+        } else {
+            Row(word: self.$word)
         }
     }
 }
