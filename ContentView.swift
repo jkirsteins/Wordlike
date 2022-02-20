@@ -38,7 +38,7 @@ class TileDropDelegate : DropDelegate
     func performDrop(info: DropInfo) -> Bool {
         print("Performing")
         
-        let items = info.itemProviders(for: [UTType.url])
+        _ = info.itemProviders(for: [UTType.url])
         
         markBusy()
         

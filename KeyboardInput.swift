@@ -1,19 +1,25 @@
 import SwiftUI
 
-struct KeyboardInput<Content: View> : View 
+struct KeyboardInput<Content: View, AccessoryView: View> : View 
 {
     @Binding var model: RowModel
     @Binding var isActive: Int?
     
     let tag: Int
     let content: Content 
+    let accessoryView: AccessoryView
     
-    init(model: Binding<RowModel>, tag: Int, isActive: Binding<Int?>,
-    @ViewBuilder _ content: ()->Content) {
+    init(
+model: Binding<RowModel>, 
+tag: Int, 
+isActive: Binding<Int?>,
+    @ViewBuilder _ content: ()->Content,
+    @ViewBuilder _ accessoryView: ()->AccessoryView) {
         self._model = model
         self.tag = tag
         self._isActive = isActive
         self.content = content()
+        self.accessoryView = accessoryView()
     }
     
     @State var contentSize: CGSize = CGSize.zero
@@ -33,31 +39,56 @@ struct KeyboardInput<Content: View> : View
             KeyboardInputUIKit(
                 model: $model,
                 tag: self.tag,
-                isActive: $isActive)
-                .frame(width: contentSize.width, height: contentSize.height)
+                isActive: $isActive,
+                accessoryView: { accessoryView })
+                .frame(width: contentSize.width, height: contentSize.height) 
         }
         .border(self.isActive == self.tag ? .red : .green)
     }
 }
 
-struct KeyboardInputUIKit: UIViewRepresentable {
+struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
-    class InternalView: UIControl, UIKeyInput
+    class InternalView<AccessoryView: View>: UIControl, UIKeyInput
     {
         @Binding var model: RowModel
         let focusTag: Int
         @Binding var isActive: Int?
         
-        var stale = UUID().uuidString
+        let accessoryView: AccessoryView
         
-        init(model: Binding<RowModel>, tag: Int, isActive: Binding<Int?>) {
+        init(
+    model: Binding<RowModel>, 
+    tag: Int, 
+    isActive: Binding<Int?>,
+        @ViewBuilder _ accessoryView: ()->AccessoryView) {
             self._model = model
             self.focusTag = tag
             self._isActive = isActive
+            self.accessoryView = accessoryView()
             super.init(frame: CGRect.infinite)
             addTarget(self, 
                       action: #selector(self.onTap(_:)),
                       for: .touchUpInside)
+            
+            self.resetAccessoryView()
+        }
+        
+        func resetAccessoryView()
+        {
+            let accView = UIView(
+                frame: CGRect(x: 0.0, y: 0.0, width: self.bounds.size.width, height: 44))
+            
+            let vc = UIHostingController(rootView: accessoryView)
+            
+            vc.view.translatesAutoresizingMaskIntoConstraints = false
+            accView.addSubview(vc.view)
+            vc.view.leadingAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.leadingAnchor).isActive = true
+            vc.view.trailingAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.trailingAnchor).isActive = true
+            vc.view.topAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.topAnchor).isActive = true
+            vc.view.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            
+            self.inputAccessoryView = accView
         }
         
         required init?(coder: NSCoder) {
@@ -66,11 +97,11 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         
         override open func resignFirstResponder() -> Bool {
             if self.isActive == focusTag {
-//                return true
+                //                return true
                 self.isActive = nil
-//                fatalError("asd")
+                //                fatalError("asd")
             }
-            print(self.focusTag, "resign", stale)
+            
             return super.resignFirstResponder()
         }
         
@@ -82,7 +113,7 @@ struct KeyboardInputUIKit: UIViewRepresentable {
             if self.isActive != focusTag {
                 self.isActive = self.focusTag
             }
-            print(self.focusTag, "become", stale)
+            
             return super.becomeFirstResponder()
         }
         
@@ -101,7 +132,9 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         }
         
         @objc private func onTap(_: AnyObject) {
-            _ = self.becomeFirstResponder()
+            UIView.performWithoutAnimation { 
+                _ = self.becomeFirstResponder()
+            }
         }
         
         var hasText: Bool {
@@ -145,62 +178,23 @@ struct KeyboardInputUIKit: UIViewRepresentable {
     @Binding var model: RowModel
     let tag: Int
     @Binding var isActive: Int?
+    @ViewBuilder let accessoryView: ()->AccessoryView
     
-    func makeUIView(context: Context) -> InternalView {
+    func makeUIView(context: Context) -> InternalView<AccessoryView> {
         let result = InternalView(
             model: $model,
             tag: self.tag,
-            isActive: self.$isActive)
+            isActive: self.$isActive,
+            { accessoryView() })
         
         result.setContentHuggingPriority(.defaultHigh, for: .vertical)
         result.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
         if isActive == tag {
-            print("Becoming 1")
-            _ = result.becomeFirstResponder()
+            UIView.performWithoutAnimation { 
+                _ = result.becomeFirstResponder()
+            }
         } 
-//            print("Resign 1")
-//            _ = result.resignFirstResponder()
-//        }
-        
-        let v = VStack {
-            Spacer()
-            HStack {
-                Spacer()
-                
-                Tile(
-                    letter: "A", 
-                    delay: 0, 
-                    revealState: .rightPlace)
-                Tile(
-                    letter: "B", 
-                    delay: 0, 
-                    revealState: .wrongPlace)
-                
-                Spacer()
-            } 
-            Spacer()
-        }.background(Color(UIColor.systemFill))
-        //            .padding(0)
-        //            .frame(width: 100, height: 44)
-        //            .background(Color(UIColor.systemFill))
-        
-        let accView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: result.bounds.size.width, height: 44))
-        //        accView.autoresizingMask = [.flexibleWidth] // important! allows it to resize
-        //        accView.backgroundColor = .red // .systemFill
-        
-        
-        let vc = UIHostingController(rootView: v)
-        //        accView.addSubview(vc.view)
-        
-        vc.view.translatesAutoresizingMaskIntoConstraints = false
-        accView.addSubview(vc.view)
-        vc.view.leadingAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        vc.view.trailingAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        vc.view.topAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.topAnchor).isActive = true
-        vc.view.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        
-        result.inputAccessoryView = accView
         
         return result
     }
@@ -213,15 +207,9 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         Coordinator()
     }
     
-    func updateUIView(_ uiView: InternalView, context: Context) {
-//        let wasActive = self.isActive
+    func updateUIView(_ uiView: InternalView<AccessoryView>, context: Context) {
         
-//        uiView.isActive = self.isActive
-//        self.isActive = true
-        
-//        uiView.isActive = self.isActive
-        
-        print("tag", uiView.focusTag, "isa", uiView.isActive, "self", self.tag, "isas", self.isActive)
+        uiView.resetAccessoryView()
         
         // The following are not called on main asynchronously,
         // there's an attribute cycle. See:
@@ -229,25 +217,20 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         if self.tag == self.isActive {
             if !uiView.isFirstResponder {
                 DispatchQueue.main.async {
-                    _ = uiView.becomeFirstResponder()
+                    UIView.performWithoutAnimation { 
+                        _ = uiView.becomeFirstResponder()
+                    }
                 }
             }
         } else {
             if uiView.isFirstResponder {
                 DispatchQueue.main.async {
-                    _ = uiView.resignFirstResponder()
+                    UIView.performWithoutAnimation { 
+                        _ = uiView.resignFirstResponder()
+                    }
                 }
             }
         }
-        
-        
-//        if self.isActive {
-//            _ = uiView.becomeFirstResponder()
-//        } 
-//        else {
-//            _ = uiView.resignFirstResponder()
-//        }
-        
     }
 }
 
@@ -269,19 +252,42 @@ struct EditableRow : View
     
     @ViewBuilder
     var body_internal: some View { 
-//        if !model.isSubmitted {
-            KeyboardInput(
-                model: $model,
-                tag: self.tag,
-                isActive: $isActive, {
+        //        if !model.isSubmitted {
+        KeyboardInput(
+            model: $model,
+            tag: self.tag,
+            isActive: $isActive, {
                 Row(model: model)
-                }).border( model.isSubmitted ? Color.clear : (self.tag == isActive ? Color.yellow : Color.purple) , width: 2 )
-//        } else {
-//            Row(model: model)
-//        }
+            }) {
+                
+                PaletteSetterView {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            
+                            Tile(
+                                letter: "A", 
+                                delay: 0, 
+                                revealState: .rightPlace)
+                            Tile(
+                                letter: "B", 
+                                delay: 0, 
+                                revealState: .wrongPlace)
+                            
+                            Spacer()
+                        } 
+                        Spacer()
+                    }.background(Color(UIColor.systemFill))
+                }
+                
+            }.border( model.isSubmitted ? Color.clear : (self.tag == isActive ? Color.yellow : Color.purple) , width: 2 )
+        //        } else {
+        //            Row(model: model)
+        //        }
         
-//        Text(verbatim: "Active: \(self.isActive)")
-//        Text(verbatim: "Tag: \(self.tag)")
+        //        Text(verbatim: "Active: \(self.isActive)")
+        //        Text(verbatim: "Tag: \(self.tag)")
     }
 }
 

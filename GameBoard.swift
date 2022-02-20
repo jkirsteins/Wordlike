@@ -7,6 +7,10 @@ class GameState : ObservableObject
     @Published var rows: [RowModel]
     @Published var isActives: [Bool]
     
+    var isCompleted: Bool {
+        rows.allSatisfy { $0.isSubmitted }
+    }
+    
     init(expected: String) {
         self.expected = expected
         
@@ -41,6 +45,14 @@ struct GameBoardView: View {
         return allSubmitted(until: row) && !state.rows[row].isSubmitted 
     } 
     
+    var onCompleteCallback: ((GameState)->())? = nil
+    
+    func onCompleted(callback: @escaping (GameState)->()) -> some View {
+        var copy = self
+        copy.onCompleteCallback = callback
+        return copy
+    }
+    
     func recalculateActive() {
         for ix in 0..<state.rows.count {
             if canEdit(row: ix) {
@@ -51,6 +63,8 @@ struct GameBoardView: View {
             print("Set nothing to active", state.rows.map { $0.isSubmitted })
         }
     }
+    
+    @State var didCompleteCallback = false
     
     var body: some View {
         PaletteSetterView {
@@ -72,6 +86,21 @@ struct GameBoardView: View {
                     
                 }
             }
+        }
+        .onChange(of: state.rows) {
+            _ in 
+            
+            if let onCompleteCallback =
+                self.onCompleteCallback, 
+                state.isCompleted, 
+                !didCompleteCallback {
+                
+                didCompleteCallback = true
+                
+                DispatchQueue.main.async {
+                    onCompleteCallback(state)
+                }
+            }  
         }
         .onTapGesture {
             recalculateActive()
