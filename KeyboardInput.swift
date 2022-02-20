@@ -67,7 +67,7 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         override open func resignFirstResponder() -> Bool {
             if self.isActive == focusTag {
 //                return true
-//                self.isActive = nil
+                self.isActive = nil
 //                fatalError("asd")
             }
             print(self.focusTag, "resign", stale)
@@ -75,8 +75,12 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         }
         
         override open func becomeFirstResponder() -> Bool {
-            if self.isActive != focusTag { 
-//                self.isActive = self.focusTag
+            guard !self.model.isSubmitted else {
+                return false
+            }
+            
+            if self.isActive != focusTag {
+                self.isActive = self.focusTag
             }
             print(self.focusTag, "become", stale)
             return super.becomeFirstResponder()
@@ -93,7 +97,7 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         }
         
         override var canBecomeFirstResponder: Bool {
-            return true
+            return !self.model.isSubmitted
         }
         
         @objc private func onTap(_: AnyObject) {
@@ -108,6 +112,11 @@ struct KeyboardInputUIKit: UIViewRepresentable {
             for chr in text { 
                 guard chr.isLetter else {
                     if chr == "\n" && self.model.word.count == 5 {
+                        // After the last editable row, isActive will
+                        // point to something that doesn't exist. This is fine,
+                        // as it simply ensures that the keyboard goes away.
+                        self.isActive = focusTag + 1
+                        
                         self.model = RowModel(
                             word: self.model.word,
                             expected: self.model.expected,
@@ -139,9 +148,9 @@ struct KeyboardInputUIKit: UIViewRepresentable {
     
     func makeUIView(context: Context) -> InternalView {
         let result = InternalView(
-            model: _model,
+            model: $model,
             tag: self.tag,
-            isActive: self._isActive)
+            isActive: self.$isActive)
         
         result.setContentHuggingPriority(.defaultHigh, for: .vertical)
         result.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -214,9 +223,21 @@ struct KeyboardInputUIKit: UIViewRepresentable {
         
         print("tag", uiView.focusTag, "isa", uiView.isActive, "self", self.tag, "isas", self.isActive)
         
+        // The following are not called on main asynchronously,
+        // there's an attribute cycle. See:
+        // https://stackoverflow.com/questions/59707784/
         if self.tag == self.isActive {
-            print("Becoming 2")
-            _ = uiView.becomeFirstResponder()
+            if !uiView.isFirstResponder {
+                DispatchQueue.main.async {
+                    _ = uiView.becomeFirstResponder()
+                }
+            }
+        } else {
+            if uiView.isFirstResponder {
+                DispatchQueue.main.async {
+                    _ = uiView.resignFirstResponder()
+                }
+            }
         }
         
         
@@ -244,52 +265,23 @@ struct EditableRow : View
     
     var body: some View {
         body_internal
-            .onChange(of: self.model) {
-                newModel in
-                
-                if newModel.isSubmitted && self.isActive == tag {
-//                    fatalError("mepqw")
-//                    self.isActive = tag + 1
-                }
-            }
-//                
-//                if newVal && isActive != tag {
-//                    print("[\(tag)] set isactive to tag")
-//                    isActive = tag
-//                } 
-//                else if !newVal && isActive == tag { 
-////                    print("[\(tag)] set isactive to nil")
-////                    if model.isSubmitted, let isActive = isActive {
-////                        self.isActive = isActive + 1
-////                    } else {
-////                        isActive = nil
-////                    }
-//                    if self.model.isSubmitted {
-//                        isActive = tag + 1
-//                    }
-//                }
-//            }
-            .onChange(of: self.isActive) {
-                newIsActive in
-                
-            }
     }
     
     @ViewBuilder
     var body_internal: some View { 
-        if true || !model.isSubmitted {
+//        if !model.isSubmitted {
             KeyboardInput(
                 model: $model,
                 tag: self.tag,
                 isActive: $isActive, {
                 Row(model: model)
-            }).border(self.tag == isActive ? .yellow : .purple, width: 2) 
-        } else {
-            Row(model: model)
-        }
+                }).border( model.isSubmitted ? Color.clear : (self.tag == isActive ? Color.yellow : Color.purple) , width: 2 )
+//        } else {
+//            Row(model: model)
+//        }
         
-        Text(verbatim: "Active: \(self.isActive)")
-        Text(verbatim: "Tag: \(self.tag)")
+//        Text(verbatim: "Active: \(self.isActive)")
+//        Text(verbatim: "Tag: \(self.tag)")
     }
 }
 

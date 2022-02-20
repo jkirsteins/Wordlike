@@ -65,9 +65,9 @@ struct GameBoardView: View {
                             tag: ix,
                             isActive: $isActive)
                             
-                        Text(verbatim: "Row \(ix) Edit: \(canEdit(row:ix)) Submit: \(state.rows[ix].isSubmitted)")
-                        Text(verbatim: "All submitted \(allSubmitted(until: ix))")
-                        Text(verbatim: "isActive \(isActive) vs \(ix)")
+//                        Text(verbatim: "Row \(ix) Edit: \(canEdit(row:ix)) Submit: \(state.rows[ix].isSubmitted)")
+//                        Text(verbatim: "All submitted \(allSubmitted(until: ix))")
+//                        Text(verbatim: "isActive \(isActive) vs \(ix)")
                     }
                     
                 }
@@ -75,6 +75,9 @@ struct GameBoardView: View {
         }
         .onTapGesture {
             recalculateActive()
+        }
+        .onAppear {
+            isActive = 0
         }
     }
 }
