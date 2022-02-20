@@ -71,11 +71,42 @@ struct Row: View {
     
     var body: some View {
         HStack {
-            ForEach(0..<5) { ix in
-                Tile(
-                    letter: model.char(guessAt: ix), 
-                    delay: ix,
-                    revealState: model.revealState(ix))
+            // Poor way to get the animations
+            // working when submission state triggers
+            if model.isSubmitted {
+                ForEach(0..<5) { ix in
+                    Tile(
+                        letter: model.char(guessAt: ix), 
+                        delay: ix,
+                        revealState: model.revealState(ix))
+                }
+            } else {
+                ForEach(0..<5) { ix in
+                    Tile(
+                        letter: model.char(guessAt: ix), 
+                        delay: ix,
+                        revealState: model.revealState(ix))
+                }
+            }
+        }
+    }
+}
+
+fileprivate struct SubmittableRow_Preview: View
+{
+    @State var model = RowModel(
+        word: "fuels",
+        expected: "fuels",
+        isSubmitted: false)
+    
+    var body: some View {
+        VStack {
+            Row(model: model)
+            Button("Submit") {
+                model = RowModel(
+                    word: model.word,
+                    expected: model.expected,
+                    isSubmitted: true)
             }
         }
     }
@@ -92,10 +123,8 @@ struct Row_Previews: PreviewProvider {
                 word: "fuels",
                 expected: "hales",
                 isSubmitted: true))
-            Row(model: RowModel(
-                word: "fuels",
-                expected: "fuels",
-                isSubmitted: false))
+            
+            SubmittableRow_Preview()
         }
     }
 }
