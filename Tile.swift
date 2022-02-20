@@ -98,7 +98,7 @@ struct Tile: View {
         // (otherwise bounds will be off in small environments, e.g. keyboard accessory)
         
         .frame(maxWidth: 150, maxHeight: 150)
-        .frame(minWidth: 10, minHeight: 10)
+        .frame(minWidth: 24, minHeight: 24)
         .aspectRatio(1, contentMode: .fit)
         
         .scaleEffect(self.scaleSize)

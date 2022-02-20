@@ -33,7 +33,7 @@ struct PaletteSetterView<Content: View>: View {
 struct PaletteSetterView_Previews: PreviewProvider {
     static var previews: some View {
         PaletteSetterView {
-            EditableRow(expected: "fuels")
+            EditableRow_ForPreview()
         }
     }
 }

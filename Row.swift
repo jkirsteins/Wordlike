@@ -1,10 +1,22 @@
 import SwiftUI
 
-struct RowModel 
+struct RowModel : Equatable
 {
-    let word: String
-    let expected: String
+    let word: String 
     let isSubmitted: Bool
+    let expected: String
+    
+    init(expected: String) {
+        self.expected = expected
+        self.word = ""
+        self.isSubmitted = false
+    }
+    
+    init(word: String, expected: String, isSubmitted: Bool) {
+        self.word = word
+        self.expected = expected
+        self.isSubmitted = isSubmitted
+    }
     
     var expectedArray: [String.Element] {
         Array(expected.uppercased())
