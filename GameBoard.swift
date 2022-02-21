@@ -1,36 +1,10 @@
 import SwiftUI
 
-class GameState : ObservableObject
-{
-    let expected: String
-    
-    @Published var rows: [RowModel]
-    @Published var isActives: [Bool]
-    
-    var isCompleted: Bool {
-        rows.allSatisfy { $0.isSubmitted }
-    }
-    
-    init(expected: String) {
-        self.expected = expected
-        
-        let maxIx = 5
-        let rowModels = (0..<maxIx).map { _ in 
-            RowModel(word: "", expected: expected, isSubmitted: false)
-        }
-        let isActives = (0..<maxIx).map { _ in
-            false
-        }
-        self._rows = Published(wrappedValue: rowModels)
-        self._isActives = Published(wrappedValue: isActives)
-    }
-}
-
 struct GameBoardView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State var isActive: Int? = nil
-    @StateObject var state: GameState
+    @ObservedObject var state: GameState
     
     func allSubmitted(until row: Int) -> Bool {
         if row == 0 {
@@ -86,6 +60,11 @@ struct GameBoardView: View {
                     
                 }
             }
+        }
+        // should be on 'state' 
+        .onChange(of: state.expected) {
+            _ in
+            self.isActive = 0
         }
         .onChange(of: state.rows) {
             _ in 
