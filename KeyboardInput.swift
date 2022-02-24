@@ -40,10 +40,10 @@ isActive: Binding<Int?>,
                 model: $model,
                 tag: self.tag,
                 isActive: $isActive,
-                accessoryView: { accessoryView })
-                .frame(width: contentSize.width, height: contentSize.height) 
+                accessoryView: accessoryView)
+                .frame(width: contentSize.width, height: contentSize.height)
+                .border(self.isActive == self.tag ? .red : .green)
         }
-        .border(self.isActive == self.tag ? .red : .green)
     }
 }
 
@@ -51,35 +51,37 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
     class InternalView<AccessoryView: View>: UIControl, UIKeyInput
     {
-        @Binding var model: RowModel
-        let focusTag: Int
-        @Binding var isActive: Int?
+//        var model: RowModel
+//        let focusTag: Int
+//        var isActive: Int?
         
-        let accessoryView: AccessoryView
+//        var accessoryView: AccessoryView
         
-        init(
-    model: Binding<RowModel>, 
-    tag: Int, 
-    isActive: Binding<Int?>,
-        @ViewBuilder _ accessoryView: ()->AccessoryView) {
-            self._model = model
-            self.focusTag = tag
-            self._isActive = isActive
-            self.accessoryView = accessoryView()
+        var owner: KeyboardInputUIKit<AccessoryView>
+        
+        init(owner: KeyboardInputUIKit<AccessoryView>) {
+            self.owner = owner
+//            self.focusTag = tag
+//            self.isActive = isActive
+//            self.accessoryView = accessoryView
+            self.vc = UIHostingController(rootView: self.owner.accessoryView)
+            
+            self.accView = UIView()
+            
             super.init(frame: CGRect.infinite)
             addTarget(self, 
                       action: #selector(self.onTap(_:)),
                       for: .touchUpInside)
             
-            self.resetAccessoryView()
+            self.initAccessoryView()
         }
         
-        func resetAccessoryView()
+        let vc: UIHostingController<AccessoryView>
+        let accView: UIView
+        
+        func initAccessoryView()
         {
-            let accView = UIView(
-                frame: CGRect(x: 0.0, y: 0.0, width: self.bounds.size.width, height: 44))
-            
-            let vc = UIHostingController(rootView: accessoryView)
+            self.accView.frame = CGRect(x: 0.0, y: 0.0, width: self.bounds.width, height: 44)
             
             vc.view.translatesAutoresizingMaskIntoConstraints = false
             accView.addSubview(vc.view)
@@ -96,9 +98,9 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         }
         
         override open func resignFirstResponder() -> Bool {
-            if self.isActive == focusTag {
+            if self.owner.isActive == owner.tag {
                 //                return true
-                self.isActive = nil
+                self.owner.isActive = nil
                 //                fatalError("asd")
             }
             
@@ -106,12 +108,12 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         }
         
         override open func becomeFirstResponder() -> Bool {
-            guard !self.model.isSubmitted else {
+            guard !self.owner.model.isSubmitted else {
                 return false
             }
             
-            if self.isActive != focusTag {
-                self.isActive = self.focusTag
+            if self.owner.isActive != owner.tag {
+                self.owner.isActive = self.owner.tag
             }
             
             return super.becomeFirstResponder()
@@ -128,31 +130,33 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         }
         
         override var canBecomeFirstResponder: Bool {
-            return !self.model.isSubmitted
+            return !self.owner.model.isSubmitted
         }
         
         @objc private func onTap(_: AnyObject) {
-            UIView.performWithoutAnimation { 
-                _ = self.becomeFirstResponder()
-            }
+//            fatalError("onTap")
+//            UIView.performWithoutAnimation { 
+//                _ = self.becomeFirstResponder()
+//            }
         }
         
         var hasText: Bool {
-            return model.word.isEmpty == false
+            return owner.model.word.isEmpty == false
         } 
         
         func insertText(_ text: String) {
+            print("Inserting text", text)
             for chr in text { 
                 guard chr.isLetter else {
-                    if chr == "\n" && self.model.word.count == 5 {
+                    if chr == "\n" && self.owner.model.word.count == 5 {
                         // After the last editable row, isActive will
                         // point to something that doesn't exist. This is fine,
                         // as it simply ensures that the keyboard goes away.
-                        self.isActive = focusTag + 1
+                        self.owner.isActive = owner.tag + 1
                         
-                        self.model = RowModel(
-                            word: self.model.word,
-                            expected: self.model.expected,
+                        self.owner.model = RowModel(
+                            word: self.owner.model.word,
+                            expected: self.owner.model.expected,
                             isSubmitted: true
                         )
                     }
@@ -161,31 +165,27 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
                 }
             }
             
-            self.model = RowModel(
-                word:  String((self.model.word + text).prefix(5)),
-                expected: self.model.expected,
-                isSubmitted: self.model.isSubmitted)
+            self.owner.model = RowModel(
+                word:  String((self.owner.model.word + text).prefix(5)),
+                expected: self.owner.model.expected,
+                isSubmitted: self.owner.model.isSubmitted)
         }
         
         func deleteBackward() {
-            self.model = RowModel(
-                word: String(self.model.word.dropLast()),
-                expected: self.model.expected,
-                isSubmitted: self.model.isSubmitted)
+            self.owner.model = RowModel(
+                word: String(self.owner.model.word.dropLast()),
+                expected: self.owner.model.expected,
+                isSubmitted: self.owner.model.isSubmitted)
         }
     }
     
     @Binding var model: RowModel
     let tag: Int
     @Binding var isActive: Int?
-    @ViewBuilder let accessoryView: ()->AccessoryView
+    let accessoryView: AccessoryView
     
     func makeUIView(context: Context) -> InternalView<AccessoryView> {
-        let result = InternalView(
-            model: $model,
-            tag: self.tag,
-            isActive: self.$isActive,
-            { accessoryView() })
+        let result = InternalView(owner: self)
         
         result.setContentHuggingPriority(.defaultHigh, for: .vertical)
         result.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -209,7 +209,19 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
     func updateUIView(_ uiView: InternalView<AccessoryView>, context: Context) {
         
-        uiView.resetAccessoryView()
+        
+        
+        uiView.owner = self
+        
+        uiView.accView.subviews[0].removeFromSuperview()
+        uiView.vc.rootView = self.accessoryView
+        uiView.accView.addSubview(uiView.vc.view)
+        
+        uiView.accView.frame = CGRect(x: 0.0, y: 0.0, width: uiView.bounds.width, height: 44)
+        
+        print("Resetting...")
+        
+//        uiView.resetAccessoryView()
         
         // The following are not called on main asynchronously,
         // there's an attribute cycle. See:
@@ -236,18 +248,24 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
 
 struct EditableRow : View
 {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Binding var model: RowModel
     let tag: Int
     @Binding var isActive: Int?
     
-    init(model: Binding<RowModel>, tag: Int, isActive: Binding<Int?>) {
+    init(
+        model: Binding<RowModel>, 
+        tag: Int, isActive: Binding<Int?>) {
         self._model = model
         self.tag = tag
         self._isActive = isActive
     }
     
     var body: some View {
-        body_internal
+        Self._printChanges()
+        return body_internal
+        
+//        Text(colorScheme == .light ? "light" : "dark")
     }
     
     @ViewBuilder
@@ -259,13 +277,14 @@ struct EditableRow : View
             isActive: $isActive, {
                 Row(model: model)
             }) {
-                
+                Text(String(randomLength: 3))
                 PaletteSetterView {
                     VStack {
                         Spacer()
                         HStack {
                             Spacer()
                             
+                            Text(colorScheme == .light ? "light" : "dark")
                             Tile(
                                 letter: "A", 
                                 delay: 0, 
@@ -281,7 +300,9 @@ struct EditableRow : View
                     }.background(Color(UIColor.systemFill))
                 }
                 
-            }.border( model.isSubmitted ? Color.clear : (self.tag == isActive ? Color.yellow : Color.purple) , width: 2 )
+            }
+//            .border( model.isSubmitted ? Color.clear : (self.tag == isActive ? Color.yellow : Color.purple) , width: 2 )
+        
         //        } else {
         //            Row(model: model)
         //        }
@@ -332,8 +353,33 @@ struct EditableRow_ForPreview : View {
     }
 }
 
+
+fileprivate struct InternalPreview: View 
+{
+    @State var state = GameState(expected: "board")
+    
+    let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
+    
+    @State var count = 0
+    
+    var body: some View {
+        VStack {
+            GameBoardView(state: state)
+            Text("Count: \(count)")
+            Button("Reset") {
+                self.state = GameState(expected: "fuels")
+            }.onReceive(timer) {
+                _ in 
+                self.count += 1
+            }
+        }
+    }
+}
+
 struct KeyboardInput_Previews: PreviewProvider {
     static var previews: some View {
+        InternalPreview()
+        
         VStack {
             Text("Above").background(.green)
             EditableRow_ForPreview()

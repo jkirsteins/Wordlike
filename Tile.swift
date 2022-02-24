@@ -160,7 +160,7 @@ struct Tile_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             HStack {
-                ForEach(0..<5) { ix in
+                ForEach(0..<5, id: \.self) { ix in
                     Tile(letter: String(wa[ix]), delay: 0, revealState: .wrongLetter)
                 }
             }

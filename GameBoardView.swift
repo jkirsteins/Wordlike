@@ -19,32 +19,51 @@ struct GameBoardView: View {
         return allSubmitted(until: row) && !state.rows[row].isSubmitted 
     } 
     
-    var onCompleteCallback: ((GameState)->())? = nil
+//    var onCompleteCallback: ((GameState)->())? = nil
     
     func onCompleted(callback: @escaping (GameState)->()) -> some View {
-        var copy = self
-        copy.onCompleteCallback = callback
-        return copy
+        var didRespond = false
+        return self.onChange(of: self.state.rows) {
+            _ in 
+
+            guard state.isCompleted, !didRespond else { 
+                return }
+            didRespond = true
+            
+            DispatchQueue.main.async {
+                callback(state)    
+            }  
+        }
+//        var copy = self
+//        copy.onCompleteCallback = callback
+//        return copy
     }
     
     func recalculateActive() {
         for ix in 0..<state.rows.count {
             if canEdit(row: ix) {
                 isActive = ix
-                print("Set", ix, "to active")
                 return
             }
-            print("Set nothing to active", state.rows.map { $0.isSubmitted })
         }
     }
     
     @State var didCompleteCallback = false
     
+    @State var test = RowModel(expected: "test")
     var body: some View {
-        PaletteSetterView {
+        
+        let model: Binding<RowModel> = $state.rows[0]
+        
+        return PaletteSetterView {
             VStack {
+                Text(state.id.uuidString)
+                Text(state.rows[0].id)
+                    .onChange(of: state.rows[0]) {
+                        _ in print("rowc")
+                    }
                 
-                ForEach(0..<state.rows.count) {
+                ForEach(0..<state.rows.count, id: \.self) {
                     ix in 
                     VStack { 
                         
@@ -52,10 +71,6 @@ struct GameBoardView: View {
                             model: $state.rows[ix], 
                             tag: ix,
                             isActive: $isActive)
-                            
-//                        Text(verbatim: "Row \(ix) Edit: \(canEdit(row:ix)) Submit: \(state.rows[ix].isSubmitted)")
-//                        Text(verbatim: "All submitted \(allSubmitted(until: ix))")
-//                        Text(verbatim: "isActive \(isActive) vs \(ix)")
                     }
                     
                 }
@@ -66,21 +81,6 @@ struct GameBoardView: View {
             _ in
             self.isActive = 0
         }
-        .onChange(of: state.rows) {
-            _ in 
-            
-            if let onCompleteCallback =
-                self.onCompleteCallback, 
-                state.isCompleted, 
-                !didCompleteCallback {
-                
-                didCompleteCallback = true
-                
-                DispatchQueue.main.async {
-                    onCompleteCallback(state)
-                }
-            }  
-        }
         .onTapGesture {
             recalculateActive()
         }
@@ -90,8 +90,22 @@ struct GameBoardView: View {
     }
 }
 
+fileprivate struct InternalPreview: View 
+{
+    @State var state = GameState(expected: "board")
+    
+    var body: some View {
+        VStack {
+            GameBoardView(state: state)
+            Button("Reset") {
+                self.state = GameState(expected: "fuels")
+            }
+        }
+    }
+}
+
 struct GameBoardView_Previews: PreviewProvider {
     static var previews: some View {
-        GameBoardView(state: GameState(expected: "board"))
+        InternalPreview()
     }
 }

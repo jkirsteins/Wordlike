@@ -1,7 +1,8 @@
 import SwiftUI
 
-struct RowModel : Equatable, Codable
+struct RowModel : Equatable, Codable, Identifiable
 {
+    let id: String
     let word: String 
     let isSubmitted: Bool
     let expected: String
@@ -9,6 +10,7 @@ struct RowModel : Equatable, Codable
     init(expected: String) {
         self.expected = expected
         self.word = ""
+        self.id = "-\(expected)"
         self.isSubmitted = false
     }
     
@@ -16,6 +18,7 @@ struct RowModel : Equatable, Codable
         self.word = word
         self.expected = expected
         self.isSubmitted = isSubmitted
+        self.id = "\(word)-\(expected)"
     }
     
     var expectedArray: [String.Element] {

@@ -1,11 +1,12 @@
 import SwiftUI
 
-class GameState : ObservableObject
+class GameState : ObservableObject, Identifiable
 {
-    let expected: String
+    let id = UUID()
     
+    @Published var expected: String
     @Published var rows: [RowModel]
-    @Published var isActives: [Bool]
+    //@Published var isActives: [Bool]
     
     var isCompleted: Bool {
         rows.allSatisfy { $0.isSubmitted }
@@ -29,6 +30,6 @@ class GameState : ObservableObject
             false
         }
         self._rows = Published(wrappedValue: rows)
-        self._isActives = Published(wrappedValue: isActives)
+        //self._isActives = Published(wrappedValue: isActives)
     }
 }
