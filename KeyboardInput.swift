@@ -149,6 +149,18 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
             for chr in text { 
                 guard chr.isLetter else {
                     if chr == "\n" && self.owner.model.word.count == 5 {
+                        // If word doesn't match,
+                        // don't set isSubmitted
+                        guard self.owner.model.canSubmit else {
+                            self.owner.model = RowModel(
+                                word: self.owner.model.word,
+                                expected: self.owner.model.expected,
+                                isSubmitted: false,
+                                attemptCount: 1
+                            )
+                            return
+                        } 
+                        
                         // After the last editable row, isActive will
                         // point to something that doesn't exist. This is fine,
                         // as it simply ensures that the keyboard goes away.
@@ -157,7 +169,8 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
                         self.owner.model = RowModel(
                             word: self.owner.model.word,
                             expected: self.owner.model.expected,
-                            isSubmitted: true
+                            isSubmitted: true,
+                            attemptCount: 0
                         )
                     }
                     

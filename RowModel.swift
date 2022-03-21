@@ -5,6 +5,7 @@ struct RowModel : Equatable, Codable, Identifiable
     let id: String
     let word: String 
     let isSubmitted: Bool
+    let attemptCount: Int
     let expected: String
     
     init(expected: String) {
@@ -12,12 +13,22 @@ struct RowModel : Equatable, Codable, Identifiable
         self.word = ""
         self.id = "-\(expected)"
         self.isSubmitted = false
+        self.attemptCount = 0
     }
     
     init(word: String, expected: String, isSubmitted: Bool) {
         self.word = word
         self.expected = expected
         self.isSubmitted = isSubmitted
+        self.attemptCount = 0
+        self.id = "\(word)-\(expected)"
+    }
+    
+    init(word: String, expected: String, isSubmitted: Bool, attemptCount: Int) {
+        self.word = word
+        self.expected = expected
+        self.isSubmitted = isSubmitted
+        self.attemptCount = attemptCount
         self.id = "\(word)-\(expected)"
     }
     
@@ -31,6 +42,10 @@ struct RowModel : Equatable, Codable, Identifiable
     
     var canReveal: Bool {
         isSubmitted
+    }
+    
+    var canSubmit: Bool {
+        wordArray[0] == "S"
     }
     
     func char(guessAt pos: Int) -> String
