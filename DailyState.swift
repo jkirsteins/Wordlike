@@ -62,8 +62,8 @@ public struct DailyState : RawRepresentable
         //        Calendar.current.isDateInToday(self.date)
     }
     
-    init() {
-        let expected = String(randomLength: 5)
+    init(expected: String) {
+//        let expected = String(randomLength: 5)
         
         self.date = Date()
         self.expected = expected

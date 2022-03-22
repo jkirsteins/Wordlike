@@ -14,6 +14,8 @@ struct MyApp: App {
     
     @StateObject var gameState: GameState = GameState(expected: "tests") //? = nil
     
+    @StateObject var validator = WordValidator(name: "en")
+    
     var body: some Scene {
         WindowGroup {
             VStack {
@@ -34,13 +36,13 @@ struct MyApp: App {
                 if dailyState == nil {
                     Text("Loading state...").onAppear {
                         guard let dailyState = dailyState else {
-                            dailyState = DailyState()
+                            dailyState = DailyState(expected: validator.todayAnswer)
                             return
                         }
                     }
                 }
             }
-            .environmentObject(WordValidator(name: "en"))
+            .environmentObject(validator)
             .onChange(of: self.dailyState) {
                 newState in
                 
@@ -61,7 +63,7 @@ struct MyApp: App {
                 
                 if dailyState.isStale {
                     // TODO: process daily results if needed
-                    self.dailyState = DailyState()
+                    self.dailyState = DailyState(expected: validator.todayAnswer)
                 }
             }
             .sheet(isPresented: $finished) {
