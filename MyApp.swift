@@ -40,6 +40,7 @@ struct MyApp: App {
                     }
                 }
             }
+            .environmentObject(WordValidator(name: "en"))
             .onChange(of: self.dailyState) {
                 newState in
                 

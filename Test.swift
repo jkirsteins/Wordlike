@@ -32,14 +32,10 @@ struct RandomNumberGeneratorWithSeed: RandomNumberGenerator {
     }
 }
 
-class WordValidator
+class WordValidator : ObservableObject
 {
     lazy var answers: [String] = {
         var random = ArbitraryRandomNumberGenerator(seed: UInt64(self.seed))
-        
-//        var random = RandomNumberGeneratorWithSeed(seed: self.seed)
-        
-//        var random = SystemRandomNumberGenerator()
         
         return Self.load("\(name)_A").shuffled(using: &random)
     }()

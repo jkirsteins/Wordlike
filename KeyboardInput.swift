@@ -49,6 +49,8 @@ isActive: Binding<Int?>,
 
 struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
+    @EnvironmentObject var validator: WordValidator
+    
     class InternalView<AccessoryView: View>: UIControl, UIKeyInput
     {
 //        var model: RowModel
@@ -145,18 +147,17 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         } 
         
         func insertText(_ text: String) {
-            print("Inserting text", text)
             for chr in text { 
                 guard chr.isLetter else {
                     if chr == "\n" && self.owner.model.word.count == 5 {
                         // If word doesn't match,
                         // don't set isSubmitted
-                        guard self.owner.model.canSubmit else {
+                        guard self.owner.validator.canSubmit(word: self.owner.model.word) else {
                             self.owner.model = RowModel(
                                 word: self.owner.model.word,
                                 expected: self.owner.model.expected,
                                 isSubmitted: false,
-                                attemptCount: 1
+                                attemptCount: self.owner.model.attemptCount + 1
                             )
                             return
                         } 
@@ -343,6 +344,8 @@ struct EditableRow_ForPreview : View {
                 tag: 1,
                 isActive: $isActive)
             
+            Text(verbatim: "\(model1.attemptCount) x \(model2.attemptCount)")
+            
             Button("Toggle") {
                 // only works if
                 // it is going nil->any
@@ -375,10 +378,13 @@ fileprivate struct InternalPreview: View
     
     @State var count = 0
     
+    @EnvironmentObject var validator: WordValidator
+    
     var body: some View {
         VStack {
             GameBoardView(state: state)
             Text("Count: \(count)")
+            Text("Today's word: \(validator.todayAnswer)")
             Button("Reset") {
                 self.state = GameState(expected: "fuels")
             }.onReceive(timer) {
@@ -392,11 +398,13 @@ fileprivate struct InternalPreview: View
 struct KeyboardInput_Previews: PreviewProvider {
     static var previews: some View {
         InternalPreview()
+            .environmentObject(WordValidator(name: "en"))
         
         VStack {
             Text("Above").background(.green)
             EditableRow_ForPreview()
             Text("Below").background(.red)
         }
+        .environmentObject(WordValidator(name: "en"))
     }
 }

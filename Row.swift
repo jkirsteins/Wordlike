@@ -7,7 +7,7 @@ struct Shake: GeometryEffect {
     var animatableData: CGFloat
     
     func effectValue(size: CGSize) -> ProjectionTransform {
-        ProjectionTransform(CGAffineTransform(translationX:
+        return ProjectionTransform(CGAffineTransform(translationX:
                                                 amount * sin(animatableData * .pi * CGFloat(shakesPerUnit)),
                                               y: 0))
     }
@@ -40,8 +40,11 @@ struct Row: View {
         .modifier(Shake(animatableData: count))
         .onChange(of: model.attemptCount) {
             nc in 
-            
-            withAnimation(.linear(duration: 0.33)) {
+            if nc > 0 {
+                withAnimation(.linear(duration: 0.33)) {
+                    self.count = CGFloat(nc)
+                }
+            } else {
                 self.count = CGFloat(nc)
             }
         }
