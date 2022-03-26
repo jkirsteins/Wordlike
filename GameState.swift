@@ -1,8 +1,14 @@
 import SwiftUI
 
-class GameState : ObservableObject, Identifiable
+class GameState : ObservableObject, Identifiable, Equatable
 {
-    let id = UUID()
+    static func == (lhs: GameState, rhs: GameState) -> Bool {
+        return
+        lhs.isCompleted == rhs.isCompleted &&
+        lhs.rows == rhs.rows
+    }
+    
+    var id = UUID()
     
     @Published var expected: String
     @Published var rows: [RowModel]

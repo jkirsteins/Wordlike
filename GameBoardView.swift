@@ -77,7 +77,7 @@ struct GameBoardView: View {
             }
         }
         // should be on 'state' 
-        .onChange(of: state.expected) {
+        .onChange(of: state.id) {
             _ in
             self.isActive = 0
         }

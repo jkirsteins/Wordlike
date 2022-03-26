@@ -12,7 +12,7 @@ struct MyApp: App {
     @State var debugMessage: String = ""
     @State var count = 0
     
-    @StateObject var gameState: GameState = GameState(expected: "tests") //? = nil
+    @StateObject var gameState: GameState = GameState(expected: "tests") 
     
     @StateObject var validator = WordValidator(name: "en")
     
@@ -49,6 +49,7 @@ struct MyApp: App {
                 if let newState = newState {
                     gameState.expected = newState.expected
                     gameState.rows = newState.rows
+                    gameState.id = UUID()
                 }
             }
             .onReceive(timer) { _ in
