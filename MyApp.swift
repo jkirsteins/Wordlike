@@ -78,17 +78,15 @@ struct MyApp: App {
                 }
             }
             .onReceive(timer) { _ in
-                return
                 
                 guard let dailyState = self.dailyState else {
                     return
                 }
                 
                 count += 1
-                debugMessage = "TTL: \(dailyState.remainingTtl) for word: \(dailyState.expected)" + "\nAGE: \(dailyState.age)"
+                debugMessage = "TTL: \(dailyState.remainingTtl) for word: \(dailyState.expected)" + "\nAGE: \(dailyState.age)" + "\nWRD: \(validator.todayAnswer)" + "\nTIX: \(validator.todayIndex)"
                 
                 if dailyState.isStale {
-                    fatalError("nop")
                     // TODO: process daily results if needed
                     self.dailyState = DailyState(expected: validator.todayAnswer)
                 }

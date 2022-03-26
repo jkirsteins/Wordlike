@@ -64,10 +64,14 @@ class WordValidator : ObservableObject
     static let MAR_22_2022 = Date(timeIntervalSince1970: 1647966002) 
     
     var todayIndex: Int {
+        indexBetween(start, and: Date())
+    }
+    
+    func indexBetween(_ start: Date, and end: Date) -> Int {
         Calendar.current.dateComponents(
             [.day], 
-            from: start, 
-            to: Date()).day!
+            from: Calendar.current.startOfDay(for: start), 
+            to: Calendar.current.startOfDay(for: end)).day!
     }
     
     func canSubmit(word: String) -> Bool {
@@ -93,16 +97,17 @@ class WordValidator : ObservableObject
 struct TestView: View {
     var body: some View {
         let x = WordValidator(name: "en", seed: 0)
-        return ZStack {
-            Rectangle().fill(.green)
-            Text("Hello: \(x.todayAnswer)")
-                .font(.system(size: 100))
-                .scaledToFit()
-                .minimumScaleFactor(0.01)
-                .lineLimit(1)
+        return VStack {
+            Text("Index on same day: \(x.indexBetween(WordValidator.MAR_22_2022, and: WordValidator.MAR_22_2022))")
+            
+            Text("Index on 1 sec before midnight: \(x.indexBetween(WordValidator.MAR_22_2022, and: Date(timeIntervalSince1970: 1647990001 - 2)))")
+            
+            Text("Index on next day (1 sec after midnight): \(x.indexBetween(WordValidator.MAR_22_2022, and: Date(timeIntervalSince1970: 1647990001)))")
+            
+            Text("Index 1 day after: \(x.indexBetween(WordValidator.MAR_22_2022, and: WordValidator.MAR_22_2022 + 86400))")
+            
+            Text("Index on Mar 27 (from Mar 22): \(x.indexBetween(WordValidator.MAR_22_2022, and: Date(timeIntervalSince1970: 1648336091)))")
         }
-        .aspectRatio(1, contentMode: .fit)
-        .frame(maxWidth: 250)
     }
 }
 
