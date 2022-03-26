@@ -63,13 +63,13 @@ public struct DailyState : RawRepresentable
     
     // might be unknown. Convenience debugging prop
     var remainingTtl: TimeInterval? {
-//        Date().secondsUntilTheNextDay
-        5 - age
+        Date().secondsUntilTheNextDay
+//        10 - age
     }
     
     var isFresh: Bool {
-        (remainingTtl ?? -1) > 0
-//        Calendar.current.isDateInToday(self.date)
+//        (remainingTtl ?? -1) > 0
+        Calendar.current.isDateInToday(self.date)
     }
     
     init(expected: String) {

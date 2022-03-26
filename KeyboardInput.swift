@@ -209,8 +209,8 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     func makeUIView(context: Context) -> InternalView<AccessoryView> {
         let result = InternalView(owner: self)
         
-        result.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        result.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+//        result.setContentHuggingPriority(.defaultLow, for: .vertical)
+//        result.setContentHuggingPriority(.defaultLow, for: .horizontal)
         
         if isActive == tag {
             UIView.performWithoutAnimation { 
@@ -231,19 +231,21 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
     func updateUIView(_ uiView: InternalView<AccessoryView>, context: Context) {
         
-        
-        
         uiView.owner = self
         
-        uiView.accView.subviews[0].removeFromSuperview()
+        // The SwiftUI view has been added as a
+        // subview to accessoryView. Resetting the rootview
+        // will update it using SwiftUI as source-of-truth
+        //
+        // If we do anything else here, we'll need to 
+        // make sure that the layout is still correct.
         uiView.vc.rootView = self.accessoryView
-        uiView.accView.addSubview(uiView.vc.view)
-        
-        uiView.accView.frame = CGRect(x: 0.0, y: 0.0, width: uiView.bounds.width, height: 44)
-        
-        print("Resetting...")
-        
-        //        uiView.resetAccessoryView()
+
+        // Without overriding the userInterfaceStyle,
+        // the input accessory view will lag behind (
+        // be light after switching to dark, and be dark
+        // after switching to light, etc.)
+        uiView.vc.overrideUserInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
         
         // The following are not called on main asynchronously,
         // there's an attribute cycle. See:
@@ -283,15 +285,9 @@ struct EditableRow : View
             self._isActive = isActive
         }
     
-    var body: some View {
-        Self._printChanges()
-        return body_internal
-        
-        //        Text(colorScheme == .light ? "light" : "dark")
-    }
+    @State var background: Color = Color(UIColor.systemFill)
     
-    @ViewBuilder
-    var body_internal: some View { 
+    var body: some View { 
         //        if !model.isSubmitted {
         KeyboardInput(
             model: $model,
@@ -299,14 +295,12 @@ struct EditableRow : View
             isActive: $isActive, {
                 Row(model: model)
             }) {
-                Text(String(randomLength: 3))
                 PaletteSetterView {
                     VStack {
                         Spacer()
                         HStack {
                             Spacer()
                             
-                            Text(colorScheme == .light ? "light" : "dark")
                             Tile(
                                 letter: "A", 
                                 delay: 0, 
@@ -315,22 +309,20 @@ struct EditableRow : View
                                 letter: "B", 
                                 delay: 0, 
                                 revealState: .wrongPlace)
+                            Tile(
+                                letter: "C", 
+                                delay: 0, 
+                                revealState: .none)
                             
                             Spacer()
                         } 
                         Spacer()
-                    }.background(Color(UIColor.systemFill))
-                }
+                    }
+                    .background(Color(UIColor.systemFill))
+                    }
                 
             }
-        //            .border( model.isSubmitted ? Color.clear : (self.tag == isActive ? Color.yellow : Color.purple) , width: 2 )
         
-        //        } else {
-        //            Row(model: model)
-        //        }
-        
-        //        Text(verbatim: "Active: \(self.isActive)")
-        //        Text(verbatim: "Tag: \(self.tag)")
     }
 }
 
