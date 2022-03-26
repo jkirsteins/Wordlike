@@ -15,6 +15,7 @@ struct Shake: GeometryEffect {
 
 struct Row: View {
     
+    var delayRowIx: Int
     var model: RowModel
     
     var body: some View {
@@ -25,14 +26,14 @@ struct Row: View {
                 ForEach(0..<5) { ix in
                     Tile(
                         letter: model.char(guessAt: ix), 
-                        delay: ix,
+                        delay: delayRowIx + ix,
                         revealState: model.revealState(ix))
                 }
             } else {
                 ForEach(0..<5) { ix in
                     Tile(
                         letter: model.char(guessAt: ix), 
-                        delay: ix,
+                        delay: delayRowIx + ix,
                         revealState: model.revealState(ix))
                 }
             }
@@ -67,7 +68,7 @@ fileprivate struct SubmittableRow_Preview: View
     
     var body: some View {
         VStack {
-            Row(model: model)
+            Row(delayRowIx: 0, model: model)
             Button("Submit") {
                 model = RowModel(
                     word: model.word,
@@ -87,7 +88,7 @@ fileprivate struct InvalidSubmittableRow_Preview: View
     
     var body: some View { 
         VStack {
-            Row(model: model)
+            Row(delayRowIx: 0, model: model)
             
             Button("Submit Invalid (\(model.attemptCount))") {
                 model = RowModel(
@@ -103,14 +104,22 @@ fileprivate struct InvalidSubmittableRow_Preview: View
 struct Row_Previews: PreviewProvider {
     static var previews: some View {
         return VStack {
-            Row(model: RowModel(
+            Row(delayRowIx: 0, model: RowModel(
                 word: "fuels",
                 expected: "fuels",
                 isSubmitted: true))
-            Row(model: RowModel(
+            Row(delayRowIx: 1, model: RowModel(
                 word: "fuels",
                 expected: "hales",
                 isSubmitted: true))
+            
+            VStack {
+                Row(delayRowIx: 2, model: RowModel(
+                    word: "aaxaa",
+                    expected: "ababa",
+                    isSubmitted: true))
+                Text("This should show green, yellow, black, black, green.")
+            }
             
             SubmittableRow_Preview()
             InvalidSubmittableRow_Preview()

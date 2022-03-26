@@ -10,22 +10,40 @@ class GameState : ObservableObject, Identifiable, Equatable
     
     var id = UUID()
     
+    @Published var initialized: Bool
+    
     @Published var expected: String
     @Published var rows: [RowModel]
-    //@Published var isActives: [Bool]
+    
+    var isWon: Bool {
+        rows.first(where: { $0.isSubmitted && $0.word == expected }) != nil
+    }
+    
+    var submittedRows: Int {
+        rows.filter({ $0.isSubmitted }).count
+    }
+    
+    var isExhausted: Bool {
+        rows.allSatisfy { $0.isSubmitted }
+    }
     
     var isCompleted: Bool {
-        rows.allSatisfy { $0.isSubmitted }
+        isWon || isExhausted 
     }
     
     convenience init(expected: String) {
         let rowModels = (0..<5).map { _ in 
             RowModel(word: "", expected: expected, isSubmitted: false)
         }
-        self.init(expected: expected, rows: rowModels)
+        self.init(initialized: true, expected: expected, rows: rowModels)
     }
     
-    init(expected: String, rows: [RowModel]) {
+    convenience init() {
+        self.init(initialized: false, expected: "", rows: [])
+    }
+    
+    init(initialized: Bool, expected: String, rows: [RowModel]) {
+        self.initialized = initialized
         self.expected = expected
         
         let maxIx = 5

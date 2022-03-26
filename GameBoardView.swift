@@ -21,18 +21,36 @@ struct GameBoardView: View {
     
 //    var onCompleteCallback: ((GameState)->())? = nil
     
-    func onCompleted(callback: @escaping (GameState)->()) -> some View {
+    func onStateChange(edited: @escaping ([RowModel])->(), completed: @escaping (GameState)->()) -> some View {
         var didRespond = false
         return self.onChange(of: self.state.rows) {
-            _ in 
+            newRows in 
+            
+            DispatchQueue.main.async {
+                edited(newRows)
+            }
 
             guard state.isCompleted, !didRespond else { 
                 return }
             didRespond = true
             
-            DispatchQueue.main.async {
-                callback(state)    
-            }  
+            Task {
+                // allow time to finish animating a single
+                // row
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                DispatchQueue.main.async {
+                    completed(state)    
+                }  
+            }
+        }.task {
+            if state.isCompleted {
+                // allow time to finish animating
+                // all rows that just appeared
+                try? await Task.sleep(nanoseconds: UInt64(state.submittedRows) * 500_000_000) 
+                DispatchQueue.main.async {
+                    completed(state)    
+                }
+            }
         }
 //        var copy = self
 //        copy.onCompleteCallback = callback
@@ -60,11 +78,13 @@ struct GameBoardView: View {
                 ForEach(0..<state.rows.count, id: \.self) {
                     ix in 
                     VStack { 
-                        
                         EditableRow(
-                            model: $state.rows[ix], 
-                            tag: ix,
-                            isActive: $isActive)
+                            editable: !state.isCompleted,
+                            delayRowIx: ix,
+                                model: $state.rows[ix], 
+                                tag: ix,
+                                isActive: $isActive)
+                        
                     }
                     
                 }
@@ -72,13 +92,13 @@ struct GameBoardView: View {
         }
         .onChange(of: state.id) {
             _ in
-            self.isActive = 0
+            recalculateActive()
         }
         .onTapGesture {
             recalculateActive()
         }
         .onAppear {
-            isActive = 0
+            recalculateActive()
         }
     }
 }

@@ -72,6 +72,12 @@ public struct DailyState : RawRepresentable
         Calendar.current.isDateInToday(self.date)
     }
     
+    init(expected: String, date: Date, rows: [RowModel] ) {
+        self.expected = expected
+        self.date = date 
+        self.rows = rows 
+    }
+    
     init(expected: String) {
 //        let expected = String(randomLength: 5)
         

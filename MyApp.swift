@@ -12,37 +12,45 @@ struct MyApp: App {
     @State var debugMessage: String = ""
     @State var count = 0
     
-    @StateObject var gameState: GameState = GameState(expected: "tests") 
+//    @StateObject var gameState: GameState = GameState(expected: "tests") 
     
     @StateObject var validator = WordValidator(name: "en")
     @State var testModel: RowModel = RowModel(expected: "fuels")
     @State var testIsActive: Int? = 0
     var body_test: some Scene {
         WindowGroup {
-            EditableRow(model: $testModel, tag: 0, isActive: $testIsActive)
+            EditableRow(delayRowIx: 0, model: $testModel, tag: 0, isActive: $testIsActive)
         }
     }
     
+    @StateObject var game: GameState = GameState()
+    
     @SceneBuilder
     var body: some Scene {
-        WindowGroup {
+        WindowGroup { 
             VStack {
-                
-                if dailyState != nil {
-                    GameBoardView(state: gameState)
-                    .onCompleted {
+                Text(verbatim: "\(validator.todayIndex) (\(validator.todayAnswer))")
+                if game.initialized {
+                    GameBoardView(state: game)
+                        .onStateChange(edited: { newRows in
+                            self.dailyState = DailyState(
+                                expected: dailyState!.expected,
+                                date: dailyState!.date,
+                                rows: newRows)
+                        }, completed: { 
                         _ in 
                         
                         finished = true
-                    }
+                    })
+//                    Text(gameState.expected)
                     Text(dailyState?.expected ?? "none")
-                    Text(String(describing: gameState.rows[0].revealState(0)))
+                    Text(dailyState?.rows[0].word ?? "none")
                     Text(self.debugMessage).id("message")
                     Text("\(self.count)").id("count")
-                }
+                } 
                 
                 if dailyState == nil {
-                    Text("Loading state...").onAppear {
+                    Text("Initializing state...").onAppear {
                         guard let dailyState = dailyState else {
                             dailyState = DailyState(expected: validator.todayAnswer)
                             return
@@ -51,26 +59,36 @@ struct MyApp: App {
                 }
             }
             .environmentObject(validator)
+            .onAppear {
+                if let newState = self.dailyState {
+                    game.expected = newState.expected
+                    game.rows = newState.rows
+                    game.id = UUID()
+                    game.initialized = true
+                } 
+            }
             .onChange(of: self.dailyState) {
                 newState in
                 
                 if let newState = newState {
-                    gameState.expected = newState.expected
-                    gameState.rows = newState.rows
-                    gameState.id = UUID()
+                    game.expected = newState.expected
+                    game.rows = newState.rows
+                    game.id = UUID()
+                    game.initialized = true
                 }
             }
             .onReceive(timer) { _ in
-                
+                return
                 
                 guard let dailyState = self.dailyState else {
                     return
                 }
                 
                 count += 1
-                debugMessage = "TTL: \(dailyState.remainingTtl) for word: \(dailyState.expected)"
+                debugMessage = "TTL: \(dailyState.remainingTtl) for word: \(dailyState.expected)" + "\nAGE: \(dailyState.age)"
                 
                 if dailyState.isStale {
+                    fatalError("nop")
                     // TODO: process daily results if needed
                     self.dailyState = DailyState(expected: validator.todayAnswer)
                 }

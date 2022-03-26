@@ -71,8 +71,8 @@ class WordValidator : ObservableObject
     }
     
     func canSubmit(word: String) -> Bool {
-        //guesses.contains(word)
-        true
+        guesses.contains(word)
+//        true
     }
     
     var todayAnswer: String {

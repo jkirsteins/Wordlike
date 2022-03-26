@@ -13,10 +13,10 @@ struct Tile: View {
     let delay: Int 
     let revealState: TileBackgroundType?
     
-    let halfDuration = 1.0 / 2.0
+    let halfDuration = 1.0 / 4.0
     
     @State var scaleSize = CGSize(width: 1.0, height: 1.0)
-    let pulseHalfDuration = 0.25 / 2.0
+    let pulseHalfDuration = 0.25 / 4.0
     
     var isEmpty: Bool {
         letter == nil || letter == ""
@@ -165,7 +165,7 @@ struct Tile_Previews: PreviewProvider {
                 }
             }
             
-            Row(model: RowModel(
+            Row(delayRowIx: 0, model: RowModel(
                 word: "fuels",
                 expected: "fuels",
                 isSubmitted: true))

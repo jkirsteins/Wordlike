@@ -8,13 +8,16 @@ struct KeyboardInput<Content: View, AccessoryView: View> : View
     let tag: Int
     let content: Content 
     let accessoryView: AccessoryView
+    let editable: Bool
     
     init(
+    editable: Bool,
 model: Binding<RowModel>, 
 tag: Int, 
 isActive: Binding<Int?>,
     @ViewBuilder _ content: ()->Content,
     @ViewBuilder _ accessoryView: ()->AccessoryView) {
+        self.editable = editable
         self._model = model
         self.tag = tag
         self._isActive = isActive
@@ -40,16 +43,19 @@ isActive: Binding<Int?>,
                     }
             })
             
+            if editable {
             KeyboardInputUIKit(
                 model: $model,
                 tag: self.tag,
                 isActive: $isActive,
                 accessoryView: accessoryView)
             
+            
             // If you set width/height, then it might prevent `content` from resizing
             // (e.g. it might not become narrow, if iPad window becomes smaller) 
                 .frame(maxWidth: contentSize.width, maxHeight: contentSize.height)
                 .border(self.isActive == self.tag ? .red : .green)
+            }
         }
         
     }
@@ -273,13 +279,35 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
 struct EditableRow : View
 {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
+    
+    var delayRowIx: Int
     @Binding var model: RowModel
+    
     let tag: Int
     @Binding var isActive: Int?
     
+    let editable: Bool
+    
     init(
+        editable: Bool,
+        delayRowIx: Int,
         model: Binding<RowModel>, 
-        tag: Int, isActive: Binding<Int?>) {
+        tag: Int, 
+        isActive: Binding<Int?>) {
+            self.editable = editable
+            self.delayRowIx = delayRowIx
+            self._model = model
+            self.tag = tag
+            self._isActive = isActive
+        }
+    
+    init(
+        delayRowIx: Int,
+        model: Binding<RowModel>, 
+        tag: Int, 
+        isActive: Binding<Int?>) {
+            self.editable = true
+            self.delayRowIx = delayRowIx
             self._model = model
             self.tag = tag
             self._isActive = isActive
@@ -288,12 +316,13 @@ struct EditableRow : View
     @State var background: Color = Color(UIColor.systemFill)
     
     var body: some View { 
-        //        if !model.isSubmitted {
+        
         KeyboardInput(
+            editable: editable,
             model: $model,
             tag: self.tag,
             isActive: $isActive, {
-                Row(model: model)
+                Row(delayRowIx: delayRowIx, model: model)
             }) {
                 PaletteSetterView {
                     VStack {
@@ -335,11 +364,13 @@ struct EditableRow_ForPreview : View {
     var body: some View {
         VStack {
             EditableRow(
+                delayRowIx: 0,
                 model: $model1,
                 tag: 0,
                 isActive: $isActive)
             
             EditableRow(
+                delayRowIx: 1,
                 model: $model2,
                 tag: 1,
                 isActive: $isActive)
