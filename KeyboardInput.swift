@@ -23,7 +23,7 @@ isActive: Binding<Int?>,
     }
     
     @State var contentSize: CGSize = CGSize.zero
-    
+    @State var testUuid: Date = Date()
     var body: some View {
         
         ZStack {
@@ -31,9 +31,13 @@ isActive: Binding<Int?>,
             content.background(GeometryReader {
                 proxy in 
                 
-                Color.clear.onAppear {
-                    contentSize = proxy.size
-                }
+                Color.clear
+                    .onAppear {
+                        contentSize = proxy.size
+                    }
+                    .onChange(of: proxy.size) { newSize in
+                        contentSize = newSize
+                    }
             })
             
             KeyboardInputUIKit(
@@ -41,9 +45,13 @@ isActive: Binding<Int?>,
                 tag: self.tag,
                 isActive: $isActive,
                 accessoryView: accessoryView)
-                .frame(width: contentSize.width, height: contentSize.height)
+            
+            // If you set width/height, then it might prevent `content` from resizing
+            // (e.g. it might not become narrow, if iPad window becomes smaller) 
+                .frame(maxWidth: contentSize.width, maxHeight: contentSize.height)
                 .border(self.isActive == self.tag ? .red : .green)
         }
+        
     }
 }
 
@@ -53,19 +61,19 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
     class InternalView<AccessoryView: View>: UIControl, UIKeyInput
     {
-//        var model: RowModel
-//        let focusTag: Int
-//        var isActive: Int?
+        //        var model: RowModel
+        //        let focusTag: Int
+        //        var isActive: Int?
         
-//        var accessoryView: AccessoryView
+        //        var accessoryView: AccessoryView
         
         var owner: KeyboardInputUIKit<AccessoryView>
         
         init(owner: KeyboardInputUIKit<AccessoryView>) {
             self.owner = owner
-//            self.focusTag = tag
-//            self.isActive = isActive
-//            self.accessoryView = accessoryView
+            //            self.focusTag = tag
+            //            self.isActive = isActive
+            //            self.accessoryView = accessoryView
             self.vc = UIHostingController(rootView: self.owner.accessoryView)
             
             self.accView = UIView()
@@ -136,10 +144,10 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         }
         
         @objc private func onTap(_: AnyObject) {
-//            fatalError("onTap")
-//            UIView.performWithoutAnimation { 
-//                _ = self.becomeFirstResponder()
-//            }
+            //            fatalError("onTap")
+            //            UIView.performWithoutAnimation { 
+            //                _ = self.becomeFirstResponder()
+            //            }
         }
         
         var hasText: Bool {
@@ -235,7 +243,7 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         
         print("Resetting...")
         
-//        uiView.resetAccessoryView()
+        //        uiView.resetAccessoryView()
         
         // The following are not called on main asynchronously,
         // there's an attribute cycle. See:
@@ -270,16 +278,16 @@ struct EditableRow : View
     init(
         model: Binding<RowModel>, 
         tag: Int, isActive: Binding<Int?>) {
-        self._model = model
-        self.tag = tag
-        self._isActive = isActive
-    }
+            self._model = model
+            self.tag = tag
+            self._isActive = isActive
+        }
     
     var body: some View {
         Self._printChanges()
         return body_internal
         
-//        Text(colorScheme == .light ? "light" : "dark")
+        //        Text(colorScheme == .light ? "light" : "dark")
     }
     
     @ViewBuilder
@@ -315,7 +323,7 @@ struct EditableRow : View
                 }
                 
             }
-//            .border( model.isSubmitted ? Color.clear : (self.tag == isActive ? Color.yellow : Color.purple) , width: 2 )
+        //            .border( model.isSubmitted ? Color.clear : (self.tag == isActive ? Color.yellow : Color.purple) , width: 2 )
         
         //        } else {
         //            Row(model: model)

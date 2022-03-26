@@ -57,12 +57,6 @@ struct GameBoardView: View {
         
         return PaletteSetterView {
             VStack {
-                Text(state.id.uuidString)
-                Text(state.rows[0].id)
-                    .onChange(of: state.rows[0]) {
-                        _ in print("rowc")
-                    }
-                
                 ForEach(0..<state.rows.count, id: \.self) {
                     ix in 
                     VStack { 
@@ -76,7 +70,6 @@ struct GameBoardView: View {
                 }
             }
         }
-        // should be on 'state' 
         .onChange(of: state.id) {
             _ in
             self.isActive = 0

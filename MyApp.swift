@@ -15,7 +15,15 @@ struct MyApp: App {
     @StateObject var gameState: GameState = GameState(expected: "tests") 
     
     @StateObject var validator = WordValidator(name: "en")
+    @State var testModel: RowModel = RowModel(expected: "fuels")
+    @State var testIsActive: Int? = 0
+    var body_test: some Scene {
+        WindowGroup {
+            EditableRow(model: $testModel, tag: 0, isActive: $testIsActive)
+        }
+    }
     
+    @SceneBuilder
     var body: some Scene {
         WindowGroup {
             VStack {
