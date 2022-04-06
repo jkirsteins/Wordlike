@@ -30,7 +30,7 @@ struct MyApp: App {
         WindowGroup { 
             VStack {
                 Text(verbatim: "\(validator.todayIndex) (\(validator.todayAnswer))")
-                if game.initialized {
+                if game.initialized && dailyState?.isFresh == true {
                     GameBoardView(state: game)
                         .onStateChange(edited: { newRows in
                             self.dailyState = DailyState(
@@ -48,6 +48,10 @@ struct MyApp: App {
                     Text(self.debugMessage).id("message")
                     Text("\(self.count)").id("count")
                 } 
+                
+                if dailyState?.isStale == true {
+                    Text("Rummaging in the sack for a new word...")
+                }
                 
                 if dailyState == nil {
                     Text("Initializing state...").onAppear {

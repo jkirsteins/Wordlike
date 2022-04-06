@@ -55,9 +55,27 @@ fileprivate struct WidthKey: PreferenceKey {
 struct StatsView: View {
     let stats: Stats 
     
+    // For sizing the horizontal stats bars
     @State var maxBarWidth: CGFloat = 0
     
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
     @Environment(\.palette) var palette: Palette
+    
+    @State var nextWordIn: String = "..."
+    
+    func recalculateNextWord() {
+        let remaining = Date().secondsUntilTheNextDay
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.unitsStyle = .positional
+        formatter.zeroFormattingBehavior = .pad
+        guard let formatted = formatter.string(from: TimeInterval(remaining)) else {
+            nextWordIn = "?"
+            return
+        }
+        nextWordIn = formatted
+    }
     
     var body: some View {
         VStack(spacing: 24) {
@@ -130,8 +148,17 @@ struct StatsView: View {
                     VStack {
                         Text("Next word")
                             .font(Font.system(.title).smallCaps())
-                        Text("00:00:00")
+                        Text(nextWordIn)
                             .font(.largeTitle)
+                            .onReceive(timer) {
+                                _ in 
+                                
+                                self.recalculateNextWord()
+                            }
+                            .onAppear {
+                                recalculateNextWord()
+                            } 
+                        
                     }
                     
                     Divider().frame(maxHeight: 88)
