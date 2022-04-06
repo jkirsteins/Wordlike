@@ -69,7 +69,7 @@ struct MyApp: App {
                 .environmentObject(validator)
                 .onAppear {
                     if let newState = self.dailyState {
-                        game.expected = newState.expected
+                        game.expected = DayWord(word: newState.expected, day: validator.todayIndex)
                         game.rows = newState.rows
                         game.id = UUID()
                         game.initialized = true
@@ -79,7 +79,7 @@ struct MyApp: App {
                     newState in
                     
                     if let newState = newState {
-                        game.expected = newState.expected
+                        game.expected = DayWord(word: newState.expected, day: validator.todayIndex)
                         game.rows = newState.rows
                         game.id = UUID()
                         game.initialized = true
@@ -100,7 +100,7 @@ struct MyApp: App {
                     }
                 }
                 .sheet(isPresented: $finished) {
-                    StatsView(stats: stats)
+                    StatsView(stats: stats, state: game)
                 }
                 .navigationTitle("hello")
                 .toolbar {

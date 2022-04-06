@@ -1,5 +1,11 @@
 import SwiftUI
 
+struct DayWord
+{
+    let word: String
+    let day: Int
+}
+
 class GameState : ObservableObject, Identifiable, Equatable
 {
     static func == (lhs: GameState, rhs: GameState) -> Bool {
@@ -11,12 +17,11 @@ class GameState : ObservableObject, Identifiable, Equatable
     var id = UUID()
     
     @Published var initialized: Bool
-    
-    @Published var expected: String
+    @Published var expected: DayWord
     @Published var rows: [RowModel]
     
     var isWon: Bool {
-        rows.first(where: { $0.isSubmitted && $0.word == expected }) != nil
+        rows.first(where: { $0.isSubmitted && $0.word == expected.word }) != nil
     }
     
     var submittedRows: Int {
@@ -31,18 +36,18 @@ class GameState : ObservableObject, Identifiable, Equatable
         isWon || isExhausted 
     }
     
-    convenience init(expected: String) {
+    convenience init(expected: DayWord) {
         let rowModels = (0..<5).map { _ in 
-            RowModel(word: "", expected: expected, isSubmitted: false)
+            RowModel(word: "", expected: expected.word, isSubmitted: false)
         }
         self.init(initialized: true, expected: expected, rows: rowModels)
     }
     
     convenience init() {
-        self.init(initialized: false, expected: "", rows: [])
+        self.init(initialized: false, expected: DayWord(word: "", day: 0), rows: [])
     }
     
-    init(initialized: Bool, expected: String, rows: [RowModel]) {
+    init(initialized: Bool, expected: DayWord, rows: [RowModel]) {
         self.initialized = initialized
         self.expected = expected
         

@@ -105,13 +105,13 @@ struct GameBoardView: View {
 
 fileprivate struct InternalPreview: View 
 {
-    @State var state = GameState(expected: "board")
+    @State var state = GameState(expected: DayWord(word: "board", day: 1))
     
     var body: some View {
         VStack {
             GameBoardView(state: state)
             Button("Reset") {
-                self.state = GameState(expected: "fuels")
+                self.state = GameState(expected: DayWord(word: "fuels", day: 1))
             }
         }
     }

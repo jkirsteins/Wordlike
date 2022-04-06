@@ -27,6 +27,7 @@ fileprivate struct WidthKey: PreferenceKey {
 
 struct StatsView: View {
     let stats: Stats 
+    let state: GameState
     
     // For sizing the horizontal stats bars
     @State var maxBarWidth: CGFloat = 0
@@ -40,7 +41,7 @@ struct StatsView: View {
     
     // Share sheet
     @State var isSharing: Bool = false
-    @State var shareItems: [Any] = ["abc"]
+    @State var shareItems: [Any] = []
     
     func recalculateNextWord() {
         let remaining = Date().secondsUntilTheNextDay
@@ -181,11 +182,22 @@ struct StatsView: View {
                 } content: {
             ActivityViewController(activityItems: $shareItems)
             }
+        }.onAppear {
+            self.shareItems = [self.state.shareSnippet]
         }
     }
 }
 
 struct StatsView_Previews: PreviewProvider {
+    static let state = GameState(
+        initialized: true, 
+        expected: DayWord(word: "fuels", day: 2), 
+        rows: [
+            RowModel(word: "clear", expected: "fuels", isSubmitted: true),
+            RowModel(word: "duels", expected: "fuels", isSubmitted: true),
+            RowModel(word: "fuels", expected: "fuels", isSubmitted: true)
+        ])
+    
     static var previews: some View {
         PaletteSetterView {
             StatsView(stats: Stats(
@@ -200,7 +212,7 @@ struct StatsView_Previews: PreviewProvider {
                     24,
                     11,
                     6
-                ]))
+                ]), state: state)
         }
         
         PaletteSetterView {
@@ -216,7 +228,7 @@ struct StatsView_Previews: PreviewProvider {
                     0,
                     0,
                     0
-                ]))
+                ]), state: state)
         }
         
         PaletteSetterView {
@@ -232,7 +244,7 @@ struct StatsView_Previews: PreviewProvider {
                     0,
                     0,
                     0
-                ]))
+                ]), state: state)
         }
     }
 }
