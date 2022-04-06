@@ -135,7 +135,7 @@ struct StatsView: View {
                     }.padding(24)
                     
                 HStack(spacing: 16) {
-                    VStack {
+                    VStack() {
                         Text("Next word")
                             .font(Font.system(.title).smallCaps())
                         Text(nextWordIn)
@@ -147,9 +147,8 @@ struct StatsView: View {
                             }
                             .onAppear {
                                 recalculateNextWord()
-                            } 
-                        
-                    }
+                            }
+                    }.frame(minWidth: 150)
                     
                     Divider().frame(maxHeight: 88)
                     
