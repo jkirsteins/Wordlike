@@ -35,7 +35,12 @@ struct StatsView: View {
     
     @Environment(\.palette) var palette: Palette
     
+    // Timer sets this to hh:mm:ss until next word
     @State var nextWordIn: String = "..."
+    
+    // Share sheet
+    @State var isSharing: Bool = false
+    @State var shareItems: [Any] = ["abc"]
     
     func recalculateNextWord() {
         let remaining = Date().secondsUntilTheNextDay
@@ -153,7 +158,7 @@ struct StatsView: View {
                     Divider().frame(maxHeight: 88)
                     
                     Button(action: {
-                        print("sharing...")
+                        self.isSharing.toggle()
                     }, label: {
                         HStack {
                             Text("Share")
@@ -169,6 +174,12 @@ struct StatsView: View {
             .onPreferenceChange(WidthKey.self) {
                 newWidth in 
                 self.maxBarWidth = newWidth
+            } 
+            .sheetWithDetents(
+                isPresented: $isSharing,
+                detents: [.medium(),.large()]) { 
+                } content: {
+            ActivityViewController(activityItems: $shareItems)
             }
         }
     }
