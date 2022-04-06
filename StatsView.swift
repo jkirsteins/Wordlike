@@ -1,37 +1,10 @@
 import SwiftUI
 
-struct Stats {
-    let played: Int 
-    let won: Int
-    let maxStreak: Int 
-    let streak: Int 
-    let guessDistribution: [Int]
-    
-    func widthRatio(row: Int) -> CGFloat {
-        let maxInt: Int = guessDistribution.max() ?? 0
-        let max = CGFloat(maxInt) 
-        guard max > 0 else { return 1.0 }
-        
-        return CGFloat(guessDistribution[row]) / max
-    }
-    
-    var maxRow: Int {
-        let maxVal = guessDistribution.max()
-        for ix in 0..<guessDistribution.count {
-            if guessDistribution[ix] == maxVal {
-                return ix
-            }
-        }
-        
-        return 0
-    }
-}
-
 struct ShareButtonStyle: ButtonStyle {
     
     let backgroundColor: Color
-//    let foregroundColor: Color
-//    let isDisabled: Bool
+    //    let foregroundColor: Color
+    //    let isDisabled: Bool
     
     func makeBody(configuration: Self.Configuration) -> some View {
         
@@ -91,7 +64,11 @@ struct StatsView: View {
                             .frame(maxWidth: 50)
                     }
                     VStack {
+                        if stats.played == 0 {
+                            Text("-").font(.largeTitle)
+                        } else {
                         Text("\(Double(stats.won) / Double(stats.played) * 100, specifier: "%.0f")").font(.largeTitle)
+                        }
                         Text("Win %")
                             .font(.caption)
                             .frame(maxWidth: 50)
@@ -115,35 +92,48 @@ struct StatsView: View {
                 Text("Guess Distribution")
                     .font(Font.system(.title).smallCaps())
                 
-                VStack(alignment: .leading, spacing: 4) {
-                ForEach(0..<6) { rowIx in 
-                    HStack(alignment: .top) {
-                        Text("\(rowIx + 1)")
-                            .padding(2)
-                            .frame(width: 16)
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(palette.maskedTextColor)
-                        HStack {
-                            Spacer() 
-                            Text("\(stats.guessDistribution[rowIx])")
-                                .foregroundColor(Color.white)
-                                .fontWeight(.bold)
-                                .font(.body)
-                                .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 4)) 
-                        }.background(
-                            GeometryReader { proxy in
-                                (rowIx == stats.maxRow ? palette.rightPlaceFill : palette.wrongLetterFill).preference(
-                                    key: WidthKey.self, 
-                                    value: proxy.size.width)
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        ForEach(0..<6) { rowIx in 
+                            HStack(alignment: .top) {
+                                Text("\(rowIx + 1)")
+                                    .padding(2)
+                                    .frame(width: 16)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(palette.maskedTextColor)
+                                HStack {
+                                    Spacer() 
+                                    Text("\(stats.guessDistribution[rowIx])")
+                                        .foregroundColor(Color.white)
+                                        .fontWeight(.bold)
+                                        .font(.body)
+                                        .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 4)) 
+                                }.background(
+                                    GeometryReader { proxy in
+                                        (rowIx == stats.maxRow ? palette.rightPlaceFill : palette.wrongLetterFill).preference(
+                                            key: WidthKey.self, 
+                                            value: proxy.size.width)
+                                    }
+                                )
+                                    .frame(maxWidth: 
+                                            
+                                            stats.guessDistribution.contains(where: { $0 > 0 }) ? 
+                                            
+                                            (rowIx == stats.maxRow ? .infinity :  max(24, 
+                                                                                               stats.widthRatio(row: rowIx) * maxBarWidth))
+                                           
+                                           : 40
+                                    
+                                    )
+                                //.frame(maxWidth: stats.widthRatio(row: rowIx) * maxBarWidth)
                             }
-                        )
-                            .frame(maxWidth: (rowIx == stats.maxRow ? .infinity :  max(20, 
-                                                                                       stats.widthRatio(row: rowIx) * maxBarWidth)))
-                        //.frame(maxWidth: stats.widthRatio(row: rowIx) * maxBarWidth)
+                        }
                     }
-                }
-                }.padding(24)
-                
+                    if !stats.guessDistribution.contains(where: { $0 > 0 }) {
+                        Spacer()
+                    }
+                    }.padding(24)
+                    
                 HStack(spacing: 16) {
                     VStack {
                         Text("Next word")
@@ -167,9 +157,9 @@ struct StatsView: View {
                         print("sharing...")
                     }, label: {
                         HStack {
-                        Text("Share")
-                            .font(Font.system(.body).smallCaps())
-                            .fontWeight(.bold)
+                            Text("Share")
+                                .font(Font.system(.body).smallCaps())
+                                .fontWeight(.bold)
                             
                             Image(systemName: "square.and.arrow.up")
                         }
@@ -188,19 +178,51 @@ struct StatsView: View {
 struct StatsView_Previews: PreviewProvider {
     static var previews: some View {
         PaletteSetterView {
-        StatsView(stats: Stats(
-            played: 63, 
-            won: 61,
-            maxStreak: 27,
-            streak: 4,
-            guessDistribution: [
-                1, 
-                3,
-                16,
-                24,
-                11,
-                6
-            ]))
+            StatsView(stats: Stats(
+                played: 63, 
+                won: 61,
+                maxStreak: 27,
+                streak: 4,
+                guessDistribution: [
+                    1, 
+                    3,
+                    16,
+                    24,
+                    11,
+                    6
+                ]))
+        }
+        
+        PaletteSetterView {
+            StatsView(stats: Stats(
+                played: 0, 
+                won: 0,
+                maxStreak: 0,
+                streak: 0,
+                guessDistribution: [
+                    0, 
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]))
+        }
+        
+        PaletteSetterView {
+            StatsView(stats: Stats(
+                played: 1, 
+                won: 1,
+                maxStreak: 1,
+                streak: 1,
+                guessDistribution: [
+                    1, 
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]))
         }
     }
 }
