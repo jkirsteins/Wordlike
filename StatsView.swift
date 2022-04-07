@@ -116,7 +116,7 @@ struct StatsView: View {
                                         .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 4)) 
                                 }.background(
                                     GeometryReader { proxy in
-                                        (rowIx == stats.maxRow ? palette.rightPlaceFill : palette.wrongLetterFill).preference(
+                                        (state.isCompleted && (rowIx+1) == state.submittedRows ? palette.rightPlaceFill : palette.wrongLetterFill).preference(
                                             key: WidthKey.self, 
                                             value: proxy.size.width)
                                     }
@@ -140,6 +140,7 @@ struct StatsView: View {
                     }
                     }.padding(24)
                     
+                if state.isCompleted {
                 HStack(spacing: 16) {
                     VStack() {
                         Text("Next word")
@@ -169,6 +170,7 @@ struct StatsView: View {
                             Image(systemName: "square.and.arrow.up")
                         }
                     }) .buttonStyle(ShareButtonStyle(backgroundColor: palette.rightPlaceFill))
+                }
                 }
                 
             }
@@ -217,6 +219,22 @@ struct StatsView_Previews: PreviewProvider {
         
         PaletteSetterView {
             StatsView(stats: Stats(
+                played: 63, 
+                won: 61,
+                maxStreak: 27,
+                streak: 4,
+                guessDistribution: [
+                    1, 
+                    3,
+                    16,
+                    24,
+                    11,
+                    6
+                ]), state: GameState(expected: DayWord(word: "fuels", day: 1)))
+        }
+        
+        PaletteSetterView {
+            StatsView(stats: Stats(
                 played: 0, 
                 won: 0,
                 maxStreak: 0,
@@ -228,7 +246,7 @@ struct StatsView_Previews: PreviewProvider {
                     0,
                     0,
                     0
-                ]), state: state)
+                ]), state: GameState(expected: DayWord(word: "fuels", day: 1)))
         }
         
         PaletteSetterView {
@@ -238,9 +256,9 @@ struct StatsView_Previews: PreviewProvider {
                 maxStreak: 1,
                 streak: 1,
                 guessDistribution: [
-                    1, 
+                    0, 
                     0,
-                    0,
+                    1,
                     0,
                     0,
                     0
