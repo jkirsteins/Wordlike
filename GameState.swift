@@ -8,6 +8,8 @@ struct DayWord
 
 class GameState : ObservableObject, Identifiable, Equatable
 {
+    static let MAX_ROWS = 6
+    
     static func == (lhs: GameState, rhs: GameState) -> Bool {
         return
         lhs.isCompleted == rhs.isCompleted &&
@@ -37,7 +39,7 @@ class GameState : ObservableObject, Identifiable, Equatable
     }
     
     convenience init(expected: DayWord) {
-        let rowModels = (0..<5).map { _ in 
+        let rowModels = (0..<Self.MAX_ROWS).map { _ in 
             RowModel(word: "", expected: expected.word, isSubmitted: false)
         }
         self.init(initialized: true, expected: expected, rows: rowModels)
@@ -51,11 +53,10 @@ class GameState : ObservableObject, Identifiable, Equatable
         self.initialized = initialized
         self.expected = expected
         
-        let maxIx = 5
 //        let rowModels = (0..<maxIx).map { _ in 
 //            RowModel(word: "", expected: expected, isSubmitted: false)
 //        }
-        let isActives = (0..<maxIx).map { _ in
+        let isActives = (0..<Self.MAX_ROWS).map { _ in
             false
         }
         self._rows = Published(wrappedValue: rows)

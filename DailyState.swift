@@ -83,7 +83,7 @@ public struct DailyState : RawRepresentable
         
         self.date = Date()
         self.expected = expected
-        self.rows = (0..<5).map {
+        self.rows = (0..<GameState.MAX_ROWS).map {
             _ in RowModel(expected: expected)
         }
     }

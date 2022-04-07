@@ -42,16 +42,46 @@ struct MyApp: App {
                                     date: dailyState!.date,
                                     rows: newRows)
                             }, completed: { 
-                                _ in 
+                                state in
+                                
+                                let newStreak = (state.isWon ? stats.streak + 1 : 0)
+                                
+                                var newDistribution: [Int] = (0..<6).map {
+                                    ix in 
+                                    
+                                    var result: Int 
+                                    
+                                    if stats.guessDistribution.count > ix {
+                                        result = stats.guessDistribution[ix]
+                                    } else {
+                                        result = 0
+                                    }
+                                    
+                                    if (ix + 1) == state.submittedRows {
+                                        result += 1
+                                    }
+                                    
+                                    return result
+                                }
+                                
+                                // TODO: do this on timeout  
+                                // TODO: don't repeat for same day
+                                stats = Stats(
+                                    played: stats.played + 1, 
+                                    won: stats.won + (state.isWon ? 1 : 0), 
+                                    maxStreak: (state.isWon ? max(newStreak, stats.maxStreak) : 0), 
+                                    streak: newStreak, 
+                                    guessDistribution: newDistribution)
                                 
                                 finished = true
                             })
-                        //                    Text(gameState.expected)
+                        Text(verbatim: "\(game.submittedRows)")
                         Text(dailyState?.expected ?? "none")
                         Text(dailyState?.rows[0].word ?? "none")
                         Text(self.debugMessage).id("message")
                         Text("\(self.count)").id("count")
                     } 
+                        
                     
                     if dailyState?.isStale == true {
                         Text("Rummaging in the sack for a new word...")
