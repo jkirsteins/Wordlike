@@ -54,7 +54,7 @@ public struct DailyState : RawRepresentable
     
     // might be unknown. Convenience debugging prop
     var remainingTtl: TimeInterval? {
-        Date().secondsUntilTheNextDay
+        Date().secondsUntilTheNextDay(in: Calendar.current)
 //        10 - age
     }
     

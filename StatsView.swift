@@ -44,7 +44,8 @@ struct StatsView: View {
     @State var shareItems: [Any] = []
     
     func recalculateNextWord() {
-        let remaining = Date().secondsUntilTheNextDay
+        let remaining = Date().secondsUntilTheNextDay(
+            in: Calendar.current)
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute, .second]
         formatter.unitsStyle = .positional
