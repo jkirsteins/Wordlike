@@ -17,6 +17,10 @@ struct MyApp: App {
     
     //    @StateObject var gameState: GameState = GameState(expected: "tests") 
     
+    let paceSetter = BucketPaceSetter(
+        start: WordValidator.MAR_22_2022, 
+        bucket: 10)
+    
     @StateObject var validator = WordValidator(name: "en")
     @State var testModel: RowModel = RowModel(expected: "fuels")
     @State var testIsActive: Int? = 0
@@ -27,6 +31,14 @@ struct MyApp: App {
     }
     
     @StateObject var game: GameState = GameState()
+    
+    func updateFromLoadedState(_ newState: DailyState) {
+        game.expected = DayWord(word: newState.expected, day: validator.todayIndex)
+        game.rows = newState.rows
+        game.isTallied = newState.isTallied
+        game.id = UUID()
+        game.initialized = true
+    }
     
     @SceneBuilder
     var body: some Scene {
@@ -99,20 +111,14 @@ struct MyApp: App {
                 .environmentObject(validator)
                 .onAppear {
                     if let newState = self.dailyState {
-                        game.expected = DayWord(word: newState.expected, day: validator.todayIndex)
-                        game.rows = newState.rows
-                        game.id = UUID()
-                        game.initialized = true
+                        updateFromLoadedState(newState)
                     } 
                 }
                 .onChange(of: self.dailyState) {
                     newState in
                     
                     if let newState = newState {
-                        game.expected = DayWord(word: newState.expected, day: validator.todayIndex)
-                        game.rows = newState.rows
-                        game.id = UUID()
-                        game.initialized = true
+                        updateFromLoadedState(newState)
                     }
                 }
                 .onReceive(timer) { _ in

@@ -66,7 +66,8 @@ struct ShareSnippet: View {
             rows: 
                 guesses.map { w in
                      RowModel(word: w, expected: expected, isSubmitted: true)
-                 } 
+                 },
+            isTallied: false
             )
         return Text(state.shareSnippet)
     }

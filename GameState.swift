@@ -11,14 +11,14 @@ class GameState : ObservableObject, Identifiable, Equatable
     static let MAX_ROWS = 6
     
     static func == (lhs: GameState, rhs: GameState) -> Bool {
-        return
-        lhs.isCompleted == rhs.isCompleted &&
+        return lhs.isCompleted == rhs.isCompleted &&
         lhs.rows == rhs.rows
     }
     
     var id = UUID()
     
     @Published var initialized: Bool
+    @Published var isTallied: Bool
     @Published var expected: DayWord
     @Published var rows: [RowModel]
     
@@ -42,24 +42,20 @@ class GameState : ObservableObject, Identifiable, Equatable
         let rowModels = (0..<Self.MAX_ROWS).map { _ in 
             RowModel(word: "", expected: expected.word, isSubmitted: false)
         }
-        self.init(initialized: true, expected: expected, rows: rowModels)
+        self.init(initialized: true, expected: expected, rows: rowModels, isTallied: false)
     }
     
     convenience init() {
-        self.init(initialized: false, expected: DayWord(word: "", day: 0), rows: [])
+        self.init(initialized: false, expected: DayWord(word: "", day: 0), rows: [], isTallied: false)
     }
     
-    init(initialized: Bool, expected: DayWord, rows: [RowModel]) {
+    init(initialized: Bool, expected: DayWord, rows: [RowModel], isTallied: Bool) {
         self.initialized = initialized
         self.expected = expected
-        
-//        let rowModels = (0..<maxIx).map { _ in 
-//            RowModel(word: "", expected: expected, isSubmitted: false)
-//        }
+        self.isTallied = isTallied
         let isActives = (0..<Self.MAX_ROWS).map { _ in
             false
         }
         self._rows = Published(wrappedValue: rows)
-        //self._isActives = Published(wrappedValue: isActives)
     }
 }

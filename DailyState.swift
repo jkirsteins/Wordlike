@@ -21,6 +21,7 @@ extension DailyState : Codable, Equatable
         case expected
         case date
         case rows
+        case isTallied
     }
     
     public init(from decoder: Decoder) throws {
@@ -28,6 +29,7 @@ extension DailyState : Codable, Equatable
         expected = try values.decode(String.self, forKey: .expected)
         date = try values.decode(Date.self, forKey: .date)
         rows = try values.decode([RowModel].self, forKey: .rows)
+        isTallied = (try? values.decode(Bool.self, forKey: .isTallied)) ?? false
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -35,48 +37,39 @@ extension DailyState : Codable, Equatable
         try container.encode(expected, forKey: .expected)
         try container.encode(date, forKey: .date)
         try container.encode(rows, forKey: .rows)
+        try container.encode(isTallied, forKey: .isTallied)
     }
 } 
 
 public struct DailyState : RawRepresentable
 {
+    /// Expected word
     let expected: String
+    
+    /// When was this state created?
     let date: Date
+    
+    /// If state is tallied, it has been added to
+    /// the player's statistics, and should not
+    /// be considered again.
+    let isTallied: Bool 
+    
     let rows: [RowModel]
     
-    var isStale: Bool {
-        !isFresh
-    }
-    
-    var age: TimeInterval {
-        Date().timeIntervalSince(date)
-    }
-    
-    // might be unknown. Convenience debugging prop
-    var remainingTtl: TimeInterval? {
-        Date().secondsUntilTheNextDay(in: Calendar.current)
-//        10 - age
-    }
-    
-    var isFresh: Bool {
-//        (remainingTtl ?? -1) > 0
-        Calendar.current.isDateInToday(self.date)
-    }
-    
-    init(expected: String, date: Date, rows: [RowModel] ) {
+    init(expected: String, date: Date, rows: [RowModel], isTallied: Bool) {
         self.expected = expected
         self.date = date 
         self.rows = rows 
+        self.isTallied = isTallied
     }
     
     init(expected: String) {
-//        let expected = String(randomLength: 5)
-        
         self.date = Date()
         self.expected = expected
         self.rows = (0..<GameState.MAX_ROWS).map {
             _ in RowModel(expected: expected)
         }
+        self.isTallied = false
     }
     
     public init?(rawValue: String)

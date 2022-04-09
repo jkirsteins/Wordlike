@@ -1,5 +1,11 @@
 import SwiftUI
 
+/// Protocol for determining when a turn begins/ends,
+/// and if subsequent periods can form a streak or not.
+///
+/// An implementation can be interval-based (e.g. 10 
+/// seconds - useful for debugging, to test with 
+/// short turns) or day-based (the actual game behaviour)
 protocol PaceSetter
 {
     /// Remaining time before next period
@@ -9,7 +15,7 @@ protocol PaceSetter
     func point(_ first: Date, isInPrecedingPeriodFrom second: Date) -> Bool
     
     /// Is current period still fresh relative to given time
-    func isFresh(at now: Date) -> Bool 
+    func isFresh(_ stateRef: Date, at now: Date) -> Bool 
 }
 
 extension Calendar {
@@ -22,6 +28,44 @@ extension Calendar {
         calendar.timeZone = TimeZone(secondsFromGMT: h * 3600)!
         return calendar
     }
+}
+
+extension Stats {
+    func update(from game: GameState, with: PaceSetter) -> Stats {
+        
+        guard !game.isTallied else {
+            return self 
+        }
+        
+        let streakablePeriods = false
+        
+        let newStreak = (streakablePeriods && game.isWon ? self.streak + 1 : 0)
+        
+        let newDistribution: [Int] = (0..<GameState.MAX_ROWS).map {
+            ix in 
+            
+            var result: Int 
+            
+            if self.guessDistribution.count > ix {
+                result = self.guessDistribution[ix]
+            } else {
+                result = 0
+            }
+            
+            if (ix + 1) == game.submittedRows {
+                result += 1
+            }
+            
+            return result
+        }
+        
+        return Stats(
+            played: self.played + 1, 
+            won: self.won + (game.isWon ? 1 : 0), 
+            maxStreak: (game.isWon ? max(newStreak, self.maxStreak) : 0),  
+            streak: newStreak, 
+            guessDistribution: newDistribution)
+    } 
 }
 
 extension Date {
@@ -44,15 +88,15 @@ class CalendarDailyPaceSetter : PaceSetter
     let cal: Calendar
     let wrapped: DailyPaceSetter
     
-    init(start: Date, stateRef: Date, cal: Calendar)
+    init(start: Date, cal: Calendar)
     {
         self.cal = cal 
-        self.wrapped = DailyPaceSetter(start: start, stateRef: stateRef)
+        self.wrapped = DailyPaceSetter(start: start)
     }
     
     static func current(start: Date, stateRef: Date) -> PaceSetter
     {
-        return CalendarDailyPaceSetter(start: start, stateRef: stateRef, cal: Calendar.current)
+        return CalendarDailyPaceSetter(start: start, cal: Calendar.current)
     }
     
     func remainingTtl(at now: Date) -> TimeInterval
@@ -65,9 +109,9 @@ class CalendarDailyPaceSetter : PaceSetter
         self.wrapped.point(first, isInPrecedingPeriodFrom: second, using: cal)
     }
     
-    func isFresh(at now: Date) -> Bool
+    func isFresh(_ stateRef: Date, at now: Date) -> Bool
     {
-        self.wrapped.isFresh(at: now, in: cal)
+        self.wrapped.isFresh(stateRef, at: now, in: cal)
     }
 }
 
@@ -76,12 +120,8 @@ class DailyPaceSetter
     // global start of the game
     let start: Date
     
-    // state's point-in-time
-    let stateRef: Date
-    
-    init(start: Date, stateRef: Date) {
+    init(start: Date) {
         self.start = start
-        self.stateRef = stateRef
     }
     
     func point(_ first: Date, isInPrecedingPeriodFrom second: Date, using cal: Calendar) -> Bool {
@@ -98,8 +138,8 @@ class DailyPaceSetter
         now.secondsUntilTheNextDay(in: cal)
     }
     
-    func isFresh(at now: Date, in cal: Calendar) -> Bool {
-        cal.isDate(now, equalTo: self.stateRef, toGranularity: .day)
+    func isFresh(_ stateRef: Date, at now: Date, in cal: Calendar) -> Bool {
+        cal.isDate(now, equalTo: stateRef, toGranularity: .day)
     }
 }
 
@@ -108,14 +148,10 @@ class BucketPaceSetter : PaceSetter
     // global start of the game
     let start: Date
     
-    // state's point-in-time
-    let stateRef: Date
-    
     let bucket: TimeInterval
     
-    init(start: Date, stateRef: Date, bucket: TimeInterval) {
+    init(start: Date, bucket: TimeInterval) {
         self.start = start
-        self.stateRef = stateRef
         self.bucket = bucket
     }
     
@@ -138,8 +174,8 @@ class BucketPaceSetter : PaceSetter
         return nextStop
     }
     
-    func isFresh(at now: Date) -> Bool {
-        now.timeIntervalSince(self.stateRef) < bucket
+    func isFresh(_ stateRef: Date, at now: Date) -> Bool {
+        now.timeIntervalSince(stateRef) < bucket
     }
 }
 
@@ -164,15 +200,14 @@ struct Daily_PaceSetter_InternalPreview: View {
         let after2 = "2022-03-24T00:00:01+0000".toIsoDate()
         
         let body = DailyPaceSetter(
-            start: WordValidator.MAR_22_2022,
-            stateRef: WordValidator.MAR_22_2022)
+            start: WordValidator.MAR_22_2022)
         
         let utcCal = Calendar.gregorianUtc
-        var utcP1Cal = Calendar.gregorian(withHourOffsetFromUtc: 1)
+        let utcP1Cal = Calendar.gregorian(withHourOffsetFromUtc: 1)
         
-        let isFreshBefore = body.isFresh(at: before, in: utcCal)
-        let isFreshBeforeP1 = body.isFresh(at: before, in: utcP1Cal)
-        let isFreshAfter = body.isFresh(at: after, in: utcCal)
+        let isFreshBefore = body.isFresh(WordValidator.MAR_22_2022, at: before, in: utcCal)
+        let isFreshBeforeP1 = body.isFresh(WordValidator.MAR_22_2022, at: before, in: utcP1Cal)
+        let isFreshAfter = body.isFresh(WordValidator.MAR_22_2022, at: after, in: utcCal)
         let remainingBefore = body.remainingTtl(at: before, in: utcCal)
         let remainingBeforeP1 = body.remainingTtl(at: before, in: utcP1Cal)
         let remainingAfter = body.remainingTtl(
@@ -251,12 +286,11 @@ struct Bucket_PaceSetter_InternalPreview: View {
         
         let body = BucketPaceSetter(
             start: start,
-            stateRef: start,
             bucket: 10.0
         )
         
-        let isFreshBefore = body.isFresh(at: first)
-        let isFreshAfter = body.isFresh(at: second)
+        let isFreshBefore = body.isFresh(start, at: first)
+        let isFreshAfter = body.isFresh(start, at: second)
         let remainingFirst = body.remainingTtl(at: first)
         let remainingSecond = body.remainingTtl(at: second)
         
