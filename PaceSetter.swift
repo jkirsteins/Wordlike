@@ -15,7 +15,10 @@ protocol PaceSetter
     func point(_ first: Date, isInPrecedingPeriodFrom second: Date) -> Bool
     
     /// Is current period still fresh relative to given time
-    func isFresh(_ stateRef: Date, at now: Date) -> Bool 
+    func isFresh(_ stateRef: Date, at now: Date) -> Bool
+    
+    /// Which turn is this? Use it to find the word
+    func turnIndex(at now: Date) -> Int
 }
 
 extension Calendar {
@@ -113,6 +116,10 @@ class CalendarDailyPaceSetter : PaceSetter
     {
         self.wrapped.isFresh(stateRef, at: now, in: cal)
     }
+    
+    func turnIndex(at now: Date) -> Int {
+        self.wrapped.turnIndex(at: now, in: cal)
+    }
 }
 
 class DailyPaceSetter
@@ -124,18 +131,29 @@ class DailyPaceSetter
         self.start = start
     }
     
-    func point(_ first: Date, isInPrecedingPeriodFrom second: Date, using cal: Calendar) -> Bool {
-        
+    func diffInDays(first: Date, second: Date, cal: Calendar) -> Int {
         let firstStart = cal.startOfDay(for: first)
         let secondStart = cal.startOfDay(for: second)
         
-        let diffInDays = Calendar.current.dateComponents([.day], from: firstStart, to: secondStart).day
+        return cal.dateComponents([.day], from: firstStart, to: secondStart).day!
+    }
+    
+    func point(_ first: Date, isInPrecedingPeriodFrom second: Date, using cal: Calendar) -> Bool {
+        
+        let diffInDays = diffInDays(
+            first: first, 
+            second: second, 
+            cal: cal)
         
         return diffInDays == 1
     }
     
     func remainingTtl(at now: Date, in cal: Calendar) -> TimeInterval {
         now.secondsUntilTheNextDay(in: cal)
+    }
+    
+    func turnIndex(at now: Date, in cal: Calendar) -> Int {
+        return diffInDays(first: self.start, second: now, cal: cal)
     }
     
     func isFresh(_ stateRef: Date, at now: Date, in cal: Calendar) -> Bool {
@@ -172,6 +190,16 @@ class BucketPaceSetter : PaceSetter
             nextStop = nextStop.addingTimeInterval(bucket)
         }
         return nextStop
+    }
+    
+    func turnIndex(at now: Date) -> Int {
+        var result = 0
+        var nextStop: Date = self.start
+        while (nextStop < now) {
+            nextStop = nextStop.addingTimeInterval(bucket)
+            result += 1
+        }
+        return result - 1
     }
     
     func isFresh(_ stateRef: Date, at now: Date) -> Bool {
@@ -217,6 +245,11 @@ struct Daily_PaceSetter_InternalPreview: View {
         let beforeAfterSubP1 = body.point(before, isInPrecedingPeriodFrom: after, using: utcP1Cal)
         let beforeAfter2SubP1 = body.point(before, isInPrecedingPeriodFrom: after2, using: utcP1Cal)
         
+        let turn0 = body.turnIndex(at: before, in: utcCal)
+        let turn1P1 = body.turnIndex(at: before, in: utcP1Cal)
+        let turn1 = body.turnIndex(at: after, in: utcCal)
+        let turn2 = body.turnIndex(at: after2, in: utcCal)
+        
         return VStack(spacing: 8) {
             Text("Daily rollover")
                 .font(.largeTitle)
@@ -256,17 +289,41 @@ struct Daily_PaceSetter_InternalPreview: View {
                     .fontWeight(.bold)
                     .foregroundColor(remainingAfter == 86399.0 ? Color.green : Color.red)
                 
-                Text(verbatim: "Seq B/A UTC: \(beforeAfterSub)")
-                    .fontWeight(.bold)
-                    .foregroundColor(beforeAfterSub ? Color.green : Color.red)
+                VStack {
+                    Text("Sequential checks").font(.title)
+                    
+                    Text(verbatim: "Seq B/A UTC: \(beforeAfterSub)")
+                        .fontWeight(.bold)
+                        .foregroundColor(beforeAfterSub ? Color.green : Color.red)
+                    
+                    Text(verbatim: "Seq B/A UTC+1: \(beforeAfterSubP1)")
+                        .fontWeight(.bold)
+                        .foregroundColor(!beforeAfterSubP1 ? Color.green : Color.red)
+                    
+                    Text(verbatim: "Seq B/A2 UTC+1: \(beforeAfter2SubP1)")
+                        .fontWeight(.bold)
+                        .foregroundColor(beforeAfter2SubP1 ? Color.green : Color.red)
+                }
                 
-                Text(verbatim: "Seq B/A UTC+1: \(beforeAfterSubP1)")
-                    .fontWeight(.bold)
-                    .foregroundColor(!beforeAfterSubP1 ? Color.green : Color.red)
-                
-                Text(verbatim: "Seq B/A2 UTC+1: \(beforeAfter2SubP1)")
-                    .fontWeight(.bold)
-                    .foregroundColor(beforeAfter2SubP1 ? Color.green : Color.red)
+                VStack {
+                    Text("Turn counter").font(.title)
+                    
+                    Text(verbatim: "Turn0 UTC: \(turn0)")
+                        .fontWeight(.bold)
+                        .foregroundColor(turn0 == 0 ? Color.green : Color.red)
+                    
+                    Text(verbatim: "Turn0 UTC+1: \(turn1P1)")
+                        .fontWeight(.bold)
+                        .foregroundColor(turn1P1 == 1 ? Color.green : Color.red)
+                    
+                    Text(verbatim: "Turn1 UTC: \(turn1)")
+                        .fontWeight(.bold)
+                        .foregroundColor(turn1 == 1 ? Color.green : Color.red)
+                    
+                    Text(verbatim: "Turn2 UTC: \(turn2)")
+                        .fontWeight(.bold)
+                        .foregroundColor(turn2 == 2 ? Color.green : Color.red)
+                }
                 
             }
         }
@@ -297,6 +354,10 @@ struct Bucket_PaceSetter_InternalPreview: View {
         let firstSecondSeq = body.point(first, isInPrecedingPeriodFrom: second)
         let firstThirdSeq = body.point(first, isInPrecedingPeriodFrom: third)
         let secondThirdSeq = body.point(second, isInPrecedingPeriodFrom: third)
+        
+        let turnIx1 = body.turnIndex(at: first)
+        let turnIx2 = body.turnIndex(at: second)
+        let turnIx3 = body.turnIndex(at: third)
         
         return VStack(spacing: 8) {
             Text("Bucket rollover")
@@ -339,6 +400,20 @@ struct Bucket_PaceSetter_InternalPreview: View {
                     .fontWeight(.bold)
                     .foregroundColor(secondThirdSeq ? Color.green : Color.red)
                 
+                Text(verbatim: "TurnIx 0: \(turnIx1)")
+                    .fontWeight(.bold)
+                    .foregroundColor(turnIx1 == 0 ? Color.green : Color.red)
+                
+                VStack {
+                Text(verbatim: "TurnIx 1: \(turnIx2)")
+                    .fontWeight(.bold)
+                    .foregroundColor(turnIx2 == 1 ? Color.green : Color.red)
+                
+                Text(verbatim: "TurnIx 2: \(turnIx3)")
+                    .fontWeight(.bold)
+                    .foregroundColor(turnIx3 == 2 ? Color.green : Color.red)
+                }
+                
             }
         }
     }
@@ -346,9 +421,11 @@ struct Bucket_PaceSetter_InternalPreview: View {
 
 struct PaceSetter_InternalPreview_Previews: PreviewProvider {
     static var previews: some View {
-        VStack(spacing: 24) {
-            Daily_PaceSetter_InternalPreview()
-            Bucket_PaceSetter_InternalPreview()
-        }
+        ScrollView {
+            VStack(spacing: 24) {
+                Daily_PaceSetter_InternalPreview()
+                Bucket_PaceSetter_InternalPreview()
+            }
+        }.padding(24)
     }
 }

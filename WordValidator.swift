@@ -42,8 +42,6 @@ class WordValidator : ObservableObject
     
     lazy var guesses = Self.load("\(name)_G")
     
-    
-    
     static func load(_ name: String) -> [String] {
         do {
             guard let fileUrl = Bundle.main.url(forResource: name, withExtension: "txt") else { 
@@ -59,55 +57,43 @@ class WordValidator : ObservableObject
     
     let name: String
     let seed: Int 
-    let start: Date
+//    let start: Date
     
     static let MAR_22_2022 = Date(timeIntervalSince1970: 1647966002) 
     
-    var todayIndex: Int {
-        indexBetween(start, and: Date())
-    }
-    
-    func indexBetween(_ start: Date, and end: Date) -> Int {
-        Calendar.current.dateComponents(
-            [.day], 
-            from: Calendar.current.startOfDay(for: start), 
-            to: Calendar.current.startOfDay(for: end)).day!
-    }
+//    var todayIndex: Int {
+//        indexBetween(start, and: Date())
+//    }
+//    
+//    func indexBetween(_ start: Date, and end: Date) -> Int {
+//        Calendar.current.dateComponents(
+//            [.day], 
+//            from: Calendar.current.startOfDay(for: start), 
+//            to: Calendar.current.startOfDay(for: end)).day!
+//    }
     
     func canSubmit(word: String) -> Bool {
         guesses.contains(word)
 //        true
     }
     
-    var todayAnswer: String {
+    func answer(at todayIndex: Int) -> String {
         answers[todayIndex % answers.count]
-    } 
+    }
     
     init(
         name: String, 
-        seed: Int = 14384982345,
-        start: Date = WordValidator.MAR_22_2022) 
+        seed: Int = 14384982345
+    )
     {
         self.name = name
         self.seed = seed
-        self.start = start
     }
 }
 
 struct TestView: View {
     var body: some View {
-        let x = WordValidator(name: "en", seed: 0)
-        return VStack {
-            Text("Index on same day: \(x.indexBetween(WordValidator.MAR_22_2022, and: WordValidator.MAR_22_2022))")
-            
-            Text("Index on 1 sec before midnight: \(x.indexBetween(WordValidator.MAR_22_2022, and: Date(timeIntervalSince1970: 1647990001 - 2)))")
-            
-            Text("Index on next day (1 sec after midnight): \(x.indexBetween(WordValidator.MAR_22_2022, and: Date(timeIntervalSince1970: 1647990001)))")
-            
-            Text("Index 1 day after: \(x.indexBetween(WordValidator.MAR_22_2022, and: WordValidator.MAR_22_2022 + 86400))")
-            
-            Text("Index on Mar 27 (from Mar 22): \(x.indexBetween(WordValidator.MAR_22_2022, and: Date(timeIntervalSince1970: 1648336091)))")
-        }
+        Text("Test view")
     }
 }
 

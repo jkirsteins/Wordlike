@@ -412,10 +412,13 @@ fileprivate struct InternalPreview: View
     @EnvironmentObject var validator: WordValidator
     
     var body: some View {
-        VStack {
+        let tc = BucketPaceSetter(
+            start: WordValidator.MAR_22_2022, 
+            bucket: 30)
+        return VStack {
             GameBoardView(state: state)
             Text("Count: \(count)")
-            Text("Today's word: \(validator.todayAnswer)")
+            Text("Today's word: \(validator.answer(at: tc.turnIndex(at: Date())))")
             Button("Reset") {
                 self.state = GameState(expected: DayWord(word: "fuels", day: 1))
             }.onReceive(timer) {

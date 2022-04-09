@@ -32,12 +32,17 @@ struct MyApp: App {
     
     @StateObject var game: GameState = GameState()
     
+    var todayIndex: Int {
+        self.paceSetter.turnIndex(at: Date())
+    }
+    
     func updateFromLoadedState(_ newState: DailyState) {
-        game.expected = DayWord(word: newState.expected, day: validator.todayIndex)
+        game.expected = DayWord(word: newState.expected, day: todayIndex)
         game.rows = newState.rows
         game.isTallied = newState.isTallied
         game.id = UUID()
         game.initialized = true
+        game.date = newState.date
     }
     
     @SceneBuilder
@@ -45,14 +50,15 @@ struct MyApp: App {
         WindowGroup { 
             NavigationView {
                 VStack {
-                    Text(verbatim: "\(validator.todayIndex) (\(validator.todayAnswer))")
-                    if game.initialized && dailyState?.isFresh == true {
+                    Text(verbatim: "\(todayIndex) (\(validator.answer(at: todayIndex)))")
+                    if game.initialized && paceSetter.isFresh(game.date, at: Date()) {
                         GameBoardView(state: game)
                             .onStateChange(edited: { newRows in
                                 self.dailyState = DailyState(
                                     expected: dailyState!.expected,
                                     date: dailyState!.date,
-                                    rows: newRows)
+                                    rows: newRows,
+                                    isTallied: dailyState!.isTallied)
                             }, completed: { 
                                 state in
                                 
@@ -95,14 +101,14 @@ struct MyApp: App {
                     } 
                         
                     
-                    if dailyState?.isStale == true {
+                    if let ds = dailyState, !paceSetter.isFresh(ds.date, at: Date()) {
                         Text("Rummaging in the sack for a new word...")
                     }
                     
                     if dailyState == nil {
                         Text("Initializing state...").onAppear {
                             guard let dailyState = dailyState else {
-                                dailyState = DailyState(expected: validator.todayAnswer)
+                                dailyState = DailyState(expected: validator.answer(at: todayIndex))
                                 return
                             }
                         }
@@ -128,11 +134,11 @@ struct MyApp: App {
                     }
                     
                     count += 1
-                    debugMessage = "TTL: \(dailyState.remainingTtl) for word: \(dailyState.expected)" + "\nAGE: \(dailyState.age)" + "\nWRD: \(validator.todayAnswer)" + "\nTIX: \(validator.todayIndex)"
+                    debugMessage = "TTL: \(paceSetter.remainingTtl(at: Date())) for word: \(dailyState.expected)" + "\nWRD: \(validator.answer(at: todayIndex))" + "\nTIX: \(todayIndex)"
                     
-                    if dailyState.isStale {
+                    if !paceSetter.isFresh(dailyState.date, at: Date()) {
                         // TODO: process daily results if needed
-                        self.dailyState = DailyState(expected: validator.todayAnswer)
+                        self.dailyState = DailyState(expected: validator.answer(at: todayIndex))
                     }
                 }
                 .sheet(isPresented: $finished) {

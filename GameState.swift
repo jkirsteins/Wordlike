@@ -6,6 +6,7 @@ struct DayWord
     let day: Int
 }
 
+// TODO: rename to TurnState
 class GameState : ObservableObject, Identifiable, Equatable
 {
     static let MAX_ROWS = 6
@@ -21,6 +22,7 @@ class GameState : ObservableObject, Identifiable, Equatable
     @Published var isTallied: Bool
     @Published var expected: DayWord
     @Published var rows: [RowModel]
+    @Published var date: Date
     
     var isWon: Bool {
         rows.first(where: { $0.isSubmitted && $0.word == expected.word }) != nil
@@ -42,17 +44,18 @@ class GameState : ObservableObject, Identifiable, Equatable
         let rowModels = (0..<Self.MAX_ROWS).map { _ in 
             RowModel(word: "", expected: expected.word, isSubmitted: false)
         }
-        self.init(initialized: true, expected: expected, rows: rowModels, isTallied: false)
+        self.init(initialized: true, expected: expected, rows: rowModels, isTallied: false, date: Date())
     }
     
     convenience init() {
-        self.init(initialized: false, expected: DayWord(word: "", day: 0), rows: [], isTallied: false)
+        self.init(initialized: false, expected: DayWord(word: "", day: 0), rows: [], isTallied: false, date: Date())
     }
     
-    init(initialized: Bool, expected: DayWord, rows: [RowModel], isTallied: Bool) {
+    init(initialized: Bool, expected: DayWord, rows: [RowModel], isTallied: Bool, date: Date) {
         self.initialized = initialized
         self.expected = expected
         self.isTallied = isTallied
+        self.date = date
         let isActives = (0..<Self.MAX_ROWS).map { _ in
             false
         }

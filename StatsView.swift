@@ -199,7 +199,9 @@ struct StatsView_Previews: PreviewProvider {
             RowModel(word: "clear", expected: "fuels", isSubmitted: true),
             RowModel(word: "duels", expected: "fuels", isSubmitted: true),
             RowModel(word: "fuels", expected: "fuels", isSubmitted: true)
-        ])
+        ],
+        isTallied: false,
+        date: Date())
     
     static var previews: some View {
         PaletteSetterView {
