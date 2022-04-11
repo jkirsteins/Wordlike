@@ -17,17 +17,11 @@ struct MyApp: App {
     
     let paceSetter = BucketPaceSetter(
         start: WordValidator.MAR_22_2022, 
-        bucket: 30)
+        bucket: 180)
     
     @StateObject var validator = WordValidator(name: "en")
     @State var testModel: RowModel = RowModel(expected: "fuels")
-    @State var testIsActive: Int? = 0
-    var body_test: some Scene {
-        WindowGroup {
-            EditableRow(delayRowIx: 0, model: $testModel, tag: 0, isActive: $testIsActive)
-        }
-    }
-    
+
     @StateObject var game: GameState = GameState()
     
     var todayIndex: Int {
@@ -54,7 +48,7 @@ struct MyApp: App {
                 VStack {
                     Text(verbatim: "\(todayIndex) (\(validator.answer(at: todayIndex)))")
                     if game.initialized && paceSetter.isFresh(game.date, at: Date()) {
-                        GameBoardView(state: game)
+                        GameBoardView(state: game, canBeAutoActivated: !finished)
                             .onStateChange(edited: { newRows in
                                 self.dailyState = DailyState(
                                     expected: dailyState!.expected,
@@ -113,7 +107,7 @@ struct MyApp: App {
                     }
                     
                     count += 1
-                    debugMessage = "TTL: \(paceSetter.remainingTtl(at: newTime)) (f:\(paceSetter.isFresh(dailyState.date, at: newTime))) for word: \(dailyState.expected)" + "\nTIX: \(todayIndex)" + "\nTALLIED: \(self.dailyState?.isTallied ?? false)"
+                    debugMessage = "TTL: \(paceSetter.remainingTtl(at: newTime)) (f:\(paceSetter.isFresh(dailyState.date, at: newTime))) for word: \(dailyState.expected)" + "\nTIX: \(todayIndex)" + "\nTALLIED: \(self.dailyState?.isTallied ?? false)" + "\nPS: \(paceSetter)"
                     
                     if !paceSetter.isFresh(dailyState.date, at: newTime) {
                         // TODO: process daily results if needed
@@ -143,7 +137,7 @@ struct MyApp: App {
                     }
                 }
             }
-            
+            .environment(\.paceSetter, paceSetter)
             
             //            VStack {
             //                Text("Above").background(.green)

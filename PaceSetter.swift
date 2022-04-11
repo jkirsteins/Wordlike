@@ -1,5 +1,17 @@
 import SwiftUI
 
+
+private struct PaceSetterKey: EnvironmentKey {
+    static let defaultValue: PaceSetter = CalendarDailyPaceSetter.current(start: WordValidator.MAR_22_2022)
+}
+
+extension EnvironmentValues {
+    var paceSetter: PaceSetter {
+        get { self[PaceSetterKey.self] }
+        set { self[PaceSetterKey.self] = newValue }
+    }
+}
+
 /// Protocol for determining when a turn begins/ends,
 /// and if subsequent periods can form a streak or not.
 ///
@@ -97,7 +109,7 @@ class CalendarDailyPaceSetter : PaceSetter
         self.wrapped = DailyPaceSetter(start: start)
     }
     
-    static func current(start: Date, stateRef: Date) -> PaceSetter
+    static func current(start: Date) -> PaceSetter
     {
         return CalendarDailyPaceSetter(start: start, cal: Calendar.current)
     }

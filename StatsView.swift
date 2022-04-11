@@ -32,9 +32,11 @@ struct StatsView: View {
     // For sizing the horizontal stats bars
     @State var maxBarWidth: CGFloat = 0
     
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     @Environment(\.palette) var palette: Palette
+    
+    @Environment(\.paceSetter) var paceSetter: PaceSetter
     
     // Timer sets this to hh:mm:ss until next word
     @State var nextWordIn: String = "..."
@@ -44,8 +46,7 @@ struct StatsView: View {
     @State var shareItems: [Any] = []
     
     func recalculateNextWord() {
-        let remaining = Date().secondsUntilTheNextDay(
-            in: Calendar.current)
+        let remaining = paceSetter.remainingTtl(at: Date())
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute, .second]
         formatter.unitsStyle = .positional
@@ -146,16 +147,9 @@ struct StatsView: View {
                     VStack() {
                         Text("Next word")
                             .font(Font.system(.title).smallCaps())
+                        
                         Text(nextWordIn)
                             .font(.largeTitle)
-                            .onReceive(timer) {
-                                _ in 
-                                
-                                self.recalculateNextWord()
-                            }
-                            .onAppear {
-                                recalculateNextWord()
-                            }
                     }.frame(minWidth: 150)
                     
                     Divider().frame(maxHeight: 88)
@@ -186,7 +180,13 @@ struct StatsView: View {
             ActivityViewController(activityItems: $shareItems)
             }
         }.onAppear {
+            recalculateNextWord()
             self.shareItems = [self.state.shareSnippet]
+        }
+        .onReceive(timer) {
+            _ in 
+            
+            self.recalculateNextWord()
         }
     }
 }

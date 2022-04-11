@@ -6,6 +6,8 @@ struct GameBoardView: View {
     @State var isActive: Int? = nil
     @ObservedObject var state: GameState
     
+    let canBeAutoActivated: Bool 
+    
     func allSubmitted(until row: Int) -> Bool {
         if row == 0 {
             return true
@@ -92,13 +94,21 @@ struct GameBoardView: View {
         }
         .onChange(of: state.id) {
             _ in
-            recalculateActive()
+            /* State can change when we've
+             e.g. stats sheet on top (in which case
+             we don't want to pop up the keyboard)
+            */
+            if canBeAutoActivated {
+                recalculateActive()
+            }
         }
         .onTapGesture {
             recalculateActive()
         }
         .onAppear {
-            recalculateActive()
+            if canBeAutoActivated {
+                recalculateActive()
+            }
         }
     }
 }
@@ -109,7 +119,7 @@ fileprivate struct InternalPreview: View
     
     var body: some View {
         VStack {
-            GameBoardView(state: state)
+            GameBoardView(state: state, canBeAutoActivated: false)
             Button("Reset") {
                 self.state = GameState(expected: DayWord(word: "fuels", day: 1))
             }

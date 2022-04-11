@@ -416,7 +416,7 @@ fileprivate struct InternalPreview: View
             start: WordValidator.MAR_22_2022, 
             bucket: 30)
         return VStack {
-            GameBoardView(state: state)
+            GameBoardView(state: state, canBeAutoActivated: false)
             Text("Count: \(count)")
             Text("Today's word: \(validator.answer(at: tc.turnIndex(at: Date())))")
             Button("Reset") {
