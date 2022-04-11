@@ -61,6 +61,7 @@ struct StatsView: View {
     var body: some View {
         VStack(spacing: 24) {
             VStack(spacing: 8) {
+                Text(verbatim: "Sharing: \(isSharing)")
                 Text("Statistics")
                     .font(Font.system(.title).smallCaps())
                 
@@ -194,7 +195,7 @@ struct StatsView: View {
 struct StatsView_Previews: PreviewProvider {
     static let state = GameState(
         initialized: true, 
-        expected: DayWord(word: "fuels", day: 2), 
+        expected: DayWord(word: "fuels", day: 2, locale: "en"), 
         rows: [
             RowModel(word: "clear", expected: "fuels", isSubmitted: true),
             RowModel(word: "duels", expected: "fuels", isSubmitted: true),
@@ -204,6 +205,7 @@ struct StatsView_Previews: PreviewProvider {
         date: Date())
     
     static var previews: some View {
+        NavigationView {
         PaletteSetterView {
             StatsView(stats: Stats(
                 played: 63, 
@@ -218,6 +220,7 @@ struct StatsView_Previews: PreviewProvider {
                     11,
                     6
                 ]), state: state)
+        }.navigationTitle("Test 1")
         }
         
         PaletteSetterView {
@@ -233,7 +236,7 @@ struct StatsView_Previews: PreviewProvider {
                     24,
                     11,
                     6
-                ]), state: GameState(expected: DayWord(word: "fuels", day: 1)))
+                ]), state: GameState(expected: DayWord(word: "fuels", day: 1, locale: "en")))
         }
         
         PaletteSetterView {
@@ -249,7 +252,7 @@ struct StatsView_Previews: PreviewProvider {
                     0,
                     0,
                     0
-                ]), state: GameState(expected: DayWord(word: "fuels", day: 1)))
+                ]), state: GameState(expected: DayWord(word: "fuels", day: 1, locale: "enswils")))
         }
         
         PaletteSetterView {

@@ -36,7 +36,16 @@ extension GameState
             tries = "X/6"
         }
         
-        var result = "\(Bundle.main.displayName) \(self.expected.day) \(tries)\n\n"
+        let flag: String 
+        if self.expected.locale == "en" {
+            flag = "🇺🇸"
+        } else if self.expected.locale == "fr" {
+            flag = "🇫🇷"
+        } else {
+            flag = self.expected.locale.uppercased()
+        }
+        
+        var result = "\(Bundle.main.displayName) \(flag)  \(self.expected.day) \(tries)\n\n"
         
         for row in self.rows {
             guard row.isSubmitted else {
@@ -62,7 +71,7 @@ struct ShareSnippet: View {
     var body: some View {
         let state = GameState(
             initialized: true, 
-            expected: DayWord(word: expected, day: day), 
+            expected: DayWord(word: expected, day: day, locale: "en"), 
             rows: 
                 guesses.map { w in
                      RowModel(word: w, expected: expected, isSubmitted: true)

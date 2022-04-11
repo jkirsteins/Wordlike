@@ -403,7 +403,7 @@ struct EditableRow_ForPreview : View {
 
 fileprivate struct InternalPreview: View 
 {
-    @State var state = GameState(expected: DayWord(word: "board", day: 1))
+    @State var state = GameState(expected: DayWord(word: "board", day: 1, locale: "en"))
     
     let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
     
@@ -420,7 +420,7 @@ fileprivate struct InternalPreview: View
             Text("Count: \(count)")
             Text("Today's word: \(validator.answer(at: tc.turnIndex(at: Date())))")
             Button("Reset") {
-                self.state = GameState(expected: DayWord(word: "fuels", day: 1))
+                self.state = GameState(expected: DayWord(word: "fuels", day: 1, locale: "en"))
             }.onReceive(timer) {
                 _ in 
                 self.count += 1

@@ -49,7 +49,9 @@ class WordValidator : ObservableObject
             }
             
             let text = try String(contentsOf: fileUrl, encoding: String.Encoding.utf8)
-            return text.components(separatedBy: "\n")
+            return text.components(separatedBy: "\n").map {
+                $0.uppercased()
+            }
         } catch {
             fatalError(String(describing: error))
         }
@@ -73,7 +75,7 @@ class WordValidator : ObservableObject
 //    }
     
     func canSubmit(word: String) -> Bool {
-        guesses.contains(word)
+        guesses.contains(word.uppercased())
 //        true
     }
     
