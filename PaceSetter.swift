@@ -203,7 +203,7 @@ class BucketPaceSetter : PaceSetter
     }
     
     func isFresh(_ stateRef: Date, at now: Date) -> Bool {
-        now.timeIntervalSince(stateRef) < bucket
+        nextRollover(from: now).timeIntervalSince(stateRef) <= bucket
     }
 }
 
@@ -372,6 +372,7 @@ struct Bucket_PaceSetter_InternalPreview: View {
                         
                         self.remainingBucket = Int(body.remainingTtl(at: Date()))
                     }
+                
                 Text(verbatim: "Fresh (-1 sec): \(isFreshBefore)")
                     .fontWeight(.bold)
                     .foregroundColor(isFreshBefore ? Color.green : Color.red)

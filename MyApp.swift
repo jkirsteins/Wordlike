@@ -15,11 +15,9 @@ struct MyApp: App {
     @State var debugMessage: String = ""
     @State var count = 0
     
-    //    @StateObject var gameState: GameState = GameState(expected: "tests") 
-    
     let paceSetter = BucketPaceSetter(
         start: WordValidator.MAR_22_2022, 
-        bucket: 10)
+        bucket: 30)
     
     @StateObject var validator = WordValidator(name: "en")
     @State var testModel: RowModel = RowModel(expected: "fuels")
@@ -37,6 +35,8 @@ struct MyApp: App {
     }
     
     func updateFromLoadedState(_ newState: DailyState) {
+        debugMessage = "Updating..."
+        
         game.expected = DayWord(word: newState.expected, day: todayIndex)
         game.rows = newState.rows
         game.isTallied = newState.isTallied
@@ -62,34 +62,7 @@ struct MyApp: App {
                             }, completed: { 
                                 state in
                                 
-                                let newStreak = (state.isWon ? stats.streak + 1 : 0)
-                                
-                                var newDistribution: [Int] = (0..<6).map {
-                                    ix in 
-                                    
-                                    var result: Int 
-                                    
-                                    if stats.guessDistribution.count > ix {
-                                        result = stats.guessDistribution[ix]
-                                    } else {
-                                        result = 0
-                                    }
-                                    
-                                    if (ix + 1) == state.submittedRows {
-                                        result += 1
-                                    }
-                                    
-                                    return result
-                                }
-                                
-                                // TODO: do this on timeout  
-                                // TODO: don't repeat for same day
-                                stats = Stats(
-                                    played: stats.played + 1, 
-                                    won: stats.won + (state.isWon ? 1 : 0), 
-                                    maxStreak: (state.isWon ? max(newStreak, stats.maxStreak) : 0), 
-                                    streak: newStreak, 
-                                    guessDistribution: newDistribution)
+                                stats = stats.update(from: game, with: paceSetter)
                                 
                                 finished = true
                             })
@@ -127,16 +100,16 @@ struct MyApp: App {
                         updateFromLoadedState(newState)
                     }
                 }
-                .onReceive(timer) { _ in
+                .onReceive(timer) { newTime in
                     
                     guard let dailyState = self.dailyState else {
                         return
                     }
                     
                     count += 1
-                    debugMessage = "TTL: \(paceSetter.remainingTtl(at: Date())) for word: \(dailyState.expected)" + "\nWRD: \(validator.answer(at: todayIndex))" + "\nTIX: \(todayIndex)"
+                    debugMessage = "TTL: \(paceSetter.remainingTtl(at: newTime)) (f:\(paceSetter.isFresh(dailyState.date, at: newTime))) for word: \(dailyState.expected)" + "\nWRD: \(validator.answer(at: todayIndex))" + "\nTIX: \(todayIndex)"
                     
-                    if !paceSetter.isFresh(dailyState.date, at: Date()) {
+                    if !paceSetter.isFresh(dailyState.date, at: newTime) {
                         // TODO: process daily results if needed
                         self.dailyState = DailyState(expected: validator.answer(at: todayIndex))
                     }
