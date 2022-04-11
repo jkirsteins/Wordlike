@@ -43,6 +43,8 @@ struct MyApp: App {
         game.id = UUID()
         game.initialized = true
         game.date = newState.date
+        
+        
     }
     
     @SceneBuilder
@@ -61,6 +63,10 @@ struct MyApp: App {
                                     isTallied: dailyState!.isTallied)
                             }, completed: { 
                                 state in
+                                
+                                if let dailyState = self.dailyState {
+                                    self.dailyState = DailyState(expected: dailyState.expected, date: dailyState.date, rows: dailyState.rows, isTallied: true)
+                                }
                                 
                                 stats = stats.update(from: game, with: paceSetter)
                                 
@@ -107,7 +113,7 @@ struct MyApp: App {
                     }
                     
                     count += 1
-                    debugMessage = "TTL: \(paceSetter.remainingTtl(at: newTime)) (f:\(paceSetter.isFresh(dailyState.date, at: newTime))) for word: \(dailyState.expected)" + "\nWRD: \(validator.answer(at: todayIndex))" + "\nTIX: \(todayIndex)"
+                    debugMessage = "TTL: \(paceSetter.remainingTtl(at: newTime)) (f:\(paceSetter.isFresh(dailyState.date, at: newTime))) for word: \(dailyState.expected)" + "\nTIX: \(todayIndex)" + "\nTALLIED: \(self.dailyState?.isTallied ?? false)"
                     
                     if !paceSetter.isFresh(dailyState.date, at: newTime) {
                         // TODO: process daily results if needed
@@ -115,7 +121,9 @@ struct MyApp: App {
                     }
                 }
                 .sheet(isPresented: $finished) {
-                    StatsView(stats: stats, state: game)
+                    PaletteSetterView {
+                        StatsView(stats: stats, state: game)
+                    }
                 }
                 .navigationTitle("hello")
                 .toolbar {
