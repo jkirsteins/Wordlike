@@ -1,5 +1,14 @@
 import SwiftUI
 
+enum ActiveSheet {
+    case stats 
+    case help
+}
+
+extension ActiveSheet: Identifiable {
+    var id: Self { self }
+}
+
 struct GameHostView: View {
     
     @State var debugMessage: String = ""
@@ -8,7 +17,10 @@ struct GameHostView: View {
     var dailyState: DailyState?
     
     @AppStorage 
-    var stats: Stats 
+    var stats: Stats
+    
+    @AppStorage 
+    var shouldShowHelp: Bool
     
     @State var finished = false
     
@@ -21,6 +33,8 @@ struct GameHostView: View {
     @StateObject var game: GameState = GameState()
     
     @Environment(\.paceSetter) var paceSetter: PaceSetter
+    
+    @State var activeSheet: ActiveSheet? = nil
     
     let title: String
     let locale: String
@@ -36,6 +50,9 @@ struct GameHostView: View {
             wrappedValue: nil, 
             "turnState.\(name)")
         
+        self._shouldShowHelp = AppStorage(
+            wrappedValue: true, "shouldShowHelp.\(name)")
+        
         self.locale = name
         
         if name == "en" {
@@ -43,6 +60,10 @@ struct GameHostView: View {
         } else {
             title = "Français"
         }
+        
+        //        
+        //        // tmp
+        //        self.shouldShowHelp = true
     }
     
     var todayIndex: Int {
@@ -61,15 +82,13 @@ struct GameHostView: View {
         game.id = UUID()
         game.initialized = true
         game.date = newState.date
-        
-        
     }
     
     var body: some View {
         VStack {
-            Text(verbatim: "\(todayIndex) (\(validator.answer(at: todayIndex)))")
             if game.initialized && paceSetter.isFresh(game.date, at: Date()) {
-                GameBoardView(state: game, canBeAutoActivated: !finished)
+                GameBoardView(state: game,
+                              canBeAutoActivated: !finished && !shouldShowHelp)
                     .onStateChange(edited: { newRows in
                         self.dailyState = DailyState(
                             expected: dailyState!.expected,
@@ -110,6 +129,10 @@ struct GameHostView: View {
         }
         .environmentObject(validator)
         .onAppear {
+            if shouldShowHelp {
+                activeSheet = .help
+            }
+            
             if let newState = self.dailyState {
                 updateFromLoadedState(newState)
             } 
@@ -127,18 +150,48 @@ struct GameHostView: View {
                 return
             }
             
-            debugMessage = "TTL: \(paceSetter.remainingTtl(at: newTime)) (f:\(paceSetter.isFresh(dailyState.date, at: newTime))) for word: \(dailyState.expected)" + "\nTIX: \(todayIndex)" + "\nTALLIED: \(self.dailyState?.isTallied ?? false)" + "\nPS: \(paceSetter)"
+            debugMessage = "TTL: \(paceSetter.remainingTtl(at: newTime)) (f:\(paceSetter.isFresh(dailyState.date, at: newTime))) for word: \(dailyState.expected)" + "\nTIX: \(todayIndex)" + "\nTALLIED: \(self.dailyState?.isTallied ?? false)" + "\nPS: \(paceSetter)" + "\nSSH: \(shouldShowHelp)"
             
             if !paceSetter.isFresh(dailyState.date, at: newTime) {
                 // TODO: process daily results if needed
                 self.dailyState = DailyState(expected: validator.answer(at: todayIndex))
             }
         }
-        .sheet(isPresented: $finished) {
+        .sheet(item: $activeSheet, 
+               onDismiss: {
+            
+            // assuming this is the first
+            // sheet to ever be dismissed
+            if shouldShowHelp {
+                shouldShowHelp = false
+            }
+            
+        }) { item in
             PaletteSetterView {
-                StatsView(stats: stats, state: game)
+                switch (item) {
+                case .help:
+                    HelpView().padding(16)
+                    case .stats:
+                    StatsView(stats: stats, state: game)
+                }    
             }
         }
+        .onChange(of: finished) {
+            newF in 
+            if (newF && activeSheet == nil) {
+                activeSheet = .stats
+            }
+        }
+//        .sheet(isPresented: $shouldShowHelp, onDismiss: { shouldShowHelp = false }) {
+//            PaletteSetterView {
+//                HelpView().padding(16)
+//            }
+//        }
+//        .sheet(isPresented: $finished) {
+//            PaletteSetterView {
+//                StatsView(stats: stats, state: game)
+//            }
+//        }
         .navigationTitle(title)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {

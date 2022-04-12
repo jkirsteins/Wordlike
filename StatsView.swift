@@ -61,9 +61,9 @@ struct StatsView: View {
     var body: some View {
         VStack(spacing: 24) {
             VStack(spacing: 8) {
-                Text(verbatim: "Sharing: \(isSharing)")
                 Text("Statistics")
                     .font(Font.system(.title).smallCaps())
+                    .fontWeight(.bold)
                 
                 HStack(alignment: .top) {
                     VStack {
@@ -100,6 +100,7 @@ struct StatsView: View {
             VStack(spacing: 8) { 
                 Text("Guess Distribution")
                     .font(Font.system(.title).smallCaps())
+                    .fontWeight(.bold)
                 
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
