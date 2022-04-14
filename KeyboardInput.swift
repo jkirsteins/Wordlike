@@ -333,15 +333,18 @@ struct EditableRow : View
                             Tile(
                                 letter: "A", 
                                 delay: 0, 
-                                revealState: .rightPlace)
+                                revealState: .rightPlace,
+                                animate: false)
                             Tile(
                                 letter: "B", 
                                 delay: 0, 
-                                revealState: .wrongPlace)
+                                revealState: .wrongPlace,
+                                animate: false)
                             Tile(
                                 letter: "C", 
                                 delay: 0, 
-                                revealState: .none)
+                                revealState: .none,
+                                animate: false)
                             
                             Spacer()
                         } 

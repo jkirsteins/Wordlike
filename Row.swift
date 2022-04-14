@@ -27,14 +27,16 @@ struct Row: View {
                     Tile(
                         letter: model.char(guessAt: ix), 
                         delay: delayRowIx + ix,
-                        revealState: model.revealState(ix))
+                        revealState: model.revealState(ix),
+                        animate: true)
                 }
             } else {
                 ForEach(0..<5) { ix in
                     Tile(
                         letter: model.char(guessAt: ix), 
                         delay: delayRowIx + ix,
-                        revealState: model.revealState(ix))
+                        revealState: model.revealState(ix),
+                        animate: true)
                 }
             }
         }

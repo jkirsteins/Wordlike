@@ -7,11 +7,25 @@ struct Tile: View {
     @State var rotateOut: Double = 0
     
     @State var flip = false
+    
+    /// The desired background type at a time. Accessed
+    /// via `calculatedType` (which will return the right
+    /// value when this is nil, or when we don't want to
+    /// animate)
+    ///
+    /// This is initially set to nil, and halfway
+    /// through the reveal animation - if any - it 
+    /// will be set to the reveal type.
     @State var type: TileBackgroundType? = nil
     
     let letter: String?
     let delay: Int 
+    
+    /// The background type we wish to reveal with
+    /// a "flip" animation (if `animate` is set to true)
     let revealState: TileBackgroundType?
+    
+    let animate: Bool
     
     let halfDuration = 1.0 / 4.0
     
@@ -22,7 +36,14 @@ struct Tile: View {
         letter == nil || letter == ""
     }
     
+    /// The background type that will be actually used
+    /// at a given moment.
     var calculatedType: TileBackgroundType {
+        
+        if !animate {
+            return revealState ?? .maskedFilled
+        }
+        
         guard let type = self.type else {
             if isEmpty {
                 return .maskedEmpty
@@ -73,7 +94,7 @@ struct Tile: View {
                         .textCase(.uppercase)
                         .padding(padding(gr))
                         .scaledToFit()
-                                        
+                    
                     /* We need a small minimumScaleFactor 
                      otherwise filled/non-filled masked
                      tiles might have different sizes */
@@ -87,7 +108,7 @@ struct Tile: View {
                             axis: (x: 1, y: 0, z: 0),
                             perspective: 0)
                         .foregroundColor(
-                            flip == false ? palette.maskedTextColor : palette.revealedTextColor)  
+                            (animate && flip == false) || calculatedType == .maskedFilled ? palette.maskedTextColor : palette.revealedTextColor)  
                 }
             } 
         }
@@ -115,6 +136,9 @@ struct Tile: View {
             Animation.easeInOut(duration: pulseHalfDuration),
             value: self.scaleSize)
         .onChange(of: self.letter) { new in
+            // This animates a small "bulge" animation
+            // on receiving input
+            guard animate else { return }
             guard self.revealState == nil, new != nil, new != "" else {
                 return
             } 
@@ -129,7 +153,8 @@ struct Tile: View {
             }
         }
         .task { 
-            guard let revealState = self.revealState else { return }
+            // This animates the reveal (flip)
+            guard animate, let revealState = self.revealState else { return }
             try? await Task.sleep(
                 nanoseconds: UInt64(
                     Double(delay) * halfDuration * 500_000_000))
@@ -159,9 +184,36 @@ struct Tile_Previews: PreviewProvider {
     static let wa = Array("fuels")
     static var previews: some View {
         VStack {
+            Text("With animation")
+            HStack {
+                Tile(letter: "A", delay: 0, revealState: .rightPlace, animate: true)
+                Tile(letter: "B", delay: 0, revealState: .wrongPlace, animate: true)
+                Tile(letter: "C", delay: 0, revealState: .wrongLetter, animate: true)
+            }
+            
+            Divider()
+            
+            VStack {
+                HStack {
+                    Tile(letter: "A", delay: 0, revealState: .rightPlace, animate: false)
+                    Tile(letter: "B", delay: 0, revealState: .wrongPlace, animate: false)
+                    Tile(letter: "C", delay: 0, revealState: .wrongLetter, animate: false)
+                    Tile(letter: "D", delay: 0, revealState: .none, animate: false)
+                }.environment(\.palette, LightPalette())
+                
+            HStack {
+                Tile(letter: "A", delay: 0, revealState: .rightPlace, animate: false)
+                Tile(letter: "B", delay: 0, revealState: .wrongPlace, animate: false)
+                Tile(letter: "C", delay: 0, revealState: .wrongLetter, animate: false)
+                Tile(letter: "D", delay: 0, revealState: .none, animate: false)
+            }.environment(\.palette, DarkPalette())
+        }
+            Text("Without animation")
+        }
+        VStack {
             HStack {
                 ForEach(0..<5, id: \.self) { ix in
-                    Tile(letter: String(wa[ix]), delay: 0, revealState: .wrongLetter)
+                    Tile(letter: String(wa[ix]), delay: 0, revealState: .wrongLetter, animate: true)
                 }
             }
             
@@ -170,27 +222,27 @@ struct Tile_Previews: PreviewProvider {
                 expected: "fuels",
                 isSubmitted: true))
             
-            Tile(letter: "q", delay: 0, revealState: .rightPlace) 
+            Tile(letter: "q", delay: 0, revealState: .rightPlace, animate: true) 
                 .font(.system(size: 100))
             
-            Tile(letter: "q", delay: 1, revealState: .wrongPlace)
-            Tile(letter: "", delay: 0, revealState: nil)
+            Tile(letter: "q", delay: 1, revealState: .wrongPlace, animate: true)
+            Tile(letter: "", delay: 0, revealState: nil, animate: true)
             
             HStack {
                 VStack {
-                    Tile(letter: "i", delay: 0, revealState: nil)
-                    Tile(letter: "", delay: 0, revealState: nil)
+                    Tile(letter: "i", delay: 0, revealState: nil, animate: true)
+                    Tile(letter: "", delay: 0, revealState: nil, animate: true)
                 }
                 
                 VStack {
-                    Tile(letter: "i", delay: 0, revealState: nil)
+                    Tile(letter: "i", delay: 0, revealState: nil, animate: true)
                         .environment(\.palette, LightPalette())
-                    Tile(letter: "", delay: 0, revealState: nil)
+                    Tile(letter: "", delay: 0, revealState: nil, animate: true)
                         .environment(\.palette, LightPalette())
                 }
             }
             
-            Tile(letter: "X", delay: 0, revealState: .wrongPlace)
+            Tile(letter: "X", delay: 0, revealState: .wrongPlace, animate: true)
                 .environment(\.palette, LightPalette())
         }
     }
