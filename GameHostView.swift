@@ -50,8 +50,10 @@ struct GameHostView: View {
             wrappedValue: nil, 
             "turnState.\(name)")
         
+        // Showing help should not be dependent
+        // on the name (unlike turn state and stats)
         self._shouldShowHelp = AppStorage(
-            wrappedValue: true, "shouldShowHelp.\(name)")
+            wrappedValue: true, "shouldShowHelp")
         
         self.locale = name
         
@@ -60,10 +62,6 @@ struct GameHostView: View {
         } else {
             title = "Français"
         }
-        
-        //        
-        //        // tmp
-        //        self.shouldShowHelp = true
     }
     
     var todayIndex: Int {
