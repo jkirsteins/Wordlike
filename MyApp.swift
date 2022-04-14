@@ -7,6 +7,8 @@ struct MyApp: App {
         start: WordValidator.MAR_22_2022, 
         bucket: 180)
     
+    let debugViz = false
+    
     @SceneBuilder
     var body: some Scene {
         WindowGroup { 
@@ -24,6 +26,7 @@ struct MyApp: App {
                 EmptyView()
             }
             .environment(\.paceSetter, paceSetter)
+            .environment(\.debug, debugViz)
         }
     }
 }

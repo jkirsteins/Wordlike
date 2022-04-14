@@ -39,6 +39,7 @@ struct StatsView: View {
     @Environment(\.paceSetter) var paceSetter: PaceSetter
     
     // Timer sets this to hh:mm:ss until next word
+    // TODO: duplicated with GameHostView
     @State var nextWordIn: String = "..."
     
     // Share sheet

@@ -33,6 +33,7 @@ struct GameHostView: View {
     @StateObject var game: GameState = GameState()
     
     @Environment(\.paceSetter) var paceSetter: PaceSetter
+    @Environment(\.debug) var debugViz: Bool
     
     @State var activeSheet: ActiveSheet? = nil
     
@@ -82,8 +83,28 @@ struct GameHostView: View {
         game.date = newState.date
     }
     
+    // Timer sets this to hh:mm:ss until next word
+    // TODO: duplicated with StatsView
+    @State var nextWordIn: String = "..." 
+    
+    func recalculateNextWord() {
+        let remaining = paceSetter.remainingTtl(at: Date())
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.unitsStyle = .positional
+        formatter.zeroFormattingBehavior = .pad
+        guard let formatted = formatter.string(from: TimeInterval(remaining)) else {
+            nextWordIn = "?"
+            return
+        }
+        nextWordIn = formatted
+    }
+    
     var body: some View {
         VStack {
+            Text("Turn \(self.todayIndex)")
+            Text("Next turn in \(self.nextWordIn)")
+            Spacer().frame(maxHeight: 24)
             if game.initialized && paceSetter.isFresh(game.date, at: Date()) {
                 GameBoardView(state: game,
                               canBeAutoActivated: !finished && !shouldShowHelp)
@@ -104,11 +125,14 @@ struct GameHostView: View {
                         
                         finished = true
                     })
+                
+                if debugViz {
                 Text(verbatim: "\(game.submittedRows)")
                 Text(verbatim: "\(game.isCompleted)")
                 Text(dailyState?.expected ?? "none")
                 Text(dailyState?.rows[0].word ?? "none")
                 Text(self.debugMessage).id("message")
+                }
             } 
             
             
@@ -143,6 +167,8 @@ struct GameHostView: View {
             }
         }
         .onReceive(timer) { newTime in
+            
+            recalculateNextWord()
             
             guard let dailyState = self.dailyState else {
                 return
@@ -180,16 +206,6 @@ struct GameHostView: View {
                 activeSheet = .stats
             }
         }
-//        .sheet(isPresented: $shouldShowHelp, onDismiss: { shouldShowHelp = false }) {
-//            PaletteSetterView {
-//                HelpView().padding(16)
-//            }
-//        }
-//        .sheet(isPresented: $finished) {
-//            PaletteSetterView {
-//                StatsView(stats: stats, state: game)
-//            }
-//        }
         .navigationTitle(title)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {

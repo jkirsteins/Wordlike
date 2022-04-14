@@ -48,6 +48,11 @@ struct RowModel : Equatable, Codable, Identifiable
         wordArray[0] == "S"
     }
     
+    var focusHintIx: Int? {
+        guard wordArray.count < 5 else { return nil }
+        return wordArray.count
+    }
+    
     func char(guessAt pos: Int) -> String
     {
         guard wordArray.count > pos else { return "" }

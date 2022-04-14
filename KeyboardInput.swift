@@ -10,6 +10,8 @@ struct KeyboardInput<Content: View, AccessoryView: View> : View
     let accessoryView: AccessoryView
     let editable: Bool
     
+    @Environment(\.debug) var debugViz: Bool
+    
     init(
     editable: Bool,
 model: Binding<RowModel>, 
@@ -23,6 +25,11 @@ isActive: Binding<Int?>,
         self._isActive = isActive
         self.content = content()
         self.accessoryView = accessoryView()
+    }
+    
+    var borderColor: Color {
+        guard debugViz else { return .clear }
+        return self.isActive == self.tag ? .red : .green
     }
     
     @State var contentSize: CGSize = CGSize.zero
@@ -54,7 +61,7 @@ isActive: Binding<Int?>,
             // If you set width/height, then it might prevent `content` from resizing
             // (e.g. it might not become narrow, if iPad window becomes smaller) 
                 .frame(maxWidth: contentSize.width, maxHeight: contentSize.height)
-                .border(self.isActive == self.tag ? .red : .green)
+                .border(borderColor)
             }
         }
         
@@ -163,7 +170,7 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         func insertText(_ text: String) {
             for chr in text { 
                 guard chr.isLetter else {
-                    if chr == "\n" && self.owner.model.word.count == 5 {
+                    if chr == "\n" {
                         // If word doesn't match,
                         // don't set isSubmitted
                         guard self.owner.validator.canSubmit(word: self.owner.model.word) else {
@@ -323,14 +330,17 @@ struct EditableRow : View
     
     @State var background: Color = Color(UIColor.systemFill)
     
-    var body: some View { 
+    var body: some View {
+        let showFocusHint = (isActive == self.tag) 
         
-        KeyboardInput(
+        return KeyboardInput(
             editable: editable,
             model: $model,
             tag: self.tag,
             isActive: $isActive, {
-                Row(delayRowIx: delayRowIx, model: model)
+                VStack {
+                    Row(delayRowIx: delayRowIx, model: model, showFocusHint: showFocusHint)
+                }
             }) {
                 PaletteSetterView {
                     VStack {

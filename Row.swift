@@ -8,8 +8,31 @@ struct Shake: GeometryEffect {
     
     func effectValue(size: CGSize) -> ProjectionTransform {
         return ProjectionTransform(CGAffineTransform(translationX:
-                                                amount * sin(animatableData * .pi * CGFloat(shakesPerUnit)),
-                                              y: 0))
+                                                        amount * sin(animatableData * .pi * CGFloat(shakesPerUnit)),
+                                                     y: 0))
+    }
+}
+
+struct BlinkViewModifier: ViewModifier {
+    
+    let duration: Double
+    @State private var blinking: Bool = false
+    
+    func body(content: Content) -> some View {
+        content
+            .opacity(blinking ? 0 : 1)
+            .animation(.easeOut(duration: duration).repeatForever())
+            .onAppear {
+                withAnimation {
+                    blinking = true
+                }
+            }
+    }
+}
+
+extension View {
+    func blinking(duration: Double = 0.75) -> some View {
+        modifier(BlinkViewModifier(duration: duration))
     }
 }
 
@@ -17,6 +40,19 @@ struct Row: View {
     
     var delayRowIx: Int
     var model: RowModel
+    var showFocusHint: Bool 
+    
+    init(delayRowIx: Int, model: RowModel, showFocusHint: Bool) {
+        self.delayRowIx = delayRowIx
+        self.model = model 
+        self.showFocusHint = showFocusHint
+    }
+    
+    init(delayRowIx: Int, model: RowModel) {
+        self.delayRowIx = delayRowIx
+        self.model = model 
+        self.showFocusHint = false
+    }
     
     var body: some View {
         HStack {
@@ -32,11 +68,18 @@ struct Row: View {
                 }
             } else {
                 ForEach(0..<5) { ix in
-                    Tile(
-                        letter: model.char(guessAt: ix), 
-                        delay: delayRowIx + ix,
-                        revealState: model.revealState(ix),
-                        animate: true)
+                    ZStack {
+                        Tile(
+                            letter: model.char(guessAt: ix), 
+                            delay: delayRowIx + ix,
+                            revealState: model.revealState(ix),
+                            animate: true)
+                        
+                        if showFocusHint && model.focusHintIx == ix {
+                            Text("_")
+                                .blinking(duration: 0.5)
+                        }
+                    }
                 }
             }
         }
@@ -106,7 +149,16 @@ fileprivate struct InvalidSubmittableRow_Preview: View
 struct Row_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            Text("yellow and green L")
+            Text("Test focus hint")
+            PaletteSetterView {
+                Row(delayRowIx: 0, model: RowModel(
+                    word: "lad",
+                    expected: "holly",
+                    isSubmitted: false), showFocusHint: true)
+            }
+        }
+        VStack {
+            Text("Test yellow and green L")
             Row(delayRowIx: 0, model: RowModel(
                 word: "ladle",
                 expected: "holly",
