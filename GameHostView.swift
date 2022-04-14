@@ -224,6 +224,7 @@ struct GameHostView: View {
             }
         }
         .padding(8)
+        .frame(maxHeight: 650)
     }
 }
 
