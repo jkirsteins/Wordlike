@@ -105,7 +105,14 @@ fileprivate struct InvalidSubmittableRow_Preview: View
 
 struct Row_Previews: PreviewProvider {
     static var previews: some View {
-        return VStack {
+        VStack {
+            Text("yellow and green L")
+            Row(delayRowIx: 0, model: RowModel(
+                word: "ladle",
+                expected: "holly",
+                isSubmitted: true))
+        }
+        VStack {
             Row(delayRowIx: 0, model: RowModel(
                 word: "fuels",
                 expected: "fuels",

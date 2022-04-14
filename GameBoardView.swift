@@ -85,7 +85,8 @@ struct GameBoardView: View {
                             delayRowIx: ix,
                                 model: $state.rows[ix], 
                                 tag: ix,
-                                isActive: $isActive)
+                                isActive: $isActive,
+                            keyboardHints: state.keyboardHints )
                         
                     }
                     

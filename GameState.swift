@@ -25,6 +25,37 @@ class GameState : ObservableObject, Identifiable, Equatable
     @Published var rows: [RowModel]
     @Published var date: Date
     
+    var keyboardHints: KeyboardHints {
+        var result: KeyboardHints = [:]
+        
+        let submittedRows = rows.filter({$0.isSubmitted})
+        
+        for srow in submittedRows {
+            for ix in 0..<srow.word.count {
+                let state = srow.revealState(ix)
+                let char = srow.char(guessAt: ix)
+                
+                // don't allow overriding rightPlace
+                guard result[char] != .rightPlace else {
+                    continue 
+                }
+                
+                guard result[char] != state else { 
+                    continue
+                }
+                
+                guard [
+                    .rightPlace, .wrongPlace].contains(state) else {
+                        continue
+                    }
+                
+                result[char] = state
+            }
+        }
+        
+        return result 
+    }
+    
     var isWon: Bool {
         rows.first(where: { $0.isSubmitted && $0.word.uppercased() == expected.word.uppercased() }) != nil
     }
@@ -63,3 +94,4 @@ class GameState : ObservableObject, Identifiable, Equatable
         self._rows = Published(wrappedValue: rows)
     }
 }
+
