@@ -197,7 +197,7 @@ struct GameHostView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(
                     action: { 
-                        finished = true
+                        activeSheet = .stats
                     }, 
                     label: {
                         Label(
@@ -209,6 +209,7 @@ struct GameHostView: View {
                     }) 
             }
         }
+        .padding(8)
     }
 }
 
