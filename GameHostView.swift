@@ -3,6 +3,7 @@ import SwiftUI
 enum ActiveSheet {
     case stats 
     case help
+    case settings
 }
 
 extension ActiveSheet: Identifiable {
@@ -103,7 +104,7 @@ struct GameHostView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack  { 
             if game.isCompleted {
                 Text(game.expected.word).font(.title)
                 Spacer().frame(maxHeight: 24)
@@ -134,11 +135,11 @@ struct GameHostView: View {
                     })
                 
                 if debugViz {
-                Text(verbatim: "\(game.submittedRows)")
-                Text(verbatim: "\(game.isCompleted)")
-                Text(dailyState?.expected ?? "none")
-                Text(dailyState?.rows[0].word ?? "none")
-                Text(self.debugMessage).id("message")
+                    Text(verbatim: "\(game.submittedRows)")
+                    Text(verbatim: "\(game.isCompleted)")
+                    Text(dailyState?.expected ?? "none")
+                    Text(dailyState?.rows[0].word ?? "none")
+                    Text(self.debugMessage).id("message")
                 }
             } 
             
@@ -202,8 +203,10 @@ struct GameHostView: View {
                 switch (item) {
                 case .help:
                     HelpView().padding(16)
-                    case .stats:
+                case .stats:
                     StatsView(stats: stats, state: game)
+                case .settings:
+                    SettingsView()
                 }    
             }
         }
@@ -242,6 +245,20 @@ struct GameHostView: View {
                                 Color(
                                     UIColor.label))
                     }) 
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(
+                    action: { 
+                        activeSheet = .settings
+                    }, 
+                    label: {
+                        Label(
+                            "Help", 
+                            systemImage: "gear")
+                            .foregroundColor(
+                                Color(
+                                    UIColor.label))
+                    })  
             }
         }
         .padding(8)
