@@ -16,6 +16,9 @@ protocol Palette
     
     var maskedTextColor: Color { get }
     var revealedTextColor: Color { get }
+    
+    var toastBackground: Color { get }
+    var toastForeground: Color { get }
 }
 
 struct DarkPalette : Palette
@@ -34,6 +37,9 @@ struct DarkPalette : Palette
     
     let maskedTextColor: Color = Color(hex: 0xffffff)
     let revealedTextColor: Color = Color(hex: 0xffffff)
+    
+    let toastBackground = Color.white
+    let toastForeground = Color(hex: 0x121213)
 }
 
 

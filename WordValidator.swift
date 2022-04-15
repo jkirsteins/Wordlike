@@ -74,9 +74,23 @@ class WordValidator : ObservableObject
 //            to: Calendar.current.startOfDay(for: end)).day!
 //    }
     
-    func canSubmit(word: String) -> Bool {
-        guesses.contains(word.uppercased())
-//        true
+    func canSubmit(word: String, reason: inout String?) -> Bool {
+        /* To avoid accidentally breaking input files,
+         do some checks centrally (e.g. we can check length
+         just here, instead of ensuring every input
+         file doesn't contain an invalid short/empty line) */
+        guard word.count == 5 else {
+            reason = "Not enough letters"
+            return false
+        } 
+        
+        guard guesses.contains(word.uppercased()) else {
+            reason = "Not in word list"
+            return false
+        }
+        
+        reason = nil
+        return true
     }
     
     func answer(at todayIndex: Int) -> String {

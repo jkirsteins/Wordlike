@@ -14,6 +14,7 @@ struct MyApp: App {
     @SceneBuilder
     var body: some Scene {
         WindowGroup { 
+            PaletteSetterView {
             NavigationView {
                 List {
                     NavigationLink("English 🇺🇸") {
@@ -32,6 +33,7 @@ struct MyApp: App {
             }
             .environment(\.paceSetter, paceSetter)
             .environment(\.debug, debugViz)
+            }
         }
     }
 }

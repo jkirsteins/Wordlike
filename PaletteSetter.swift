@@ -16,6 +16,9 @@ struct LightPalette : Palette
     
     let maskedTextColor: Color = Color(hex: 0x000000)
     let revealedTextColor: Color = Color(hex: 0xffffff)
+    
+    let toastBackground = Color(hex: 0x121213)
+    let toastForeground = Color.white
 }
 
 struct DarkHCPalette : Palette
@@ -34,6 +37,9 @@ struct DarkHCPalette : Palette
     
     let maskedTextColor: Color = Color(hex: 0xffffff)
     let revealedTextColor: Color = Color(hex: 0xffffff)
+    
+    let toastBackground = Color.white
+    let toastForeground = Color(hex: 0x121213)
 }
 
 struct LightHCPalette : Palette
@@ -52,6 +58,9 @@ struct LightHCPalette : Palette
     
     let maskedTextColor: Color = Color(hex: 0x000000)
     let revealedTextColor: Color = Color(hex: 0xffffff)
+    
+    let toastBackground = Color(hex: 0x121213)
+    let toastForeground = Color.white
 }
 
 

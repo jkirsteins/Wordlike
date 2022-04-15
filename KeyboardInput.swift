@@ -1,5 +1,13 @@
 import SwiftUI
 
+struct SubmissionFailureReasonKey: PreferenceKey {
+    static var defaultValue: String? = nil
+    
+    static func reduce(value: inout String?, nextValue: () -> String?) {
+        value = nextValue() ?? value
+    }
+}
+
 struct KeyboardInput<Content: View, AccessoryView: View> : View 
 {
     @Binding var model: RowModel
@@ -34,6 +42,9 @@ isActive: Binding<Int?>,
     
     @State var contentSize: CGSize = CGSize.zero
     @State var testUuid: Date = Date()
+    
+    @Environment(\.failureReason) var failureReason: Binding<String?>
+    
     var body: some View {
         
         ZStack {
@@ -52,6 +63,7 @@ isActive: Binding<Int?>,
             
             if editable {
             KeyboardInputUIKit(
+                failureReason: failureReason,
                 model: $model,
                 tag: self.tag,
                 isActive: $isActive,
@@ -64,6 +76,10 @@ isActive: Binding<Int?>,
                 .border(borderColor)
             }
         }
+        .preference(
+            key: SubmissionFailureReasonKey.self, 
+            value: failureReason.wrappedValue
+        )
         
     }
 }
@@ -71,6 +87,8 @@ isActive: Binding<Int?>,
 struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
     @EnvironmentObject var validator: WordValidator
+    
+    @Binding var failureReason: String?
     
     class InternalView<AccessoryView: View>: UIControl, UIKeyInput
     {
@@ -173,13 +191,14 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
                     if chr == "\n" {
                         // If word doesn't match,
                         // don't set isSubmitted
-                        guard self.owner.validator.canSubmit(word: self.owner.model.word) else {
+                        guard  self.owner.validator.canSubmit(word: self.owner.model.word, reason: &self.owner.failureReason) else {
                             self.owner.model = RowModel(
                                 word: self.owner.model.word,
                                 expected: self.owner.model.expected,
                                 isSubmitted: false,
                                 attemptCount: self.owner.model.attemptCount + 1
                             )
+                            
                             return
                         } 
                         

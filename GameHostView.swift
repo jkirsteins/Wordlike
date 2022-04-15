@@ -10,6 +10,17 @@ extension ActiveSheet: Identifiable {
     var id: Self { self }
 }
 
+extension EnvironmentValues {
+    var failureReason: Binding<String?> {
+        get { self[FailureReasonKey.self] }
+        set { self[FailureReasonKey.self] = newValue }
+    }
+}
+
+struct FailureReasonKey: EnvironmentKey {
+    static let defaultValue: Binding<String?> = .constant(nil) 
+}
+
 struct GameHostView: View {
     
     @State var debugMessage: String = ""
@@ -35,11 +46,15 @@ struct GameHostView: View {
     
     @Environment(\.paceSetter) var paceSetter: PaceSetter
     @Environment(\.debug) var debugViz: Bool
+    @Environment(\.palette) var palette: Palette
     
     @State var activeSheet: ActiveSheet? = nil
     
     let title: String
     let locale: String
+    
+    /* Propogated via preferences from the underlying EditableRow. */
+    @State var failureReason: String? = nil
     
     init(_ name: String) {
         self._validator = StateObject(wrappedValue: WordValidator(name: name))
@@ -103,166 +118,202 @@ struct GameHostView: View {
         nextWordIn = formatted
     }
     
+    // When to clear message toast
+    @State var clearToastAt: Date? = nil
+    
     var body: some View {
-        VStack  { 
-            if game.isCompleted {
-                Text(game.expected.word).font(.title)
-                Spacer().frame(maxHeight: 24)
-            }
-            
-            Text("Turn \(self.todayIndex)")
-            Text("Next turn in \(self.nextWordIn)")
-            Spacer().frame(maxHeight: 24)
-            if game.initialized && paceSetter.isFresh(game.date, at: Date()) {
-                GameBoardView(state: game,
-                              canBeAutoActivated: !finished && !shouldShowHelp)
-                    .onStateChange(edited: { newRows in
-                        self.dailyState = DailyState(
-                            expected: dailyState!.expected,
-                            date: dailyState!.date,
-                            rows: newRows,
-                            isTallied: dailyState!.isTallied)
-                    }, completed: { 
-                        state in
-                        
-                        if let dailyState = self.dailyState {
-                            self.dailyState = DailyState(expected: dailyState.expected, date: dailyState.date, rows: dailyState.rows, isTallied: true)
-                        }
-                        
-                        stats = stats.update(from: game, with: paceSetter)
-                        
-                        finished = true
-                    })
-                
-                if debugViz {
-                    Text(verbatim: "\(game.submittedRows)")
-                    Text(verbatim: "\(game.isCompleted)")
-                    Text(dailyState?.expected ?? "none")
-                    Text(dailyState?.rows[0].word ?? "none")
-                    Text(self.debugMessage).id("message")
+        ZStack {
+            VStack  { 
+                if game.isCompleted {
+                    Text(game.expected.word).font(.title)
+                    Spacer().frame(maxHeight: 24)
                 }
-            } 
-            
-            
-            if let ds = dailyState, !paceSetter.isFresh(ds.date, at: Date()) {
-                Text("Rummaging in the sack for a new word...")
-            }
-            
-            if dailyState == nil {
-                Text("Initializing state...").onAppear {
-                    guard let dailyState = dailyState else {
-                        dailyState = DailyState(expected: validator.answer(at: todayIndex))
-                        return
+                
+                Text("Turn \(self.todayIndex)")
+                Text("Next turn in \(self.nextWordIn)")
+                
+                Spacer().frame(maxHeight: 24)
+                if game.initialized && paceSetter.isFresh(game.date, at: Date()) {
+                    GameBoardView(state: game,
+                                  canBeAutoActivated: !finished && !shouldShowHelp)
+                        .onStateChange(edited: { newRows in
+                            self.dailyState = DailyState(
+                                expected: dailyState!.expected,
+                                date: dailyState!.date,
+                                rows: newRows,
+                                isTallied: dailyState!.isTallied)
+                        }, completed: { 
+                            state in
+                            
+                            if let dailyState = self.dailyState {
+                                self.dailyState = DailyState(expected: dailyState.expected, date: dailyState.date, rows: dailyState.rows, isTallied: true)
+                            }
+                            
+                            stats = stats.update(from: game, with: paceSetter)
+                            
+                            finished = true
+                        })
+                        .environment(\.failureReason, $failureReason)
+                        .onPreferenceChange(SubmissionFailureReasonKey.self) {
+                            new in 
+                            
+                            self.failureReason = new
+                            self.clearToastAt = (self.clearToastAt ?? Date()) + 2.0
+                        }
+                    
+                    if debugViz {
+                        Text(verbatim: "\(game.submittedRows)")
+                        Text(verbatim: "\(game.isCompleted)")
+                        Text(dailyState?.expected ?? "none")
+                        Text(dailyState?.rows[0].word ?? "none")
+                        Text(self.debugMessage).id("message")
+                    }
+                } 
+                
+                
+                if let ds = dailyState, !paceSetter.isFresh(ds.date, at: Date()) {
+                    Text("Rummaging in the sack for a new word...")
+                }
+                
+                if dailyState == nil {
+                    Text("Initializing state...").onAppear {
+                        guard let dailyState = dailyState else {
+                            dailyState = DailyState(expected: validator.answer(at: todayIndex))
+                            return
+                        }
                     }
                 }
             }
+            .environmentObject(validator)
+            .onAppear {
+                if shouldShowHelp {
+                    activeSheet = .help
+                }
+                
+                if let newState = self.dailyState {
+                    updateFromLoadedState(newState)
+                } 
+            }
+            .onChange(of: self.dailyState) {
+                newState in
+                
+                if let newState = newState {
+                    updateFromLoadedState(newState)
+                }
+            }
+            .onReceive(timer) { newTime in
+                
+                recalculateNextWord()
+                
+                if let clearToastAt = clearToastAt, Date() > clearToastAt {
+                    self.clearToastAt = nil
+                    withAnimation {
+                        self.failureReason = nil
+                    }
+                }
+                
+                guard let dailyState = self.dailyState else {
+                    return
+                }
+                
+                debugMessage = "TTL: \(paceSetter.remainingTtl(at: newTime)) (f:\(paceSetter.isFresh(dailyState.date, at: newTime))) for word: \(dailyState.expected)" + "\nTIX: \(todayIndex)" + "\nTALLIED: \(self.dailyState?.isTallied ?? false)" + "\nPS: \(paceSetter)" + "\nSSH: \(shouldShowHelp)"
+                
+                if !paceSetter.isFresh(dailyState.date, at: newTime) {
+                    // TODO: process daily results if needed
+                    self.dailyState = DailyState(expected: validator.answer(at: todayIndex))
+                }
+            }
+            .sheet(item: $activeSheet, 
+                   onDismiss: {
+                
+                // assuming this is the first
+                // sheet to ever be dismissed
+                if shouldShowHelp {
+                    shouldShowHelp = false
+                }
+                
+            }) { item in
+                PaletteSetterView {
+                    switch (item) {
+                    case .help:
+                        HelpView().padding(16)
+                    case .stats:
+                        StatsView(stats: stats, state: game)
+                    case .settings:
+                        SettingsView()
+                    }    
+                }
+            }
+            .onChange(of: finished) {
+                newF in 
+                if (newF && activeSheet == nil) {
+                    activeSheet = .stats
+                }
+            }
+            .navigationTitle(title)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(
+                        action: { 
+                            activeSheet = .help
+                        }, 
+                        label: {
+                            Label(
+                                "Help", 
+                                systemImage: "questionmark.circle")
+                                .foregroundColor(
+                                    Color(
+                                        UIColor.label))
+                        })  
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(
+                        action: { 
+                            activeSheet = .stats
+                        }, 
+                        label: {
+                            Label(
+                                "Stats", 
+                                systemImage: "chart.bar")
+                                .foregroundColor(
+                                    Color(
+                                        UIColor.label))
+                        }) 
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(
+                        action: { 
+                            activeSheet = .settings
+                        }, 
+                        label: {
+                            Label(
+                                "Help", 
+                                systemImage: "gear")
+                                .foregroundColor(
+                                    Color(
+                                        UIColor.label))
+                        })  
+                }
+            }
+            .padding(8)
+            .frame(maxHeight: 650)
+            
+            if let failureReason = failureReason {
+            VStack {
+                Spacer().frame(maxHeight: 48)
+                Text(verbatim: "\(failureReason)")
+                    .foregroundColor(palette.toastForeground)
+                    .fontWeight(.bold)
+                    .padding(16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(palette.toastBackground))
+                Spacer()
+            }
+            .transition(.opacity)
+            
+            }
         }
-        .environmentObject(validator)
-        .onAppear {
-            if shouldShowHelp {
-                activeSheet = .help
-            }
-            
-            if let newState = self.dailyState {
-                updateFromLoadedState(newState)
-            } 
-        }
-        .onChange(of: self.dailyState) {
-            newState in
-            
-            if let newState = newState {
-                updateFromLoadedState(newState)
-            }
-        }
-        .onReceive(timer) { newTime in
-            
-            recalculateNextWord()
-            
-            guard let dailyState = self.dailyState else {
-                return
-            }
-            
-            debugMessage = "TTL: \(paceSetter.remainingTtl(at: newTime)) (f:\(paceSetter.isFresh(dailyState.date, at: newTime))) for word: \(dailyState.expected)" + "\nTIX: \(todayIndex)" + "\nTALLIED: \(self.dailyState?.isTallied ?? false)" + "\nPS: \(paceSetter)" + "\nSSH: \(shouldShowHelp)"
-            
-            if !paceSetter.isFresh(dailyState.date, at: newTime) {
-                // TODO: process daily results if needed
-                self.dailyState = DailyState(expected: validator.answer(at: todayIndex))
-            }
-        }
-        .sheet(item: $activeSheet, 
-               onDismiss: {
-            
-            // assuming this is the first
-            // sheet to ever be dismissed
-            if shouldShowHelp {
-                shouldShowHelp = false
-            }
-            
-        }) { item in
-            PaletteSetterView {
-                switch (item) {
-                case .help:
-                    HelpView().padding(16)
-                case .stats:
-                    StatsView(stats: stats, state: game)
-                case .settings:
-                    SettingsView()
-                }    
-            }
-        }
-        .onChange(of: finished) {
-            newF in 
-            if (newF && activeSheet == nil) {
-                activeSheet = .stats
-            }
-        }
-        .navigationTitle(title)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(
-                    action: { 
-                        activeSheet = .help
-                    }, 
-                    label: {
-                        Label(
-                            "Help", 
-                            systemImage: "questionmark.circle")
-                            .foregroundColor(
-                                Color(
-                                    UIColor.label))
-                    })  
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(
-                    action: { 
-                        activeSheet = .stats
-                    }, 
-                    label: {
-                        Label(
-                            "Stats", 
-                            systemImage: "chart.bar")
-                            .foregroundColor(
-                                Color(
-                                    UIColor.label))
-                    }) 
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(
-                    action: { 
-                        activeSheet = .settings
-                    }, 
-                    label: {
-                        Label(
-                            "Help", 
-                            systemImage: "gear")
-                            .foregroundColor(
-                                Color(
-                                    UIColor.label))
-                    })  
-            }
-        }
-        .padding(8)
-        .frame(maxHeight: 650)
     }
 }
 
