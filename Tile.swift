@@ -11,6 +11,16 @@ extension EnvironmentValues {
     }
 }
 
+extension EnvironmentValues {
+    var showFocusHint: Bool {
+        get { self[ShowFocusHintKey.self] }
+        set { self[ShowFocusHintKey.self] = newValue }
+    }
+}
+
+struct ShowFocusHintKey: EnvironmentKey {
+    static let defaultValue: Bool = false 
+}
 
 struct Tile: View {
     @Environment(\.palette) var palette: Palette
@@ -30,6 +40,8 @@ struct Tile: View {
     /// through the reveal animation - if any - it 
     /// will be set to the reveal type.
     @State var type: TileBackgroundType? = nil
+    
+    @Environment(\.showFocusHint) var showFocusHint: Bool
     
     let letter: String?
     let delay: Int 
@@ -100,7 +112,26 @@ struct Tile: View {
                         axis: (x: 1, y: 0, z: 0),
                         perspective: 0)
                 
-                if let letter = letter {
+                if showFocusHint {
+                    // This is the cursor branch.
+                    // 
+                    // Text() modifiers need to be same
+                    // here and in the letter branch
+                    // (except animations)
+                    Text("_") 
+                        .font( 
+                            .system(size: fontSize(gr), weight: .bold))
+                        .textCase(.uppercase)
+                        .padding(padding(gr))
+                        .scaledToFit()
+                        .minimumScaleFactor(0.19)
+                        .lineLimit(1)
+                        .foregroundColor(
+                            (animate && flip == false) || calculatedType == .maskedFilled ? palette.maskedTextColor : palette.revealedTextColor) 
+                            .blinking(duration: 0.5)
+                }
+                
+                if !showFocusHint, let letter = letter {
                     Text(letter) 
                         .font( 
                             .system(size: fontSize(gr), weight: .bold))
@@ -196,6 +227,12 @@ extension EnvironmentValues {
 struct Tile_Previews: PreviewProvider {
     static let wa = Array("fuels")
     static var previews: some View {
+        PaletteSetterView {
+            VStack {
+            Text("Blinking cursor test")
+        Tile(letter: nil, delay: 0, revealState: nil, animate: true).environment(\.showFocusHint, true)
+            }
+        }
         VStack {
             Text("With animation")
             HStack {
@@ -259,6 +296,8 @@ struct Tile_Previews: PreviewProvider {
                 .environment(\.palette, LightPalette())
         }
         
+        Tile(letter: nil, delay: 0, revealState: nil, animate: true)
+        
         HStack() {
             ZStack(alignment: .center) {
 //                Tile(letter: " W° ", delay: 0, revealState: .wrongLetter, animate: false)
@@ -298,7 +337,7 @@ struct Tile_Previews: PreviewProvider {
                 }
             }
         }
-        .environment(\.palette, HighContrastPalette())
+        .environment(\.palette, DarkHCPalette())
         .environment(\.sideLength, 500)
     }
 }

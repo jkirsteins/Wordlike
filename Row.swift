@@ -68,18 +68,15 @@ struct Row: View {
                 }
             } else {
                 ForEach(0..<5) { ix in
-                    ZStack {
-                        Tile(
-                            letter: model.char(guessAt: ix), 
-                            delay: delayRowIx + ix,
-                            revealState: model.revealState(ix),
-                            animate: true)
-                        
-                        if showFocusHint && model.focusHintIx == ix {
-                            Text("_")
-                                .blinking(duration: 0.5)
-                        }
-                    }
+                    Tile(
+                        letter: model.char(guessAt: ix), 
+                        delay: delayRowIx + ix,
+                        revealState: model.revealState(ix),
+                        animate: true
+                    )
+                        .environment(\.showFocusHint,
+                        showFocusHint && model.focusHintIx == ix)
+                    
                 }
             }
         }
