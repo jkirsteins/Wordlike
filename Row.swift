@@ -21,11 +21,11 @@ struct BlinkViewModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .opacity(blinking ? 0 : 1)
-            .animation(.easeOut(duration: duration).repeatForever())
+            .animation(
+                .easeInOut(duration: duration).repeatForever(), 
+                value: blinking)
             .onAppear {
-                withAnimation {
-                    blinking = true
-                }
+                blinking = true
             }
     }
 }
@@ -75,7 +75,7 @@ struct Row: View {
                         animate: true
                     )
                         .environment(\.showFocusHint,
-                        showFocusHint && model.focusHintIx == ix)
+                                      showFocusHint && model.focusHintIx == ix)
                     
                 }
             }

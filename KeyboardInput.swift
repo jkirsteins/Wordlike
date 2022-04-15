@@ -331,7 +331,7 @@ struct EditableRow : View
     @State var background: Color = Color(UIColor.systemFill)
     
     var body: some View {
-        let showFocusHint = (isActive == self.tag) 
+        let showFocusHint =  editable && (isActive == self.tag) 
         
         return KeyboardInput(
             editable: editable,
