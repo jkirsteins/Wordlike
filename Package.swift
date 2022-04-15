@@ -34,9 +34,15 @@ let package = Package(
             ]
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/benlmyers/confetti-view", "1.1.2"..<"2.0.0")
+    ],
     targets: [
         .executableTarget(
             name: "AppModule",
+            dependencies: [
+                .product(name: "ConfettiView", package: "confetti-view")
+            ],
             path: ".",
             resources: [
                 .process("Resources")

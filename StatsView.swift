@@ -1,4 +1,5 @@
 import SwiftUI
+import ConfettiView
 
 struct ShareButtonStyle: ButtonStyle {
     
@@ -62,9 +63,18 @@ struct StatsView: View {
     var body: some View {
         VStack(spacing: 24) {
             VStack(spacing: 8) {
-                Text("Statistics")
-                    .font(Font.system(.title).smallCaps())
-                    .fontWeight(.bold)
+                
+                ZStack {
+                    Text("Statistics")
+                        .font(Font.system(.title).smallCaps())
+                        .fontWeight(.bold)
+                    
+                    if self.state.isWon {
+                        ConfettiView()
+                        ParticleView(time: 0, scale: 0.1)
+                    }
+                    
+                }
                 
                 HStack(alignment: .top) {
                     VStack {
@@ -77,7 +87,7 @@ struct StatsView: View {
                         if stats.played == 0 {
                             Text("-").font(.largeTitle)
                         } else {
-                        Text("\(Double(stats.won) / Double(stats.played) * 100, specifier: "%.0f")").font(.largeTitle)
+                            Text("\(Double(stats.won) / Double(stats.played) * 100, specifier: "%.0f")").font(.largeTitle)
                         }
                         Text("Win %")
                             .font(.caption)
@@ -129,12 +139,12 @@ struct StatsView: View {
                                     .frame(maxWidth: 
                                             
                                             stats.guessDistribution.contains(where: { $0 > 0 }) ? 
-                                            
-                                            (rowIx == stats.maxRow ? .infinity :  max(24, 
-                                                                                               stats.widthRatio(row: rowIx) * maxBarWidth))
+                                           
+                                           (rowIx == stats.maxRow ? .infinity :  max(24, 
+                                                                                     stats.widthRatio(row: rowIx) * maxBarWidth))
                                            
                                            : 40
-                                    
+                                           
                                     )
                                 //.frame(maxWidth: stats.widthRatio(row: rowIx) * maxBarWidth)
                             }
@@ -143,32 +153,32 @@ struct StatsView: View {
                     if !stats.guessDistribution.contains(where: { $0 > 0 }) {
                         Spacer()
                     }
-                    }.padding(24)
-                    
+                }.padding(24)
+                
                 if state.isCompleted {
-                HStack(spacing: 16) {
-                    VStack() {
-                        Text("Next word")
-                            .font(Font.system(.title).smallCaps())
-                        
-                        Text(nextWordIn)
-                            .font(.largeTitle)
-                    }.frame(minWidth: 150)
-                    
-                    Divider().frame(maxHeight: 88)
-                    
-                    Button(action: {
-                        self.isSharing.toggle()
-                    }, label: {
-                        HStack {
-                            Text("Share")
-                                .font(Font.system(.body).smallCaps())
-                                .fontWeight(.bold)
+                    HStack(spacing: 16) {
+                        VStack() {
+                            Text("Next word")
+                                .font(Font.system(.title).smallCaps())
                             
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                    }) .buttonStyle(ShareButtonStyle(backgroundColor: palette.rightPlaceFill))
-                }
+                            Text(nextWordIn)
+                                .font(.largeTitle)
+                        }.frame(minWidth: 150)
+                        
+                        Divider().frame(maxHeight: 88)
+                        
+                        Button(action: {
+                            self.isSharing.toggle()
+                        }, label: {
+                            HStack {
+                                Text("Share")
+                                    .font(Font.system(.body).smallCaps())
+                                    .fontWeight(.bold)
+                                
+                                Image(systemName: "square.and.arrow.up")
+                            }
+                        }) .buttonStyle(ShareButtonStyle(backgroundColor: palette.rightPlaceFill))
+                    }
                 }
                 
             }
@@ -180,8 +190,8 @@ struct StatsView: View {
                 isPresented: $isSharing,
                 detents: [.medium(),.large()]) { 
                 } content: {
-            ActivityViewController(activityItems: $shareItems)
-            }
+                    ActivityViewController(activityItems: $shareItems)
+                }
         }.onAppear {
             recalculateNextWord()
             self.shareItems = [self.state.shareSnippet]
@@ -191,6 +201,8 @@ struct StatsView: View {
             
             self.recalculateNextWord()
         }
+        
+        
     }
 }
 
@@ -208,21 +220,21 @@ struct StatsView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-        PaletteSetterView {
-            StatsView(stats: Stats(
-                played: 63, 
-                won: 61,
-                maxStreak: 27,
-                streak: 4,
-                guessDistribution: [
-                    1, 
-                    3,
-                    16,
-                    24,
-                    11,
-                    6
-                ]), state: state)
-        }.navigationTitle("Test 1")
+            PaletteSetterView {
+                StatsView(stats: Stats(
+                    played: 63, 
+                    won: 61,
+                    maxStreak: 27,
+                    streak: 4,
+                    guessDistribution: [
+                        1, 
+                        3,
+                        16,
+                        24,
+                        11,
+                        6
+                    ]), state: state)
+            }.navigationTitle("Test 1")
         }
         
         PaletteSetterView {
