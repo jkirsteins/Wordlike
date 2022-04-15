@@ -2,6 +2,7 @@ import SwiftUI
 
 struct HelpView: View {
     var body: some View {
+        ScrollView {
         VStack(alignment: .leading, spacing: 16) {
             VStack(alignment: .leading, spacing: 16) {
                 Text("How to play")
@@ -58,6 +59,14 @@ struct HelpView: View {
             
             Text("A new word is available every day.").fontWeight(.bold)
         }
+            // Without padding, scrollbars
+            // can overlap the content
+        .padding(8)
+            
+            // Hack to not have too-wide content
+            // on iPad (overlaps scrollbars, even
+            // if padding is set)
+        .frame(maxWidth: 500)
     }
 }
 
@@ -66,5 +75,11 @@ struct HelpView_Previews: PreviewProvider {
         PaletteSetterView {
             HelpView()
         }
+        
+        VStack {
+            Text("Testing help is scrollable (and doesn't compress text)").frame(minHeight: 200)
+            HelpView()
+        }
     }
+}
 }
