@@ -11,16 +11,19 @@ struct KeyboardHintView: View {
         if hints.isEmpty {
             Text("You haven't guessed any letters yet.")
         }
-        
-        HStack {
-            ForEach(orderedKeys, id: \.self) {
-                key in 
-                
-                VStack {
-                    Tile(letter: key,
-                         delay: 0, 
-                         revealState: hints[key], 
-                         animate: false)
+        else {
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(orderedKeys, id: \.self) {
+                        key in 
+                        
+                        VStack {
+                            Tile(letter: key,
+                                 delay: 0, 
+                                 revealState: hints[key], 
+                                 animate: false)
+                        }
+                    }
                 }
             }
         }

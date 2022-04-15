@@ -44,10 +44,14 @@ class GameState : ObservableObject, Identifiable, Equatable
                     continue
                 }
                 
-                guard [
-                    .rightPlace, .wrongPlace].contains(state) else {
-                        continue
-                    }
+                guard 
+                    [
+                        .rightPlace, 
+                        .wrongPlace,
+                        .wrongLetter
+                ].contains(state) else {
+                    continue
+                }
                 
                 result[char] = state
             }
