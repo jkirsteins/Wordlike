@@ -23,14 +23,14 @@ struct HighContrastPalette : Palette
     let maskedFilledStroke: Color = Color(hex: 0x878a8c)
     let maskedEmptyStroke: Color = Color(hex: 0xd3d6da)
     let wrongLetterStroke: Color = Color(hex: 0x787c7e)
-    let wrongPlaceStroke: Color = Color(hex: 0x0000FF)
-    let rightPlaceStroke: Color = Color(hex: 0xFF0000)
+    let wrongPlaceStroke: Color = Color(hex: 0x85C0f9)
+    let rightPlaceStroke: Color = Color(hex: 0xF5793A)
     
     let maskedFilledFill: Color = Color(hex: 0xffffff)
     let maskedEmptyFill: Color = Color(hex: 0xffffff)
     let wrongLetterFill: Color = Color(hex: 0x787c7e)
-    let wrongPlaceFill: Color = Color(hex: 0x0000FF)
-    let rightPlaceFill: Color = Color(hex: 0xFF0000)
+    let wrongPlaceFill: Color = Color(hex: 0x85C0f9)
+    let rightPlaceFill: Color = Color(hex: 0xF5793A)
     
     let maskedTextColor: Color = Color(hex: 0x000000)
     let revealedTextColor: Color = Color(hex: 0xffffff)
@@ -55,6 +55,12 @@ struct PaletteSetterView_Previews: PreviewProvider {
     static var previews: some View {
         PaletteSetterView {
             EditableRow_ForPreview()
+        }
+        
+        VStack {
+            Text("High contrast")
+            Row(delayRowIx: 0, model: RowModel(word: "flbes", expected: "fuels", isSubmitted: true))
+                .environment(\.palette, HighContrastPalette())
         }
     }
 }

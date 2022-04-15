@@ -41,11 +41,13 @@ extension GameState
             flag = "🇺🇸"
         } else if self.expected.locale == "fr" {
             flag = "🇫🇷"
+        } else if self.expected.locale == "lv" {
+            flag = "🇱🇻"
         } else {
             flag = self.expected.locale.uppercased()
         }
         
-        var result = "\(Bundle.main.displayName) \(flag)  \(self.expected.day) \(tries)\n\n"
+        var result = "\(Bundle.main.displayName) \(flag) \(self.expected.day) \(tries)\n\n"
         
         for row in self.rows {
             guard row.isSubmitted else {

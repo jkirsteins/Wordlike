@@ -260,12 +260,45 @@ struct Tile_Previews: PreviewProvider {
         }
         
         HStack() {
-            ZStack(alignment: .bottom) {
-                Tile(letter: " W° ", delay: 0, revealState: .wrongLetter, animate: false)
+            ZStack(alignment: .center) {
+//                Tile(letter: " W° ", delay: 0, revealState: .wrongLetter, animate: false)
+                TileBackgroundView(type: .rightPlace)
+                
+                VStack {
+                    HStack {
+                        Image(systemName: "b.square.fill")
+                        .font(.system(size: 100))
+                        .foregroundColor(.white)
+                        Image(systemName: "a.square")
+                            .font(.system(size: 100))
+                            .foregroundColor(.white)
+                        Image(systemName: "square")
+                            .font(.system(size: 100))
+                            .foregroundColor(.white)
+                    }
+                    
+                    ForEach(0..<2, id: \.self) { _ in 
+                        HStack {
+                            Image(systemName: "square")
+                                .font(.system(size: 100))
+                                .foregroundColor(.white)
+                            Image(systemName: "square")
+                                .font(.system(size: 100))
+                                .foregroundColor(.white)
+                            Image(systemName: "square")
+                                .font(.system(size: 100))
+                                .foregroundColor(.white)
+                        }
+                    }
+                    
+//                    Image(systemName: "keyboard")
+//                    .font(.system(size: 300))
+//                    .foregroundColor(.white)
+                    
+                }
             }
         }
-        .border(.white, width: 8)
-        .environment(\.palette, LightPalette())
+        .environment(\.palette, HighContrastPalette())
         .environment(\.sideLength, 500)
     }
 }
