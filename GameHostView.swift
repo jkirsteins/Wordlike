@@ -60,8 +60,10 @@ struct GameHostView: View {
         
         if name == "en" {
             title = "English"
-        } else {
+        } else if name == "fr" {
             title = "Français"
+        } else {
+            title = "Latviski"
         }
     }
     
@@ -102,6 +104,11 @@ struct GameHostView: View {
     
     var body: some View {
         VStack {
+            if game.isCompleted {
+                Text(game.expected.word).font(.title)
+                Spacer().frame(maxHeight: 24)
+            }
+            
             Text("Turn \(self.todayIndex)")
             Text("Next turn in \(self.nextWordIn)")
             Spacer().frame(maxHeight: 24)
@@ -232,5 +239,6 @@ struct GameHostView_Previews: PreviewProvider {
     static var previews: some View {
         GameHostView("en")
         GameHostView("fr")
+        GameHostView("lv")
     }
 }

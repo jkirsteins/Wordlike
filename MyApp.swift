@@ -3,9 +3,11 @@ import SwiftUI
 @main
 struct MyApp: App {
     
-    let paceSetter = BucketPaceSetter(
-        start: WordValidator.MAR_22_2022, 
-        bucket: 180)
+//    let paceSetter = BucketPaceSetter(
+//        start: WordValidator.MAR_22_2022, 
+//        bucket: 180)
+    
+    let paceSetter = CalendarDailyPaceSetter.current(start: WordValidator.MAR_22_2022)
     
     let debugViz = false
     
@@ -19,6 +21,9 @@ struct MyApp: App {
                     }
                     NavigationLink("Français 🇫🇷") {
                         GameHostView("fr")
+                    }
+                    NavigationLink("Latviski 🇱🇻") {
+                        GameHostView("lv")
                     }
                 }
                 .navigationTitle("Welcome!")
