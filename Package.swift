@@ -16,8 +16,10 @@ let package = Package(
         .iOSApplication(
             name: "Simple Word Game",
             targets: ["AppModule"],
+            bundleIdentifier: "org.janiskirsteins.SimpleWordGame",
+            teamIdentifier: "FN5YR78T7X",
             displayVersion: "1.0",
-            bundleVersion: "1",
+            bundleVersion: "3",
             iconAssetName: "AppIcon",
             accentColorAssetName: "AccentColor",
             supportedDeviceFamilies: [

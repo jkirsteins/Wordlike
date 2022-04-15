@@ -1,7 +1,20 @@
 import SwiftUI
 
+fileprivate struct SideLengthKey: EnvironmentKey {
+    static let defaultValue: CGFloat = 150
+}
+
+extension EnvironmentValues {
+    var sideLength: CGFloat {
+        get { self[SideLengthKey.self] }
+        set { self[SideLengthKey.self] = newValue }
+    }
+}
+
+
 struct Tile: View {
     @Environment(\.palette) var palette: Palette
+    @Environment(\.sideLength) var sideLength: CGFloat
     
     @State var rotate: Double = 0
     @State var rotateOut: Double = 0
@@ -118,7 +131,7 @@ struct Tile: View {
         // aspectRatio must come after maxWidth
         // (otherwise bounds will be off in small environments, e.g. keyboard accessory)
         
-        .frame(maxWidth: 150, maxHeight: 150)
+        .frame(maxWidth: sideLength, maxHeight: sideLength)
         .frame(minWidth: 24, minHeight: 24)
         .aspectRatio(1, contentMode: .fit)
         
@@ -245,5 +258,14 @@ struct Tile_Previews: PreviewProvider {
             Tile(letter: "X", delay: 0, revealState: .wrongPlace, animate: true)
                 .environment(\.palette, LightPalette())
         }
+        
+        HStack() {
+            ZStack(alignment: .bottom) {
+                Tile(letter: " W° ", delay: 0, revealState: .wrongLetter, animate: false)
+            }
+        }
+        .border(.white, width: 8)
+        .environment(\.palette, LightPalette())
+        .environment(\.sideLength, 500)
     }
 }
