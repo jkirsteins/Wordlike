@@ -215,6 +215,20 @@ struct GameHostView: View {
         }
         .navigationTitle(title)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(
+                    action: { 
+                        activeSheet = .help
+                    }, 
+                    label: {
+                        Label(
+                            "Help", 
+                            systemImage: "questionmark.circle")
+                            .foregroundColor(
+                                Color(
+                                    UIColor.label))
+                    })  
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(
                     action: { 
