@@ -130,6 +130,70 @@ struct LatvianKeyboardView: View {
     }
 }
 
+struct EnglishKeyboardView: View {
+    @State var maxSize: CGSize = .zero
+    
+    let hspacing = CGFloat(1) 
+    let vspacing = CGFloat(1) 
+    
+    var body: some View {
+        VStack(spacing: vspacing) {
+            HStack(spacing: hspacing) {
+                Group {
+                    SizeSettingKeyboardTile(maxSize: $maxSize, letter: "Q")
+                    
+                    KeyboardTile(letter: "W")
+                    KeyboardTile(letter: "E")
+                    KeyboardTile(letter: "R")
+                    KeyboardTile(letter: "T")
+                }
+                
+                Group {
+                    KeyboardTile(letter: "Y")
+                    KeyboardTile(letter: "U")
+                    KeyboardTile(letter: "I")
+                    KeyboardTile(letter: "O")
+                    KeyboardTile(letter: "P")
+                }
+            }
+            
+            HStack(spacing: hspacing ) {
+                Group {
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "A")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "S")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "D")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "F")
+                }
+                Group {
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "G")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "H")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "J")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "K")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "L")
+                }
+            }
+            
+            HStack(spacing: hspacing) {
+                Spacer()
+                Group {
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "Z")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "X")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "C")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "V")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "B")
+                }
+                Group {
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "N")
+                    SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "M")
+                    
+                }
+                Spacer()
+            }
+            
+        }
+    }
+}
+
 struct LatvianKeyboardView_Previews: PreviewProvider {
     static var previews: some View {
         LatvianKeyboardView()
@@ -138,5 +202,12 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
                 "Ž": .rightPlace,
                 "S": .wrongLetter,
             ], locale: "lv"))
+        
+        EnglishKeyboardView()
+            .environment(\.keyboardHints, KeyboardHints(hints: [
+                "Q": .wrongPlace,
+                "W": .rightPlace,
+                "M": .wrongLetter,
+            ], locale: "en"))
     }
 }

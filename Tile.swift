@@ -101,6 +101,14 @@ struct Tile: View {
         return 4
     }
     
+    /// Hack: helps get rid of SwfitUI warnings about 
+    /// ignoring singular matrix
+    func safeDegree(_ val: CGFloat) -> CGFloat {
+        guard val != 0 else { return 0.01 }
+        guard val != 90 else { return 89.9 }
+        return val 
+    }
+    
     var body: some View {
         GeometryReader { gr in 
             ZStack {
@@ -108,7 +116,7 @@ struct Tile: View {
                     type: calculatedType)
                     .animation(nil, value: self.type)
                     .rotation3DEffect(
-                        .degrees(rotate + rotateOut), 
+                        .degrees(safeDegree(rotate + rotateOut)), 
                         axis: (x: 1, y: 0, z: 0),
                         perspective: 0)
                 

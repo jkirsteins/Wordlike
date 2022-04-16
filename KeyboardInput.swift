@@ -8,6 +8,52 @@ struct SubmissionFailureReasonKey: PreferenceKey {
     }
 }
 
+/* Two hacky global variables to work around
+ my inability to model the SwiftUI<>UIKit relationship
+ properly.
+ 
+ currentResponder keeps track of current active responder (so we can update accessory view and request a reload)
+ 
+ and hack_updateAccSize regenerates the accessory view 
+ given a new target size.
+ */
+fileprivate var hack_currentResponder: AccessoryViewOwner? = nil
+fileprivate var hack_updateAccSize: ((CGSize)->())? = nil
+// END input hacks
+
+struct SizingView<AccessoryView: View>: View {
+    let content: AccessoryView
+    
+    @State var size: CGSize = .zero
+    
+    let holder = Holder()
+    
+    class Holder {
+        var size: CGSize = .zero
+    }
+    
+    init(@ViewBuilder _ content: ()->AccessoryView) {
+        self.content = content()
+    }
+    
+    var body: some View {
+        VStack {
+            content
+        }
+        .background(GeometryReader {
+            proxy in 
+            
+            Color.clear
+                .onAppear {
+                    hack_updateAccSize?(proxy.size)
+                }
+                .onChange(of: proxy.size) { newSize in
+                    hack_updateAccSize?(newSize)
+                }
+        })
+    }
+}
+
 struct KeyboardInput<Content: View, AccessoryView: View> : View 
 {
     @Binding var model: RowModel
@@ -15,9 +61,8 @@ struct KeyboardInput<Content: View, AccessoryView: View> : View
     
     let tag: Int
     let content: Content 
-    let accessoryView: AccessoryView
+    let accessoryView: SizingView<AccessoryView>
     let editable: Bool
-    let accHeight: CGFloat 
     
     @Environment(\.debug) var debugViz: Bool
     
@@ -25,17 +70,15 @@ struct KeyboardInput<Content: View, AccessoryView: View> : View
 editable: Bool,
 model: Binding<RowModel>,
 tag: Int, 
-    accHeight: CGFloat,
 isActive: Binding<Int?>,
     @ViewBuilder _ content: ()->Content,
     @ViewBuilder _ accessoryView: ()->AccessoryView) {
         self.editable = editable
         self._model = model
-        self.accHeight = accHeight
         self.tag = tag
         self._isActive = isActive
-        self.content = content()
-        self.accessoryView = accessoryView()
+        self.content = content() 
+        self.accessoryView = SizingView<AccessoryView>(accessoryView)
     }
     
     var borderColor: Color {
@@ -44,6 +87,7 @@ isActive: Binding<Int?>,
     }
     
     @State var contentSize: CGSize = CGSize.zero
+    @State var accSize: CGSize = CGSize.zero
     @State var testUuid: Date = Date()
     
     @Environment(\.failureReason) var failureReason: Binding<String?>
@@ -69,7 +113,6 @@ isActive: Binding<Int?>,
                     failureReason: failureReason,
                     model: $model,
                     tag: self.tag,
-                    accHeight: accHeight,
                     isActive: $isActive,
                     accessoryView: accessoryView)
                 
@@ -88,13 +131,45 @@ isActive: Binding<Int?>,
     }
 }
 
+class AccViewWrapper : UIView {
+    var size: CGSize = .zero
+    
+    override var intrinsicContentSize: CGSize {
+        return self.size
+    }
+}
+
+class CustomView: UIView {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .red
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func draw(_ rect: CGRect) {
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }    
+        ctx.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1)
+        let rectangle = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
+        ctx.stroke(rectangle, width: 5)
+    }
+    
+}
+
+protocol AccessoryViewOwner : UIResponder {
+    var inputAccessoryView: UIView? { get set }
+}
+
 struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
     @EnvironmentObject var validator: WordValidator
     
     @Binding var failureReason: String?
     
-    class InternalView<AccessoryView: View>: UIControl, UIKeyInput
+    class InternalView<AccessoryView: View>: UIControl, UIKeyInput, AccessoryViewOwner
     {
         //        var model: RowModel
         //        let focusTag: Int
@@ -121,29 +196,46 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
             self.initAccessoryView()
         }
         
-        let vc: UIHostingController<AccessoryView>
+        let vc: UIHostingController<SizingView<AccessoryView>>
         let accView: UIView
         
         var heightConstraint: NSLayoutConstraint? = nil
         
         func initAccessoryView()
         {
-            let initialHeight = CGFloat(90)
-            self.accView.frame = CGRect(x: 0.0, y: 0.0, width: self.bounds.width, height: initialHeight)
-//            
-            vc.view.translatesAutoresizingMaskIntoConstraints = false
-            accView.addSubview(vc.view)
-            vc.view.leadingAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.leadingAnchor).isActive = true
-            vc.view.trailingAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.trailingAnchor).isActive = true
-            vc.view.topAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.topAnchor).isActive = true
+            hack_updateAccSize = { [weak self]
+                newSize in
+                
+                guard let strongSelf = self else {
+                    return 
+                }
+                
+                guard var fr = hack_currentResponder else {
+                    return 
+                }
+                
+                let newFrame = CGRect(
+                    origin: .zero,
+                    size: newSize)
+                
+                let newAccView = UIView(frame:newFrame)
+                
+                newAccView.addSubview(strongSelf.vc.view)
+                
+                strongSelf.vc.view.translatesAutoresizingMaskIntoConstraints = false 
+                strongSelf.vc.view.leadingAnchor.constraint(equalTo: newAccView.leadingAnchor).isActive = true
+                strongSelf.vc.view.trailingAnchor.constraint(equalTo: newAccView.trailingAnchor).isActive = true
+                
+                fr.inputAccessoryView = newAccView
+                fr.reloadInputViews()
+            }
             
-            heightConstraint = 
-                        vc.view.heightAnchor.constraint(equalToConstant: initialHeight)
-            heightConstraint?.isActive = true 
-            
-//            accView.heightAnchor.constraint(equalToConstant: 90).isActive = true
-            
-            self.inputAccessoryView = accView
+            // Initially set the target view directly
+            // to trigger the SwiftUI geometry reader pass.
+            //
+            // Then subsequently we'll update via hacks (see
+            // top of file).
+            self.inputAccessoryView = vc.view
         }
         
         required init?(coder: NSCoder) {
@@ -152,9 +244,7 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         
         override open func resignFirstResponder() -> Bool {
             if self.owner.isActive == owner.tag {
-                //                return true
                 self.owner.isActive = nil
-                //                fatalError("asd")
             }
             
             return super.resignFirstResponder()
@@ -169,6 +259,7 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
                 self.owner.isActive = self.owner.tag
             }
             
+            hack_currentResponder = self
             return super.becomeFirstResponder()
         }
         
@@ -247,9 +338,8 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
     @Binding var model: RowModel
     let tag: Int
-    let accHeight: CGFloat
     @Binding var isActive: Int?
-    let accessoryView: AccessoryView
+    let accessoryView: SizingView<AccessoryView>
     
     func makeUIView(context: Context) -> InternalView<AccessoryView> {
         let result = InternalView(owner: self)
@@ -284,11 +374,8 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         //
         // If we do anything else here, we'll need to 
         // make sure that the layout is still correct.
-        uiView.vc.rootView = self.accessoryView
         
-        let newHeight = CGFloat(uiView.owner.accHeight)
-        uiView.accView.frame = CGRect(x: 0.0, y: 0.0, width: uiView.accView.bounds.width, height: newHeight)
-        uiView.heightConstraint?.constant = newHeight
+//        uiView.vc.rootView = self.accessoryView
         
         // Without overriding the userInterfaceStyle,
         // the input accessory view will lag behind (
@@ -382,7 +469,6 @@ struct EditableRow : View
                 editable: editable,
                 model: $model,
                 tag: self.tag,
-                accHeight: (keyboardHints.locale == "lv" ? 90 : 44),
                 isActive: $isActive, {
                     VStack {
                         Row(delayRowIx: delayRowIx, model: model, showFocusHint: showFocusHint)
@@ -395,14 +481,17 @@ struct EditableRow : View
                                 Spacer()
                                 
                                 if keyboardHints.locale == "lv" {
-                                    LatvianKeyboardView().environment(\.keyboardHints, keyboardHints)
+                                    LatvianKeyboardView()
+                                } else if keyboardHints.locale == "en" {
+                                    EnglishKeyboardView()
                                 } else {
                                     KeyboardHintView(
                                         hints: keyboardHints)
                                 }
                                 
                                 Spacer()
-                            } 
+                            }
+                            .environment(\.keyboardHints, keyboardHints) 
                             Spacer()
                         }
                         .background(Color(UIColor.systemFill))
