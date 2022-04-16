@@ -26,7 +26,7 @@ class GameState : ObservableObject, Identifiable, Equatable
     @Published var date: Date
     
     var keyboardHints: KeyboardHints {
-        var result: KeyboardHints = [:]
+        var result: Dictionary<String, TileBackgroundType> = [:]
         
         let submittedRows = rows.filter({$0.isSubmitted})
         
@@ -57,7 +57,9 @@ class GameState : ObservableObject, Identifiable, Equatable
             }
         }
         
-        return result 
+        return KeyboardHints(
+            hints: result, 
+            locale: expected.locale)  
     }
     
     var isWon: Bool {
@@ -96,6 +98,23 @@ class GameState : ObservableObject, Identifiable, Equatable
             false
         }
         self._rows = Published(wrappedValue: rows)
+    }
+}
+
+struct KeyboardHintsTestInternalView: View {
+    var body: some View {
+        let state = GameState(initialized: true, expected: DayWord(word: "fuels", day: 1, locale: "en"), 
+                  rows: [
+                    RowModel(word: "abcde", expected: "fuels", isSubmitted: true, attemptCount: 0)
+                  ], isTallied: true, date: Date())
+        
+        return Text(verbatim: "\(state.keyboardHints)")
+    }
+}
+
+struct KeyboardHintsTestInternalView_Previews: PreviewProvider {
+    static var previews: some View {
+        KeyboardHintsTestInternalView()
     }
 }
 

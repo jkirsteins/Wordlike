@@ -302,7 +302,15 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     }
 }
 
-typealias KeyboardHints = Dictionary<String, TileBackgroundType>
+struct KeyboardHints {
+    /// This contains the mapping to known outcomes (
+    /// known good/misplaced/unused)
+    let hints: Dictionary<String, TileBackgroundType>
+    
+    /// Locale is used to generate the alphabet, so 
+    /// we can infer which are remaining usable chars.
+    let locale: String
+}
 
 struct EditableRow : View
 {
@@ -367,7 +375,8 @@ struct EditableRow : View
                         HStack {
                             Spacer()
                             
-                            KeyboardHintView(hints: keyboardHints)
+                            KeyboardHintView(
+                                hints: keyboardHints)
                             
                             Spacer()
                         } 
@@ -387,9 +396,9 @@ struct EditableRow_ForPreview : View {
     @State var model1 = RowModel(expected: "fuels")
     @State var model2 = RowModel(expected: "fuels")
     
-    let kh: KeyboardHints = [
+    let kh: KeyboardHints = KeyboardHints(hints: [
         "A": .rightPlace
-    ]
+    ], locale: "en")
     
     var body: some View {
         VStack {
