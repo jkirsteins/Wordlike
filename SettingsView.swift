@@ -23,6 +23,23 @@ struct SettingsView: View {
                     }
                 }
             }
+            
+            Divider()
+            
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Reset state").font(.body)
+                    Text("Clear all historical stats and today's progress").font(.caption)
+                }
+                Spacer()
+                Button("Reset") {
+                    if let bundleID = Bundle.main.bundleIdentifier {
+                        UserDefaults.standard.removePersistentDomain(forName: bundleID)
+                    }
+                }
+            }
+            
+            Divider()
         }.padding(24)
     }
 }

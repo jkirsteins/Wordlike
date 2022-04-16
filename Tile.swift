@@ -84,7 +84,7 @@ struct Tile: View {
             // Hardcode some value which is used for
             // small previews (like in a keyboard
             // accessory view)
-            return 20
+            return 12
         }
         
         return gr.size.height/1.5
@@ -98,7 +98,7 @@ struct Tile: View {
             return 0
         }
         
-        return 8
+        return 4
     }
     
     var body: some View {

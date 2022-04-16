@@ -17,18 +17,21 @@ struct KeyboardInput<Content: View, AccessoryView: View> : View
     let content: Content 
     let accessoryView: AccessoryView
     let editable: Bool
+    let accHeight: CGFloat 
     
     @Environment(\.debug) var debugViz: Bool
     
     init(
-    editable: Bool,
-model: Binding<RowModel>, 
+editable: Bool,
+model: Binding<RowModel>,
 tag: Int, 
+    accHeight: CGFloat,
 isActive: Binding<Int?>,
     @ViewBuilder _ content: ()->Content,
     @ViewBuilder _ accessoryView: ()->AccessoryView) {
         self.editable = editable
         self._model = model
+        self.accHeight = accHeight
         self.tag = tag
         self._isActive = isActive
         self.content = content()
@@ -62,18 +65,19 @@ isActive: Binding<Int?>,
             })
             
             if editable {
-            KeyboardInputUIKit(
-                failureReason: failureReason,
-                model: $model,
-                tag: self.tag,
-                isActive: $isActive,
-                accessoryView: accessoryView)
-            
-            
-            // If you set width/height, then it might prevent `content` from resizing
-            // (e.g. it might not become narrow, if iPad window becomes smaller) 
-                .frame(maxWidth: contentSize.width, maxHeight: contentSize.height)
-                .border(borderColor)
+                KeyboardInputUIKit(
+                    failureReason: failureReason,
+                    model: $model,
+                    tag: self.tag,
+                    accHeight: accHeight,
+                    isActive: $isActive,
+                    accessoryView: accessoryView)
+                
+                
+                // If you set width/height, then it might prevent `content` from resizing
+                // (e.g. it might not become narrow, if iPad window becomes smaller) 
+                    .frame(maxWidth: contentSize.width, maxHeight: contentSize.height)
+                    .border(borderColor)
             }
         }
         .preference(
@@ -120,16 +124,24 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         let vc: UIHostingController<AccessoryView>
         let accView: UIView
         
+        var heightConstraint: NSLayoutConstraint? = nil
+        
         func initAccessoryView()
         {
-            self.accView.frame = CGRect(x: 0.0, y: 0.0, width: self.bounds.width, height: 44)
-            
+            let initialHeight = CGFloat(90)
+            self.accView.frame = CGRect(x: 0.0, y: 0.0, width: self.bounds.width, height: initialHeight)
+//            
             vc.view.translatesAutoresizingMaskIntoConstraints = false
             accView.addSubview(vc.view)
             vc.view.leadingAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.leadingAnchor).isActive = true
             vc.view.trailingAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.trailingAnchor).isActive = true
             vc.view.topAnchor.constraint(equalTo: accView.safeAreaLayoutGuide.topAnchor).isActive = true
-            vc.view.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            
+            heightConstraint = 
+                        vc.view.heightAnchor.constraint(equalToConstant: initialHeight)
+            heightConstraint?.isActive = true 
+            
+//            accView.heightAnchor.constraint(equalToConstant: 90).isActive = true
             
             self.inputAccessoryView = accView
         }
@@ -235,14 +247,15 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
     @Binding var model: RowModel
     let tag: Int
+    let accHeight: CGFloat
     @Binding var isActive: Int?
     let accessoryView: AccessoryView
     
     func makeUIView(context: Context) -> InternalView<AccessoryView> {
         let result = InternalView(owner: self)
         
-//        result.setContentHuggingPriority(.defaultLow, for: .vertical)
-//        result.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        //        result.setContentHuggingPriority(.defaultLow, for: .vertical)
+        //        result.setContentHuggingPriority(.defaultLow, for: .horizontal)
         
         if isActive == tag {
             UIView.performWithoutAnimation { 
@@ -272,7 +285,11 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         // If we do anything else here, we'll need to 
         // make sure that the layout is still correct.
         uiView.vc.rootView = self.accessoryView
-
+        
+        let newHeight = CGFloat(uiView.owner.accHeight)
+        uiView.accView.frame = CGRect(x: 0.0, y: 0.0, width: uiView.accView.bounds.width, height: newHeight)
+        uiView.heightConstraint?.constant = newHeight
+        
         // Without overriding the userInterfaceStyle,
         // the input accessory view will lag behind (
         // be light after switching to dark, and be dark
@@ -360,32 +377,38 @@ struct EditableRow : View
     var body: some View {
         let showFocusHint =  editable && (isActive == self.tag) 
         
-        return KeyboardInput(
-            editable: editable,
-            model: $model,
-            tag: self.tag,
-            isActive: $isActive, {
-                VStack {
-                    Row(delayRowIx: delayRowIx, model: model, showFocusHint: showFocusHint)
-                }
-            }) {
-                PaletteSetterView {
+        return VStack {
+            KeyboardInput(
+                editable: editable,
+                model: $model,
+                tag: self.tag,
+                accHeight: (keyboardHints.locale == "lv" ? 90 : 44),
+                isActive: $isActive, {
                     VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            
-                            KeyboardHintView(
-                                hints: keyboardHints)
-                            
-                            Spacer()
-                        } 
-                        Spacer()
+                        Row(delayRowIx: delayRowIx, model: model, showFocusHint: showFocusHint)
                     }
-                    .background(Color(UIColor.systemFill))
+                }) {
+                    PaletteSetterView {
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                
+                                if keyboardHints.locale == "lv" {
+                                    LatvianKeyboardView().environment(\.keyboardHints, keyboardHints)
+                                } else {
+                                    KeyboardHintView(
+                                        hints: keyboardHints)
+                                }
+                                
+                                Spacer()
+                            } 
+                            Spacer()
+                        }
+                        .background(Color(UIColor.systemFill))
                     }
-                
-            }
+                }
+        }
         
     }
 }

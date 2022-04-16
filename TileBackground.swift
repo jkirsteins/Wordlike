@@ -58,7 +58,7 @@ struct TileBackgroundView: View {
     
     var body: some View {
         Rectangle()
-            .stroke(
+            .strokeBorder(
                 type.strokeColor(from: palette), 
                 lineWidth: 2)
             .background(
