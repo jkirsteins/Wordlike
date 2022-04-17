@@ -17,8 +17,9 @@ struct SubmissionFailureReasonKey: PreferenceKey {
  and hack_updateAccSize regenerates the accessory view 
  given a new target size.
  */
-fileprivate var hack_currentResponder: AccessoryViewOwner? = nil
-fileprivate var hack_updateAccSize: ((CGSize)->())? = nil
+//fileprivate var hack_currentResponder: AccessoryViewOwner? = nil
+//fileprivate var hack_updateAccSize: ((CGSize)->())? = nil
+//fileprivate var hack_lastAccSize: CGSize? = nil
 // END input hacks
 
 struct SizingView<AccessoryView: View>: View {
@@ -26,29 +27,34 @@ struct SizingView<AccessoryView: View>: View {
     
     @State var size: CGSize = .zero
     
-    let holder = Holder()
-    
-    class Holder {
-        var size: CGSize = .zero
-    }
-    
     init(@ViewBuilder _ content: ()->AccessoryView) {
         self.content = content()
     }
     
     var body: some View {
         VStack {
-            content
+            // Hack with frame maxHeight to not
+            // be huge on iPad horizontal
+            content.frame(maxHeight: 150)
         }
+        .border(.red)
         .background(GeometryReader {
             proxy in 
             
             Color.clear
                 .onAppear {
-                    hack_updateAccSize?(proxy.size)
+                    guard proxy.size != .zero else { return }
+                    
+//                    self.size = proxy.size 
+//                    hack_lastAccSize = proxy.size
+//                    hack_updateAccSize?(proxy.size)
                 }
                 .onChange(of: proxy.size) { newSize in
-                    hack_updateAccSize?(newSize)
+                    guard newSize != .zero else { return }
+                    
+//                    self.size = newSize 
+//                    hack_lastAccSize = newSize
+//                    hack_updateAccSize?(newSize)
                 }
         })
     }
@@ -161,6 +167,32 @@ class CustomView: UIView {
 
 protocol AccessoryViewOwner : UIResponder {
     var inputAccessoryView: UIView? { get set }
+    func initAccessoryView(newSize: CGSize)
+}
+
+class AccViewHostingController<Content: View> : UIHostingController<Content> {
+    
+    var owner: AccessoryViewOwner? = nil 
+    
+    override init(rootView: Content) {
+        super.init(rootView: rootView)
+        
+        self.view.frame = CGRect(x: 0, y: 0, width: 0, height: 100)
+        self.view.backgroundColor = .purple
+    }
+
+    @MainActor @objc required dynamic init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        
+//        let fittingSize = CGSize(width: UIView.layoutFittingCompressedSize.width, height: UIView.layoutFittingCompressedSize.height)
+//        let fitted = self.sizeThatFits(in: fittingSize)
+//        
+////        owner?.initAccessoryView(newSize: fitted)
+//    }
 }
 
 struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
@@ -171,71 +203,95 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
     class InternalView<AccessoryView: View>: UIControl, UIKeyInput, AccessoryViewOwner
     {
-        //        var model: RowModel
-        //        let focusTag: Int
-        //        var isActive: Int?
-        
-        //        var accessoryView: AccessoryView
-        
         var owner: KeyboardInputUIKit<AccessoryView>
         
         init(owner: KeyboardInputUIKit<AccessoryView>) {
             self.owner = owner
-            //            self.focusTag = tag
-            //            self.isActive = isActive
-            //            self.accessoryView = accessoryView
-            self.vc = UIHostingController(rootView: self.owner.accessoryView)
             
-            self.accView = UIView()
+            self.vc = AccViewHostingController(
+                rootView: self.owner.accessoryView)
             
             super.init(frame: CGRect.infinite)
             addTarget(self, 
                       action: #selector(self.onTap(_:)),
                       for: .touchUpInside)
             
-            self.initAccessoryView()
+
+            self.initAccessoryView(newSize: CGSize(width: 1, height: 100))
+            
+            
+            self.vc.owner = self
         }
         
-        let vc: UIHostingController<SizingView<AccessoryView>>
-        let accView: UIView
+        let vc: AccViewHostingController<SizingView<AccessoryView>>
         
         var heightConstraint: NSLayoutConstraint? = nil
         
-        func initAccessoryView()
+        func initAccessoryView(newSize: CGSize)
         {
-            hack_updateAccSize = { [weak self]
-                newSize in
-                
-                guard let strongSelf = self else {
-                    return 
-                }
-                
-                guard var fr = hack_currentResponder else {
-                    return 
-                }
-                
-                let newFrame = CGRect(
-                    origin: .zero,
-                    size: newSize)
-                
-                let newAccView = UIView(frame:newFrame)
-                
-                newAccView.addSubview(strongSelf.vc.view)
-                
-                strongSelf.vc.view.translatesAutoresizingMaskIntoConstraints = false 
-                strongSelf.vc.view.leadingAnchor.constraint(equalTo: newAccView.leadingAnchor).isActive = true
-                strongSelf.vc.view.trailingAnchor.constraint(equalTo: newAccView.trailingAnchor).isActive = true
-                
-                fr.inputAccessoryView = newAccView
-                fr.reloadInputViews()
+//            print("NEW initting accessory view for \(self.inputAccessoryView?.bounds.height) to \(newSize)")
+//            
+//            guard (self.inputAccessoryView?.bounds.height ?? 0) != newSize.height else {
+//                return 
+//            }
+//            
+//            
+//            let bottomInset2 = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
+//            let fittingSize = CGSize(width: UIView.layoutFittingCompressedSize.width, height: UIView.layoutFittingCompressedSize.height)
+//            let fitted = self.vc.sizeThatFits(in: fittingSize)
+//            let fitted2 = CGSize(width: fitted.width, height: fitted.height + bottomInset2 + 50)
+            
+            DispatchQueue.main.async {
+                self.inputAccessoryView = self.vc.view
             }
             
-            // Initially set the target view directly
-            // to trigger the SwiftUI geometry reader pass.
-            //
-            // Then subsequently we'll update via hacks (see
-            // top of file).
-            self.inputAccessoryView = vc.view
+            print("here")
+            return
+        
+            
+            
+            let newHeight = max(1, newSize.height)
+            
+            let bottomInset = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
+            
+            let newHeightWInsets = newHeight + bottomInset
+            
+            let newAccView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 0, height: newHeightWInsets)))
+            let subAccView = UIView() 
+            
+            newAccView.backgroundColor = .green
+            subAccView.backgroundColor = .red
+//            subAccView.layer.opacity = 0.5
+//            
+            newAccView.addSubview(subAccView)
+//            
+//            print("NEW set size \(newHeightWInsets) raw \(newHeight)")
+//            
+            subAccView.translatesAutoresizingMaskIntoConstraints = false
+//            
+            subAccView.leadingAnchor.constraint(equalTo: newAccView.leadingAnchor).isActive = true
+            subAccView.trailingAnchor.constraint(equalTo: newAccView.trailingAnchor).isActive = true
+//
+            subAccView.topAnchor.constraint(equalTo: newAccView.topAnchor).isActive = true
+//            
+            subAccView.bottomAnchor.constraint(equalTo: newAccView.safeAreaLayoutGuide.bottomAnchor).isActive = true
+            
+            
+            let kbv = self.vc.view!
+//            
+//            self.owner.addChild(self.vc)
+            subAccView.addSubview(self.vc.view)
+//            self.vc.didMove(toParent: self)
+            
+//            kbv.translatesAutoresizingMaskIntoConstraints = false 
+//            kbv.leadingAnchor.constraint(equalTo: subAccView.leadingAnchor).isActive = true
+//            kbv.trailingAnchor.constraint(equalTo: subAccView.trailingAnchor).isActive = true
+//            kbv.topAnchor.constraint(equalTo: subAccView.topAnchor).isActive = true
+//            kbv.bottomAnchor.constraint(equalTo: subAccView.bottomAnchor).isActive = true
+//
+//            print("NEW setting \(newAccView.frame)")
+            self.inputAccessoryView = newAccView
+//            self.reloadInputViews()
         }
         
         required init?(coder: NSCoder) {
@@ -255,11 +311,10 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
                 return false
             }
             
-            if self.owner.isActive != owner.tag {
-                self.owner.isActive = self.owner.tag
-            }
-            
-            hack_currentResponder = self
+//            if self.owner.isActive != owner.tag {
+//                self.owner.isActive = self.owner.tag
+//            }
+//            
             return super.becomeFirstResponder()
         }
         
@@ -344,11 +399,8 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     func makeUIView(context: Context) -> InternalView<AccessoryView> {
         let result = InternalView(owner: self)
         
-        //        result.setContentHuggingPriority(.defaultLow, for: .vertical)
-        //        result.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        
         if isActive == tag {
-            UIView.performWithoutAnimation { 
+            UIView.performWithoutAnimation {
                 _ = result.becomeFirstResponder()
             }
         } 
@@ -366,17 +418,16 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
     
     func updateUIView(_ uiView: InternalView<AccessoryView>, context: Context) {
         
-        uiView.owner = self
+//        uiView.owner = self
         
-        // The SwiftUI view has been added as a
-        // subview to accessoryView. Resetting the rootview
-        // will update it using SwiftUI as source-of-truth
-        //
-        // If we do anything else here, we'll need to 
-        // make sure that the layout is still correct.
+        // IMPORTANT! Without this, state updates
+        // will not trigger changes in accessory view
+        // until it is reset from scratch
+//        uiView.vc.rootView = accessoryView
         
-//        uiView.vc.rootView = self.accessoryView
-        
+        // This initial trigger is needed to force layout,
+        // which will force update
+
         // Without overriding the userInterfaceStyle,
         // the input accessory view will lag behind (
         // be light after switching to dark, and be dark
@@ -389,16 +440,8 @@ struct KeyboardInputUIKit<AccessoryView: View>: UIViewRepresentable {
         if self.tag == self.isActive {
             if !uiView.isFirstResponder {
                 DispatchQueue.main.async {
-                    UIView.performWithoutAnimation { 
+                    UIView.performWithoutAnimation {
                         _ = uiView.becomeFirstResponder()
-                    }
-                }
-            }
-        } else {
-            if uiView.isFirstResponder {
-                DispatchQueue.main.async {
-                    UIView.performWithoutAnimation { 
-                        _ = uiView.resignFirstResponder()
                     }
                 }
             }

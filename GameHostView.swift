@@ -105,6 +105,18 @@ struct GameHostView: View {
     // TODO: duplicated with StatsView
     @State var nextWordIn: String = "..." 
     
+    @ViewBuilder
+    var keyboardView: some View {
+        if game.expected.locale == "lv" {
+            LatvianKeyboardView()
+        }
+        else if game.expected.locale == "fr" {
+            FrenchKeyboardView()
+        } else {
+            EnglishKeyboardView()
+        }
+    }
+    
     func recalculateNextWord() {
         let remaining = paceSetter.remainingTtl(at: Date())
         let formatter = DateComponentsFormatter()
@@ -172,6 +184,8 @@ struct GameHostView: View {
                         Text(dailyState?.rows[0].word ?? "none")
                         Text(self.debugMessage).id("message")
                     }
+                    
+                    keyboardView
                 } 
                 
                 

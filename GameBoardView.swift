@@ -80,13 +80,15 @@ struct GameBoardView: View {
                 ForEach(0..<state.rows.count, id: \.self) {
                     ix in 
                     VStack { 
-                        EditableRow(
-                            editable: !state.isCompleted,
-                            delayRowIx: ix,
-                                model: $state.rows[ix], 
-                                tag: ix,
-                                isActive: $isActive,
-                            keyboardHints: state.keyboardHints )
+                        
+//                        EditableRow(
+//                            editable: !state.isCompleted,
+//                            delayRowIx: ix,
+//                                model: $state.rows[ix], 
+//                                tag: ix,
+//                                isActive: $isActive,
+//                            keyboardHints: state.keyboardHints )
+                        
                         
                     }
                     
