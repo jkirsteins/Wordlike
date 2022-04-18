@@ -61,148 +61,164 @@ struct StatsView: View {
     }
     
     var body: some View {
-        VStack(spacing: 24) {
-            VStack(spacing: 8) {
-                
-                ZStack {
-                    Text("Statistics")
-                        .font(Font.system(.title).smallCaps())
-                        .fontWeight(.bold)
-                    
-                    if self.state.isWon {
-                        ConfettiView()
-                        ParticleView(time: 0, scale: 0.1)
-                    }
-                    
-                }
-                
-                HStack(alignment: .top) {
-                    VStack {
-                        Text("\(stats.played)").font(.largeTitle)
-                        Text("Played")
-                            .font(.caption)
-                            .frame(maxWidth: 50)
-                    }
-                    VStack {
-                        if stats.played == 0 {
-                            Text("-").font(.largeTitle)
-                        } else {
-                            Text("\(Double(stats.won) / Double(stats.played) * 100, specifier: "%.0f")").font(.largeTitle)
-                        }
-                        Text("Win %")
-                            .font(.caption)
-                            .frame(maxWidth: 50)
-                    }
-                    VStack {
-                        Text("\(stats.streak)").font(.largeTitle)
-                        Text("Current Streak")
-                            .font(.caption)
-                            .frame(maxWidth: 50)
-                    }
-                    VStack {
-                        Text("\(stats.maxStreak)").font(.largeTitle)
-                        Text("Max Streak")
-                            .font(.caption)
-                            .frame(maxWidth: 50)
-                    }
-                }.multilineTextAlignment(.center)
-            }
-            
-            VStack(spacing: 8) { 
-                Text("Guess Distribution")
-                    .font(Font.system(.title).smallCaps())
-                    .fontWeight(.bold)
-                
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        ForEach(0..<6) { rowIx in 
-                            HStack(alignment: .top) {
-                                Text("\(rowIx + 1)")
-                                    .padding(2)
-                                    .frame(width: 16)
-                                    .multilineTextAlignment(.center)
-                                    .foregroundColor(palette.maskedTextColor)
-                                HStack {
-                                    Spacer() 
-                                    Text("\(stats.guessDistribution[rowIx])")
-                                        .foregroundColor(Color.white)
-                                        .fontWeight(.bold)
-                                        .font(.body)
-                                        .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 4)) 
-                                }.background(
-                                    GeometryReader { proxy in
-                                        (state.isWon && (rowIx+1) == state.submittedRows ? palette.rightPlaceFill : palette.wrongLetterFill).preference(
-                                            key: WidthKey.self, 
-                                            value: proxy.size.width)
-                                    }
-                                )
-                                    .frame(maxWidth: 
-                                            
-                                            stats.guessDistribution.contains(where: { $0 > 0 }) ? 
-                                           
-                                           (rowIx == stats.maxRow ? .infinity :  max(24, 
-                                                                                     stats.widthRatio(row: rowIx) * maxBarWidth))
-                                           
-                                           : 40
-                                           
-                                    )
-                                //.frame(maxWidth: stats.widthRatio(row: rowIx) * maxBarWidth)
-                            }
-                        }
-                    }
-                    if !stats.guessDistribution.contains(where: { $0 > 0 }) {
-                        Spacer()
-                    }
-                }.padding(24)
-                
-                if state.isCompleted {
-                    HStack(spacing: 16) {
-                        VStack() {
-                            Text("Next word")
+        GeometryReader { gr in 
+            ScrollView {
+                VStack(spacing: 24) {
+                    VStack(spacing: 8) {
+                        
+                        ZStack {
+                            Text("Statistics")
                                 .font(Font.system(.title).smallCaps())
+                                .fontWeight(.bold)
                             
-                            Text(nextWordIn)
-                                .font(.largeTitle)
-                        }.frame(minWidth: 150)
-                        
-                        Divider().frame(maxHeight: 88)
-                        
-                        Button(action: {
-                            self.isSharing.toggle()
-                        }, label: {
-                            HStack {
-                                Text("Share")
-                                    .font(Font.system(.body).smallCaps())
-                                    .fontWeight(.bold)
-                                
-                                Image(systemName: "square.and.arrow.up")
+                            if self.state.isWon {
+                                ConfettiView()
+                                ParticleView(time: 0, scale: 0.1)
                             }
-                        }) .buttonStyle(ShareButtonStyle(backgroundColor: palette.rightPlaceFill))
+                            
+                        }
+                        
+                        HStack(alignment: .top) {
+                            VStack {
+                                Text("\(stats.played)").font(.largeTitle)
+                                Text("Played")
+                                    .font(.caption)
+                                    .frame(maxWidth: 50)
+                            }
+                            VStack {
+                                if stats.played == 0 {
+                                    Text("-").font(.largeTitle)
+                                } else {
+                                    Text("\(Double(stats.won) / Double(stats.played) * 100, specifier: "%.0f")").font(.largeTitle)
+                                }
+                                Text("Win %")
+                                    .font(.caption)
+                                    .frame(maxWidth: 50)
+                            }
+                            VStack {
+                                Text("\(stats.streak)").font(.largeTitle)
+                                Text("Current Streak")
+                                    .font(.caption)
+                                    .frame(maxWidth: 50)
+                            }
+                            VStack {
+                                Text("\(stats.maxStreak)").font(.largeTitle)
+                                Text("Max Streak")
+                                    .font(.caption)
+                                    .frame(maxWidth: 50)
+                            }
+                        }.multilineTextAlignment(.center)
                     }
+                    
+                    if state.isCompleted {
+                        VStack(spacing: 8) {
+                            Text("Answer")
+                                .font(Font.system(.title).smallCaps())
+                                .fontWeight(.bold)
+                            
+                            Text(state.expected.word.uppercased())
+                                .font(Font.system(.body))
+                            
+                        }
+                    }
+                    
+                    VStack(spacing: 8) { 
+                        Text("Guess Distribution")
+                            .font(Font.system(.title).smallCaps())
+                            .fontWeight(.bold)
+                        
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                ForEach(0..<6) { rowIx in 
+                                    HStack(alignment: .top) {
+                                        Text("\(rowIx + 1)")
+                                            .padding(2)
+                                            .frame(width: 16)
+                                            .multilineTextAlignment(.center)
+                                            .foregroundColor(palette.maskedTextColor)
+                                        HStack {
+                                            Spacer() 
+                                            Text("\(stats.guessDistribution[rowIx])")
+                                                .foregroundColor(Color.white)
+                                                .fontWeight(.bold)
+                                                .font(.body)
+                                                .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 4)) 
+                                        }.background(
+                                            GeometryReader { proxy in
+                                                (state.isWon && (rowIx+1) == state.submittedRows ? palette.rightPlaceFill : palette.wrongLetterFill).preference(
+                                                    key: WidthKey.self, 
+                                                    value: proxy.size.width)
+                                            }
+                                        )
+                                            .frame(maxWidth: 
+                                                    
+                                                    stats.guessDistribution.contains(where: { $0 > 0 }) ? 
+                                                   
+                                                   (rowIx == stats.maxRow ? .infinity :  max(24, 
+                                                                                             stats.widthRatio(row: rowIx) * maxBarWidth))
+                                                   
+                                                   : 40
+                                                   
+                                            )
+                                        //.frame(maxWidth: stats.widthRatio(row: rowIx) * maxBarWidth)
+                                    }
+                                }
+                            }
+                            if !stats.guessDistribution.contains(where: { $0 > 0 }) {
+                                Spacer()
+                            }
+                        }.padding(24)
+                        
+                        if state.isCompleted {
+                            HStack(spacing: 16) {
+                                VStack() {
+                                    Text("Next word")
+                                        .font(Font.system(.title).smallCaps())
+                                    
+                                    Text(nextWordIn)
+                                        .font(.largeTitle)
+                                }.frame(minWidth: 150)
+                                
+                                Divider().frame(maxHeight: 88)
+                                
+                                Button(action: {
+                                    self.isSharing.toggle()
+                                }, label: {
+                                    HStack {
+                                        Text("Share")
+                                            .font(Font.system(.body).smallCaps())
+                                            .fontWeight(.bold)
+                                        
+                                        Image(systemName: "square.and.arrow.up")
+                                    }
+                                }) .buttonStyle(ShareButtonStyle(backgroundColor: palette.rightPlaceFill))
+                            }
+                        }
+                        
+                    }
+                    .onPreferenceChange(WidthKey.self) {
+                        newWidth in 
+                        self.maxBarWidth = newWidth
+                    } 
+                    .sheetWithDetents(
+                        isPresented: $isSharing,
+                        detents: [.medium(),.large()]) { 
+                        } content: {
+                            ActivityViewController(activityItems: $shareItems)
+                        }
+                }.onAppear {
+                    recalculateNextWord()
+                    self.shareItems = [self.state.shareSnippet]
                 }
-                
+                .onReceive(timer) {
+                    _ in 
+                    
+                    self.recalculateNextWord()
+                }
+                .frame(width: gr.size.width)      
+                .frame(minHeight: gr.size.height)
             }
-            .onPreferenceChange(WidthKey.self) {
-                newWidth in 
-                self.maxBarWidth = newWidth
-            } 
-            .sheetWithDetents(
-                isPresented: $isSharing,
-                detents: [.medium(),.large()]) { 
-                } content: {
-                    ActivityViewController(activityItems: $shareItems)
-                }
-        }.onAppear {
-            recalculateNextWord()
-            self.shareItems = [self.state.shareSnippet]
         }
-        .onReceive(timer) {
-            _ in 
-            
-            self.recalculateNextWord()
-        }
-        
-        
     }
 }
 

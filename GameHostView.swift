@@ -73,14 +73,7 @@ struct GameHostView: View {
             wrappedValue: true, "shouldShowHelp")
         
         self.locale = name
-        
-        if name == "en" {
-            title = "English"
-        } else if name == "fr" {
-            title = "Français"
-        } else {
-            title = "Latviski"
-        }
+        title = name.localeDisplayName
     }
     
     var todayIndex: Int {
@@ -136,18 +129,6 @@ struct GameHostView: View {
     var body: some View {
         ZStack {
             VStack { 
-                // Show the following info only for
-                // currently fresh states
-                if let ds = dailyState, paceSetter.isFresh(ds.date, at: Date())
-                {
-                    if game.isCompleted {
-                        Text(game.expected.word).font(.title)
-                        Spacer().frame(maxHeight: 24)
-                    }
-                    
-                    Text("Next turn in \(self.nextWordIn)")
-                }
-                
                 Spacer().frame(maxHeight: 24)
                 if game.initialized && paceSetter.isFresh(game.date, at: Date()) {
                     GameBoardView(state: game,
