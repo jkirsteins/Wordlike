@@ -20,6 +20,10 @@ struct KeyboardTile: View {
     @EnvironmentObject var game: GameState
     
     func insertText() {
+        guard !game.isCompleted else {
+            return
+        }
+        
         guard 
             let row = game.rows.first(where: { !$0.isSubmitted }),
             let ix = game.activeIx
@@ -36,10 +40,11 @@ struct KeyboardTile: View {
     
     var body: some View {
         Button(letter, action: insertText)
-        .frame(minHeight: 45)
-        .buttonStyle(
-            KeyboardButtonStyle(type: keyboardHints.hints[letter]))
-        .aspectRatio(1.0, contentMode: .fit)
+            .disabled(game.isCompleted)
+            .frame(minHeight: 45)
+            .buttonStyle(
+                KeyboardButtonStyle(type: keyboardHints.hints[letter]))
+            .aspectRatio(1.0, contentMode: .fit)
     }
 }
 
@@ -225,6 +230,8 @@ struct LatvianKeyboardView: View {
 }
 
 struct LatvianKeyboardView_Previews: PreviewProvider {
+    static let state = GameState(expected: DayWord(word: "fuels", day: 1, locale: "en"))
+    
     static var previews: some View {
         VStack {
             Text("Latvian keyboard (light)")
@@ -236,7 +243,7 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
                     "S": .wrongLetter,
                 ], locale: "lv"))
                 .environment(\.palette, LightPalette())
-        }
+        }.environmentObject(state)
         
         VStack {
             Text("Latvian keyboard (light hc)")
@@ -248,7 +255,7 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
                     "S": .wrongLetter,
                 ], locale: "lv"))
                 .environment(\.palette, LightHCPalette())
-        }
+        }.environmentObject(state)
         
         VStack {
             Text("Latvian keyboard (dark)")
@@ -260,6 +267,6 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
                     "S": .wrongLetter,
                 ], locale: "lv"))
                 .environment(\.palette, DarkPalette())
-        }
+        }.environmentObject(state)
     }
 }

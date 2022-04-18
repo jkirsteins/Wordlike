@@ -45,6 +45,9 @@ struct BackspaceTile: View {
     }
     
     func action() {
+        guard !game.isCompleted else {
+            return
+        }
         
         guard 
             let row = game.rows.first(where: { !$0.isSubmitted }),
@@ -75,6 +78,7 @@ struct BackspaceTile: View {
                 }.padding(padding(gr))
             }
             })
+            .disabled(game.isCompleted)
             .buttonStyle(BackspaceButtonStyle())
             .frame(
                 maxWidth: maxSize.width, 
@@ -84,6 +88,7 @@ struct BackspaceTile: View {
 
 struct InternalBackspaceTilePreview: View {
     @State var side: CGFloat = 74.0
+    let state = GameState(expected: DayWord(word: "fuels", day: 1, locale: "en"))
     
     var body: some View {
         VStack(spacing: 8) {
@@ -94,7 +99,7 @@ struct InternalBackspaceTilePreview: View {
             }
             Text(verbatim: "\(side)")
             Slider(value: $side, in: 0.0...200.0)
-        }
+        }.environmentObject(state)
     }
 }
 

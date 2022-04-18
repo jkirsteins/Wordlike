@@ -4,11 +4,13 @@ import SwiftUI
 struct SubmitButtonStyle: ButtonStyle {
     @Environment(\.palette) var palette: Palette
     
+    @EnvironmentObject var game: GameState
+    
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 4.0)
                 .fill(
-                    palette.submitKeyboardFill
+                    (game.isCompleted ? palette.normalKeyboardFill : palette.submitKeyboardFill)
                         .adjust(
                             pressed: configuration.isPressed)
                 )
@@ -29,6 +31,10 @@ struct SubmitTile: View {
     @Binding var failureReason: String?
     
     func submitAction() {
+        guard !game.isCompleted else {
+            return
+        }
+        
         let first = game.rows.first
         let firstSubmitted = game.rows.first(where: { !$0.isSubmitted })
         
@@ -58,7 +64,6 @@ struct SubmitTile: View {
                 return
             } 
                             
-        print("Setting \(currentIx) to submitted")
         let submitted = RowModel(
             word: current.word,
             expected: current.expected,
@@ -102,6 +107,7 @@ struct SubmitTile: View {
             }
         })
             .buttonStyle(SubmitButtonStyle())
+            .disabled(game.isCompleted)
             .frame(
                 maxWidth: maxSize.width, 
                 maxHeight: maxSize.height)
