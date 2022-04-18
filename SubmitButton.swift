@@ -1,39 +1,17 @@
 import SwiftUI
 
 
-extension Color {
-    var uiColor: UIColor { .init(self) }
-    typealias RGBA = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
-    var rgba: RGBA? {
-        var (r, g, b, a): RGBA = (0, 0, 0, 0)
-        return uiColor.getRed(&r, green: &g, blue: &b, alpha: &a) ? (r, g, b, a) : nil
-    }
-    var hexaRGB: String? {
-        guard let (red, green, blue, _) = rgba else { return nil }
-        return String(format: "#%02x%02x%02x",
-                      Int(red * 255),
-                      Int(green * 255),
-                      Int(blue * 255))
-    }
-    var hexaRGBA: String? {
-        guard let (red, green, blue, alpha) = rgba else { return nil }
-        return String(format: "#%02x%02x%02x%02x",
-                      Int(red * 255),
-                      Int(green * 255),
-                      Int(blue * 255),
-                      Int(alpha * 255))
-    }
-}
-
 struct SubmitButtonStyle: ButtonStyle {
+    let normal = Color.blue 
+    
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             // blue is 0x007afe
             RoundedRectangle(cornerRadius: 4.0)
-                .fill(configuration.isPressed ? Color(hex: 0x0058dc) : .blue)
+                .fill(configuration.isPressed ? normal.darker : normal)
             
             configuration.label
-                .foregroundColor(.white)
+                .foregroundColor(configuration.isPressed ? .white.darker : .white)
         }
         .clipShape(RoundedRectangle(cornerRadius: 4.0))
     }
