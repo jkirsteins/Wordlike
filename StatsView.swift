@@ -131,7 +131,7 @@ struct StatsView: View {
                                         .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 4)) 
                                 }.background(
                                     GeometryReader { proxy in
-                                        (state.isCompleted && (rowIx+1) == state.submittedRows ? palette.rightPlaceFill : palette.wrongLetterFill).preference(
+                                        (state.isWon && (rowIx+1) == state.submittedRows ? palette.rightPlaceFill : palette.wrongLetterFill).preference(
                                             key: WidthKey.self, 
                                             value: proxy.size.width)
                                     }

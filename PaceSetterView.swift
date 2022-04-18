@@ -67,7 +67,8 @@ extension Stats {
                 result = 0
             }
             
-            if (ix + 1) == game.submittedRows {
+            // Only increase tally if game was won
+            if game.isWon && (ix + 1) == game.submittedRows {
                 result += 1
             }
             

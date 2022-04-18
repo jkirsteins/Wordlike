@@ -1,7 +1,5 @@
 import SwiftUI
 
-import SwiftUI
-
 struct FrenchKeyboardView: View {
     @State var maxSize: CGSize = .zero
     
