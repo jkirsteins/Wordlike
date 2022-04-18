@@ -120,7 +120,10 @@ struct Tile: View {
                         axis: (x: 1, y: 0, z: 0),
                         perspective: 0)
                 
-                if showFocusHint {
+                // Turning off focus hint after removing
+                // iOS keyboard support. To be
+                // removed if not missed visually.
+                if false && showFocusHint {
                     // This is the cursor branch.
                     // 
                     // Text() modifiers need to be same

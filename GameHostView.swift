@@ -169,7 +169,6 @@ struct GameHostView: View {
                             
                             finished = true
                         })
-                        .environment(\.failureReason, $failureReason)
                         .onPreferenceChange(SubmissionFailureReasonKey.self) {
                             new in 
                             
@@ -186,8 +185,8 @@ struct GameHostView: View {
                     }
                     
                     keyboardView
+                        .environmentObject(game)
                 } 
-                
                 
                 if let ds = dailyState, !paceSetter.isFresh(ds.date, at: Date()) {
                     Text("Rummaging in the sack for a new word...")
@@ -202,6 +201,8 @@ struct GameHostView: View {
                     }
                 }
             }
+            .environment(\.failureReason, $failureReason)
+            .environment(\.keyboardHints, game.keyboardHints)
             .environmentObject(validator)
             .onAppear {
                 if shouldShowHelp {

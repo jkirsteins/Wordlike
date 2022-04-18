@@ -17,22 +17,29 @@ struct KeyboardTile: View {
     @Environment(\.keyboardHints) 
     var keyboardHints: KeyboardHints
     
-    var body: some View {
-        Button(letter) {
-            print("bim")
+    @EnvironmentObject var game: GameState
+    
+    func insertText() {
+        guard 
+            let row = game.rows.first(where: { !$0.isSubmitted }),
+            let ix = game.activeIx
+        else {
+            // no editable rows
+            return 
         }
+        
+        game.rows[ix] = RowModel(
+            word:  String((row.word + letter).prefix(5)),
+            expected: row.expected,
+            isSubmitted: row.isSubmitted)
+    }
+    
+    var body: some View {
+        Button(letter, action: insertText)
+        .frame(minHeight: 45)
         .buttonStyle(
             KeyboardButtonStyle(type: keyboardHints.hints[letter]))
-        //        .frame(maxWidth: 30, maxHeight: 100)
-        
-        
         .aspectRatio(1.0, contentMode: .fit)
-        //        .scaledToFit()
-        
-        //        .frame(minWidth: 8, maxWidth: 44, minHeight: 8, maxHeight: 44)
-        
-        //        .border(.black)
-        //        Tile(letter: letter, delay: 0, revealState: keyboardHints.hints[letter], animate: false)
     }
 }
 
@@ -136,6 +143,8 @@ struct SizeSettingKeyboardTile: View {
 struct LatvianKeyboardView: View {
     @State var maxSize: CGSize = .zero
     
+    @Environment(\.failureReason) var failureReason: Binding<String?>
+    
     let hspacing = CGFloat(1) 
     let vspacing = CGFloat(1) 
     
@@ -206,12 +215,12 @@ struct LatvianKeyboardView: View {
                     SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "M")
                 }
                 
-                SubmitTile(maxSize: CGSize(width: maxSize.width*2, height: maxSize.height))
+                SubmitTile(maxSize: CGSize(width: maxSize.width*2, height: maxSize.height),
+                           failureReason: failureReason)
             }
             
         }
         .frame(maxWidth: 600)
-        .border(.green)
     }
 }
 

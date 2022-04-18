@@ -24,47 +24,49 @@ struct BackspaceButtonStyle: ButtonStyle {
 struct BackspaceTile: View {
     let maxSize: CGSize
     
+    @EnvironmentObject var game: GameState
+    
     func padding(_ gp: GeometryProxy) -> CGFloat {
-        let minEdge = min(gp.size.width, gp.size.height)
-        print("--")
-        print(minEdge)
+        let minEdge = max(gp.size.width, gp.size.height)
         
         let div: CGFloat 
         
-        if gp.size.height < 25 {
+        if minEdge < 30 {
             return 0
-        } else if gp.size.height < 30 {
-            return 1
-        } else if gp.size.height < 35 {
-            return 3
-        } else if gp.size.height < 40 {
-            return 5
-        } else 
-        if gp.size.height < 50 {
-            div = 6
-        } else if gp.size.height < 60 {
-            div = 5.0
-        } else if gp.size.height < 70 {
-            div = 4.5
+        } 
+        else if minEdge < 50 {
+            div = 9.0
         } 
         else {
-            div = 4.0
+            div = 6.0
         }
         
         return gp.size.height / div
     }
     
+    func action() {
+        
+        guard 
+            let row = game.rows.first(where: { !$0.isSubmitted }),
+            let ix = game.activeIx else {
+            // no editable rows
+            return 
+        }
+        
+        game.rows[ix] = RowModel(
+            word: String(row.word.dropLast()),
+            expected: row.expected,
+            isSubmitted: row.isSubmitted)
+    }
+    
     var body: some View {
-        Button(action: {
-            print("Submitting...")
-        }, label: {
+        Button(action: action, label: {
             GeometryReader { gr in
-//                Text(verbatim: "\(gr.size)")
                 HStack(alignment: .center) {
                     Spacer()
                     VStack(alignment: .center) {
                         Spacer()
-                        Image(systemName: "delete.left.fill")
+                        Image(systemName: "delete.left")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                         Spacer()

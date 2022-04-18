@@ -3,7 +3,7 @@ import SwiftUI
 struct GameBoardView: View {
     @Environment(\.colorScheme) var colorScheme
     
-    @State var isActive: Int? = nil
+    @State var isActive: Int = 0
     @ObservedObject var state: GameState
     
     let canBeAutoActivated: Bool 
@@ -81,17 +81,14 @@ struct GameBoardView: View {
                     ix in 
                     VStack { 
                         
-//                        EditableRow(
-//                            editable: !state.isCompleted,
-//                            delayRowIx: ix,
-//                                model: $state.rows[ix], 
-//                                tag: ix,
-//                                isActive: $isActive,
-//                            keyboardHints: state.keyboardHints )
-                        
-                        
+                        EditableRow(
+                            editable: !state.isCompleted,
+                            delayRowIx: ix,
+                                model: $state.rows[ix], 
+                                tag: ix,
+                                isActive: $isActive,
+                            keyboardHints: state.keyboardHints )
                     }
-                    
                 }
             }
         }

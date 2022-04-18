@@ -3,6 +3,8 @@ import SwiftUI
 struct EnglishKeyboardView: View {
     @State var maxSize: CGSize = .zero
     
+    @Environment(\.failureReason) var failureReason: Binding<String?>
+    
     let hspacing = CGFloat(1) 
     let vspacing = CGFloat(1)
     
@@ -60,12 +62,13 @@ struct EnglishKeyboardView: View {
                     SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "N")
                     SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "M")
                 }
-                SubmitTile(maxSize: CGSize(width: maxSize.width*2, height: maxSize.height))
+                SubmitTile(
+                    maxSize: CGSize(width: maxSize.width*2, height: maxSize.height),
+                    failureReason: failureReason)
             }
             
         }
         .frame(maxWidth: 600)
-        .border(.green)
     }
 }
 

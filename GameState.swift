@@ -25,6 +25,17 @@ class GameState : ObservableObject, Identifiable, Equatable
     @Published var rows: [RowModel]
     @Published var date: Date
     
+    /// Index of the editable row
+    var activeIx: Int? {
+        for i in 0..<rows.count {
+            if !rows[i].isSubmitted {
+                return i
+            }
+        }
+        
+        return nil 
+    }
+    
     var keyboardHints: KeyboardHints {
         var result: Dictionary<String, TileBackgroundType> = [:]
         
