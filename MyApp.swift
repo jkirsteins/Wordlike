@@ -62,13 +62,13 @@ struct LanguageLinkLabel: View {
 extension String {
     var localeDisplayName: String {
         switch(self.uppercased()) {
-            case "EN":
+        case "EN":
             return "English 🇺🇸"
-            case "FR":
+        case "FR":
             return "Français 🇫🇷"
-            case "LV":
+        case "LV":
             return "Latviski 🇱🇻"
-            default:
+        default:
             return self 
         }
     }
@@ -94,18 +94,27 @@ struct MyApp: App {
     var body: some Scene {
         WindowGroup { 
             PaletteSetterView {
-            NavigationView {
-                List {
-                    LinkToGame(locale: "en")
-                    LinkToGame(locale: "fr")
-                    LinkToGame(locale: "lv")
+                NavigationView {
+                    List {
+                        LinkToGame(locale: "en")
+                        LinkToGame(locale: "fr")
+                        LinkToGame(locale: "lv")
+                    }
+                    .navigationTitle(
+                        Bundle.main.displayName)
+                    
+                    VStack {
+                        Text("Welcome!")
+                            .foregroundColor(Color.accentColor)
+                            .font(.largeTitle )
+                            .fontWeight(.bold)
+                            
+                            
+                        Text("Please select a language in the left side menu.")
+                    }
                 }
-                .navigationTitle("Welcome!")
-                
-                EmptyView()
-            }
-            .environment(\.paceSetter, paceSetter)
-            .environment(\.debug, debugViz)
+                .environment(\.paceSetter, paceSetter)
+                .environment(\.debug, debugViz)
             }
         }
     }

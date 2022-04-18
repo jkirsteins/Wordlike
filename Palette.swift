@@ -120,4 +120,25 @@ struct LightHCPalette : Palette
     var submitKeyboardFill = Color.blue
 }
 
+struct PaletteInternalTestView: View {
+    var body: some View {
+        VStack {
+            Row(delayRowIx: 0, model: RowModel(word: "CRAZY", expected: "FUELS", isSubmitted: true))
+            Row(delayRowIx: 0, model: RowModel(word: "SLEDS", expected: "FUELS", isSubmitted: true))
+            Row(delayRowIx: 0, model: RowModel(word: "FLINT", expected: "FUELS", isSubmitted: true))
+            Row(delayRowIx: 0, model: RowModel(word: "FIL", expected: "FUELS", isSubmitted: false))
+            Row(delayRowIx: 0, model: RowModel(expected: "FUELS"))
+        }
+    }
+}
 
+struct PaletteInternalTestView_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack {
+            Text("Light palette")
+        
+        PaletteInternalTestView()
+            .environment(\.palette, LightPalette())
+        }
+    }
+}
