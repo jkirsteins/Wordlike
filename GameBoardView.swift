@@ -21,7 +21,7 @@ struct GameBoardView: View {
         return allSubmitted(until: row) && !state.rows[row].isSubmitted 
     } 
     
-//    var onCompleteCallback: ((GameState)->())? = nil
+    //    var onCompleteCallback: ((GameState)->())? = nil
     
     func onStateChange(edited: @escaping ([RowModel])->(), completed: @escaping (GameState)->()) -> some View {
         var didRespond = false
@@ -31,7 +31,7 @@ struct GameBoardView: View {
             DispatchQueue.main.async {
                 edited(newRows)
             }
-
+            
             guard state.isCompleted, !didRespond else { 
                 return }
             didRespond = true
@@ -49,14 +49,9 @@ struct GameBoardView: View {
                 // allow time to finish animating
                 // all rows that just appeared
                 try? await Task.sleep(nanoseconds: UInt64(state.submittedRows) * 500_000_000) 
-                DispatchQueue.main.async {
-                    completed(state)    
-                }
+                completed(state)
             }
         }
-//        var copy = self
-//        copy.onCompleteCallback = callback
-//        return copy
     }
     
     func recalculateActive() {
@@ -84,9 +79,9 @@ struct GameBoardView: View {
                         EditableRow(
                             editable: !state.isCompleted,
                             delayRowIx: ix,
-                                model: $state.rows[ix], 
-                                tag: ix,
-                                isActive: $isActive,
+                            model: $state.rows[ix], 
+                            tag: ix,
+                            isActive: $isActive,
                             keyboardHints: state.keyboardHints )
                     }
                 }
@@ -97,7 +92,7 @@ struct GameBoardView: View {
             /* State can change when we've
              e.g. stats sheet on top (in which case
              we don't want to pop up the keyboard)
-            */
+             */
             if canBeAutoActivated {
                 recalculateActive()
             }

@@ -135,7 +135,7 @@ struct GameHostView: View {
     
     var body: some View {
         ZStack {
-            VStack  {
+            VStack { 
                 // Show the following info only for
                 // currently fresh states
                 if let ds = dailyState, paceSetter.isFresh(ds.date, at: Date())
@@ -330,7 +330,6 @@ struct GameHostView: View {
                     Spacer()
                 }
                 .transition(.opacity)
-                
             }
         }
     }
