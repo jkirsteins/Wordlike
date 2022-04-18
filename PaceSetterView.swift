@@ -54,7 +54,7 @@ extension Stats {
         
         let streakablePeriods = false
         
-        let newStreak = (streakablePeriods && game.isWon ? self.streak + 1 : 0)
+        let newStreak = (streakablePeriods && game.isWon ? self.streak : 0) + 1 
         
         let newDistribution: [Int] = (0..<GameState.MAX_ROWS).map {
             ix in 
