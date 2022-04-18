@@ -1,8 +1,34 @@
 import SwiftUI
+import UniformTypeIdentifiers
+
+fileprivate enum ActiveSheet {
+    case mail 
+}
+
+extension ActiveSheet: Identifiable {
+    var id: Self { self }
+}
+
 
 struct SettingsView: View {
     
+    // iCloud "Hide my e-mail" address
+    static let feedbackEmail = "adorables.ambassade_0z@icloud.com"
+    
+    // Min width for right-hand widgets
+    static let minRightWidth = CGFloat(0)
+    
+    @State var mailData = ComposeMailData(
+        subject: "Feedback about \(Bundle.main.displayName)",
+        recipients: [
+            Self.feedbackEmail
+        ],
+        message: "",
+        attachments: [])
+    
     static let HIGH_CONTRAST_KEY = "cfg.isHighContrast"
+    
+    @State fileprivate var activeSheet: ActiveSheet? = nil
     
     @AppStorage(SettingsView.HIGH_CONTRAST_KEY) 
     var isHighContrast: Bool = false
@@ -16,8 +42,10 @@ struct SettingsView: View {
     @AppStorage("turnState.lv")
     var dailyStateLv: DailyState?
     
+    @State var emailCopied = false
+    
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 16) {
             Text("Settings")
                 .font(Font.system(.title).smallCaps())
                 .fontWeight(.bold)
@@ -33,6 +61,56 @@ struct SettingsView: View {
                 }
             }
             
+            if MailView.canSendMail {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Feedback")
+                        Text("You can send feedback via e-mail.").font(.caption)
+                    }
+                    Spacer()
+                    Button("Send") {
+                            activeSheet = .mail
+                        }.frame(minWidth: Self.minRightWidth)
+                }
+            }
+            
+                HStack {
+                    VStack(alignment: .leading) {
+                        if MailView.canSendMail {
+                            Text("Feedback (manual)")
+                        } else {
+                        Text("Feedback")
+                        }
+                        Text("Click to copy feedback e-mail address.").font(.caption)
+                    }
+                    Spacer()
+                    HStack {
+                        if emailCopied {
+                            Text("Copied")
+                                .font(.caption)
+                                .foregroundColor(Color(UIColor.secondaryLabel))
+                                .task {
+                                    try? await Task.sleep(nanoseconds: 2_000_000_000)
+                                    emailCopied = false
+                                }
+                        } else {
+                            Button(action: {
+                                UIPasteboard.general.setValue(
+                                    Self.feedbackEmail,
+                                    forPasteboardType: UTType.plainText.identifier)
+                                
+                                emailCopied = true
+                            }, label: {
+                                Image(systemName: "doc.on.clipboard")
+                            }) 
+                        }
+                    }.frame(minWidth: Self.minRightWidth)
+                
+            }
+            
+            // Debug stuff
+            Group { 
+                
             Divider()
             
             HStack {
@@ -84,7 +162,20 @@ struct SettingsView: View {
             }
             
             Divider()
-        }.padding(24)
+            }
+        }
+        .padding(24)
+        .sheet(item: $activeSheet, onDismiss: {
+            
+        }, content: { item in
+            switch(item) {
+            case .mail: 
+                //                Text(verbatim: "\(mailData)")
+                MailView(data: $mailData) { _ in
+                    print("yo")
+                }
+            }
+        })
     }
 }
 

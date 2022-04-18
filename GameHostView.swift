@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum ActiveSheet {
+fileprivate enum ActiveSheet {
     case stats 
     case help
     case settings
@@ -48,7 +48,7 @@ struct GameHostView: View {
     @Environment(\.debug) var debugViz: Bool
     @Environment(\.palette) var palette: Palette
     
-    @State var activeSheet: ActiveSheet? = nil
+    @State fileprivate var activeSheet: ActiveSheet? = nil
     
     let title: String
     let locale: String
