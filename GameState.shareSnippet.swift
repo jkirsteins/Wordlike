@@ -49,7 +49,9 @@ extension GameState
         
         var result = "\(Bundle.main.displayName) \(flag) \(self.expected.day) \(tries)\n\n"
         
+        var rowValues: [String] = []
         for row in self.rows {
+            var result = ""
             guard row.isSubmitted else {
                 break
             }
@@ -58,8 +60,10 @@ extension GameState
                 result += shareSymbol(for: row.revealState(ix)) 
             }
             
-            result += "\n"
+            rowValues.append(result) 
         }
+        
+        result += rowValues.joined(separator: "\n")
         
         return result
     }
@@ -94,11 +98,13 @@ struct ShareSnippet_Previews: PreviewProvider {
                                "aboma",
                                "douma",
                                "momma"], day: 5)
+                .border(.red)
         
         ShareSnippet(expected: "baton", guesses: ["audio", 
                                                   "toads",
                                                   "about",
                                                   "baton"], day: 2)
+                .border(.red)
         }
     }
 }
