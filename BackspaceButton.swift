@@ -2,11 +2,17 @@ import SwiftUI
 
 
 struct BackspaceButtonStyle: ButtonStyle {
+    @Environment(\.palette) var palette: Palette 
+    
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
-            // blue is 0x007afe
             RoundedRectangle(cornerRadius: 4.0)
-                .fill(configuration.isPressed ? Color(hex: 0x454545) : .gray)
+                .fill(
+                    Color.keyboardFill(
+                        for: nil, from: palette)
+                        .adjust(
+                            pressed: configuration.isPressed)
+                )
             
             configuration.label
                 .foregroundColor(.white)
@@ -66,10 +72,7 @@ struct BackspaceTile: View {
                     Spacer()
                 }.padding(padding(gr))
             }
-            //                .minimumScaleFactor(0.005)
-            //                .font(.system(size: 100))
-            
-        })
+            })
             .buttonStyle(BackspaceButtonStyle())
             .frame(
                 maxWidth: maxSize.width, 

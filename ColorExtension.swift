@@ -1,6 +1,24 @@
 import SwiftUI
 
 extension Color {
+    static func keyboardFill(for type: TileBackgroundType?, from palette: Palette) -> Color {
+        
+        guard let type = type else {
+            return palette.normalKeyboardFill
+        }    
+        
+        return type.fillColor(from: palette)
+    }
+    
+    func adjust(pressed: Bool) -> Color {
+        if pressed { 
+            return self.darker 
+        }
+        return self
+    }
+}
+
+extension Color {
     init(hex: UInt, alpha: Double = 1) {
         self.init(
             .sRGB,

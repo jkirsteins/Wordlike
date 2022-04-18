@@ -31,11 +31,10 @@ struct KeyboardTile: View {
         
         //        .frame(minWidth: 8, maxWidth: 44, minHeight: 8, maxHeight: 44)
         
-//        .border(.black)
+        //        .border(.black)
         //        Tile(letter: letter, delay: 0, revealState: keyboardHints.hints[letter], animate: false)
     }
 }
-
 
 struct KeyboardButtonStyle: ButtonStyle {
     @Environment(\.palette) var palette: Palette
@@ -53,10 +52,6 @@ struct KeyboardButtonStyle: ButtonStyle {
         return gr.size.height/1.5
     }
     
-    //    var backgroundColor: Color {
-    //        
-    //    }
-    
     func padding(_ gr: GeometryProxy) -> Double {
         if gr.size.height < 50 {
             // Hardcode some value which is used for
@@ -72,22 +67,6 @@ struct KeyboardButtonStyle: ButtonStyle {
         return type ?? .wrongLetter
     }
     
-    func fillColor(_ configuration: Configuration) -> Color {
-        guard let type = type else {
-            if configuration.isPressed {
-                return Color(hex: 0x818181)
-            } else {
-                return Color(hex: 0xA1A1A1)
-            }
-        }
-        
-        if configuration.isPressed {
-            return .black
-        } else {
-            return type.fillColor(from: palette)
-        }
-    }
-    
     func textColor(_ configuration: Configuration) -> Color {
         guard let type = type else {
             return .white
@@ -101,41 +80,19 @@ struct KeyboardButtonStyle: ButtonStyle {
     }
     
     func makeBody(configuration: Configuration) -> some View {
-        //        ZStack {
-        //        configuration.label
         ZStack {
-//            TileBackgroundView(type: type ?? .maskedEmpty)
-//                .clipShape(RoundedRectangle(cornerRadius: 4.0))
             RoundedRectangle(cornerRadius: 4.0)
-                .fill(fillColor(configuration))
+                .fill(
+                    Color.keyboardFill(
+                        for: type, from: palette)
+                        .adjust(
+                            pressed: configuration.isPressed)
+                )
             
             configuration.label
                 .foregroundColor(textColor(configuration))
         }
         .clipShape(RoundedRectangle(cornerRadius: 4.0))
-        
-        
-        //            .padding(4)
-        
-        //                    .strokeBorder(
-        //                        Color.clear, 
-        //                        lineWidth: 1)
-        
-        //                configuration.label 
-        //                    .font( 
-        //                        .system(size: fontSize(gr), weight: .bold))
-        //                    .textCase(.uppercase)
-        //                    .padding(padding(gr))
-        //                    .scaledToFit()
-        //                    .minimumScaleFactor(0.19)
-        //                    .lineLimit(1)
-        //                    .foregroundColor(.white)
-        //            }
-        //            .padding(4)
-        //            .background(palette.maskedEmptyFill)
-        //            .foregroundColor(palette.maskedTextColor)
-        //            .aspectRatio(1, contentMode: .fit)
-        //            .frame(maxWidth: 100)
     }
 }
 
@@ -261,16 +218,39 @@ struct LatvianKeyboardView: View {
 struct LatvianKeyboardView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            Text("Latvian keyboard")
+            Text("Latvian keyboard (light)")
             
-            PaletteSetterView {
-                LatvianKeyboardView()
-                    .environment(\.keyboardHints, KeyboardHints(hints: [
-                        "Ļ": .wrongPlace,
-                        "Ž": .rightPlace,
-                        "S": .wrongLetter,
-                    ], locale: "lv"))
-            }
+            LatvianKeyboardView()
+                .environment(\.keyboardHints, KeyboardHints(hints: [
+                    "Ļ": .wrongPlace,
+                    "Ž": .rightPlace,
+                    "S": .wrongLetter,
+                ], locale: "lv"))
+                .environment(\.palette, LightPalette())
+        }
+        
+        VStack {
+            Text("Latvian keyboard (light hc)")
+            
+            LatvianKeyboardView()
+                .environment(\.keyboardHints, KeyboardHints(hints: [
+                    "Ļ": .wrongPlace,
+                    "Ž": .rightPlace,
+                    "S": .wrongLetter,
+                ], locale: "lv"))
+                .environment(\.palette, LightHCPalette())
+        }
+        
+        VStack {
+            Text("Latvian keyboard (dark)")
+            
+            LatvianKeyboardView()
+                .environment(\.keyboardHints, KeyboardHints(hints: [
+                    "Ļ": .wrongPlace,
+                    "Ž": .rightPlace,
+                    "S": .wrongLetter,
+                ], locale: "lv"))
+                .environment(\.palette, DarkPalette())
         }
     }
 }

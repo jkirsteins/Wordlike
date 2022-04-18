@@ -2,13 +2,16 @@ import SwiftUI
 
 
 struct SubmitButtonStyle: ButtonStyle {
-    let normal = Color.blue 
+    @Environment(\.palette) var palette: Palette
     
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
-            // blue is 0x007afe
             RoundedRectangle(cornerRadius: 4.0)
-                .fill(configuration.isPressed ? normal.darker : normal)
+                .fill(
+                    palette.submitKeyboardFill
+                        .adjust(
+                            pressed: configuration.isPressed)
+                )
             
             configuration.label
                 .foregroundColor(configuration.isPressed ? .white.darker : .white)
