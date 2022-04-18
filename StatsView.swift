@@ -116,9 +116,14 @@ struct StatsView: View {
                                 .font(Font.system(.title).smallCaps())
                                 .fontWeight(.bold)
                             
-                            Text(state.expected.word.uppercased())
-                                .font(Font.system(.body))
-                            
+                            HStack {
+                                Text(state.expected.word.uppercased())
+                                    .font(Font.system(.body))
+                                
+                                if let defUrl = state.expected.word.definitionUrl(in: state.expected.locale) {
+                                    Link("See definition", destination: defUrl)
+                                }
+                            }
                         }
                     }
                     
