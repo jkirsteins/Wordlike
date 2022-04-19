@@ -244,7 +244,7 @@ struct GameHostView: View {
                 debugMessage = "TTL: \(paceSetter.remainingTtl(at: newTime)) (f:\(paceSetter.isFresh(dailyState.date, at: newTime))) for word: \(dailyState.expected)" + "\nTIX: \(todayIndex)" + "\nTALLIED: \(self.dailyState?.isTallied ?? false)" + "\nPS: \(paceSetter)" + "\nSSH: \(shouldShowHelp)"
                 
                 if !paceSetter.isFresh(dailyState.date, at: newTime) {
-                    // TODO: process daily results if needed
+                    stats = stats.update(from: game, with: paceSetter)
                     self.dailyState = DailyState(expected: validator.answer(at: todayIndex))
                 }
             }
