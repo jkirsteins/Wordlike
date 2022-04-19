@@ -70,11 +70,6 @@ struct SubmitTile: View {
                 return
             } 
         
-        var submittedCount = game.rows.filter { $0.isSubmitted }.count
-        if submittedCount == 5 {
-            message = "Phew!"
-        }
-                            
         let submitted = RowModel(
             word: current.word,
             expected: current.expected,

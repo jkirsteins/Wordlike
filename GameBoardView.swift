@@ -23,7 +23,15 @@ struct GameBoardView: View {
     
     //    var onCompleteCallback: ((GameState)->())? = nil
     
-    func onStateChange(edited: @escaping ([RowModel])->(), completed: @escaping (GameState)->()) -> some View {
+    func onStateChange(
+        edited: @escaping ([RowModel])->(),
+        
+    // Turn was completed, but callback is before animations are finished. Not called if turn was already finished when the view appeared.
+        earlyCompleted: @escaping (GameState)->(),
+    
+    // Both turn and animations have completed. This 
+    // has a delay relative to earlyCompleted:
+        completed: @escaping (GameState)->()) -> some View {
         var didRespond = false
         return self.onChange(of: self.state.rows) {
             newRows in 
@@ -35,6 +43,10 @@ struct GameBoardView: View {
             guard state.isCompleted, !didRespond else { 
                 return }
             didRespond = true
+            
+            DispatchQueue.main.async {
+                earlyCompleted(state)
+            }
             
             Task {
                 // allow time to finish animating a single

@@ -128,7 +128,43 @@ struct GameHostView: View {
                                 date: dailyState!.date,
                                 rows: newRows,
                                 isTallied: dailyState!.isTallied)
-                        }, completed: { 
+                        }, 
+                                       earlyCompleted: {
+                            newState in
+                            
+                            if let dailyState = self.dailyState {
+                                if !dailyState.isTallied {
+                                    /* Game has just been
+                                     completed, so
+                                     we can show some messages while
+                                     the tiles are finishing animating. */
+                                    
+                                    if !newState.isWon {
+                                        // When losing, show the word
+                                        toastMessageCenter.set(dailyState.expected)
+                                    } else {
+                                        // When winning, show a flavor message
+                                        let message: String?
+                                        
+                                        switch (newState.submittedRows) {
+                                        case 6: message = "Phew!"
+                                        case 5: message = "Great"
+                                        case 4: message = "Splendid"
+                                        case 3: message = "Impressive"
+                                        case 2: message = "Magnificent"
+                                        case 1: message = "Genius"
+                                        default:
+                                            message = nil
+                                        }
+                                        
+                                        if let message = message {
+                                            toastMessageCenter.set(message)
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                                       completed: { 
                             state in
                             
                             if let dailyState = self.dailyState {
