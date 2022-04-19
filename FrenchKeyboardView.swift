@@ -65,13 +65,14 @@ struct FrenchKeyboardView: View {
                 }
                 SubmitTile(maxSize: wideSize)
             }
-            
         }
         .frame(maxWidth: 600)
     }
 }
 
 struct FrenchKeyboardView_Previews: PreviewProvider {
+    static let state = GameState(expected: DayWord(word: "aller", day: 1, locale: "fr"))
+    
     static var previews: some View {
         VStack {
             Text("French keyboard")
@@ -87,7 +88,7 @@ struct FrenchKeyboardView_Previews: PreviewProvider {
                         "Y": .wrongLetter,
                     ], locale: "fr"))
             }
-        }
+        }.environmentObject(state)
     }
 }
 

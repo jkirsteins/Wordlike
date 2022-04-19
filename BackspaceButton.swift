@@ -8,8 +8,7 @@ struct BackspaceButtonStyle: ButtonStyle {
         ZStack {
             RoundedRectangle(cornerRadius: 4.0)
                 .fill(
-                    Color.keyboardFill(
-                        for: nil, from: palette)
+                    palette.submitKeyboardFill
                         .adjust(
                             pressed: configuration.isPressed)
                 )
