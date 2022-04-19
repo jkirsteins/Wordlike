@@ -1,15 +1,64 @@
 import SwiftUI
 
+/// We wrap a String message in a struct that is
+/// always brand new (to trigger the on-change even
+/// for the same message).
 struct ToastMessage : Equatable {
     let id = UUID() 
     let message: String 
 }
 
 class ToastMessageCenter : ObservableObject {
+    /// Actual message that will be displayed
     @Published var message: ToastMessage? = nil
     
+    /// Requested message might be overridden
+    /// with an easter-egg message
+    var requestedMessage: String? = nil
+    
+    let jokeMessages = [
+        "Seriously?",
+        "Sure, keep doing the same thing...",
+        "I promise the outcome won't change",
+        "Persistance won't pay off this time",
+        "Consider doing something else",
+        "What do you seek?",
+        "I'll be sick from all the shaking...",
+        "I promise you that is not a valid word",
+        "You can do better than that",
+        "There is no prize for the most clicks",
+    ].shuffled()
+    
+    /// We want to keep a joke message around for a while, to give
+    /// the user the time to read it.
+    var currentJoke: String? = nil
+    
+    /// This triggers rollover for joke index
+    var countSame: Int = 0
+    
+    /// This keeps incrementing to fetch the next joke (we don't grab
+    /// a random joke to ensure every joke gets equal screentime)
+    var jokeIndex: Int = 0
+    
     func set(_ message: String) {
-        self.message = ToastMessage(message: message)
+        defer {
+            requestedMessage = message
+        }
+        
+        if message == requestedMessage {
+            countSame += 1
+            
+            if countSame % 5 == 0 {
+                jokeIndex += 1
+                let joke = jokeMessages[jokeIndex % jokeMessages.count] 
+                currentJoke = joke
+            }
+        } else {
+            // Drop the joke when new message comes in
+            currentJoke = nil
+        }
+        
+        self.message = ToastMessage(message: currentJoke ?? message)
     }
 }
 
