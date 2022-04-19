@@ -59,20 +59,8 @@ class WordValidator : ObservableObject
     
     let name: String
     let seed: Int 
-//    let start: Date
-    
+
     static let MAR_22_2022 = Date(timeIntervalSince1970: 1647966002) 
-    
-//    var todayIndex: Int {
-//        indexBetween(start, and: Date())
-//    }
-//    
-//    func indexBetween(_ start: Date, and end: Date) -> Int {
-//        Calendar.current.dateComponents(
-//            [.day], 
-//            from: Calendar.current.startOfDay(for: start), 
-//            to: Calendar.current.startOfDay(for: end)).day!
-//    }
     
     func canSubmit(word: String, reason: inout String?) -> Bool {
         /* To avoid accidentally breaking input files,

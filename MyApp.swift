@@ -87,7 +87,7 @@ extension String {
 struct MyApp: App {
     
     let paceSetter = CalendarDailyPaceSetter.current(start: WordValidator.MAR_22_2022)
-    
+
     let debugViz = false
     
     @AppStorage("turnState.en")

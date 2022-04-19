@@ -6,6 +6,7 @@ struct Stats : RawRepresentable {
     let maxStreak: Int 
     let streak: Int 
     let guessDistribution: [Int]
+    let lastWinAt: Date?
     
     func widthRatio(row: Int) -> CGFloat {
         let maxInt: Int = guessDistribution.max() ?? 0
@@ -26,12 +27,13 @@ struct Stats : RawRepresentable {
         return 0
     }
     
-    public init(played: Int, won: Int, maxStreak: Int, streak: Int, guessDistribution: [Int]) {
+    public init(played: Int, won: Int, maxStreak: Int, streak: Int, guessDistribution: [Int], lastWinAt: Date?) {
         self.played = played 
         self.won = won 
         self.maxStreak = maxStreak
         self.streak = streak 
         self.guessDistribution = guessDistribution
+        self.lastWinAt = lastWinAt
     } 
                 
     public init() {
@@ -40,6 +42,7 @@ struct Stats : RawRepresentable {
         self.maxStreak = 0
         self.streak = 0
         self.guessDistribution = [0,0,0,0,0,0]
+        self.lastWinAt = nil
     }
     
     // RawRepresentable
@@ -73,6 +76,7 @@ extension Stats: Codable, Equatable {
         case maxStreak 
         case streak 
         case guessDistribution
+        case lastWinAt
     }
     
     public init(from decoder: Decoder) throws {
@@ -82,6 +86,7 @@ extension Stats: Codable, Equatable {
         maxStreak = try values.decode(Int.self, forKey: .maxStreak)
         streak = try values.decode(Int.self, forKey: .streak)
         guessDistribution = try values.decode([Int].self, forKey: .guessDistribution)
+        lastWinAt = try values.decode(Optional<Date>.self, forKey: .lastWinAt)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -91,6 +96,7 @@ extension Stats: Codable, Equatable {
         try container.encode(maxStreak, forKey: .maxStreak)
         try container.encode(streak, forKey: .streak)
         try container.encode(guessDistribution, forKey: .guessDistribution)
+        try container.encode(lastWinAt, forKey: .lastWinAt)
     }
 }
 

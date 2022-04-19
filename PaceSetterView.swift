@@ -46,15 +46,20 @@ extension Calendar {
 }
 
 extension Stats {
-    func update(from game: GameState, with: PaceSetter) -> Stats {
+    func update(from game: GameState, with ps: PaceSetter) -> Stats {
         
         guard !game.isTallied else {
             return self 
         }
         
-        let streakablePeriods = false
+        let streakablePeriods: Bool 
+        if let lastWinAt = self.lastWinAt {
+            streakablePeriods = ps.point(lastWinAt, isInPrecedingPeriodFrom: game.date)
+        } else {
+            streakablePeriods = false
+        }
         
-        let newStreak = (streakablePeriods && game.isWon ? self.streak : 0) + 1 
+        let newStreak = (streakablePeriods && game.isWon ? self.streak : 0) + (game.isWon ? 1 : 0) 
         
         let newDistribution: [Int] = (0..<GameState.MAX_ROWS).map {
             ix in 
@@ -75,12 +80,19 @@ extension Stats {
             return result
         }
         
+        // Only count games as played if any rows submitted
+        let didPlay = game.rows.filter {
+            $0.isSubmitted
+        }.count > 0
+        
         return Stats(
-            played: self.played + 1, 
+            played: didPlay ? self.played + 1 : self.played, 
             won: self.won + (game.isWon ? 1 : 0), 
             maxStreak: (game.isWon ? max(newStreak, self.maxStreak) : 0),  
             streak: newStreak, 
-            guessDistribution: newDistribution)
+            guessDistribution: newDistribution,
+            lastWinAt: (game.isWon ? Date() : self.lastWinAt)
+        )
     } 
 }
 

@@ -254,7 +254,8 @@ struct StatsView_Previews: PreviewProvider {
                         24,
                         11,
                         6
-                    ]), state: state)
+                    ],
+                    lastWinAt: nil), state: state)
             }.navigationTitle("Test 1")
         }
         
@@ -271,7 +272,8 @@ struct StatsView_Previews: PreviewProvider {
                     24,
                     11,
                     6
-                ]), state: GameState(expected: DayWord(word: "fuels", day: 1, locale: "en")))
+                ],
+                lastWinAt: nil), state: GameState(expected: DayWord(word: "fuels", day: 1, locale: "en")))
         }
         
         PaletteSetterView {
@@ -287,7 +289,8 @@ struct StatsView_Previews: PreviewProvider {
                     0,
                     0,
                     0
-                ]), state: GameState(expected: DayWord(word: "fuels", day: 1, locale: "enswils")))
+                ],
+                lastWinAt: nil), state: GameState(expected: DayWord(word: "fuels", day: 1, locale: "enswils")))
         }
         
         PaletteSetterView {
@@ -303,7 +306,8 @@ struct StatsView_Previews: PreviewProvider {
                     0,
                     0,
                     0
-                ]), state: state)
+                ], 
+                lastWinAt: nil), state: state)
         }
     }
 }
