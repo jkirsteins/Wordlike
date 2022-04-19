@@ -23,7 +23,7 @@ struct LanguageLinkLabel: View {
     
     var caption: (String, Color)? {
         guard let dailyState = dailyState, paceSetter.isFresh(dailyState.date, at: Date()) else {
-            return ("Not started", .black) 
+            return ("Not started", Color.primary) 
         }
         
         let countSubmitted = dailyState.rows.filter({ $0.isSubmitted }).count
