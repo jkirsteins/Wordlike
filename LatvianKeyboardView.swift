@@ -202,7 +202,7 @@ struct LatvianKeyboardView: View {
                     KeyboardTile(letter: "K")
                     KeyboardTile(letter: "L")
                 }
-            }
+            }.frame(maxHeight: 50)
             
             HStack(spacing: hspacing) {
                 BackspaceTile(maxSize: wideSize)

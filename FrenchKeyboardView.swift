@@ -32,7 +32,7 @@ struct FrenchKeyboardView: View {
                     KeyboardTile(letter: "O")
                     KeyboardTile(letter: "P")
                 }
-            }
+            }.frame(maxHeight: 50)
             
             HStack(spacing: hspacing ) {
                 Group {
