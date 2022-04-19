@@ -29,6 +29,10 @@ class ToastMessageCenter : ObservableObject {
         "There is no prize for the most clicks",
     ].shuffled()
     
+    /// We want to stop showing the jokes after a timeout
+    /// (i.e. only on vigorous same-message-button-mashing)
+    var expireJokeAt: Date? = nil
+    
     /// We want to keep a joke message around for a while, to give
     /// the user the time to read it.
     var currentJoke: String? = nil
@@ -45,8 +49,17 @@ class ToastMessageCenter : ObservableObject {
             requestedMessage = message
         }
         
-        if message == requestedMessage {
+        let shouldExpireJoke: Bool
+        if let expireJokeAt = self.expireJokeAt, expireJokeAt <= Date() {
+            shouldExpireJoke = true
+        } else {
+            shouldExpireJoke = false
+        }
+        
+        if !shouldExpireJoke, message == requestedMessage {
             countSame += 1
+            
+            expireJokeAt = Date() + 2.0
             
             if countSame % 5 == 0 {
                 jokeIndex += 1
@@ -54,8 +67,10 @@ class ToastMessageCenter : ObservableObject {
                 currentJoke = joke
             }
         } else {
-            // Drop the joke when new message comes in
-            currentJoke = nil
+            // Reset joke state completely
+            self.currentJoke = nil
+            self.expireJokeAt = nil
+            self.countSame = 0
         }
         
         self.message = ToastMessage(message: currentJoke ?? message)
