@@ -21,11 +21,11 @@ struct BlinkViewModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .opacity(blinking ? 0 : 1)
-            .animation(
-                .easeInOut(duration: duration).repeatForever(), 
-                value: blinking)
             .onAppear {
-                blinking = true
+                withAnimation(
+                    .easeInOut(duration: duration).repeatForever()) {
+                        blinking = true
+                    }
             }
     }
 }

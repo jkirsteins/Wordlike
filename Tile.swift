@@ -126,6 +126,8 @@ struct Tile: View {
                     // Text() modifiers need to be same
                     // here and in the letter branch
                     // (except animations)
+                    ZStack {
+                        
                     Text("_") 
                         .font( 
                             .system(size: fontSize(gr), weight: .bold))
@@ -137,6 +139,8 @@ struct Tile: View {
                         .foregroundColor(
                             (animate && flip == false) || calculatedType == .maskedFilled ? palette.maskedTextColor : palette.revealedTextColor) 
                             .blinking(duration: 0.5)
+                    }
+                    
                 }
                 
                 if !showFocusHint, let letter = letter {
@@ -162,7 +166,7 @@ struct Tile: View {
                         .foregroundColor(
                             (animate && flip == false) || calculatedType == .maskedFilled ? palette.maskedTextColor : palette.revealedTextColor)  
                 }
-            } 
+            }
         }
         // frame w maxWidth must come before aspectRatio
         // (otherwise bounds will be off in small environments, e.g. keyboard accessory)
