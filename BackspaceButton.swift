@@ -4,11 +4,13 @@ import SwiftUI
 struct BackspaceButtonStyle: ButtonStyle {
     @Environment(\.palette) var palette: Palette 
     
+    @EnvironmentObject var game: GameState
+    
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 4.0)
                 .fill(
-                    palette.submitKeyboardFill
+                    (game.isCompleted ? palette.normalKeyboardFill : palette.submitKeyboardFill)
                         .adjust(
                             pressed: configuration.isPressed)
                 )
