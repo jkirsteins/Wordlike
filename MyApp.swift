@@ -12,6 +12,14 @@ struct LinkToGame: View {
     }
 }
 
+fileprivate enum ActiveSheet {
+    case settings 
+}
+
+extension ActiveSheet: Identifiable {
+    var id: Self { self }
+}
+
 struct LanguageLinkLabel: View {
     @AppStorage
     var dailyState: DailyState?
@@ -91,6 +99,8 @@ struct MyApp: App {
     @AppStorage("turnState.lv")
     var dailyStateLv: DailyState?
     
+    @State fileprivate var activeSheet: ActiveSheet? = nil
+    
     @SceneBuilder
     var body: some Scene {
         WindowGroup { 
@@ -103,20 +113,43 @@ struct MyApp: App {
                     }
                     .navigationTitle(
                         Bundle.main.displayName)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(
+                                action: { 
+                                    activeSheet = .settings
+                                }, 
+                                label: {
+                                    Label(
+                                        "Help", 
+                                        systemImage: "gear")
+                                        .foregroundColor(
+                                            Color(
+                                                UIColor.label))
+                                })  
+                        }
+                    }
                     
                     VStack {
                         Text("Welcome!")
                             .foregroundColor(Color.accentColor)
                             .font(.largeTitle )
                             .fontWeight(.bold)
-                            
-                            
+                        
+                        
                         Text("Please select a language in the left side menu.")
                     }
                 }
                 .environment(\.paceSetter, paceSetter)
+            }.sheet(item: $activeSheet, onDismiss: {
+                
+            }, content: { item in
+                switch(item) {
+                case .settings: 
+                    SettingsView()
+                }
+            })
                 .environment(\.debug, debugViz)
-            }
         }
     }
 }

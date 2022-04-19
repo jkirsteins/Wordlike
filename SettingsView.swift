@@ -28,6 +28,8 @@ struct SettingsView: View {
     
     static let HIGH_CONTRAST_KEY = "cfg.isHighContrast"
     
+    @Environment(\.debug) var debug: Bool
+    
     @State fileprivate var activeSheet: ActiveSheet? = nil
     
     @AppStorage(SettingsView.HIGH_CONTRAST_KEY) 
@@ -69,99 +71,101 @@ struct SettingsView: View {
                     }
                     Spacer()
                     Button("Send") {
-                            activeSheet = .mail
-                        }.frame(minWidth: Self.minRightWidth)
-                }
-            }
-            
-                HStack {
-                    VStack(alignment: .leading) {
-                        if MailView.canSendMail {
-                            Text("Feedback (manual)")
-                        } else {
-                        Text("Feedback")
-                        }
-                        Text("Click to copy feedback e-mail address.").font(.caption)
-                    }
-                    Spacer()
-                    HStack {
-                        if emailCopied {
-                            Text("Copied")
-                                .font(.caption)
-                                .foregroundColor(Color(UIColor.secondaryLabel))
-                                .task {
-                                    try? await Task.sleep(nanoseconds: 2_000_000_000)
-                                    emailCopied = false
-                                }
-                        } else {
-                            Button(action: {
-                                UIPasteboard.general.setValue(
-                                    Self.feedbackEmail,
-                                    forPasteboardType: UTType.plainText.identifier)
-                                
-                                emailCopied = true
-                            }, label: {
-                                Image(systemName: "doc.on.clipboard")
-                            }) 
-                        }
+                        activeSheet = .mail
                     }.frame(minWidth: Self.minRightWidth)
-                
+                }
             }
-            
-            // Debug stuff
-            Group { 
-                
-            Divider()
             
             HStack {
                 VStack(alignment: .leading) {
-                    Text("Reset all state").font(.body)
-                    Text("Clear all historical stats and today's progress").font(.caption)
-                }
-                Spacer()
-                Button("Full reset") {
-                    if let bundleID = Bundle.main.bundleIdentifier {
-                        UserDefaults.standard.removePersistentDomain(forName: bundleID)
+                    if MailView.canSendMail {
+                        Text("Feedback (manual)")
+                    } else {
+                        Text("Feedback")
                     }
-                }
-            }
-            
-            Divider()
-            
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Reset turn (EN)").font(.body)
-                    Text("Reset today's state only (EN)").font(.caption)
+                    Text("Click to copy feedback e-mail address.").font(.caption)
                 }
                 Spacer()
-                Button("Reset") {
-                    dailyStateEn = nil
-                }
+                HStack {
+                    if emailCopied {
+                        Text("Copied")
+                            .font(.caption)
+                            .foregroundColor(Color(UIColor.secondaryLabel))
+                            .task {
+                                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                                emailCopied = false
+                            }
+                    } else {
+                        Button(action: {
+                            UIPasteboard.general.setValue(
+                                Self.feedbackEmail,
+                                forPasteboardType: UTType.plainText.identifier)
+                            
+                            emailCopied = true
+                        }, label: {
+                            Image(systemName: "doc.on.clipboard")
+                        }) 
+                    }
+                }.frame(minWidth: Self.minRightWidth)
+                
             }
             
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Reset turn (FR)").font(.body)
-                    Text("Reset today's state only (FR)").font(.caption)
+            // Debug group
+            if debug {
+                Group { 
+                    
+                    Divider()
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Reset all state").font(.body)
+                            Text("Clear all historical stats and today's progress").font(.caption)
+                        }
+                        Spacer()
+                        Button("Full reset") {
+                            if let bundleID = Bundle.main.bundleIdentifier {
+                                UserDefaults.standard.removePersistentDomain(forName: bundleID)
+                            }
+                        }
+                    }
+                    
+                    Divider()
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Reset turn (EN)").font(.body)
+                            Text("Reset today's state only (EN)").font(.caption)
+                        }
+                        Spacer()
+                        Button("Reset") {
+                            dailyStateEn = nil
+                        }
+                    }
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Reset turn (FR)").font(.body)
+                            Text("Reset today's state only (FR)").font(.caption)
+                        }
+                        Spacer()
+                        Button("Reset") {
+                            dailyStateFr = nil
+                        }
+                    }
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Reset turn (LV)").font(.body)
+                            Text("Reset today's state only (LV)").font(.caption)
+                        }
+                        Spacer()
+                        Button("Reset") {
+                            dailyStateLv = nil
+                        }
+                    }
+                    
+                    Divider()
                 }
-                Spacer()
-                Button("Reset") {
-                    dailyStateFr = nil
-                }
-            }
-            
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Reset turn (LV)").font(.body)
-                    Text("Reset today's state only (LV)").font(.caption)
-                }
-                Spacer()
-                Button("Reset") {
-                    dailyStateLv = nil
-                }
-            }
-            
-            Divider()
             }
         }
         .padding(24)
