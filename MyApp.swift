@@ -16,12 +16,13 @@ struct LanguageLinkLabel: View {
     @AppStorage
     var dailyState: DailyState?
     
+    @Environment(\.paceSetter) var paceSetter: PaceSetter
     @Environment(\.palette) var palette: Palette
     
     let locale: String
     
     var caption: (String, Color)? {
-        guard let dailyState = dailyState else {
+        guard let dailyState = dailyState, paceSetter.isFresh(dailyState.date, at: Date()) else {
             return ("Not started", .black) 
         }
         
