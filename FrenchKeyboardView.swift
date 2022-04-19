@@ -3,7 +3,8 @@ import SwiftUI
 struct FrenchKeyboardView: View {
     @State var maxSize: CGSize = .zero
     
-    @Environment(\.failureReason) var failureReason: Binding<String?>
+    @EnvironmentObject 
+    var toastMessage: ToastMessageCenter
     
     let hspacing = CGFloat(1) 
     let vspacing = CGFloat(1) 
@@ -62,8 +63,7 @@ struct FrenchKeyboardView: View {
                 Group {
                     SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "N")
                 }
-                SubmitTile(maxSize: wideSize,
-                           failureReason: failureReason)
+                SubmitTile(maxSize: wideSize)
             }
             
         }

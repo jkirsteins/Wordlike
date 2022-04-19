@@ -28,7 +28,8 @@ struct SubmitTile: View {
     @EnvironmentObject var game: GameState
     @EnvironmentObject var validator: WordValidator
     
-    @Binding var failureReason: String?
+    @EnvironmentObject 
+    var toastMessageCenter: ToastMessageCenter
     
     func submitAction() {
         guard !game.isCompleted else {
@@ -47,11 +48,18 @@ struct SubmitTile: View {
             return
         }
         
+        var message: String? = nil
+        defer {
+            if let newMessage = message {
+                toastMessageCenter.set(newMessage)
+            }
+        }
+        
         // If word doesn't match,
         // don't set isSubmitted
         guard validator.canSubmit(
             word: current.word, 
-            reason: &failureReason) else {
+            reason: &message) else {
                 let updatedRow = RowModel(
                     word: current.word,
                     expected: current.expected,
@@ -59,10 +67,13 @@ struct SubmitTile: View {
                     attemptCount: current.attemptCount + 1)
                                 
                 game.rows[currentIx] = updatedRow
-                
-                print("Can't submit")
                 return
             } 
+        
+        var submittedCount = game.rows.filter { $0.isSubmitted }.count
+        if submittedCount == 5 {
+            message = "Phew!"
+        }
                             
         let submitted = RowModel(
             word: current.word,
@@ -125,8 +136,7 @@ struct SubmitTileInternalPreview : View {
             Text("Failure: \(reason ?? "<none>")")
         SubmitTile(
             maxSize: 
-                    CGSize(width: 200, height: 100),
-            failureReason: $reason)
+                    CGSize(width: 200, height: 100))
             .environmentObject(state)
             .environmentObject(WordValidator(name: "en", seed: 123))
         }

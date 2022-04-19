@@ -1,10 +1,15 @@
 import SwiftUI
 
-struct SubmissionFailureReasonKey: PreferenceKey {
-    static var defaultValue: String? = nil
+struct ToastMessage : Equatable {
+    let id = UUID() 
+    let message: String 
+}
+
+class ToastMessageCenter : ObservableObject {
+    @Published var message: ToastMessage? = nil
     
-    static func reduce(value: inout String?, nextValue: () -> String?) {
-        value = nextValue() ?? value
+    func set(_ message: String) {
+        self.message = ToastMessage(message: message)
     }
 }
 

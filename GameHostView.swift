@@ -10,17 +10,6 @@ extension ActiveSheet: Identifiable {
     var id: Self { self }
 }
 
-extension EnvironmentValues {
-    var failureReason: Binding<String?> {
-        get { self[FailureReasonKey.self] }
-        set { self[FailureReasonKey.self] = newValue }
-    }
-}
-
-struct FailureReasonKey: EnvironmentKey {
-    static let defaultValue: Binding<String?> = .constant(nil) 
-}
-
 struct GameHostView: View {
     
     @State var debugMessage: String = ""
@@ -54,7 +43,7 @@ struct GameHostView: View {
     let locale: String
     
     /* Propogated via preferences from the underlying EditableRow. */
-    @State var failureReason: String? = nil
+    @StateObject var toastMessageCenter = ToastMessageCenter()
     
     init(_ name: String) {
         self._validator = StateObject(wrappedValue: WordValidator(name: name))
@@ -150,12 +139,6 @@ struct GameHostView: View {
                             
                             finished = true
                         })
-                        .onPreferenceChange(SubmissionFailureReasonKey.self) {
-                            new in 
-                            
-                            self.failureReason = new
-                            self.clearToastAt = (self.clearToastAt ?? Date()) + 2.0
-                        }
                     
                     if debugViz {
                         Text(verbatim: "\(game.submittedRows)")
@@ -182,7 +165,7 @@ struct GameHostView: View {
                     }
                 }
             }
-            .environment(\.failureReason, $failureReason)
+            .environmentObject(toastMessageCenter)
             .environment(\.keyboardHints, game.keyboardHints)
             .environmentObject(validator)
             .onAppear {
@@ -193,6 +176,11 @@ struct GameHostView: View {
                 if let newState = self.dailyState {
                     updateFromLoadedState(newState)
                 } 
+            }
+            .onChange(of: self.toastMessageCenter.message ) {
+                newMessage in 
+                
+                self.clearToastAt = Date() + 2.0
             }
             .onChange(of: self.dailyState) {
                 newState in
@@ -205,10 +193,11 @@ struct GameHostView: View {
                 
                 recalculateNextWord()
                 
+                
                 if let clearToastAt = clearToastAt, Date() > clearToastAt {
                     self.clearToastAt = nil
                     withAnimation {
-                        self.failureReason = nil
+                        self.toastMessageCenter.message = nil
                     }
                 }
                 
@@ -298,10 +287,10 @@ struct GameHostView: View {
             .padding(8)
             .frame(maxHeight: 650)
             
-            if let failureReason = failureReason {
+            if let toastMessage = toastMessageCenter.message {
                 VStack {
                     Spacer().frame(maxHeight: 48)
-                    Text(verbatim: "\(failureReason)")
+                    Text(verbatim: "\(toastMessage.message)")
                         .foregroundColor(palette.toastForeground)
                         .fontWeight(.bold)
                         .padding(16)

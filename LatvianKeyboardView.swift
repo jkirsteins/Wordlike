@@ -148,7 +148,8 @@ struct SizeSettingKeyboardTile: View {
 struct LatvianKeyboardView: View {
     @State var maxSize: CGSize = .zero
     
-    @Environment(\.failureReason) var failureReason: Binding<String?>
+    @EnvironmentObject 
+    var toastMessageCenter: ToastMessageCenter
     
     let hspacing = CGFloat(1) 
     let vspacing = CGFloat(1) 
@@ -220,8 +221,7 @@ struct LatvianKeyboardView: View {
                     SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "M")
                 }
                 
-                SubmitTile(maxSize: CGSize(width: maxSize.width*2, height: maxSize.height),
-                           failureReason: failureReason)
+                SubmitTile(maxSize: CGSize(width: maxSize.width*2, height: maxSize.height))
             }
             
         }
