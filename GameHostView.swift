@@ -305,20 +305,7 @@ struct GameHostView: View {
                                         UIColor.label))
                         }) 
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(
-                        action: { 
-                            activeSheet = .settings
-                        }, 
-                        label: {
-                            Label(
-                                "Help", 
-                                systemImage: "gear")
-                                .foregroundColor(
-                                    Color(
-                                        UIColor.label))
-                        })  
-                }
+                
             }
             .padding(8)
             .frame(maxHeight: 650)

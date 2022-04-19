@@ -111,6 +111,8 @@ struct MyApp: App {
                         LinkToGame(locale: "fr")
                         LinkToGame(locale: "lv")
                     }
+                    .listStyle(.insetGrouped)
+                    .navigationBarTitleDisplayMode(.large)
                     .navigationTitle(
                         Bundle.main.displayName)
                     .toolbar {
