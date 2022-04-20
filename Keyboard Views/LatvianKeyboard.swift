@@ -145,22 +145,27 @@ struct SizeSettingKeyboardTile: View {
     }
 }
 
-struct LatvianKeyboardView: View {
+/// Latvian qwerty keyboard
+struct LatvianKeyboard: View {
     @State var maxSize: CGSize = .zero
     
     @EnvironmentObject 
     var toastMessageCenter: ToastMessageCenter
     
+    @Environment(\.rootGeometry) var geometry: GeometryProxy?
+    
     let hspacing = CGFloat(1) 
     let vspacing = CGFloat(1) 
     
     var wideSize: CGSize {
-        CGSize(width: maxSize.width*2, height: maxSize.height)
+        CGSize(
+            width: maxSize.width*1.5 + hspacing, 
+            height: maxSize.height)
     }
     
     var body: some View {
-        VStack(spacing: vspacing) {
-            HStack(spacing: hspacing) {
+        KeyboardContainer(spacing: vspacing) {
+            RowContainer(spacing: hspacing) {
                 Group {
                     SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "E")
                     
@@ -183,7 +188,7 @@ struct LatvianKeyboardView: View {
                 
             }
             
-            HStack(spacing: hspacing ) {
+            RowContainer(spacing: hspacing ) {
                 Group {
                     SizeSettingKeyboardTile(maxSize: $maxSize, letter: "A")
                     KeyboardTile(letter: "Ā")
@@ -204,7 +209,7 @@ struct LatvianKeyboardView: View {
                 }
             }.frame(maxHeight: 50)
             
-            HStack(spacing: hspacing) {
+            RowContainer(spacing: hspacing) {
                 BackspaceTile(maxSize: wideSize)
                 
                 Group {
@@ -221,11 +226,9 @@ struct LatvianKeyboardView: View {
                     SizeConstrainedKeyboardTile(maxSize: maxSize, letter: "M")
                 }
                 
-                SubmitTile(maxSize: CGSize(width: maxSize.width*2, height: maxSize.height))
+                SubmitTile(maxSize: wideSize)
             }
-            
         }
-        .frame(maxWidth: 600)
     }
 }
 
@@ -236,7 +239,7 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
         VStack {
             Text("Latvian keyboard (light)")
             
-            LatvianKeyboardView()
+            LatvianKeyboard()
                 .environment(\.keyboardHints, KeyboardHints(hints: [
                     "Ļ": .wrongPlace,
                     "Ž": .rightPlace,
@@ -248,7 +251,7 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
         VStack {
             Text("Latvian keyboard (light hc)")
             
-            LatvianKeyboardView()
+            LatvianKeyboard()
                 .environment(\.keyboardHints, KeyboardHints(hints: [
                     "Ļ": .wrongPlace,
                     "Ž": .rightPlace,
@@ -260,7 +263,7 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
         VStack {
             Text("Latvian keyboard (dark)")
             
-            LatvianKeyboardView()
+            LatvianKeyboard()
                 .environment(\.keyboardHints, KeyboardHints(hints: [
                     "Ļ": .wrongPlace,
                     "Ž": .rightPlace,

@@ -12,8 +12,6 @@ extension ActiveSheet: Identifiable {
 
 struct GameHostView: View {
     
-    @State var debugMessage: String = ""
-    
     @AppStorage 
     var dailyState: DailyState?
     
@@ -70,8 +68,6 @@ struct GameHostView: View {
     }
     
     func updateFromLoadedState(_ newState: DailyState) {
-        debugMessage = "Updating..."
-        
         game.expected = DayWord(
             word: newState.expected, 
             day: todayIndex,
@@ -85,17 +81,19 @@ struct GameHostView: View {
     
     // Timer sets this to hh:mm:ss until next word
     // TODO: duplicated with StatsView
-    @State var nextWordIn: String = "..." 
+    @State var nextWordIn: String = "..."
+    
+    @Environment(\.rootGeometry) var geometry: GeometryProxy?
     
     @ViewBuilder
     var keyboardView: some View {
         if game.expected.locale == "lv" {
-            LatvianKeyboardView()
+            LatvianKeyboard()
         }
         else if game.expected.locale == "fr" {
-            FrenchKeyboardView()
+            FrenchKeyboard()
         } else {
-            EnglishKeyboardView()
+            EnglishKeyboard()
         }
     }
     
@@ -115,7 +113,40 @@ struct GameHostView: View {
     // When to clear message toast
     @State var clearToastAt: Date? = nil
     
-    var body: some View {
+    @Environment(\.rootGeometry) var rootGeometry: GeometryProxy?
+    
+    /* Sometimes the view appears to go out of bounds of
+     the screen. Sometimes after rotation (on a device),
+     or (in Swift Playgrounds) when first opening the LV view. 
+     
+     The rootGeometry proxy should communicate our bounds,
+     so we can set that as the max.
+     
+     Not clear if this definitively solves the issue, but
+     the problem seems to be less prevalent.*/
+    var body: some View  {
+        if let geometry = rootGeometry {
+            bodyUnconstrained
+                .frame(
+                    idealWidth: geometry.size.width,
+                    maxWidth: geometry.size.width)
+                .fixedSize()
+                .border(debugViz ? .blue : .clear)
+        } else {
+            VStack {
+                /* Adding this message as a way to know
+                 if layout issues are due to missing 
+                 geometry proxy. */
+                Text("Good luck!")
+                
+                bodyUnconstrained
+            }
+        }
+        
+    }
+    
+    @ViewBuilder
+    var bodyUnconstrained: some View {
         ZStack {
             VStack { 
                 Spacer().frame(maxHeight: 24)
@@ -177,11 +208,8 @@ struct GameHostView: View {
                         })
                     
                     if debugViz {
-                        Text(verbatim: "\(game.submittedRows)")
-                        Text(verbatim: "\(game.isCompleted)")
                         Text(dailyState?.expected ?? "none")
-                        Text(dailyState?.rows[0].word ?? "none")
-                        Text(self.debugMessage).id("message")
+                        Text(verbatim: "\(geometry?.size.width ?? 0)")
                     }
                     
                     keyboardView
@@ -194,8 +222,8 @@ struct GameHostView: View {
                 
                 if dailyState == nil {
                     Text("Initializing state...").onAppear {
-                        guard let dailyState = dailyState else {
-                            dailyState = DailyState(expected: validator.answer(at: todayIndex))
+                        guard let _ = dailyState else {
+                            self.dailyState = DailyState(expected: validator.answer(at: todayIndex))
                             return
                         }
                     }
@@ -240,8 +268,6 @@ struct GameHostView: View {
                 guard let dailyState = self.dailyState else {
                     return
                 }
-                
-                debugMessage = "TTL: \(paceSetter.remainingTtl(at: newTime)) (f:\(paceSetter.isFresh(dailyState.date, at: newTime))) for word: \(dailyState.expected)" + "\nTIX: \(todayIndex)" + "\nTALLIED: \(self.dailyState?.isTallied ?? false)" + "\nPS: \(paceSetter)" + "\nSSH: \(shouldShowHelp)"
                 
                 if !paceSetter.isFresh(dailyState.date, at: newTime) {
                     stats = stats.update(from: game, with: paceSetter)
