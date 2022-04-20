@@ -22009,3 +22009,9 @@ nežūt
 žūžot
 žūžos
 žvadz
+klāts
+klāti
+klāta
+klātu
+klāto
+klātā
