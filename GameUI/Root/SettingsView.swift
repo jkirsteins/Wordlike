@@ -174,9 +174,8 @@ struct SettingsView: View {
         }, content: { item in
             switch(item) {
             case .mail: 
-                //                Text(verbatim: "\(mailData)")
                 MailView(data: $mailData) { _ in
-                    print("yo")
+                    
                 }
             }
         })

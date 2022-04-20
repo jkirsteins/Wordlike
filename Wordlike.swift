@@ -71,8 +71,6 @@ struct Wordlike: App {
                     
                     Text("Please select a language in the left side menu.")
                 }
-                .environment(\.turnCounter, turnCounter)
-                .environment(\.debug, debug)
             }.sheet(item: $activeSheet, onDismiss: {
                 // nothing to do on dismiss
             }, content: { item in
@@ -81,6 +79,8 @@ struct Wordlike: App {
                     SettingsView()
                 }
             })
+                .environment(\.turnCounter, turnCounter)
+                .environment(\.debug, debug)
         }
     }
 }

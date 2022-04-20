@@ -201,7 +201,6 @@ struct StatsView: View {
                                 }) .buttonStyle(ShareButtonStyle(backgroundColor: palette.rightPlaceFill))
                             }
                         }
-                        
                     }
                     .onPreferenceChange(WidthKey.self) {
                         newWidth in 
@@ -211,7 +210,9 @@ struct StatsView: View {
                         isPresented: $isSharing,
                         detents: [.medium(),.large()]) { 
                         } content: {
-                            ActivityViewController(activityItems: $shareItems)
+                            ActivityViewController(activityItems: $shareItems, callback: {
+                                isSharing = false
+                            })
                         }
                 }.onAppear {
                     recalculateNextWord()

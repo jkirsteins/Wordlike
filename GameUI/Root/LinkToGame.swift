@@ -8,6 +8,9 @@ struct LinkToGame: View {
     @Environment(\.palette) 
     var palette: Palette
     
+    @Environment(\.debug) 
+    var debug: Bool
+    
     var body: some View {
         NavigationLink(destination: {
             GeometryReader { gr in
@@ -16,6 +19,7 @@ struct LinkToGame: View {
                  it will not be handled by the palette wrapper
                  (it is instantiated, not nested) */
                     .environment(\.rootGeometry, gr)
+                    .environment(\.debug, debug)
                     .environment(\.palette, palette)
             }
             /* Padding must not be inside the GeometryReader

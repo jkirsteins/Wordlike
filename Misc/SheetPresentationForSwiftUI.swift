@@ -58,6 +58,11 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
         // dismiss-by-button and dismiss-by-swipe
         viewController.transitioningDelegate = context.coordinator
         
+        if !isPresented, let presentedVc = context.coordinator.presenterVc?.presentedViewController {
+                presentedVc.dismiss(animated: true)
+            return
+        }
+        
         /* Presenting here is a bit of a hack.
          
          Look for an already presented VC, and use that
@@ -66,15 +71,21 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
          When dismissing, look for the last VC that presents something, and assume it is us.
          */
         if isPresented && viewController.presentingViewController == nil {
+            
+            // Store a ref to the presented VC so we
+            // can dismiss
+            
             if let alreadyPresented = uiView.window?.rootViewController?.presentedViewController {
-                alreadyPresented.present(viewController, animated: true)
+                context.coordinator.presenterVc = alreadyPresented
             } else {
                 // Present the viewController
-                uiView.window?.rootViewController?.present(viewController, animated: true)
+                context.coordinator.presenterVc = uiView.window?.rootViewController
             }
+            
+            context.coordinator.presenterVc?.present(viewController, animated: true)
         } else {
-            if let presentingVc = viewController.presentingViewController {
-                presentingVc.dismiss(animated: true)
+            if let presentedVc = context.coordinator.presenterVc?.presentedViewController {
+                presentedVc.dismiss(animated: true)
             }
         }
         
@@ -90,6 +101,9 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
     class Coordinator: NSObject, UIViewControllerTransitioningDelegate {
         @Binding var isPresented: Bool
         let onDismiss: (() -> Void)?
+        
+        /// Which VC is presenting the sheet
+        var presenterVc: UIViewController? = nil
         
         init(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil) {
             self._isPresented = isPresented
