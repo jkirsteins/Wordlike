@@ -233,15 +233,6 @@ struct GameHost: View {
     }
     
     @ViewBuilder
-    var bodyUnconstrained_2: some View {
-        VStack {
-            Text("yo")
-            Tile(letter: "A", delay: 0, revealState: nil, animate: false)
-            Spacer( )
-        }
-    }
-    
-    @ViewBuilder
     var bodyUnconstrained: some View {
         VStack { 
             if let game = turnDataToDisplay {
