@@ -1,6 +1,6 @@
 import SwiftUI
 
-extension Optional: Codable, RawRepresentable where Wrapped == DailyState {
+extension Optional: RawRepresentable where Wrapped == DailyState {
     public init?(rawValue: String) {
         self = DailyState(rawValue: rawValue)
     }

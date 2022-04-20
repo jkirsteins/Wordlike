@@ -108,9 +108,6 @@ class GameState : ObservableObject, Identifiable, Equatable
         self.expected = expected
         self.isTallied = isTallied
         self.date = date
-        let isActives = (0..<Self.MAX_ROWS).map { _ in
-            false
-        }
         self._rows = Published(wrappedValue: rows)
     }
 }
