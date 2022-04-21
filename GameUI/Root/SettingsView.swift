@@ -63,51 +63,75 @@ struct SettingsView: View {
                 }
             }
             
-            if MailView.canSendMail {
+            // Feedback group
+            Group { 
+                
+                if MailView.canSendMail {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Feedback")
+                            Text("You can send feedback via e-mail.").font(.caption)
+                        }
+                        Spacer()
+                        Button("Send") {
+                            activeSheet = .mail
+                        }.frame(minWidth: Self.minRightWidth)
+                    }
+                }
+                
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("Feedback")
-                        Text("You can send feedback via e-mail.").font(.caption)
+                        if MailView.canSendMail {
+                            Text("Feedback (manual)")
+                        } else {
+                            Text("Feedback")
+                        }
+                        Text("Click to copy feedback e-mail address.").font(.caption)
                     }
                     Spacer()
-                    Button("Send") {
-                        activeSheet = .mail
+                    HStack {
+                        if emailCopied {
+                            Text("Copied")
+                                .font(.caption)
+                                .foregroundColor(Color(UIColor.secondaryLabel))
+                                .task {
+                                    try? await Task.sleep(nanoseconds: 2_000_000_000)
+                                    emailCopied = false
+                                }
+                        } else {
+                            Button(action: {
+                                UIPasteboard.general.setValue(
+                                    Self.feedbackEmail,
+                                    forPasteboardType: UTType.plainText.identifier)
+                                
+                                emailCopied = true
+                            }, label: {
+                                Image(systemName: "doc.on.clipboard")
+                            }) 
+                        }
                     }.frame(minWidth: Self.minRightWidth)
+                    
                 }
             }
             
-            HStack {
-                VStack(alignment: .leading) {
-                    if MailView.canSendMail {
-                        Text("Feedback (manual)")
-                    } else {
-                        Text("Feedback")
-                    }
-                    Text("Click to copy feedback e-mail address.").font(.caption)
-                }
-                Spacer()
+            // GitHub 
+            Group {
+                Divider()
                 HStack {
-                    if emailCopied {
-                        Text("Copied")
+                    VStack(alignment: .leading) {
+                        Text("Source code")
+                        Text("This game was created using Swift Playgrounds 4 on an iPad.\n\nThe source code is freely available.")
                             .font(.caption)
-                            .foregroundColor(Color(UIColor.secondaryLabel))
-                            .task {
-                                try? await Task.sleep(nanoseconds: 2_000_000_000)
-                                emailCopied = false
-                            }
-                    } else {
-                        Button(action: {
-                            UIPasteboard.general.setValue(
-                                Self.feedbackEmail,
-                                forPasteboardType: UTType.plainText.identifier)
-                            
-                            emailCopied = true
-                        }, label: {
-                            Image(systemName: "doc.on.clipboard")
-                        }) 
                     }
-                }.frame(minWidth: Self.minRightWidth)
-                
+                    
+                    Spacer()
+                    
+                    Link(destination: URL(string: "https://github.com/jkirsteins/SimpleWordGame")!, label: {
+                        Text("GitHub")
+                    })
+                        .frame(minWidth: Self.minRightWidth)
+                }
+                Divider()
             }
             
             // Debug group
