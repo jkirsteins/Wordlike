@@ -129,13 +129,19 @@ struct GameHost: View {
      Not clear if this definitively solves the issue, but
      the problem seems to be less prevalent.*/
     var body: some View  {
-        
         ZStack(alignment: .top) {
-            VStack {
+            VStack(alignment: .center) {
                 Spacer()
                 bodyUnconstrained
                 Spacer()
             }
+            /* Without `maxWidth: .infinity`, the content 
+             might not be wide enough to fill 
+             the available space.
+             
+             So e.g. messages might appear off-center.*/
+            .frame(maxWidth: .infinity)
+            .border(debugViz ? .red : .clear)
             
             /* Toast message comes second, so it
              shows on top of the content. */
@@ -254,6 +260,8 @@ struct GameHost: View {
             
             if let ds = dailyState, !turnCounter.isFresh(ds.date, at: Date()) {
                 Text("Rummaging in the sack for a new word...")
+                    .multilineTextAlignment(.center)
+                    .border(debugViz ? .red : .clear)
             }
             
             if dailyState == nil {
@@ -265,6 +273,7 @@ struct GameHost: View {
                 }
             }
         }
+        .border(debugViz ? .yellow : .clear)
         .environmentObject(toastMessageCenter)
         .environment(\.keyboardHints, game.keyboardHints)
         .environmentObject(validator)

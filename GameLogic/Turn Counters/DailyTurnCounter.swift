@@ -40,7 +40,10 @@ class DailyTurnCounter
     }
     
     func isFresh(_ stateRef: Date, at now: Date, in cal: Calendar) -> Bool {
-        cal.isDate(now, equalTo: stateRef, toGranularity: .day)
+        cal.isDate(
+            now, 
+            equalTo: stateRef, 
+            toGranularity: .day)
     }
 }
 
