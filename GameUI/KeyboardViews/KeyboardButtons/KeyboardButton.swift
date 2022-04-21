@@ -28,10 +28,25 @@ struct KeyboardButton: View {
             isSubmitted: row.isSubmitted)
     }
     
+    @Environment(\.horizontalSizeClass) 
+    var horizontalSizeClass
+    @Environment(\.verticalSizeClass) 
+    var verticalSizeClass
+    
+    /// If we're in compact height (e.g. phone landscape),
+    /// allow a smaller keyboard.
+    var minHeight: CGFloat {
+        if verticalSizeClass == .compact {
+            return 20
+        }
+        
+        return 45
+    }
+    
     var body: some View {
         Button(letter, action: insertText)
             .disabled(game.isCompleted)
-            .frame(minHeight: 45)
+            .frame(minHeight: minHeight)
             .buttonStyle(
                 KeyboardButtonStyle(type: keyboardHints.hints[letter]))
             .aspectRatio(1.0, contentMode: .fit)

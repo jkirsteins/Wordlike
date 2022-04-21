@@ -54,8 +54,23 @@ struct Row: View {
         self.showFocusHint = false
     }
     
+    @Environment(\.horizontalSizeClass) 
+    var horizontalSizeClass
+    @Environment(\.verticalSizeClass) 
+    var verticalSizeClass
+    
+    /// If we have a small view, then spacing should be reduced
+    /// (e.g. horizontal compact)i
+    var hspacing: CGFloat {
+        if verticalSizeClass == .compact {
+            return GridPadding.compact
+        } 
+        
+        return GridPadding.normal
+    }
+    
     var body: some View {
-        HStack {
+        HStack(spacing: hspacing) {
             // Poor way to get the animations
             // working when submission state triggers
             if model.isSubmitted {

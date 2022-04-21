@@ -1,5 +1,10 @@
 import SwiftUI
 
+struct GridPadding {
+    static let normal = CGFloat(8.0)
+    static let compact = CGFloat(2.0)
+}
+
 struct GameBoard: View {
     @Environment(\.colorScheme) var colorScheme
     
@@ -77,21 +82,33 @@ struct GameBoard: View {
     
     @State var didCompleteCallback = false
     
-    @State var test = RowModel(expected: "test")
+    @Environment(\.horizontalSizeClass) 
+    var horizontalSizeClass
+    @Environment(\.verticalSizeClass) 
+    var verticalSizeClass
+    
+    /// If we have a small view, then spacing should be reduced
+    /// (e.g. horizontal compact)
+    var vspacing: CGFloat {
+        if verticalSizeClass == .compact {
+            return GridPadding.compact
+        } 
+        
+        return GridPadding.normal
+    }
+    
     var body: some View {
-        VStack {
+        VStack(spacing: vspacing) {
             ForEach(0..<state.rows.count, id: \.self) {
                 ix in 
-                VStack { 
-                    
-                    EditableRow(
+                
+                EditableRow(
                         editable: !state.isCompleted,
                         delayRowIx: ix,
                         model: $state.rows[ix], 
                         tag: ix,
                         isActive: $isActive,
                         keyboardHints: state.keyboardHints )
-                }
             }
         }
         .onChange(of: state.id) {
