@@ -4,6 +4,8 @@ A game written in SwiftUI using Swift Playgrounds 4.
 
 The objective is to guess a word in 6 tries. A new round starts every day.
 
+![Screenshot](gh_screenshot.png)
+
 Available languages:
 
 - English
