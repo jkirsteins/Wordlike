@@ -54,6 +54,12 @@ class GameState : ObservableObject, Identifiable, Equatable
                     continue 
                 }
                 
+                /* don't allow overriding wrongPlace
+                 unless it's rightPlace */
+                guard !(result[char] == .wrongPlace && state != .rightPlace) else {
+                    continue
+                } 
+                
                 guard result[char] != state else { 
                     continue
                 }
@@ -61,11 +67,11 @@ class GameState : ObservableObject, Identifiable, Equatable
                 guard 
                     [
                         .rightPlace, 
-                        .wrongPlace,
+                            .wrongPlace,
                         .wrongLetter
-                ].contains(state) else {
-                    continue
-                }
+                    ].contains(state) else {
+                        continue
+                    }
                 
                 result[char] = state
             }
@@ -113,19 +119,37 @@ class GameState : ObservableObject, Identifiable, Equatable
 }
 
 struct KeyboardHintsTestInternalView: View {
+    let word: String 
+    let guess: String 
+    
     var body: some View {
-        let state = GameState(initialized: true, expected: TurnAnswer(word: "fuels", day: 1, locale: "en"), 
-                  rows: [
-                    RowModel(word: "abcde", expected: "fuels", isSubmitted: true, attemptCount: 0)
-                  ], isTallied: true, date: Date())
+        let state = GameState(initialized: true, expected: TurnAnswer(word: word, day: 1, locale: "en"), 
+                              rows: [
+                                RowModel(word: guess, expected: word, isSubmitted: true, attemptCount: 0)
+                              ], isTallied: true, date: Date())
         
-        return Text(verbatim: "\(state.keyboardHints)")
+        return 
+        GeometryReader { gr in
+            VStack {
+                Text(verbatim: "\(state.keyboardHints)")
+                Row(delayRowIx: 0, model: state.rows[0])
+                EnglishKeyboard()
+                    .environmentObject(state)
+                    .environment(\.keyboardHints, state.keyboardHints)
+                    .environment(\.rootGeometry, gr)
+            }
+        }
     }
 }
 
 struct KeyboardHintsTestInternalView_Previews: PreviewProvider {
     static var previews: some View {
-        KeyboardHintsTestInternalView()
+        KeyboardHintsTestInternalView(word: "fuels", guess: "clues")
+        
+        VStack {
+            Text("Regression test: A should be yellow in the keyboard").font(.title)
+            KeyboardHintsTestInternalView(word: "buzza", guess: "maman")
+        }.padding()
     }
 }
 
