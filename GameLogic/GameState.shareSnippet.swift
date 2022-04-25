@@ -25,13 +25,16 @@ extension GameState
         }
         
         let flag: String 
-        if self.expected.locale == "en" {
+        switch(self.expected.locale.uppercased()) {
+            case "EN":
             flag = "🇺🇸"
-        } else if self.expected.locale == "fr" {
+            case "EN-GB":
+            flag = "🇬🇧"
+            case "FR":
             flag = "🇫🇷"
-        } else if self.expected.locale == "lv" {
+            case "LV":
             flag = "🇱🇻"
-        } else {
+            default:
             flag = self.expected.locale.uppercased()
         }
         

@@ -18,15 +18,6 @@ struct Wordlike: App {
     /// and can trigger debug borders or messages.
     let debug = false
     
-    @AppStorage("turnState.en")
-    var dailyStateEn: DailyState?
-    
-    @AppStorage("turnState.fr")
-    var dailyStateFr: DailyState?
-    
-    @AppStorage("turnState.lv")
-    var dailyStateLv: DailyState?
-    
     @State 
     fileprivate var activeSheet: ActiveSheet? = nil
     
@@ -37,6 +28,7 @@ struct Wordlike: App {
                 PaletteSetterView {
                     List {
                         LinkToGame(locale: "en")
+                        LinkToGame(locale: "en-GB")
                         LinkToGame(locale: "fr")
                         LinkToGame(locale: "lv")
                     }

@@ -20,16 +20,16 @@ extension String {
     }() 
     
     static func uppercasedAlphabet(for locale: String) -> [String] {
-        if locale == "en" {
+        switch(locale.uppercased()) {
+            case "EN", "EN-GB":
             return uppercasedEnAlphabet
-        } 
-        else if locale == "fr" {
+            case "FR":
             return uppercasedFrAlphabet
-        } else if locale == "lv" {
+            case "LV":
             return uppercasedLvAlphabet
+            default:
+            return []
         }
-        
-        return []
     }
     
     /// Check if first comes before second, given

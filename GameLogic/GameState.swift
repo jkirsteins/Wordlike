@@ -128,8 +128,7 @@ struct KeyboardHintsTestInternalView: View {
                                 RowModel(word: guess, expected: word, isSubmitted: true, attemptCount: 0)
                               ], isTallied: true, date: Date())
         
-        return 
-        GeometryReader { gr in
+        return GeometryReader { gr in
             VStack {
                 Text(verbatim: "\(state.keyboardHints)")
                 Row(delayRowIx: 0, model: state.rows[0])

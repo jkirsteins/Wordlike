@@ -7,6 +7,8 @@ extension String
         switch(self.uppercased()) {
         case "EN":
             return "English 🇺🇸"
+        case "EN-GB":
+            return "English 🇬🇧"
         case "FR":
             return "Français 🇫🇷"
         case "LV":
@@ -43,6 +45,8 @@ extension String
             return URL(string: "https://tezaurs.lv/\(encoded!)")
         case "EN":
             return URL(string: "https://www.dictionary.com/browse/\(lowself)")
+        case "EN-GB":
+            return URL(string: "https://www.dictionary.com/browse/\(lowself)")
         default:    
             return nil
         }
@@ -78,6 +82,7 @@ struct InternalDefinitionUrlTestView_Previews: PreviewProvider {
             InternalDefinitionUrlTestView(word: "ĀLAVA", locale: "lv")
             InternalDefinitionUrlTestView(word: "FRÈRE", locale: "fr")
             InternalDefinitionUrlTestView(word: "FUELS", locale: "en")
+            InternalDefinitionUrlTestView(word: "FUELS", locale: "en-gb")
         }
     }
 }
