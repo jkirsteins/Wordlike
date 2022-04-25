@@ -28,13 +28,11 @@ struct ActivityViewController: UIViewControllerRepresentable {
                 return
             }
             
-            print("Calling callback")
             callback()
         }
     }
     
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityViewController>) {
-        print("Updating callback")
         updateCallback(uiViewController, self.callback)
     }
 }

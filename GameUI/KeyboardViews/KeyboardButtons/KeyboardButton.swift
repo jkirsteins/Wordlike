@@ -10,22 +10,7 @@ struct KeyboardButton: View {
     @EnvironmentObject var game: GameState
     
     func insertText() {
-        guard !game.isCompleted else {
-            return
-        }
-        
-        guard 
-            let row = game.rows.first(where: { !$0.isSubmitted }),
-            let ix = game.activeIx
-        else {
-            // no editable rows
-            return 
-        }
-        
-        game.rows[ix] = RowModel(
-            word:  String((row.word + letter).prefix(5)),
-            expected: row.expected,
-            isSubmitted: row.isSubmitted)
+        self.game.insertText(letter: letter)
     }
     
     @Environment(\.horizontalSizeClass) 

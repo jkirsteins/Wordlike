@@ -242,12 +242,21 @@ struct GameHost: View {
     var bodyUnconstrained: some View {
         VStack { 
             if let game = turnDataToDisplay {
-                GameBoard(state: game,
+                ZStack {
+                    GameBoard(state: game,
                               canBeAutoActivated: !finished && !shouldShowHelp)
                     .onStateChange(
                         edited: turnStateChanged,
                         earlyCompleted: turnCompletedBeforeAnimations,
                         completed: turnCompletedAfterAnimations)
+                    
+                    /// Allow input from keyboard
+                    /// on iPad and macOS
+                    HardwareKeyboardInput()
+                        .border(debugViz ? .red : .clear)
+                }
+                /// For the KeyboardInput view
+                .environmentObject(game)
                     
                 if debugViz {
                     Text(dailyState?.expected ?? "none")

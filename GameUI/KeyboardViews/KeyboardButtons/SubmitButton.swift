@@ -32,50 +32,9 @@ struct SubmitButton: View {
     var toastMessageCenter: ToastMessageCenter
     
     func submitAction() {
-        guard !game.isCompleted else {
-            return
-        }
-        
-        let first = game.rows.first
-        let firstSubmitted = game.rows.first(where: { !$0.isSubmitted })
-        
-        guard 
-            let current = firstSubmitted ?? first,
-            let currentIx = game.activeIx
-        else {
-            // no rows?
-            print("No rows")
-            return
-        }
-        
-        var message: String? = nil
-        defer {
-            if let newMessage = message {
-                toastMessageCenter.set(newMessage)
-            }
-        }
-        
-        // If word doesn't match,
-        // don't set isSubmitted
-        guard validator.canSubmit(
-            word: current.word, 
-            reason: &message) else {
-                let updatedRow = RowModel(
-                    word: current.word,
-                    expected: current.expected,
-                    isSubmitted: false,
-                    attemptCount: current.attemptCount + 1)
-                                
-                game.rows[currentIx] = updatedRow
-                return
-            } 
-        
-        let submitted = RowModel(
-            word: current.word,
-            expected: current.expected,
-            isSubmitted: true,
-            attemptCount: 0)
-        game.rows[currentIx] = submitted
+        self.game.submit(
+            validator: validator, 
+            toastMessageCenter: toastMessageCenter)
     }
     
     func padding(_ gp: GeometryProxy) -> CGFloat {
