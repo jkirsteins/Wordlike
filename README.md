@@ -20,3 +20,8 @@ Available languages:
 - Clone this repository on your iPad directly into the Swift Playgrounds 4 storage
 
 Then open Playgrounds, and the application should be available.
+
+## Credits
+
+- English/British translations taken from <git@github.com:hyperreality/American-British-English-Translator.git>
+
