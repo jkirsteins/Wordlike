@@ -161,7 +161,7 @@ struct LatvianKeyboard: View {
                     SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "M")
                 }
                 
-                SubmitButton<LatvianWordValidator>(maxSize: wideSize)
+                SubmitButton<WordValidator>(maxSize: wideSize)
             }
         }
     }
