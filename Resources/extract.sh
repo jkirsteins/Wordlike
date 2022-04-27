@@ -26,7 +26,22 @@ cat lv_wordlist_5.txt | grep -r '.*[asše]$' | \
 	grep -v -r '.*ās$' | grep -v -r '.*āt$' | grep -v -r '.*os$' | grep -v -r '.*as$' | \
 	grep -v -r '.*īs$' | grep -v -r '.*us$' | grep -v -r '.*es$' | grep -v -r '.*ūs$' | \
 	grep -v -r '.*ļa$' | grep -v -r '.*ēs$' | \
-	egrep '^[[:lower:]]+$' | \
-	sort -u 
+	grep -v -r '.*aš$' | \
+	grep -v -r '.*era$' | \
+	grep -v -r '.*eta$' | \
+	egrep '^[[:lower:]]+$' \
+	> lv_A.tmp.txt
+
+# Reinstate false positive eliminations
+echo 'gleta' >> lv_A.tmp.txt
+echo 'pieta' >> lv_A.tmp.txt
+echo 'stera' >> lv_A.tmp.txt
+echo 'vieta' >> lv_A.tmp.txt
+echo 'lieta' >> lv_A.tmp.txt
+echo 'opera' >> lv_A.tmp.txt
+
+cat lv_A.tmp.txt | sort -u > lv_A.txt
+rm lv_A.tmp.txt
+
 
 

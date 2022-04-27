@@ -307,7 +307,6 @@ cenzs
 ciema
 ciems
 ciesa
-cieta
 ciete
 ciets
 cieņa
@@ -417,7 +416,6 @@ drīzs
 drūma
 drūms
 ducis
-dueta
 duets
 dukša
 dulla
@@ -492,7 +490,6 @@ ecēja
 ecēša
 efeja
 ejiņa
-ekera
 ekers
 ekija
 ekijs
@@ -505,7 +502,6 @@ eposa
 eposs
 epīra
 eseja
-esera
 esers
 esoša
 esošs
@@ -518,7 +514,6 @@ etiķa
 etāna
 etāns
 etīde
-ezera
 ezers
 ezīša
 eģīte
@@ -678,7 +673,6 @@ grūts
 guaša
 gudra
 gudrs
-gulaš
 gulda
 gulgs
 gulta
@@ -1223,10 +1217,8 @@ meļņa
 miece
 miega
 miegs
-miera
 miers
 miesa
-mieta
 miets
 mieža
 migla
@@ -1390,7 +1382,6 @@ odiņš
 oduma
 odums
 ogoja
-okera
 okers
 oliņa
 olāja
@@ -1525,7 +1516,6 @@ pleca
 plecs
 pleda
 pleds
-pleta
 pleķa
 plika
 pliks
@@ -1672,9 +1662,7 @@ režģa
 rieba
 riebs
 riepa
-riera
 riesa
-rieta
 riets
 rieva
 rieza
@@ -1806,9 +1794,7 @@ sieka
 sieks
 siena
 siens
-siera
 siers
-sieta
 siets
 sieva
 sigla
@@ -1997,7 +1983,6 @@ suita
 suits
 summa
 susla
-sutaš
 suķis
 sušķa
 svara
@@ -2465,7 +2450,6 @@ zāģis
 čulga
 čupra
 čuprs
-čuvaš
 čūska
 ēciņa
 ēdina
@@ -2478,7 +2462,6 @@ zāģis
 ēniņa
 ēnoja
 ērtie
-ētera
 ēters
 ētika
 ēvele
