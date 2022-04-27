@@ -1,20 +1,93 @@
 import SwiftUI
 
-class LatvianWordValidator : WordValidator
+class SimplifiedLatvianWordValidator : WordValidator
 {
     init() {
         super.init(name: "lv")
     }
     
     /// Validator protocol
-    override func foldForHintKey(_ char: String) -> String {
-        return char.folding(
-            options: .diacriticInsensitive, 
-            locale: Locale(identifier: "lv_LV")) 
+    override func collapseHints(_ hints: Dictionary<String, TileBackgroundType>) -> Dictionary<String, TileBackgroundType> 
+    {
+        var result = Dictionary<String, TileBackgroundType>()
+        
+        let specialMap: Dictionary<String, String> = [
+            "Ē": "E",
+            "Ū": "U",
+            "Ī": "I",
+            "Ā": "A",
+            "Š": "S",
+            "Ģ": "G",
+            "Ķ": "K",
+            "Ļ": "L",
+            "Ž": "Z",
+            "Č": "C",
+            "Ņ": "N"]
+        
+        let fold: ((String) -> String) = { x in 
+            x.folding(options: .diacriticInsensitive, locale: Locale(identifier: "lv_LV"))
+        }
+        
+        var specialValues = Dictionary<String, [TileBackgroundType]>()
+        
+        let storeSpecial: (String, TileBackgroundType)->() = { key, value in
+            let folded = fold(key)
+            var newVals = (specialValues[folded] ?? [])
+            newVals.append(value)
+            specialValues[folded] = newVals
+        }
+        
+        // Store all values under a folded key
+        for (key, val) in hints {
+            storeSpecial(key, val)
+        }
+        
+        // Now aggregate the results
+        for key in specialValues.keys {
+            let values = (specialValues[key] ?? [])
+            
+            if values.contains(TileBackgroundType.rightPlace) {
+                // rightPlace should always be propogated
+                result[key] = .rightPlace 
+            } else if
+                // wrongPlace should always be propogated
+                // but not ahead of rightPlace
+                values.contains(TileBackgroundType.wrongPlace) {
+                    result[key] = .wrongPlace 
+            } else if values.count == 2 {
+                // if both diacritic/diacriticless values
+                // are bad, propogate
+                result[key] = values[0]
+            } else if !specialMap.values.contains(key) && values.count > 0 {
+                // if only 1 value present, only propogate
+                // if it does not have a complement
+                result[key] = values[0]
+            } else {
+                // this means a pair has only 1 value
+                // and that 1 value is invalid, but we
+                // can't assume that the complement is
+                // also invalid.
+                //
+                // so skip.
+            }
+        }
+        
+        return result
     }
     
+    /// NOTE: do NOT apply any simplifications here. 
+    /// The dropping of diacritics should happen when
+    /// validating/submitting a row, but once it is submitted,
+    /// it should become the source of truth.
+    ///
+    /// Otherwise you would enable this type of bug:
+    ///   - expect KAITE
+    ///   - submit KAITĒ in hard mode
+    ///   - switch to simplified mode
+    ///   - board automatically considered as won, but
+    ///     the word has Ē as a non-green square still
     override func accepts(_ word: String, as expected: String) -> Bool {
-        return simplify(word) == simplify(expected)
+        super.accepts(word, as: expected)
     }
     
     override func canSubmit(word: String, expected: String, reason: inout String?) -> String? {
@@ -29,7 +102,7 @@ class LatvianWordValidator : WordValidator
         
         let uppercaseExpected = expected.uppercased()
         let simplifiedSubmit = simplify(word.uppercased())
-
+        
         let candidates = guesses.filter {
             simplify($0) == simplifiedSubmit
         }.map {
@@ -76,7 +149,7 @@ class LatvianWordValidator : WordValidator
 }
 
 struct Internal_LatvianWordValidator_TestView: View {
-    let validator = LatvianWordValidator()
+    let validator = SimplifiedLatvianWordValidator()
     
     let answer: String 
     let word: String

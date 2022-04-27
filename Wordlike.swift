@@ -21,6 +21,9 @@ struct Wordlike: App {
     @State 
     fileprivate var activeSheet: ActiveSheet? = nil
     
+    @AppStorage(SettingsView.HARD_MODE_LATVIAN_KEY)
+    var isHardMode_Latvian: Bool = false
+    
     @SceneBuilder
     var body: some Scene {
         WindowGroup { 
@@ -30,9 +33,17 @@ struct Wordlike: App {
                         LinkToGame(locale: "en")
                         LinkToGame(locale: "en-GB")
                         LinkToGame(locale: "fr")
-                        LinkToGame(
-                            locale: "lv", 
-                            validator: LatvianWordValidator())
+                        
+                        if isHardMode_Latvian {
+                            LinkToGame(
+                                locale: "lv",
+                                caption: "Hard mode")
+                        } else {
+                            LinkToGame(
+                                locale: "lv", 
+                                validator: SimplifiedLatvianWordValidator(),
+                                caption: "Easy mode")
+                        }
                     }
                 }
                 .listStyle(.insetGrouped)

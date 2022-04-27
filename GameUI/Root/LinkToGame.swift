@@ -1,9 +1,10 @@
 import SwiftUI
 
 extension LinkToGame where ValidatorImpl == WordValidator {
-    init(locale: String) {
+    init(locale: String, caption: String? = nil) {
         self.locale = locale 
         self.validator = WordValidator(name: locale)
+        self.caption = caption
     }
 }
 
@@ -12,12 +13,19 @@ extension LinkToGame where ValidatorImpl == WordValidator {
 struct LinkToGame<ValidatorImpl: Validator & ObservableObject>: View {
     let locale: String
     let validator: ValidatorImpl
+    let caption: String? 
     
     @Environment(\.palette) 
     var palette: Palette
     
     @Environment(\.debug) 
     var debug: Bool
+    
+    init(locale: String, validator: ValidatorImpl, caption: String? = nil) {
+        self.locale = locale 
+        self.validator = validator
+        self.caption = caption
+    }
     
     var body: some View {
         NavigationLink(destination: {
@@ -38,7 +46,9 @@ struct LinkToGame<ValidatorImpl: Validator & ObservableObject>: View {
              child views will overflow bounds. */
             .padding()
         }, label: {
-            LanguageLinkLabel(locale)
+            LanguageLinkLabel(
+                locale, 
+                extraCaption: caption)
         })
     }
 }

@@ -21,13 +21,12 @@ protocol Validator {
     /// from the expected word.
     func canSubmit(word: String, expected: String, reason: inout String?) -> String?
     
-    /// Perform folding for a letter, which is used
-    /// as the key for keyboard hints.
-    ///
-    /// E.g. normally you can return the same char. However
-    /// a simplified language could return the same char
-    /// with diacritics removed.
-    func foldForHintKey(_ char: String) -> String 
+    /// Collapse the hints dictionary.
+    /// Normally this can be a no-op, but in some cases
+    /// (e.g. simplified Latvian) you might want to
+    /// collapse green/yellow letter-with-diacritics onto
+    /// a letter without diacritics.
+    func collapseHints(_ hints: Dictionary<String, TileBackgroundType>) -> Dictionary<String, TileBackgroundType> 
 }
 
 /// Used as a temporary invalid value.
@@ -48,7 +47,7 @@ class DummyValidator: Validator, ObservableObject {
         fatalError()
     }
     
-    func foldForHintKey(_ char: String) -> String {
+    func collapseHints(_ hints: Dictionary<String, TileBackgroundType>) -> Dictionary<String, TileBackgroundType> {
         fatalError()
     }
 }
@@ -56,9 +55,9 @@ class DummyValidator: Validator, ObservableObject {
 class WordValidator : Validator, ObservableObject
 {
     /// Validator protocol 
-    func foldForHintKey(_ char: String) -> String
+    func collapseHints(_ hints: Dictionary<String, TileBackgroundType>) -> Dictionary<String, TileBackgroundType> 
     {
-        char
+        hints
     }
     
     func accepts(_ word: String, as expected: String) -> Bool {

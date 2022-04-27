@@ -11,6 +11,7 @@ struct LanguageLinkLabel: View {
     @Environment(\.palette) var palette: Palette
     
     let locale: String
+    let extraCaption: String?
     
     var caption: (String, Color)? {
         guard let dailyState = dailyState, turnCounter.isFresh(dailyState.date, at: Date()) else {
@@ -33,14 +34,21 @@ struct LanguageLinkLabel: View {
         return ("In progress", palette.wrongPlaceFill)
     }
     
-    init(_ locale: String) {
-        self.locale = locale 
+    init(_ locale: String, extraCaption: String?) {
+        self.locale = locale
+        self.extraCaption = extraCaption
         self._dailyState = AppStorage("turnState.\(locale)", store: nil)
     }
     
     var body: some View {
         VStack(alignment: .leading) {
             Text(locale.localeDisplayName)
+            
+            if let caption = self.extraCaption {
+                Text(caption)
+                    .font(.caption)
+                    .foregroundColor(.primary)
+            }
             
             if let caption = self.caption {
                 Text(caption.0)

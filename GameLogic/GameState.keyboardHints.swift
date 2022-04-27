@@ -28,21 +28,19 @@ extension GameState {
                 
                 guard 
                     [
-                        .rightPlace, 
-                            .wrongPlace,
+                        .rightPlace, .wrongPlace,
                         .wrongLetter
                     ].contains(state) else {
                         continue
                     }
                 
-                result[
-                    self.expected.validator.foldForHintKey(char)
-                ] = state
+                result[char] = state
             }
         }
         
         return KeyboardHints(
-            hints: result, 
+            hints: self.expected.validator.collapseHints(
+                result), 
             locale: expected.locale)  
     }
 }
@@ -78,7 +76,7 @@ struct Internal_LatvianSimplifiedTest: View
     let state = GameState(
         initialized: true, 
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: "lv", validator: LatvianWordValidator()),
+            word: Self.expected, day: 1, locale: "lv", validator: SimplifiedLatvianWordValidator()),
         rows: [
             RowModel(
                 word: "zvņīa", 
@@ -89,33 +87,81 @@ struct Internal_LatvianSimplifiedTest: View
     
     var body: some View {
         GeometryReader { gr in
-        VStack {
-            Text("Simplified Latvian test").font(.title)
-            Divider()
-            
-            HStack {
-            Text("Hints should higlight simplified as yellow when answer contains non-simplified in a different position.")
-                Spacer()
+            VStack {
+                Text("Simplified Latvian test").font(.title)
+                Divider()
+                
+                HStack {
+                    Text("Hints should higlight simplified as yellow when answer contains non-simplified in a different position.")
+                    Spacer()
+                }
+                
+                HStack {
+                    Text("On keyboard expect green: Z, V, A")
+                    Spacer()
+                }
+                HStack {
+                    Text("On keyboard expect yellow: I, N")
+                    Spacer()
+                }
+                
+                ForEach(state.rows) {
+                    Row(delayRowIx: 0, model: $0)
+                }
+                LatvianKeyboard_Simplified()
+                    .environmentObject(state)
+                    .environment(\.keyboardHints, state.keyboardHints)
+                    .environment(\.rootGeometry, gr)
             }
-            
-            HStack {
-                Text("On keyboard expect green: Z, V, A")
-                Spacer()
+        }.padding()
+    }
+}
+
+struct Internal_LatvianSimplifiedTest_validateUncertainPair: View
+{
+    static let expected = "kaite"
+    
+    let state = GameState(
+        initialized: true, 
+        expected: TurnAnswer(
+            word: Self.expected, day: 1, locale: "lv", validator: SimplifiedLatvianWordValidator()),
+        rows: [
+            RowModel(
+                word: "kaitē", 
+                expected: Self.expected, 
+                isSubmitted: true, 
+                attemptCount: 0),
+        ], isTallied: true, date: Date())
+    
+    var body: some View {
+        GeometryReader { gr in
+            VStack {
+                Text("Simplified Latvian test").font(.title)
+                Divider()
+                
+                HStack {
+                    Text("If we switch between hard/easy during a round, we can end up in a situation where a letter pairing is uncertain (e.g. Ē has been tried and is invalid, but E hasn't and is valid).\n\nWe should not mark these letters as 'known' in this case.\n\nE should be 'unknown' and neither green nor dark.")
+                    Spacer()
+                }
+                Divider()
+                HStack {
+                    Text("On keyboard expect green: K, A, I, T")
+                    Spacer()
+                }
+                HStack {
+                    Text("On keyboard expect unknown: E")
+                    Spacer()
+                }
+                
+                ForEach(state.rows) {
+                    Row(delayRowIx: 0, model: $0)
+                }
+                LatvianKeyboard_Simplified()
+                    .environmentObject(state)
+                    .environment(\.keyboardHints, state.keyboardHints)
+                    .environment(\.rootGeometry, gr)
             }
-            HStack {
-                Text("On keyboard expect yellow: I, N")
-                Spacer()
-            }
-            
-            ForEach(state.rows) {
-                Row(delayRowIx: 0, model: $0)
-            }
-            LatvianKeyboard_Simplified()
-                        .environmentObject(state)
-                        .environment(\.keyboardHints, state.keyboardHints)
-                        .environment(\.rootGeometry, gr)
-        }
-    }.padding()
+        }.padding()
     }
 }
 
@@ -129,6 +175,7 @@ struct KeyboardHintsTestInternalView_Previews: PreviewProvider {
         }.padding()
         
         Internal_LatvianSimplifiedTest()
+        Internal_LatvianSimplifiedTest_validateUncertainPair()
     }
 }
 

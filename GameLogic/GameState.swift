@@ -31,9 +31,7 @@ class GameState : ObservableObject, Identifiable, Equatable
     
     var isWon: Bool {
         rows.first(where: {
-            print($0.word, "accepted by", expected.validator, expected.validator.accepts(
-                $0.word, as: expected.word))
-            return $0.isSubmitted && expected.validator.accepts(
+            $0.isSubmitted && expected.validator.accepts(
                 $0.word, as: expected.word) 
         }) != nil
     }

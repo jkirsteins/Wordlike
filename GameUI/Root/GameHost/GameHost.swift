@@ -100,8 +100,11 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
     @ViewBuilder
     var keyboardView: some View {
         if game.expected.locale == "lv" {
-//            LatvianKeyboard()
-            LatvianKeyboard_Simplified()
+            if type(of: validator) == SimplifiedLatvianWordValidator.self {
+                LatvianKeyboard_Simplified()
+            } else {
+                LatvianKeyboard()
+            }
         }
         else if game.expected.locale == "fr" {
             FrenchKeyboard()
@@ -247,6 +250,19 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
         return nil 
     }
     
+    /// If we haven't set the right validator in GameState,
+    /// we should not attempt to calculate KeyboardHints yet
+    var safeComputeKeyboardHints: KeyboardHints {
+        guard let safeGame = turnDataToDisplay else {
+            return KeyboardHints(hints: [:], locale: game.expected.locale)
+        }
+        
+        guard type(of: safeGame.expected.validator) != DummyValidator.self else {
+            fatalError("Do not use GameState before a proper validator is assigned")
+        }
+        return safeGame.keyboardHints
+    }
+    
     @ViewBuilder
     var bodyUnconstrained: some View {
         VStack { 
@@ -293,7 +309,9 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
         }
         .border(debugViz ? .yellow : .clear)
         .environmentObject(toastMessageCenter)
-        .environment(\.keyboardHints, game.keyboardHints)
+        .environment(
+            \.keyboardHints, 
+             self.safeComputeKeyboardHints)
         .environmentObject(validator)
         .onAppear {
             if shouldShowHelp {
