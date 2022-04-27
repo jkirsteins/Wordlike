@@ -24,13 +24,6 @@ protocol Validator {
         expected: String,
         model: [RowModel]?,
         reason: inout String?) -> String?
-    
-    /// Collapse the hints dictionary.
-    /// Normally this can be a no-op, but in some cases
-    /// (e.g. simplified Latvian) you might want to
-    /// collapse green/yellow letter-with-diacritics onto
-    /// a letter without diacritics.
-    func collapseHints(_ hints: Dictionary<String, TileBackgroundType>) -> Dictionary<String, TileBackgroundType> 
 }
 
 /// Used as a temporary invalid value.
@@ -54,10 +47,6 @@ class DummyValidator: Validator, ObservableObject {
         reason: inout String?) -> String? {
             fatalError()
         }
-    
-    func collapseHints(_ hints: Dictionary<String, TileBackgroundType>) -> Dictionary<String, TileBackgroundType> {
-        fatalError()
-    }
 }
 
 private var ordinalFormatter: NumberFormatter = {

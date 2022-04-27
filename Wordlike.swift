@@ -16,7 +16,7 @@ struct Wordlike: App {
     
     /// This is propogated through the environment
     /// and can trigger debug borders or messages.
-    let debug = false
+    @State var debug = false
     
     @State 
     fileprivate var activeSheet: ActiveSheet? = nil
@@ -72,7 +72,14 @@ struct Wordlike: App {
                                     .foregroundColor(
                                         Color(
                                             UIColor.label))
-                            })  
+                            }) 
+                            .contextMenu {
+                                Button {
+                                    self.debug.toggle()
+                                } label: {
+                                    Label("Toggle debug mode", systemImage: "hammer")
+                                }
+                            }
                     }
                 }
                 

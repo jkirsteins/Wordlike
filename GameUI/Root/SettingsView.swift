@@ -146,9 +146,10 @@ struct SettingsView: View {
                         }
                     }
                     
+                    Divider()
+                    
                     // GitHub 
                     Group {
-                        Divider()
                         HStack {
                             VStack(alignment: .leading) {
                                 Text("Source code")
@@ -163,7 +164,6 @@ struct SettingsView: View {
                             })
                                 .frame(minWidth: Self.minRightWidth)
                         }
-                        Divider()
                     }
                     
                     // Debug group

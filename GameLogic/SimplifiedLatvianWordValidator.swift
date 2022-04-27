@@ -2,6 +2,19 @@ import SwiftUI
 
 class SimplifiedLatvianWordValidator : WordValidator
 {
+    static let specialMap: Dictionary<String, String> = [
+        "Ē": "E",
+        "Ū": "U",
+        "Ī": "I",
+        "Ā": "A",
+        "Š": "S",
+        "Ģ": "G",
+        "Ķ": "K",
+        "Ļ": "L",
+        "Ž": "Z",
+        "Č": "C",
+        "Ņ": "N"]
+    
     init() {
         super.init(name: "lv")
     }
@@ -19,75 +32,6 @@ class SimplifiedLatvianWordValidator : WordValidator
         let simpleWord = simplify(word)
         let simpleChar = simplify(requiredChar)
         return simpleWord.contains(simpleChar)
-    }
-    
-    /// Validator protocol
-    override func collapseHints(_ hints: Dictionary<String, TileBackgroundType>) -> Dictionary<String, TileBackgroundType> 
-    {
-        var result = Dictionary<String, TileBackgroundType>()
-        
-        let specialMap: Dictionary<String, String> = [
-            "Ē": "E",
-            "Ū": "U",
-            "Ī": "I",
-            "Ā": "A",
-            "Š": "S",
-            "Ģ": "G",
-            "Ķ": "K",
-            "Ļ": "L",
-            "Ž": "Z",
-            "Č": "C",
-            "Ņ": "N"]
-        
-        let fold: ((String) -> String) = { x in 
-            x.folding(options: .diacriticInsensitive, locale: Locale(identifier: "lv_LV"))
-        }
-        
-        var specialValues = Dictionary<String, [TileBackgroundType]>()
-        
-        let storeSpecial: (String, TileBackgroundType)->() = { key, value in
-            let folded = fold(key)
-            var newVals = (specialValues[folded] ?? [])
-            newVals.append(value)
-            specialValues[folded] = newVals
-        }
-        
-        // Store all values under a folded key
-        for (key, val) in hints {
-            storeSpecial(key, val)
-        }
-        
-        // Now aggregate the results
-        for key in specialValues.keys {
-            let values = (specialValues[key] ?? [])
-            
-            if values.contains(TileBackgroundType.rightPlace) {
-                // rightPlace should always be propogated
-                result[key] = .rightPlace 
-            } else if
-                // wrongPlace should always be propogated
-                // but not ahead of rightPlace
-                values.contains(TileBackgroundType.wrongPlace) {
-                    result[key] = .wrongPlace 
-            } else if values.count == 2 {
-                // if both diacritic/diacriticless values
-                // are bad, propogate
-                result[key] = values[0]
-            } else if !specialMap.values.contains(key) && values.count > 0 {
-                // if only 1 value present, only propogate
-                // if it does not have a complement
-                result[key] = values[0]
-            } else {
-                // this means a pair has only 1 value
-                // and that 1 value is invalid, but we
-                // can't assume that the complement is
-                // also invalid.
-                //
-                // so skip.
-            }
-        }
-        
-        return result
     }
     
     /// NOTE: do NOT apply any simplifications here. 

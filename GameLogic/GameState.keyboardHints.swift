@@ -37,10 +37,10 @@ extension GameState {
                 result[char] = state
             }
         }
-        
+        // Do not collapse hints here, because the
+        // keyboard might need the source-of-truth
         return KeyboardHints(
-            hints: self.expected.validator.collapseHints(
-                result), 
+            hints: result, 
             locale: expected.locale)  
     }
 }
@@ -175,7 +175,6 @@ struct KeyboardHintsTestInternalView_Previews: PreviewProvider {
         }.padding()
         
         Internal_LatvianSimplifiedTest()
-        Internal_LatvianSimplifiedTest_validateUncertainPair()
+        Internal_LatvianSimplifiedTest_validateUncertainPair( )
     }
 }
-
