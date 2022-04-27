@@ -6,6 +6,21 @@ class SimplifiedLatvianWordValidator : WordValidator
         super.init(name: "lv")
     }
     
+    /// Override to drop diacritics
+    override func safeMatches(_ charA: Character, _ charB: Character) -> Bool {
+        let a = String(charA).folding(options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "lv_LV"))
+        let b = String(charB).folding(options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "lv_LV"))
+        
+        return a == b
+    }
+    
+    /// Override to drop diacritics
+    override func safeContains(_ word: String, _ requiredChar: String) -> Bool {
+        let simpleWord = simplify(word)
+        let simpleChar = simplify(requiredChar)
+        return simpleWord.contains(simpleChar)
+    }
+    
     /// Validator protocol
     override func collapseHints(_ hints: Dictionary<String, TileBackgroundType>) -> Dictionary<String, TileBackgroundType> 
     {
@@ -90,11 +105,19 @@ class SimplifiedLatvianWordValidator : WordValidator
         super.accepts(word, as: expected)
     }
     
-    override func canSubmit(word: String, expected: String, reason: inout String?) -> String? {
+    override func canSubmit(
+        word: String, 
+        expected: String,
+        model: [RowModel]?,
+        reason: inout String?) -> String? {
         guard word.count == 5 else {
             reason = "Not enough letters"
             return nil
         } 
+            
+            guard super.validateRequirements(word: word, model: model, reason: &reason) else {
+                return nil
+            }
         
         if word.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil) == expected.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil) {
             return expected.uppercased()
@@ -161,7 +184,7 @@ struct Internal_LatvianWordValidator_TestView: View {
     
     var body: some View {
         body_in.onAppear {
-            submittable = validator.canSubmit(word: word, expected: answer, reason: &reason)
+            submittable = validator.canSubmit(word: word, expected: answer, model: nil, reason: &reason)
         }
     }
     

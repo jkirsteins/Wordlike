@@ -277,8 +277,13 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                     
                     /// Allow input from keyboard
                     /// on iPad and macOS
-                    HardwareKeyboardInput()
-                        .border(debugViz ? .red : .clear)
+                    if type(of: validator) == SimplifiedLatvianWordValidator.self {
+                        HardwareKeyboardInput<SimplifiedLatvianWordValidator>()
+                            .border(debugViz ? .red : .clear)
+                    } else {
+                        HardwareKeyboardInput<WordValidator>()
+                            .border(debugViz ? .red : .clear)
+                    }
                 }
                 /// For the KeyboardInput view
                 .environmentObject(game)

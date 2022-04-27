@@ -24,25 +24,34 @@ struct Wordlike: App {
     @AppStorage(SettingsView.HARD_MODE_LATVIAN_KEY)
     var isHardMode_Latvian: Bool = false
     
+    @AppStorage(SettingsView.HARD_MODE_KEY)
+    var isHardMode: Bool = false
+    
     @SceneBuilder
     var body: some Scene {
         WindowGroup { 
             NavigationView {
                 PaletteSetterView {
                     List {
-                        LinkToGame(locale: "en")
-                        LinkToGame(locale: "en-GB")
-                        LinkToGame(locale: "fr")
+                        LinkToGame(
+                            locale: "en", 
+                            caption: isHardMode ? "Hard mode." : nil)
+                        LinkToGame(
+                            locale: "en-GB",
+                            caption: isHardMode ? "Hard mode." : nil)
+                        LinkToGame(
+                            locale: "fr",
+                            caption: isHardMode ? "Hard mode." : nil)
                         
                         if isHardMode_Latvian {
                             LinkToGame(
                                 locale: "lv",
-                                caption: "Hard mode")
+                                caption: "\(isHardMode ? "Hard mode. " : "")Extended keyboard.")
                         } else {
                             LinkToGame(
                                 locale: "lv", 
                                 validator: SimplifiedLatvianWordValidator(),
-                                caption: "Easy mode")
+                                caption: "\(isHardMode ? "Hard mode. " : "")Simplified keyboard.")
                         }
                     }
                 }

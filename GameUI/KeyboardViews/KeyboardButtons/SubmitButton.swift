@@ -31,9 +31,13 @@ struct SubmitButton<ValidatorImpl: Validator & ObservableObject>: View {
     @EnvironmentObject 
     var toastMessageCenter: ToastMessageCenter
     
+    @AppStorage(SettingsView.HARD_MODE_KEY)
+    var isHardMode: Bool = false
+    
     func submitAction() {
         self.game.submit(
-            validator: validator, 
+            validator: validator,
+            hardMode: self.isHardMode,
             toastMessageCenter: toastMessageCenter)
     }
     
@@ -87,7 +91,7 @@ struct SubmitButtonInternalPreview : View {
     
     var body: some View {
         VStack {
-            Text(verbatim: "Failure: \(tmc.message)")
+            Text(verbatim: "Failure: \(tmc.message?.message ?? "none")")
             
         SubmitButton<WordValidator>(
             maxSize: 

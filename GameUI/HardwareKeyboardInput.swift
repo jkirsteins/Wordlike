@@ -5,13 +5,16 @@ import SwiftUI
 ///
 /// It will prevent on-screen iOS keyboard from being
 /// shown (by providing a blank UIView() as the inputView).
-struct HardwareKeyboardInput: UIViewRepresentable 
+struct HardwareKeyboardInput<ValidatorImpl: Validator & ObservableObject>: UIViewRepresentable 
 {
     @EnvironmentObject var game: GameState
-    @EnvironmentObject var validator: WordValidator
+    @EnvironmentObject var validator: ValidatorImpl
     
     @EnvironmentObject 
     var toastMessageCenter: ToastMessageCenter
+    
+    @AppStorage(SettingsView.HARD_MODE_KEY)
+    var isHardMode: Bool = false
     
     /// Using a custom empty keyboard view,
     /// in case we need to override something.
@@ -75,7 +78,8 @@ struct HardwareKeyboardInput: UIViewRepresentable
         func insertText(_ text: String) {
             if text == "\n" {
                 self.owner.game.submit(
-                    validator: self.owner.validator, 
+                    validator: self.owner.validator,
+                    hardMode: self.owner.isHardMode,
                     toastMessageCenter: self.owner.toastMessageCenter)
                 return
             }
@@ -130,7 +134,7 @@ struct Internal_InputCaptureView_Preview : View {
     
     var body: some View {
         VStack {
-            HardwareKeyboardInput()
+            HardwareKeyboardInput<WordValidator>()
                 .border(.red)
             GameBoard(state: game, canBeAutoActivated: false)
         }
