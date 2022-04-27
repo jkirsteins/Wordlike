@@ -95,6 +95,24 @@ struct Row: View {
                 }
             }
         }
+        .contextMenu {
+            Button {
+                /* TODO: implement hit testing.
+                 
+                 The hardware input overlay is needed
+                 to become first responder (onTap). But
+                 then the context menu is never activated.
+                 
+                 We could probably override hitTest in the hardware keyboard overlay, and
+                 return the right view for the underlying row (after becoming first responder).
+                 
+                 But this would include view traversal in SwiftUI. Not completely sure this would work...
+                 */
+                print("Defining...")
+            } label: {
+                Label("Define", systemImage: "book")
+            }
+        }
         .modifier(Shake(animatableData: count))
         .onChange(of: model.attemptCount) {
             nc in 
