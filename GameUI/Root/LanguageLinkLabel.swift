@@ -10,6 +10,9 @@ struct LanguageLinkLabel: View {
     
     @Environment(\.palette) var palette: Palette
     
+    @AppStorage
+    var stats: Stats
+    
     let locale: String
     let extraCaption: String?
     
@@ -38,22 +41,51 @@ struct LanguageLinkLabel: View {
         self.locale = locale
         self.extraCaption = extraCaption
         self._dailyState = AppStorage("turnState.\(locale)", store: nil)
+        self._stats = AppStorage(
+            wrappedValue: Stats(), 
+            "stats.\(locale)")
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(locale.localeDisplayName)
-            
-            if let caption = self.extraCaption {
-                Text(caption)
-                    .font(.caption)
-                    .foregroundColor(.primary)
+        HStack {
+            VStack(alignment: .leading) {
+                Text(locale.localeDisplayName)
+                
+                if let caption = self.extraCaption {
+                    Text(caption)
+                        .font(.caption)
+                        .foregroundColor(.primary)
+                }
+                
+                if let caption = self.caption {
+                    Text(caption.0)
+                        .font(.caption)
+                        .foregroundColor(caption.1)
+                }
             }
             
-            if let caption = self.caption {
-                Text(caption.0)
-                    .font(.caption)
-                    .foregroundColor(caption.1)
+            if stats.played > 0 {
+                HStack {
+                    Spacer()
+                    Divider()
+                    VStack {
+                        Text("\(stats.streak) / \(stats.maxStreak)")
+                            .font(.body)
+                            .multilineTextAlignment(.center)
+                        Text("Streak")
+                            .font(.body)
+                            .multilineTextAlignment(.center)
+                    }
+                    VStack {
+                        Text("\(Double(stats.won) / Double(stats.played) * 100, specifier: "%.0f")")
+                            .font(.body)
+                        Text("Win %")
+                            .font(.body)
+                            .multilineTextAlignment(.center)
+                    }.frame(minWidth: 30)
+                }
+                .minimumScaleFactor(0.02)
+                .frame(maxHeight: 30)
             }
         }
     }

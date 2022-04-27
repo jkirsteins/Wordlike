@@ -66,51 +66,10 @@ struct StatsView: View {
         GeometryReader { gr in 
             ScrollView {
                 VStack(spacing: 24) {
-                    VStack(spacing: 8) {
-                        
-                        ZStack {
-                            Text("Statistics")
-                                .font(Font.system(.title).smallCaps())
-                                .fontWeight(.bold)
-                            
-                            if self.state.isWon {
-                                ConfettiView()
-                                ParticleView(time: 0, scale: 0.1)
-                            }
-                            
-                        }
-                        
-                        HStack(alignment: .top) {
-                            VStack {
-                                Text("\(stats.played)").font(.largeTitle)
-                                Text("Played")
-                                    .font(.caption)
-                                    .frame(maxWidth: 50)
-                            }
-                            VStack {
-                                if stats.played == 0 {
-                                    Text("-").font(.largeTitle)
-                                } else {
-                                    Text("\(Double(stats.won) / Double(stats.played) * 100, specifier: "%.0f")").font(.largeTitle)
-                                }
-                                Text("Win %")
-                                    .font(.caption)
-                                    .frame(maxWidth: 50)
-                            }
-                            VStack {
-                                Text("\(stats.streak)").font(.largeTitle)
-                                Text("Current Streak")
-                                    .font(.caption)
-                                    .frame(maxWidth: 50)
-                            }
-                            VStack {
-                                Text("\(stats.maxStreak)").font(.largeTitle)
-                                Text("Max Streak")
-                                    .font(.caption)
-                                    .frame(maxWidth: 50)
-                            }
-                        }.multilineTextAlignment(.center)
-                    }
+                    StatsHeader(
+                        stats: stats, 
+                        showConfetti: self.state.isWon,
+                        showHeader: true)
                     
                     if state.isCompleted {
                         VStack(spacing: 8) {
