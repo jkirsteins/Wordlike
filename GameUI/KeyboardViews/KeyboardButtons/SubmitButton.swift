@@ -22,11 +22,11 @@ fileprivate struct SubmitButtonStyle: ButtonStyle {
 }
 
 /// Keyboard submit button.
-struct SubmitButton: View {
+struct SubmitButton<ValidatorImpl: Validator & ObservableObject>: View {
     let maxSize: CGSize
     
     @EnvironmentObject var game: GameState
-    @EnvironmentObject var validator: WordValidator
+    @EnvironmentObject var validator: ValidatorImpl
     
     @EnvironmentObject 
     var toastMessageCenter: ToastMessageCenter
@@ -80,19 +80,21 @@ struct SubmitButton: View {
 } 
 
 struct SubmitButtonInternalPreview : View {
-    @State var reason: String? = nil
+    @StateObject var tmc = ToastMessageCenter()
     @State var state = GameState(
         expected: TurnAnswer(
-            word: "fuels", day: 0, locale: "en"))
+            word: "fuels", day: 0, locale: "en", validator: WordValidator(name: "en")))
     
     var body: some View {
         VStack {
-            Text("Failure: \(reason ?? "<none>")")
-        SubmitButton(
+            Text(verbatim: "Failure: \(tmc.message)")
+            
+        SubmitButton<WordValidator>(
             maxSize: 
                     CGSize(width: 200, height: 100))
             .environmentObject(state)
             .environmentObject(WordValidator(name: "en", seed: 123))
+            .environmentObject(tmc)
         }
     }
 }

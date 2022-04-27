@@ -10,9 +10,15 @@ extension ActiveSheet: Identifiable {
     var id: Self { self }
 }
 
+extension GameHost where ValidatorImpl == WordValidator {
+    init(_ name: String) {
+        self.init(name, validator: WordValidator(name: name))
+    }
+}
+
 /// Represents a game of a given languages, with its
 /// own stats separate from other games.
-struct GameHost: View {
+struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
     
     @AppStorage 
     var dailyState: DailyState?
@@ -30,7 +36,7 @@ struct GameHost: View {
         on: .main, 
         in: .common).autoconnect()
     
-    @StateObject var validator: WordValidator
+    @StateObject var validator: ValidatorImpl
     @StateObject var game: GameState = GameState()
     
     @Environment(\.turnCounter) 
@@ -46,8 +52,9 @@ struct GameHost: View {
     /* Propogated via preferences from the underlying EditableRow. */
     @StateObject var toastMessageCenter = ToastMessageCenter()
     
-    init(_ name: String) {
-        self._validator = StateObject(wrappedValue: WordValidator(name: name))
+    init(_ name: String, validator: ValidatorImpl) {
+        self._validator = StateObject(
+            wrappedValue: validator)
         
         self._stats = AppStorage(
             wrappedValue: Stats(), 
@@ -75,7 +82,8 @@ struct GameHost: View {
         game.expected = TurnAnswer(
             word: newState.expected, 
             day: turnIndex,
-            locale: self.locale)
+            locale: self.locale,
+            validator: self.validator)
         game.rows = newState.rows
         game.isTallied = newState.isTallied
         game.id = UUID()
@@ -92,7 +100,8 @@ struct GameHost: View {
     @ViewBuilder
     var keyboardView: some View {
         if game.expected.locale == "lv" {
-            LatvianKeyboard()
+//            LatvianKeyboard()
+            LatvianKeyboard_Simplified()
         }
         else if game.expected.locale == "fr" {
             FrenchKeyboard()

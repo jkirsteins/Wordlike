@@ -67,7 +67,7 @@ class ToastMessageCenter : ObservableObject {
             
             expireJokeAt = Date() + 2.0
             
-            if countSame % 5 == 0 {
+            if countSame % 15 == 0 {
                 jokeIndex += 1
                 let joke = jokeMessages[jokeIndex % jokeMessages.count] 
                 currentJoke = joke

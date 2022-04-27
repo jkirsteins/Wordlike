@@ -122,8 +122,10 @@ struct HardwareKeyboardInput: UIViewRepresentable
 }
 
 struct Internal_InputCaptureView_Preview : View {
-    @StateObject var game = GameState(expected: TurnAnswer(word: "ČAULA", day: 1, locale: "lv"))
-    @StateObject var validator = WordValidator(name: "lv")
+    static let validator = WordValidator(name: "lv")
+    
+    @StateObject var game = GameState(expected: TurnAnswer(word: "ČAULA", day: 1, locale: "lv", validator: Self.validator))
+    @StateObject var validator = Self.validator
     @StateObject var tmc = ToastMessageCenter()
     
     var body: some View {

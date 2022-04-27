@@ -64,11 +64,12 @@ struct Internal_ShareSnippet_Test: View {
     let expected: String 
     let guesses: [String] 
     let day: Int
+    let validator = WordValidator(name: "en")
     
     var body: some View {
         let state = GameState(
             initialized: true, 
-            expected: TurnAnswer(word: expected, day: day, locale: "en"), 
+            expected: TurnAnswer(word: expected, day: day, locale: "en", validator: validator), 
             rows: 
                 guesses.map { w in
                     RowModel(word: w, expected: expected, isSubmitted: true)

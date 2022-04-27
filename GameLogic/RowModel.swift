@@ -44,10 +44,6 @@ struct RowModel : Equatable, Codable, Identifiable
         isSubmitted
     }
     
-    var canSubmit: Bool {
-        wordArray[0] == "S"
-    }
-    
     var focusHintIx: Int? {
         guard wordArray.count < 5 else { return nil }
         return wordArray.count

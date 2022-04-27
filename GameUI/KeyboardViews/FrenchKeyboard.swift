@@ -82,7 +82,7 @@ struct FrenchKeyboard: View {
                     SizeConstrainedKeyboardButton(
                         maxSize: maxSize, letter: "N")
                 }
-                SubmitButton(maxSize: wideSize)
+                SubmitButton<WordValidator>(maxSize: wideSize)
             }
             
         }
@@ -90,7 +90,7 @@ struct FrenchKeyboard: View {
 }
 
 struct FrenchKeyboardView_Previews: PreviewProvider {
-    static let state = GameState(expected: TurnAnswer(word: "aller", day: 1, locale: "fr"))
+    static let state = GameState(expected: TurnAnswer(word: "aller", day: 1, locale: "fr", validator: WordValidator(name: "fr")))
     
     static var previews: some View {
         VStack {

@@ -44,7 +44,7 @@ extension GameState {
     
     /// Submit key
     func submit(
-        validator: WordValidator, 
+        validator: Validator, 
         toastMessageCenter: ToastMessageCenter
     ) {
         guard !self.isCompleted else {
@@ -71,8 +71,9 @@ extension GameState {
         
         // If word doesn't match,
         // don't set isSubmitted
-        guard validator.canSubmit(
-            word: current.word, 
+        guard let submittedWord = validator.canSubmit(
+            word: current.word,
+            expected: current.expected,
             reason: &message) else {
                 let updatedRow = RowModel(
                     word: current.word,
@@ -85,7 +86,7 @@ extension GameState {
             } 
         
         let submitted = RowModel(
-            word: current.word,
+            word: submittedWord,
             expected: current.expected,
             isSubmitted: true,
             attemptCount: 0)

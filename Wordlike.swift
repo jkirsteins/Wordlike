@@ -30,7 +30,9 @@ struct Wordlike: App {
                         LinkToGame(locale: "en")
                         LinkToGame(locale: "en-GB")
                         LinkToGame(locale: "fr")
-                        LinkToGame(locale: "lv")
+                        LinkToGame(
+                            locale: "lv", 
+                            validator: LatvianWordValidator())
                     }
                 }
                 .listStyle(.insetGrouped)

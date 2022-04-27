@@ -1,9 +1,17 @@
 import SwiftUI
 
+extension LinkToGame where ValidatorImpl == WordValidator {
+    init(locale: String) {
+        self.locale = locale 
+        self.validator = WordValidator(name: locale)
+    }
+}
+
 /// Creates a standardized NavigationLink
 /// to a GameHost instance.
-struct LinkToGame: View {
+struct LinkToGame<ValidatorImpl: Validator & ObservableObject>: View {
     let locale: String
+    let validator: ValidatorImpl
     
     @Environment(\.palette) 
     var palette: Palette
@@ -14,7 +22,7 @@ struct LinkToGame: View {
     var body: some View {
         NavigationLink(destination: {
             GeometryReader { gr in
-                GameHost(locale)
+                GameHost(locale, validator: validator)
                 /* We set the environment explicitly, because
                  it will not be handled by the palette wrapper
                  (it is instantiated, not nested) */
