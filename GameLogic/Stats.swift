@@ -94,7 +94,7 @@ struct Stats : RawRepresentable {
         return Stats(
             played: didPlay ? self.played + 1 : self.played, 
             won: self.won + (game.isWon ? 1 : 0), 
-            maxStreak: (game.isWon ? max(newStreak, self.maxStreak) : 0),  
+            maxStreak: (game.isWon ? max(newStreak, self.maxStreak) : self.maxStreak),  
             streak: newStreak, 
             guessDistribution: newDistribution,
             lastWinAt: (game.isWon ? Date() : self.lastWinAt)
