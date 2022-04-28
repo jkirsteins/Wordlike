@@ -7,17 +7,17 @@ struct TurnAnswer
 {
     let word: String
     let day: Int
-    let locale: String
+    let locale: GameLocale
     let validator: Validator
     
-    init(word: String, day: Int, locale: String) {
+    init(word: String, day: Int, locale: GameLocale) {
         self.word = word 
         self.day = day 
         self.locale = locale 
-        self.validator = WordValidator(name: locale)
+        self.validator = WordValidator(locale: locale)
     }
     
-    init(word: String, day: Int, locale: String, validator: Validator) {
+    init(word: String, day: Int, locale: GameLocale, validator: Validator) {
         self.word = word 
         self.day = day 
         self.locale = locale 

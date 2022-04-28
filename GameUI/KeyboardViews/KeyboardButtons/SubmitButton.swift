@@ -87,7 +87,7 @@ struct SubmitButtonInternalPreview : View {
     @StateObject var tmc = ToastMessageCenter()
     @State var state = GameState(
         expected: TurnAnswer(
-            word: "fuels", day: 0, locale: "en", validator: WordValidator(name: "en")))
+            word: "fuels", day: 0, locale: .en_US, validator: WordValidator(locale: .en_US)))
     
     var body: some View {
         VStack {
@@ -97,7 +97,7 @@ struct SubmitButtonInternalPreview : View {
             maxSize: 
                     CGSize(width: 200, height: 100))
             .environmentObject(state)
-            .environmentObject(WordValidator(name: "en", seed: 123))
+            .environmentObject(WordValidator(locale: .en_US, seed: 123))
             .environmentObject(tmc)
         }
     }

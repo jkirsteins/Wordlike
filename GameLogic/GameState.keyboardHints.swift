@@ -48,10 +48,10 @@ extension GameState {
 struct KeyboardHintsTestInternalView: View {
     let word: String 
     let guess: String 
-    let validator = WordValidator(name: "en")
+    let validator = WordValidator(locale: .en_US)
     
     var body: some View {
-        let state = GameState(initialized: true, expected: TurnAnswer(word: word, day: 1, locale: "en", validator: validator), 
+        let state = GameState(initialized: true, expected: TurnAnswer(word: word, day: 1, locale: .en_US, validator: validator), 
                               rows: [
                                 RowModel(word: guess, expected: word, isSubmitted: true, attemptCount: 0)
                               ], isTallied: true, date: Date())
@@ -76,7 +76,7 @@ struct Internal_LatvianSimplifiedTest: View
     let state = GameState(
         initialized: true, 
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: "lv", validator: SimplifiedLatvianWordValidator()),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: SimplifiedLatvianWordValidator()),
         rows: [
             RowModel(
                 word: "zvņīa", 
@@ -124,7 +124,7 @@ struct Internal_LatvianSimplifiedTest_validateUncertainPair: View
     let state = GameState(
         initialized: true, 
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: "lv", validator: SimplifiedLatvianWordValidator()),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: SimplifiedLatvianWordValidator()),
         rows: [
             RowModel(
                 word: "kaitē", 

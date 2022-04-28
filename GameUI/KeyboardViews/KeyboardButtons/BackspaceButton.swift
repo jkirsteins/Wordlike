@@ -75,7 +75,7 @@ struct BackspaceButton: View {
 
 struct InternalBackspaceButtonPreview: View {
     @State var side: CGFloat = 74.0
-    let state = GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: "en", validator: WordValidator(name: "en")))
+    let state = GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: .en_US, validator: WordValidator(locale: .en_US)))
     
     var body: some View {
         VStack(spacing: 8) {

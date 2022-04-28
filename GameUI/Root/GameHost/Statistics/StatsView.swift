@@ -192,7 +192,7 @@ struct StatsView: View {
 struct StatsView_Previews: PreviewProvider {
     static let state = GameState(
         initialized: true, 
-        expected: TurnAnswer(word: "fuels", day: 2, locale: "en"), 
+        expected: TurnAnswer(word: "fuels", day: 2, locale: .en_US), 
         rows: [
             RowModel(word: "clear", expected: "fuels", isSubmitted: true),
             RowModel(word: "duels", expected: "fuels", isSubmitted: true),
@@ -235,7 +235,7 @@ struct StatsView_Previews: PreviewProvider {
                     11,
                     6
                 ],
-                lastWinAt: nil), state: GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: "en")))
+                lastWinAt: nil), state: GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: .en_US)))
         }
         
         PaletteSetterView {
@@ -252,7 +252,7 @@ struct StatsView_Previews: PreviewProvider {
                     0,
                     0
                 ],
-                lastWinAt: nil), state: GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: "enswils")))
+                lastWinAt: nil), state: GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: .en_US)))
         }
         
         PaletteSetterView {

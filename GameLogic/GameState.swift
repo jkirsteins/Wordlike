@@ -59,7 +59,7 @@ class GameState : ObservableObject, Identifiable, Equatable
             expected: TurnAnswer(
                 word: "", 
                 day: 0, 
-                locale: "?", 
+                locale: .unknown, 
                 validator: DummyValidator()),
             rows: [], 
             isTallied: false, 

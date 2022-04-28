@@ -59,6 +59,9 @@ struct Row: View {
     @Environment(\.verticalSizeClass) 
     var verticalSizeClass
     
+    @Environment(\.gameLocale)
+    var gameLocale: GameLocale
+    
     /// If we have a small view, then spacing should be reduced
     /// (e.g. horizontal compact)i
     var hspacing: CGFloat {
@@ -96,22 +99,12 @@ struct Row: View {
             }
         }
         .contextMenu {
-            Button {
-                /* TODO: implement hit testing.
-                 
-                 The hardware input overlay is needed
-                 to become first responder (onTap). But
-                 then the context menu is never activated.
-                 
-                 We could probably override hitTest in the hardware keyboard overlay, and
-                 return the right view for the underlying row (after becoming first responder).
-                 
-                 But this would include view traversal in SwiftUI. Not completely sure this would work...
-                 */
-                print("Defining...")
-            } label: {
-                Label("Define", systemImage: "book")
-            }
+            if let defUrl = self.model.word.definitionUrl(in: gameLocale) {
+                Text(self.model.word.uppercased())
+                Link(destination: defUrl, label: {
+                    Label("Look up", systemImage: "book")
+                })
+            } 
         }
         .modifier(Shake(animatableData: count))
         .onChange(of: model.attemptCount) {

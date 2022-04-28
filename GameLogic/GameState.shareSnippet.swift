@@ -25,17 +25,17 @@ extension GameState
         }
         
         let flag: String 
-        switch(self.expected.locale.uppercased()) {
-            case "EN":
+        switch(self.expected.locale) {
+            case .en_US:
             flag = "🇺🇸"
-            case "EN-GB":
+            case .en_GB:
             flag = "🇬🇧"
-            case "FR":
+            case .fr_FR:
             flag = "🇫🇷"
-            case "LV":
+            case .lv_LV(_):
             flag = "🇱🇻"
-            default:
-            flag = self.expected.locale.uppercased()
+            case .unknown:
+            flag = ""
         }
         
         var result = "\(Bundle.main.displayName) \(flag) \(self.expected.day) \(tries)\n\n"
@@ -64,12 +64,12 @@ struct Internal_ShareSnippet_Test: View {
     let expected: String 
     let guesses: [String] 
     let day: Int
-    let validator = WordValidator(name: "en")
+    let validator = WordValidator(locale: .en_US)
     
     var body: some View {
         let state = GameState(
             initialized: true, 
-            expected: TurnAnswer(word: expected, day: day, locale: "en", validator: validator), 
+            expected: TurnAnswer(word: expected, day: day, locale: .en_US, validator: validator), 
             rows: 
                 guesses.map { w in
                     RowModel(word: w, expected: expected, isSubmitted: true)

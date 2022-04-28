@@ -21,13 +21,13 @@ extension String {
         }
     }() 
     
-    static func uppercasedAlphabet(for locale: String) -> [String] {
-        switch(locale.uppercased()) {
-        case "EN", "EN-GB":
+    static func uppercasedAlphabet(for locale: GameLocale) -> [String] {
+        switch(locale) {
+        case .en_US, .en_GB:
             return uppercasedEnAlphabet
-        case "FR":
+        case .fr_FR:
             return uppercasedFrAlphabet
-        case "LV":
+        case .lv_LV(_):
             return uppercasedLvAlphabet
         default:
             return []
@@ -36,12 +36,12 @@ extension String {
     
     /// Check if first comes before second, given
     /// the alphabet of a specific locale
-    static func orderAsAlphabet(first: String, second: String, locale: String) -> Bool {
+    static func orderAsAlphabet(first: String, second: String, locale: GameLocale) -> Bool {
         
         let firstC = first.uppercased()
         let secondC = second.uppercased()
         
-        let alphabet = String.uppercasedAlphabet(for: locale )
+        let alphabet = String.uppercasedAlphabet(for: locale)
         
         guard let firstIx = alphabet.firstIndex(of: firstC), let secondIx = alphabet.firstIndex(of: secondC) else {
             // fallback
@@ -55,21 +55,6 @@ extension String {
 /// For generating test words
 extension String
 {
-    var localeDisplayName: String {
-        switch(self.uppercased()) {
-        case "EN":
-            return "English 🇺🇸"
-        case "EN-GB":
-            return "English 🇬🇧"
-        case "FR":
-            return "Français 🇫🇷"
-        case "LV":
-            return "Latviski 🇱🇻"
-        default:
-            return self 
-        }
-    }
-    
     init(randomLength length: Int) {
         let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         self = String((0..<length).map{ _ in letters.randomElement()! })
@@ -85,19 +70,17 @@ extension String
     /// Generate the URL to a page that provides
     /// the definition of the given word in the given
     /// locale (i.e. to a thesaurus page)
-    func definitionUrl(in locale: String) -> URL? {
+    func definitionUrl(in locale: GameLocale) -> URL? {
         let lowself = self.lowercased()
-        switch(locale.uppercased()) {
-        case "FR":
+        switch(locale) {
+        case .fr_FR:
             let stripped = lowself.folding(options: .diacriticInsensitive, locale: Locale(identifier: "FR"))
             
             return URL(string: "https://1mot.net/\(stripped)")
-        case "LV":
+        case .lv_LV(_):
             let encoded = lowself.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
             return URL(string: "https://tezaurs.lv/\(encoded!)")
-        case "EN":
-            return URL(string: "https://www.dictionary.com/browse/\(lowself)")
-        case "EN-GB":
+        case .en_US, .en_GB:
             return URL(string: "https://www.dictionary.com/browse/\(lowself)")
         default:    
             return nil
@@ -107,12 +90,12 @@ extension String
 
 struct InternalDefinitionUrlTestView: View {
     let word: String
-    let locale: String 
+    let locale: GameLocale 
     
     var body: some View {
         VStack(spacing: 24) {
             VStack {
-                Text(locale)
+                Text(String(describing: locale))
                 
                 if let url = word.definitionUrl(in: locale) {
                     Text("\(url)")
@@ -131,10 +114,10 @@ struct InternalDefinitionUrlTestView: View {
 struct InternalDefinitionUrlTestView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            InternalDefinitionUrlTestView(word: "ĀLAVA", locale: "lv")
-            InternalDefinitionUrlTestView(word: "FRÈRE", locale: "fr")
-            InternalDefinitionUrlTestView(word: "FUELS", locale: "en")
-            InternalDefinitionUrlTestView(word: "FUELS", locale: "en-gb")
+            InternalDefinitionUrlTestView(word: "ĀLAVA", locale: .lv_LV(simplified: false))
+            InternalDefinitionUrlTestView(word: "FRÈRE", locale: .fr_FR)
+            InternalDefinitionUrlTestView(word: "FUELS", locale: .en_US)
+            InternalDefinitionUrlTestView(word: "FUELS", locale: .en_GB)
         }
     }
 }

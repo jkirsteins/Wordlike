@@ -143,13 +143,13 @@ struct GameBoard: View {
 
 fileprivate struct InternalPreview: View 
 {
-    @State var state = GameState(expected: TurnAnswer(word: "board", day: 1, locale: "en", validator: WordValidator(name: "en")))
+    @State var state = GameState(expected: TurnAnswer(word: "board", day: 1, locale: .en_US, validator: WordValidator(locale: .en_US)))
     
     var body: some View {
         VStack {
             GameBoard(state: state)
             Button("Reset") {
-                self.state =     GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: "en", validator: WordValidator(name: "en")))
+                self.state =     GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: .en_US, validator: WordValidator(locale: .en_US)))
             }
         }
     }

@@ -49,19 +49,6 @@ class DummyValidator: Validator, ObservableObject {
         }
 }
 
-private var ordinalFormatter: NumberFormatter = {
-    let formatter = NumberFormatter()
-    formatter.numberStyle = .ordinal
-    formatter.locale = Locale(identifier: "en_US")
-    return formatter
-}()
-
-extension Int {
-    var ordinal: String? {
-        return ordinalFormatter.string(from: NSNumber(value: self))
-    }
-}
-
 class WordValidator : Validator, ObservableObject
 {
     static func letterNumberMsg(_ ix: Int) -> String {
@@ -179,13 +166,13 @@ class WordValidator : Validator, ObservableObject
     func loadAnswers() -> [String] {
         var random = ArbitraryRandomNumberGenerator(seed: UInt64(self.seed))
         
-        return Self.load("\(name)_A").shuffled(using: &random)
+        return Self.load("\(locale.fileBaseName)_A").shuffled(using: &random)
     }
     
     lazy var guesses: [String] = self.loadGuesses()
     
     func loadGuesses() -> [String] {
-        Self.load("\(name)_G")
+        Self.load("\(locale.fileBaseName)_G")
     }
     
     static func load(_ name: String) -> [String] {
@@ -203,7 +190,7 @@ class WordValidator : Validator, ObservableObject
         }
     }
     
-    let name: String
+    let locale: GameLocale
     let seed: Int 
     
     /// Constant used as the start date of counting 
@@ -212,11 +199,11 @@ class WordValidator : Validator, ObservableObject
     static let MAR_22_2022 = Date(timeIntervalSince1970: 1647966002) 
     
     init(
-        name: String, 
+        locale: GameLocale, 
         seed: Int? = nil 
     )
     {
-        self.name = name
+        self.locale = locale
         self.seed = seed ?? 14384982345
     }
 }

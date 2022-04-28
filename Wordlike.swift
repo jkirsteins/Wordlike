@@ -8,6 +8,101 @@ extension ActiveSheet: Identifiable {
     var id: Self { self }
 }
 
+enum GameLocale
+{
+    case unknown
+    case en_US
+    case en_GB
+    case fr_FR
+    case lv_LV(simplified: Bool)
+    
+    var localeDisplayName: String {
+        switch(self) {
+        case .en_US:
+            return "English 🇺🇸"
+        case .en_GB:
+            return "English 🇬🇧"
+        case .fr_FR:
+            return "Français 🇫🇷"
+        case .lv_LV(_):
+            return "Latviski 🇱🇻"
+        case .unknown:
+            fatalError("Do not use unknown locale") 
+        }
+    }
+    
+    var fileBaseName: String {
+        switch(self) {
+            case .en_GB:
+            return "en-GB"
+            case .en_US:
+            return "en"
+            case .fr_FR:
+            return "fr"
+            case .lv_LV(_):
+            return "lv"
+            case .unknown:
+            fatalError("Invalid locale")
+        }
+    }
+}
+
+extension UIApplication {
+    func addGestureRecognizer(_ d: GlobalTapDelegate) {
+        let sceneWindows =
+        UIApplication.shared.connectedScenes
+        .filter { $0.activationState == .foregroundActive }
+        .first(where: { $0 is UIWindowScene })
+        .flatMap({ $0 as? UIWindowScene })?.windows
+        
+        guard let window = sceneWindows?.first else { return }
+        let gesture = UITapGestureRecognizer(target: window, action: nil)
+        gesture.requiresExclusiveTouchType = false
+        gesture.cancelsTouchesInView = false
+        gesture.delegate = d
+        window.addGestureRecognizer(gesture)
+    }
+}
+
+class GlobalTapDelegate: NSObject, UIGestureRecognizerDelegate {
+    let requestCount: Binding<Int>
+    
+    init(_ requestCount: Binding<Int>) {
+        self.requestCount = requestCount
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        requestCount.wrappedValue += 1
+        return true
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+}
+
+fileprivate struct GlobalTapCountKey: EnvironmentKey {
+    static let defaultValue: Binding<Int> = .constant(0)
+}
+
+extension EnvironmentValues {
+    var globalTapCount: Binding<Int> {
+        get { self[GlobalTapCountKey.self] }
+        set { self[GlobalTapCountKey.self] = newValue }
+    }
+}
+
+fileprivate struct GameLocaleKey: EnvironmentKey {
+    static let defaultValue: GameLocale = .unknown
+}
+
+extension EnvironmentValues {
+    var gameLocale: GameLocale {
+        get { self[GameLocaleKey.self] }
+        set { self[GameLocaleKey.self] = newValue }
+    }
+}
+
 @main
 struct Wordlike: App {
     
@@ -27,6 +122,10 @@ struct Wordlike: App {
     @AppStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
     
+    @State var globalTapCount = 0
+    
+    @State var tapDelegate: GlobalTapDelegate? = nil
+    
     @SceneBuilder
     var body: some Scene {
         WindowGroup { 
@@ -34,22 +133,22 @@ struct Wordlike: App {
                 PaletteSetterView {
                     List {
                         LinkToGame(
-                            locale: "en", 
+                            locale: .en_US, 
                             caption: isHardMode ? "Hard mode." : nil)
                         LinkToGame(
-                            locale: "en-GB",
+                            locale: .en_GB,
                             caption: isHardMode ? "Hard mode." : nil)
                         LinkToGame(
-                            locale: "fr",
+                            locale: .fr_FR,
                             caption: isHardMode ? "Hard mode." : nil)
                         
                         if isHardMode_Latvian {
                             LinkToGame(
-                                locale: "lv",
+                                locale: .lv_LV(simplified: false),
                                 caption: "\(isHardMode ? "Hard mode. " : "")Extended keyboard.")
                         } else {
                             LinkToGame(
-                                locale: "lv", 
+                                locale: .lv_LV(simplified: true), 
                                 validator: SimplifiedLatvianWordValidator(),
                                 caption: "\(isHardMode ? "Hard mode. " : "")Simplified keyboard.")
                         }
@@ -92,7 +191,17 @@ struct Wordlike: App {
                     
                     Text("Please select a language in the left side menu.")
                 }
-            }.sheet(item: $activeSheet, onDismiss: {
+            }
+            .onAppear {
+                self.tapDelegate = GlobalTapDelegate($globalTapCount)
+                UIApplication.shared.addGestureRecognizer(
+                    tapDelegate!
+                )
+            }
+            .environment(
+                \.globalTapCount, 
+                 $globalTapCount)
+            .sheet(item: $activeSheet, onDismiss: {
                 // nothing to do on dismiss
             }, content: { item in
                 switch(item) {

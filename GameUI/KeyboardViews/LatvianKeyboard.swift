@@ -1,7 +1,7 @@
 import SwiftUI
 
 private struct KeyboardHintEnvironmentKey: EnvironmentKey {
-    static let defaultValue: KeyboardHints = KeyboardHints(hints: [:], locale: "en")
+    static let defaultValue: KeyboardHints = KeyboardHints(hints: [:], locale: .en_US)
 }
 
 extension EnvironmentValues {
@@ -168,7 +168,7 @@ struct LatvianKeyboard: View {
 }
 
 struct LatvianKeyboardView_Previews: PreviewProvider {
-    static let state = GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: "en", validator: WordValidator(name: "lv")))
+    static let state = GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: .lv_LV(simplified: false), validator: WordValidator(locale: .lv_LV(simplified: false))))
     
     static var previews: some View {
         VStack {
@@ -179,7 +179,7 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
                     "Ļ": .wrongPlace,
                     "Ž": .rightPlace,
                     "S": .wrongLetter,
-                ], locale: "lv"))
+                ], locale: .lv_LV(simplified: false)))
                 .environment(\.palette, LightPalette())
         }.environmentObject(state)
         
@@ -191,7 +191,7 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
                     "Ļ": .wrongPlace,
                     "Ž": .rightPlace,
                     "S": .wrongLetter,
-                ], locale: "lv"))
+                ], locale: .lv_LV(simplified: false)))
                 .environment(\.palette, LightHCPalette())
         }.environmentObject(state)
         
@@ -203,7 +203,7 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
                     "Ļ": .wrongPlace,
                     "Ž": .rightPlace,
                     "S": .wrongLetter,
-                ], locale: "lv"))
+                ], locale: .lv_LV(simplified: false)))
                 .environment(\.palette, DarkPalette())
         }.environmentObject(state)
     }

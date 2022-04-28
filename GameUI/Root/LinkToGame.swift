@@ -1,9 +1,9 @@
 import SwiftUI
 
 extension LinkToGame where ValidatorImpl == WordValidator {
-    init(locale: String, caption: String? = nil, seed: Int? = nil) {
+    init(locale: GameLocale, caption: String? = nil, seed: Int? = nil) {
         self.locale = locale 
-        self.validator = WordValidator(name: locale, seed: seed)
+        self.validator = WordValidator(locale: locale, seed: seed)
         self.caption = caption
     }
 }
@@ -11,17 +11,20 @@ extension LinkToGame where ValidatorImpl == WordValidator {
 /// Creates a standardized NavigationLink
 /// to a GameHost instance.
 struct LinkToGame<ValidatorImpl: Validator & ObservableObject>: View {
-    let locale: String
+    let locale: GameLocale
     let validator: ValidatorImpl
     let caption: String? 
     
     @Environment(\.palette) 
     var palette: Palette
     
+    @Environment(\.globalTapCount)
+    var globalTapCount: Binding<Int>
+    
     @Environment(\.debug) 
     var debug: Bool
     
-    init(locale: String, validator: ValidatorImpl, caption: String? = nil) {
+    init(locale: GameLocale, validator: ValidatorImpl, caption: String? = nil) {
         self.locale = locale 
         self.validator = validator
         self.caption = caption
@@ -35,6 +38,7 @@ struct LinkToGame<ValidatorImpl: Validator & ObservableObject>: View {
                  it will not be handled by the palette wrapper
                  (it is instantiated, not nested) */
                     .environment(\.rootGeometry, gr)
+                    .environment(\.globalTapCount, globalTapCount)
                     .environment(\.debug, debug)
                     .environment(\.palette, palette)
             }

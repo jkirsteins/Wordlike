@@ -16,6 +16,16 @@ struct HardwareKeyboardInput<ValidatorImpl: Validator & ObservableObject>: UIVie
     @AppStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
     
+    /// Using an externally-controlled focus request
+    /// variable lets us become first responder without
+    /// having to be overlaid other views.
+    ///
+    /// This means other views are free to support 
+    /// interaction (e.g. context menus).
+    @Binding var focusRequests: Int
+    
+    @Environment(\.debug) var debug: Bool
+    
     /// Using a custom empty keyboard view,
     /// in case we need to override something.
     class HiddenKeyboard : UIView {
@@ -26,6 +36,11 @@ struct HardwareKeyboardInput<ValidatorImpl: Validator & ObservableObject>: UIVie
     class InternalView: UIControl, UIKeyInput
     {
         var owner: HardwareKeyboardInput
+        
+        /// if this changes from SwiftUI views focus
+        /// request count, then we should become first
+        /// responder (and set this value to match)
+        var handledFocusRequests: Int = 0
         
         override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
             let _ = self.becomeFirstResponder( )
@@ -120,23 +135,35 @@ struct HardwareKeyboardInput<ValidatorImpl: Validator & ObservableObject>: UIVie
     
     func updateUIView(_ uiView: InternalView, context: Context) {
         
-        uiView.owner = self
+        if (uiView.handledFocusRequests != self.focusRequests) {
+            uiView.handledFocusRequests = self.focusRequests
+            if !uiView.isFirstResponder {
+                uiView.becomeFirstResponder()
+            }
+        }
         
+        uiView.owner = self
     }
 }
 
 struct Internal_InputCaptureView_Preview : View {
-    static let validator = WordValidator(name: "lv")
+    static let validator = WordValidator(locale: .lv_LV(simplified: false))
     
-    @StateObject var game = GameState(expected: TurnAnswer(word: "ČAULA", day: 1, locale: "lv", validator: Self.validator))
+    @StateObject var game = GameState(expected: TurnAnswer(word: "ČAULA", day: 1, locale: .lv_LV(simplified: false), validator: Self.validator))
     @StateObject var validator = Self.validator
     @StateObject var tmc = ToastMessageCenter()
     
+    @State var focusRequests: Int = 0
+    
     var body: some View {
         VStack {
-            HardwareKeyboardInput<WordValidator>()
+            HardwareKeyboardInput<WordValidator>(focusRequests: $focusRequests)
                 .border(.red)
             GameBoard(state: game)
+            Text(verbatim: "Focus requests: \(focusRequests)")
+            Button("Focus") {
+                focusRequests += 1
+            }
         }
         .environmentObject(game)
         .environmentObject(validator)

@@ -13,7 +13,7 @@ struct LanguageLinkLabel: View {
     @AppStorage
     var stats: Stats
     
-    let locale: String
+    let locale: GameLocale
     let extraCaption: String?
     
     var caption: (String, Color)? {
@@ -37,7 +37,7 @@ struct LanguageLinkLabel: View {
         return ("In progress", palette.wrongPlaceFill)
     }
     
-    init(_ locale: String, extraCaption: String?) {
+    init(_ locale: GameLocale, extraCaption: String?) {
         self.locale = locale
         self.extraCaption = extraCaption
         self._dailyState = AppStorage("turnState.\(locale)", store: nil)

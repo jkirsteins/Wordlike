@@ -24,7 +24,7 @@ class SimplifiedLatvianWordValidator : WordValidator
         "Ņ": "N"]
     
     init() {
-        super.init(name: "lv")
+        super.init(locale: .lv_LV(simplified: true))
     }
     
     /// Override to drop diacritics
@@ -85,8 +85,7 @@ class SimplifiedLatvianWordValidator : WordValidator
             }
             
             guard let candidateResult = candidates.max(by: {
-                print("Comparing", $0, "with", $1)
-                return $0.1 < $1.1 || $0.2 < $0.2 
+                $0.1 < $1.1 || $0.2 < $0.2 
             }).map({ $0.0 }) else {
                 reason = "Not in word list"
                 return nil

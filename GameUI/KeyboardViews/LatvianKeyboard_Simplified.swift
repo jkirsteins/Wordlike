@@ -244,7 +244,7 @@ struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementUnknown: View
     let state = GameState(
         initialized: true, 
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: "lv", validator: SimplifiedLatvianWordValidator()),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: SimplifiedLatvianWordValidator()),
         rows: [
             RowModel(
                 word: "marts", 
@@ -290,7 +290,7 @@ struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementGood: View
     let state = GameState(
         initialized: true, 
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: "lv", validator: SimplifiedLatvianWordValidator()),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: false), validator: SimplifiedLatvianWordValidator()),
         rows: [
             RowModel(
                 word: "kurši", 
@@ -336,7 +336,7 @@ struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent: View
     let state = GameState(
         initialized: true, 
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: "lv", validator: SimplifiedLatvianWordValidator()),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: SimplifiedLatvianWordValidator()),
         rows: [
             RowModel(
                 word: "saišu", 
@@ -380,7 +380,7 @@ struct LatvianKeyboard_SimplifiedTest_testCollapsing_onlyComplementKnown: View
     let state = GameState(
         initialized: true, 
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: "lv", validator: SimplifiedLatvianWordValidator()),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: SimplifiedLatvianWordValidator()),
         rows: [
             RowModel(
                 word: "trūka", 

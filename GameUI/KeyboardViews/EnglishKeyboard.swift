@@ -88,7 +88,7 @@ struct EnglishKeyboard: View {
 
 struct EnglishKeyboardView_Previews: PreviewProvider {
     static let state = GameState(
-        expected: TurnAnswer(word: "fuels", day: 1, locale: "en", validator: WordValidator(name: "en")))
+        expected: TurnAnswer(word: "fuels", day: 1, locale: .en_US, validator: WordValidator(locale: .en_US)))
     
     static var previews: some View {
         VStack {
@@ -103,7 +103,7 @@ struct EnglishKeyboardView_Previews: PreviewProvider {
                         "A": .wrongLetter,
                         "S": .wrongLetter,
                         "D": .wrongLetter,
-                    ], locale: "en"))
+                    ], locale: .en_US))
             }
         }.environmentObject(state)
     }

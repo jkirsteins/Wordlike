@@ -7,7 +7,7 @@ struct KeyboardHints {
     
     /// Locale is used to generate the alphabet, so 
     /// we can infer which are remaining usable chars.
-    let locale: String
+    let locale: GameLocale
 }
 
 struct EditableRow : View
@@ -73,7 +73,7 @@ struct EditableRow_ForPreview : View {
     
     let kh: KeyboardHints = KeyboardHints(hints: [
         "A": .rightPlace
-    ], locale: "en")
+    ], locale: .en_US)
     
     var body: some View {
         VStack {
@@ -98,7 +98,6 @@ struct EditableRow_ForPreview : View {
                 // it is going nil->any
                 //
                 // any->any resigns both
-                print("=== toggling ===")
                 if isActive == 0 {
                     isActive = 1
                     return

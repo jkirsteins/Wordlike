@@ -11,8 +11,8 @@ extension ActiveSheet: Identifiable {
 }
 
 extension GameHost where ValidatorImpl == WordValidator {
-    init(_ name: String) {
-        self.init(name, validator: WordValidator(name: name))
+    init(_ locale: GameLocale) {
+        self.init(locale, validator: WordValidator(locale: locale))
     }
 }
 
@@ -44,31 +44,31 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
     
     @State fileprivate var activeSheet: ActiveSheet? = nil
     
+    let locale: GameLocale
     let title: String
-    let locale: String
     
     /* Propogated via preferences from the underlying EditableRow. */
     @StateObject var toastMessageCenter = ToastMessageCenter()
     
-    init(_ name: String, validator: ValidatorImpl) {
+    init(_ locale: GameLocale, validator: ValidatorImpl) {
         self._validator = StateObject(
             wrappedValue: validator)
         
         self._stats = AppStorage(
             wrappedValue: Stats(), 
-            "stats.\(name)")
+            "stats.\(locale.fileBaseName)")
         
         self._dailyState = AppStorage(
             wrappedValue: nil, 
-            "turnState.\(name)")
+            "turnState.\(locale.fileBaseName)")
         
         // Showing help should not be dependent
         // on the name (unlike turn state and stats)
         self._shouldShowHelp = AppStorage(
             wrappedValue: true, "shouldShowHelp")
         
-        self.locale = name
-        title = name.localeDisplayName
+        self.locale = locale 
+        title = locale.localeDisplayName
     }
     
     /// Index of current turn (at time of invocation)
@@ -97,16 +97,14 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
     
     @ViewBuilder
     var keyboardView: some View {
-        if game.expected.locale == "lv" {
-            if type(of: validator) == SimplifiedLatvianWordValidator.self {
-                LatvianKeyboard_Simplified()
-            } else {
-                LatvianKeyboard()
-            }
-        }
-        else if game.expected.locale == "fr" {
-            FrenchKeyboard()
-        } else {
+        switch(locale) {
+            case .lv_LV(simplified: true):
+            LatvianKeyboard_Simplified()
+            case .lv_LV(simplified: false):
+            LatvianKeyboard()
+            case .fr_FR:
+            FrenchKeyboard() 
+            default:
             EnglishKeyboard()
         }
     }
@@ -124,8 +122,14 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
         nextWordIn = formatted
     }
     
-    // When to clear message toast
+    /// When to clear message toast
     @State var clearToastAt: Date? = nil
+    
+    /// When this changes, we want to become
+    /// first responder (e.g. on a tap anywhere in the
+    /// window)
+    @Environment(\.globalTapCount)
+    var globalTapCount: Binding<Int>
     
     @Environment(\.rootGeometry) var rootGeometry: GeometryProxy?
     
@@ -171,6 +175,7 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                 .border(debugViz ? .red : .clear)
             }
         }
+        .environment(\.gameLocale, locale)
     }
     
     /// This is called when a row was edited/submitted
@@ -266,27 +271,36 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
         VStack { 
             if let game = turnDataToDisplay {
                 ZStack {
+                    /// Allow input from keyboard
+                    /// on iPad and macOS
+                    ///
+                    /// Put behind other views to not
+                    /// obscure input (that can break
+                    /// context menus e.g.)
+                    if type(of: validator) == SimplifiedLatvianWordValidator.self {
+                        HardwareKeyboardInput<SimplifiedLatvianWordValidator>(
+                            focusRequests: globalTapCount)
+                            .border(debugViz ? .red : .clear)
+                    } else {
+                        HardwareKeyboardInput<WordValidator>(
+                            focusRequests: globalTapCount)
+                            .border(debugViz ? .red : .clear)
+                    }
+                    
                     GameBoard(state: game)
                     .onStateChange(
                         edited: turnStateChanged,
                         earlyCompleted: turnCompletedBeforeAnimations,
                         completed: turnCompletedAfterAnimations)
-                    
-                    /// Allow input from keyboard
-                    /// on iPad and macOS
-                    if type(of: validator) == SimplifiedLatvianWordValidator.self {
-                        HardwareKeyboardInput<SimplifiedLatvianWordValidator>()
-                            .border(debugViz ? .red : .clear)
-                    } else {
-                        HardwareKeyboardInput<WordValidator>()
-                            .border(debugViz ? .red : .clear)
-                    }
+                    .border(.purple, width: 2)
+                    .contentShape(Rectangle())
                 }
                 /// For the KeyboardInput view
                 .environmentObject(game)
                     
                 if debugViz {
                     Text(dailyState?.expected ?? "none")
+                    Text(verbatim: "Focus requests: \(globalTapCount.wrappedValue)")
                     Text(verbatim: "\(game.rows.count)")
                     Text(verbatim: "\(game.rows.map { $0.isSubmitted })")
                     Text(verbatim: "\(geometry?.size.width ?? 0)")
@@ -416,8 +430,9 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
 
 struct GameHostView_Previews: PreviewProvider {
     static var previews: some View {
-        GameHost("en")
-        GameHost("fr")
-        GameHost("lv")
+        GameHost(.en_US)
+        GameHost(.fr_FR)
+        GameHost(.lv_LV(simplified: true))
+        GameHost(.lv_LV(simplified: false))
     }
 }
