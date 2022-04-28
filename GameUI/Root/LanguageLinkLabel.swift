@@ -40,10 +40,10 @@ struct LanguageLinkLabel: View {
     init(_ locale: GameLocale, extraCaption: String?) {
         self.locale = locale
         self.extraCaption = extraCaption
-        self._dailyState = AppStorage("turnState.\(locale)", store: nil)
+        self._dailyState = AppStorage("turnState.\(locale.fileBaseName)", store: nil)
         self._stats = AppStorage(
             wrappedValue: Stats(), 
-            "stats.\(locale)")
+            "stats.\(locale.fileBaseName)")
     }
     
     var body: some View {
