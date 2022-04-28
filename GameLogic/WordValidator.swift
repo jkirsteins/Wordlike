@@ -213,11 +213,11 @@ class WordValidator : Validator, ObservableObject
     
     init(
         name: String, 
-        seed: Int = 14384982345
+        seed: Int? = nil 
     )
     {
         self.name = name
-        self.seed = seed
+        self.seed = seed ?? 14384982345
     }
 }
 

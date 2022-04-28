@@ -1,9 +1,9 @@
 import SwiftUI
 
 extension LinkToGame where ValidatorImpl == WordValidator {
-    init(locale: String, caption: String? = nil) {
+    init(locale: String, caption: String? = nil, seed: Int? = nil) {
         self.locale = locale 
-        self.validator = WordValidator(name: locale)
+        self.validator = WordValidator(name: locale, seed: seed)
         self.caption = caption
     }
 }
