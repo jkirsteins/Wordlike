@@ -15,13 +15,21 @@ extension GameState
         }
     }
     
-    public var shareSnippet: String {
+    public func shareSnippet(hard: Bool, additional: String?) -> String {
         
-        let tries: String
+        var tries: String
         if isWon {
             tries = "\(self.submittedRows)/6"
         } else {
             tries = "X/6"
+        }
+        
+        if hard {
+            tries = "\(tries)*"
+        }
+        
+        if let add = additional {
+            tries = "\(tries)\(add)"
         }
         
         let flag: String 
@@ -65,6 +73,8 @@ struct Internal_ShareSnippet_Test: View {
     let guesses: [String] 
     let day: Int
     let validator = WordValidator(locale: .en_US)
+    let hard: Bool 
+    let additional: String?
     
     var body: some View {
         let state = GameState(
@@ -77,7 +87,7 @@ struct Internal_ShareSnippet_Test: View {
             isTallied: false,
             date: Date() 
         )
-        return Text(state.shareSnippet)
+        return Text(state.shareSnippet(hard: hard, additional: additional))
     }
 }
 
@@ -92,7 +102,9 @@ struct Internal_ShareSnippet_Test_Previews: PreviewProvider {
                           "aboma",
                           "douma",
                           "momma"], 
-                day: 5)
+                day: 5,
+                hard: true,
+                additional: nil)
                 .border(.red)
             
             Internal_ShareSnippet_Test(
@@ -101,7 +113,9 @@ struct Internal_ShareSnippet_Test_Previews: PreviewProvider {
                           "toads",
                           "about",
                           "baton"], 
-                day: 2)
+                day: 2,
+                hard: false,
+                additional: "^")
                 .border(.red)
         }
     }
