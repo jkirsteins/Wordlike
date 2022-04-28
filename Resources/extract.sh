@@ -29,6 +29,7 @@ cat lv_wordlist_5.txt | grep -r '.*[asše]$' | \
 	grep -v -r '.*aš$' | \
 	grep -v -r '.*era$' | \
 	grep -v -r '.*eta$' | \
+	grep -v -r '.*ķa$' | \
 	egrep '^[[:lower:]]+$' \
 	> lv_A.tmp.txt
 

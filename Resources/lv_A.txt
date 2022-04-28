@@ -172,7 +172,6 @@ basks
 bauda
 bauma
 baķis
-baļķa
 bebra
 bebrs
 bedre
@@ -182,7 +181,6 @@ bende
 berza
 berze
 beļģa
-beņķa
 bieda
 bieds
 biete
@@ -207,14 +205,11 @@ blata
 blats
 blefa
 blefs
-bleķa
 bloka
 bloks
 blusa
-bluķa
 blāva
 blāvs
-blāķa
 blēde
 blēja
 blēža
@@ -250,7 +245,6 @@ bruģa
 bruņa
 brāga
 brāza
-brāķa
 brēca
 brēka
 brēks
@@ -426,7 +420,6 @@ dunka
 dunča
 duāla
 duāls
-duļķa
 duļķe
 dvaka
 dvaša
@@ -510,7 +503,6 @@ etapa
 etaps
 etila
 etils
-etiķa
 etāna
 etāns
 etīde
@@ -627,7 +619,6 @@ grafs
 grama
 grams
 grava
-graķa
 graša
 graža
 greba
@@ -640,7 +631,6 @@ grils
 grima
 grims
 gripa
-griķa
 groda
 grods
 groka
@@ -683,7 +673,6 @@ gurda
 gurds
 gurna
 gurns
-gurķa
 gārgs
 gārsa
 gārņa
@@ -789,7 +778,6 @@ jauša
 jaušs
 jašma
 jezga
-jeņķa
 jidiš
 jonis
 josla
@@ -862,8 +850,6 @@ kauns
 kausa
 kauss
 kaķis
-kaļķa
-kašķa
 klade
 klaja
 klajš
@@ -872,7 +858,6 @@ klans
 klape
 klase
 klaņa
-kleķa
 kliba
 klibs
 klija
@@ -881,7 +866,6 @@ klips
 kliķe
 klona
 klons
-kloķa
 kluba
 klubs
 klupa
@@ -927,7 +911,6 @@ kords
 koris
 korta
 korts
-korķa
 košie
 kraha
 krahs
@@ -937,7 +920,6 @@ krasa
 krass
 krata
 krava
-kraķa
 krepa
 kreps
 krese
@@ -952,7 +934,6 @@ krosa
 kross
 kroņa
 krusa
-kruķa
 krāca
 krāce
 krāga
@@ -968,7 +949,6 @@ krāsa
 krāva
 krēma
 krēms
-krēķa
 krīta
 krīts
 krīva
@@ -1010,7 +990,6 @@ kusla
 kusls
 kuģis
 kuņģa
-kušķa
 kušņa
 kvasa
 kvass
@@ -1080,7 +1059,6 @@ lauta
 lauva
 lauza
 lauča
-lauķa
 lazda
 leiša
 lekna
@@ -1097,7 +1075,6 @@ lenčs
 lepna
 lepns
 lepra
-leņķa
 lieca
 liece
 liega
@@ -1122,7 +1099,6 @@ liste
 litra
 litrs
 liāna
-lišķa
 lišķe
 locis
 lorda
@@ -1134,7 +1110,6 @@ luksa
 lukss
 lukta
 luste
-luņķa
 lācis
 lāgie
 lāsma
@@ -1248,7 +1223,6 @@ morgs
 moris
 morsa
 morss
-mošķa
 možie
 muita
 muiža
@@ -1263,7 +1237,6 @@ murda
 murds
 murga
 murgs
-muļķa
 muļķe
 mārka
 mārks
@@ -1273,7 +1246,6 @@ mērca
 mērce
 mēris
 mērks
-mērķa
 mēsla
 mēsls
 mētra
@@ -1299,7 +1271,6 @@ nasks
 nasta
 nauda
 nazis
-našķa
 neada
 neara
 nears
@@ -1451,7 +1422,6 @@ parka
 parks
 parta
 parts
-parķa
 pasta
 pasts
 patēš
@@ -1516,11 +1486,9 @@ pleca
 plecs
 pleda
 pleds
-pleķa
 plika
 pliks
 pliča
-pliķa
 plosa
 plova
 plovs
@@ -1589,9 +1557,6 @@ purvs
 putna
 putns
 putra
-puļķa
-puņķa
-pušķa
 pālie
 pālis
 pāris
@@ -1677,7 +1642,6 @@ riska
 risks
 ritma
 ritms
-riņķa
 romba
 rombs
 ronis
@@ -1744,7 +1708,6 @@ sargs
 sarka
 sarks
 sarma
-sarķa
 sarķe
 sarža
 saržs
@@ -1838,7 +1801,6 @@ skuja
 skuma
 skums
 skuva
-skuķa
 skuķe
 skvoš
 skāba
@@ -1899,14 +1861,12 @@ smēla
 smēra
 smēre
 smērs
-smēķa
 smīna
 smīns
 sniga
 snigs
 snoba
 snobs
-snuķa
 solis
 sopka
 soģis
@@ -1915,7 +1875,6 @@ spals
 spara
 spars
 spers
-speķa
 spice
 spina
 spins
@@ -1953,13 +1912,11 @@ stepe
 steps
 stera
 sters
-steķa
 stiba
 stiga
 stigs
 stila
 stils
-stiķa
 stopa
 stops
 store
@@ -1984,7 +1941,6 @@ suits
 summa
 susla
 suķis
-sušķa
 svara
 svars
 svece
@@ -2275,7 +2231,6 @@ verba
 verbs
 verga
 vergs
-verķa
 veste
 veģis
 vieba
@@ -2309,7 +2264,6 @@ vista
 vists
 vizla
 vizma
-viļķa
 viļņa
 vižņa
 vobla
@@ -2346,7 +2300,6 @@ vēzis
 vīsta
 vītne
 vīķis
-vīšķa
 yōais
 zagle
 zaiga
@@ -2360,12 +2313,10 @@ zaura
 zaurs
 zaķis
 zaļie
-zaņķa
 zebra
 zelta
 zelts
 zemie
-zeņķa
 zieda
 ziede
 zieds
@@ -2480,7 +2431,6 @@ zāģis
 īgnie
 īguma
 īgums
-īkšķa
 īlena
 īlens
 īpaša
@@ -2496,7 +2446,6 @@ zāģis
 īsums
 īsāka
 īsāks
-ķauķa
 ķekša
 ķelle
 ķelta
@@ -2511,7 +2460,6 @@ zāģis
 ķirpa
 ķirša
 ķocis
-ķurķa
 ķēkša
 ķērca
 ķērks
