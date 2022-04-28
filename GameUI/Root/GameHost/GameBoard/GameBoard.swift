@@ -9,9 +9,11 @@ struct GameBoard: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State var isActive: Int = 0
-    @ObservedObject var state: GameState
     
-    let canBeAutoActivated: Bool 
+    // Controls if we call the complete callback
+    @State var didRespond = false
+    
+    @ObservedObject var state: GameState
     
     func allSubmitted(until row: Int) -> Bool {
         if row == 0 {
@@ -37,7 +39,6 @@ struct GameBoard: View {
         // Both turn and animations have completed. This 
         // has a delay relative to earlyCompleted:
         completed: @escaping (GameState)->()) -> some View {
-            var didRespond = false
             return self.onChange(of: self.state.rows) {
                 newRows in 
                 
@@ -45,8 +46,10 @@ struct GameBoard: View {
                     edited(newRows)
                 }
                 
-                guard state.isCompleted, !didRespond else { 
-                    return }
+                guard state.isCompleted, !didRespond else 
+                { 
+                    return 
+                }
                 didRespond = true
                 
                 DispatchQueue.main.async {
@@ -87,6 +90,9 @@ struct GameBoard: View {
     @Environment(\.verticalSizeClass) 
     var verticalSizeClass
     
+    @Environment(\.debug)
+    var debug: Bool
+    
     /// If we have a small view, then spacing should be reduced
     /// (e.g. horizontal compact)
     var vspacing: CGFloat {
@@ -110,6 +116,12 @@ struct GameBoard: View {
                         isActive: $isActive,
                         keyboardHints: state.keyboardHints )
             }
+            
+            if (debug) {
+                Text(verbatim: "Did respond: \(didRespond)")
+                Text(verbatim: "Is completed: \(state.isCompleted)")
+                Text(verbatim: "Active: \(isActive)")
+            }
         }
         .onChange(of: state.id) {
             _ in
@@ -117,17 +129,14 @@ struct GameBoard: View {
              e.g. stats sheet on top (in which case
              we don't want to pop up the keyboard)
              */
-            if canBeAutoActivated {
-                recalculateActive()
-            }
+            recalculateActive()
+//            didRespond = false
         }
         .onTapGesture {
             recalculateActive()
         }
         .onAppear {
-            if canBeAutoActivated {
-                recalculateActive()
-            }
+            recalculateActive()
         }
     }
 }
@@ -138,7 +147,7 @@ fileprivate struct InternalPreview: View
     
     var body: some View {
         VStack {
-            GameBoard(state: state, canBeAutoActivated: false)
+            GameBoard(state: state)
             Button("Reset") {
                 self.state =     GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: "en", validator: WordValidator(name: "en")))
             }

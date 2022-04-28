@@ -136,7 +136,7 @@ struct Internal_InputCaptureView_Preview : View {
         VStack {
             HardwareKeyboardInput<WordValidator>()
                 .border(.red)
-            GameBoard(state: game, canBeAutoActivated: false)
+            GameBoard(state: game)
         }
         .environmentObject(game)
         .environmentObject(validator)

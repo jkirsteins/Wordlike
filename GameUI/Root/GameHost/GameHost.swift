@@ -29,8 +29,6 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
     @AppStorage 
     var shouldShowHelp: Bool
     
-    @State var finished = false
-    
     @State var timer = Timer.publish(
         every: 1, 
         on: .main, 
@@ -196,7 +194,7 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
         
         stats = stats.update(from: game, with: turnCounter)
         
-        finished = true
+        activeSheet = .stats
     }
     
     /// This is called when a turn is finished. It is called
@@ -268,8 +266,7 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
         VStack { 
             if let game = turnDataToDisplay {
                 ZStack {
-                    GameBoard(state: game,
-                              canBeAutoActivated: !finished && !shouldShowHelp)
+                    GameBoard(state: game)
                     .onStateChange(
                         edited: turnStateChanged,
                         earlyCompleted: turnCompletedBeforeAnimations,
@@ -290,6 +287,8 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                     
                 if debugViz {
                     Text(dailyState?.expected ?? "none")
+                    Text(verbatim: "\(game.rows.count)")
+                    Text(verbatim: "\(game.rows.map { $0.isSubmitted })")
                     Text(verbatim: "\(geometry?.size.width ?? 0)")
                 }
                 
@@ -379,12 +378,6 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                 case .settings:
                     SettingsView()
                 }    
-            }
-        }
-        .onChange(of: finished) {
-            newF in 
-            if (newF && activeSheet == nil) {
-                activeSheet = .stats
             }
         }
         .navigationTitle(title)
