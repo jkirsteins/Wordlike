@@ -292,7 +292,6 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                         edited: turnStateChanged,
                         earlyCompleted: turnCompletedBeforeAnimations,
                         completed: turnCompletedAfterAnimations)
-                    .border(.purple, width: 2)
                     .contentShape(Rectangle())
                 }
                 /// For the KeyboardInput view
