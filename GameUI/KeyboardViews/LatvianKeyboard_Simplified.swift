@@ -122,14 +122,24 @@ struct LatvianKeyboard_Simplified: View {
             return letter
         }
         
+        if hints.hints[complement] == .wrongPlace {
+            return complement
+        }
+        
+        if hints.hints[letter] == .wrongPlace {
+            return letter
+        }
+        
+        // return the 'unknown' complement if the
+        // other is known bad
         if hints.hints[letter] == .wrongLetter && hints.hints[complement] == nil {
             return complement
         }
         
-        if (hints.hints[complement] == .rightPlace || 
-            hints.hints[complement] == .wrongPlace) && hints.hints[letter] == nil {
-            return complement
-        }  
+        // This can happen if we use the hardware keyboard
+        if hints.hints[complement] == .wrongLetter && hints.hints[letter] == nil {
+            return letter
+        }
         
         return letter
     }
@@ -363,10 +373,54 @@ struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent: View
     }
 }
 
+struct LatvianKeyboard_SimplifiedTest_testCollapsing_onlyComplementKnown: View
+{
+    static let expected = "gārgs"
+    
+    let state = GameState(
+        initialized: true, 
+        expected: TurnAnswer(
+            word: Self.expected, day: 1, locale: "lv", validator: SimplifiedLatvianWordValidator()),
+        rows: [
+            RowModel(
+                word: "trūka", 
+                expected: Self.expected, 
+                isSubmitted: true, 
+                attemptCount: 0),
+            RowModel(
+                word: "vērās", 
+                expected: Self.expected, 
+                isSubmitted: true, 
+                attemptCount: 0),
+        ], isTallied: true, date: Date())
+    
+    var body: some View {
+        GeometryReader { gr in
+            VStack {
+                Text("Regression test").font(.title)
+                Divider()
+                
+                Text("A should be yellow.")
+                Text("A should display letter Ā.")
+                Divider()
+                
+                ForEach(state.rows) {
+                    Row(delayRowIx: 0, model: $0)
+                }
+                LatvianKeyboard_Simplified()
+                    .environmentObject(state)
+                    .environment(\.keyboardHints, state.keyboardHints)
+                    .environment(\.rootGeometry, gr)
+            }
+        }.padding()
+    }
+}
+
 struct LatvianKeyboard_SimplifiedTest_Previews: PreviewProvider {
     static var previews: some View {
         LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementUnknown()
         LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementGood()
         LatvianKeyboard_SimplifiedTest_bothComplementsPresent()
+        LatvianKeyboard_SimplifiedTest_testCollapsing_onlyComplementKnown()
     }
 }
