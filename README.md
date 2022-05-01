@@ -24,4 +24,4 @@ Then open Playgrounds, and the application should be available.
 ## Credits
 
 - English/British translations taken from <git@github.com:hyperreality/American-British-English-Translator.git>
-
+- Latvian word list preparation relied on word analysis from <https://github.com/PeterisP/LVTagger.git> 
