@@ -57,6 +57,10 @@ class SimplifiedLatvianWordValidator : WordValidator
         super.accepts(word, as: expected)
     }
     
+    override func answer(at turnIndex: Int) -> String {
+        "knašs"
+    }
+    
     override func canSubmit(
         word: String, 
         expected: String,
@@ -84,10 +88,11 @@ class SimplifiedLatvianWordValidator : WordValidator
             let simplifiedSubmit = simplify(word.uppercased())
             
             // 
-            let knownBad: [String]
+            let knownBadCandidates: [String]
+            let knownNonBad: [String]
             let noSubstitutePattern: [String]
             if let model = model {
-                knownBad = model.flatMap { row -> [String] in
+                knownBadCandidates = model.flatMap { row -> [String] in
                     (0..<row.wordArray.count).map { ix->String? in
                         if let rs = row.revealState(ix), rs == .wrongLetter {
                             return row.char(guessAt: ix)
@@ -96,6 +101,16 @@ class SimplifiedLatvianWordValidator : WordValidator
                         }
                     }.filter { $0 != nil }.map { $0! }
                 }
+                
+                knownNonBad = model.flatMap { row -> [String] in
+                    (0..<row.wordArray.count).map { ix->String? in
+                        if let rs = row.revealState(ix), rs != .wrongLetter {
+                            return row.char(guessAt: ix)
+                        } else {
+                            return nil
+                        }
+                    }.filter { $0 != nil }.map { $0! }
+                } 
                 
                 let wordArray = Array(word)
                 noSubstitutePattern = (0..<word.count).map { rowIx in
@@ -114,21 +129,30 @@ class SimplifiedLatvianWordValidator : WordValidator
                     return "*"
                 }
             } else {
-                knownBad = []
+                knownBadCandidates = []
+                knownNonBad = []
                 noSubstitutePattern = (0..<word.count).map({ _ in "*" })
             }
+            
+            let knownBad = knownBadCandidates.filter { !knownNonBad.contains($0) }
             
             let patternArray = Array(noSubstitutePattern)
             
             let candidates = guesses.filter {
                 // Simplified match
                 guard simplify($0) == simplifiedSubmit else { 
+                    if $0.folding(options: .caseInsensitive, locale: lv) == "krams" {
+                        print("doesnt match simplified")
+                    }
                     return false 
                 }
                 
                 // Reject if any known-bad letters are present in the match
                 for l in knownBad {
                     if $0.contains(l) {
+                        if $0.folding(options: .caseInsensitive, locale: lv) == "krams" {
+                            print("known bad", l, knownBad)
+                        }
                         return false 
                     }
                 }
@@ -140,6 +164,9 @@ class SimplifiedLatvianWordValidator : WordValidator
                     let candidateChar = String(Array($0)[ix]).folding(options: .caseInsensitive, locale: lv)
                     
                     guard candidateChar == char else {
+                        if $0.folding(options: .caseInsensitive, locale: lv) == "krams" {
+                            print("cand char failed")
+                        }
                         return false 
                     }
                 }
@@ -152,7 +179,11 @@ class SimplifiedLatvianWordValidator : WordValidator
             guard candidates.count > 0, let candidateResult = candidates.max(by: {
                 $0.1 < $1.1 || $0.2 < $0.2 
             }).map({ $0.0 }) else {
-                reason = "Not in word list"
+                if word.folding(options: .caseInsensitive, locale: lv) == "krams" {
+                    reason = "Weird"
+                } else {
+                    reason = "Not in word list"
+                }
                 return nil
             } 
             
@@ -209,6 +240,34 @@ struct Internal_LatvianWordValidator_TestView: View {
     var body_in: some View {
         if let submittable = submittable {
             Text(submittable).foregroundColor(submittable == okTestResult ? .green : .red)
+        } else {
+            Text("Can't submit: \(reason ?? "unknown reason")").foregroundColor(.red)
+        }
+    }
+}
+
+struct Internal_LatvianWordValidator_TestView_regression: View {
+    let validator = SimplifiedLatvianWordValidator()
+    
+    let answer: String = "KNAŠS"
+    
+    @State var reason: String? = nil
+    
+    @State var submittable: String? = nil
+    
+    var body: some View {
+        body_in.onAppear {
+            submittable = validator.canSubmit(word: "klans", expected: answer, model: [
+                RowModel(word: "kņada", expected: answer, isSubmitted: true),
+                RowModel(word: "krāms", expected: answer, isSubmitted: true),
+            ], mustMatchKnown: false, reason: &reason)
+        }
+    }
+    
+    @ViewBuilder
+    var body_in: some View {
+        if let submittable = submittable {
+            Text(submittable).foregroundColor(.green)
         } else {
             Text("Can't submit: \(reason ?? "unknown reason")").foregroundColor(.red)
         }
@@ -318,6 +377,11 @@ struct Internal_LatvianWordValidator_TestPreviews: PreviewProvider {
         VStack {
             Text("We should not allow substituting a letter we know are wrong (e.g. if a word matches against L in 2nd spot, but L is known bad)")
             Internal_LatvianWordValidator_TestView_badSubstitution()
+        }
+        
+        VStack {
+            Text("Regression test")
+            Internal_LatvianWordValidator_TestView_regression()
         }
     }
 }

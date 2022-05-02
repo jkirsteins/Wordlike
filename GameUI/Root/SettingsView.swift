@@ -27,7 +27,7 @@ struct SettingsView: View {
         attachments: [])
     
     static let HIGH_CONTRAST_KEY = "cfg.isHighContrast"
-    static let HARD_MODE_LATVIAN_KEY = "cfg.isHardModeLatvian"
+    static let SIMPLIFIED_LATVIAN_KEYBOARD_KEY = "cfg.isSimplifiedLatvianKeyboard"
     static let HARD_MODE_KEY = "cfg.isHardMode"
     
     @Environment(\.debug) var debug: Bool
@@ -37,8 +37,8 @@ struct SettingsView: View {
     @AppStorage(SettingsView.HIGH_CONTRAST_KEY) 
     var isHighContrast: Bool = false
     
-    @AppStorage(SettingsView.HARD_MODE_LATVIAN_KEY)
-    var isHardMode_Latvian: Bool = false
+    @AppStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
+    var isSimplifiedLatvianKeyboard: Bool = false
     
     @AppStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
@@ -67,7 +67,7 @@ struct SettingsView: View {
                         Toggle(isOn: $isHighContrast) {
                             VStack(alignment: .leading) {
                                 Text("High contrast mode")
-                                Text("For improved color vision")
+                                Text("For improved color vision.")
                                     .font(.caption)
                             }
                         }
@@ -84,10 +84,10 @@ struct SettingsView: View {
                             }
                         }
                         
-                        Toggle(isOn: $isHardMode_Latvian) {
+                        Toggle(isOn: $isSimplifiedLatvianKeyboard) {
                             VStack(alignment: .leading) {
-                                Text("Hard mode (Latvian)")
-                                Text("Require precise use of diacritics.")
+                                Text("Simplified Latvian keyboard")
+                                Text("Do not require precise use of diacritics.")
                                     .font(.caption)
                             }
                         }

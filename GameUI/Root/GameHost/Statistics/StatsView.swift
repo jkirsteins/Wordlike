@@ -44,10 +44,6 @@ struct StatsView: View {
     // TODO: duplicated with GameHostView
     @State var nextWordIn: String = "..."
     
-    // For share snippet preparation
-    @AppStorage(SettingsView.HARD_MODE_LATVIAN_KEY)
-    var isHardMode_Latvian: Bool = false
-    
     @AppStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
     
@@ -184,8 +180,8 @@ struct StatsView: View {
                     recalculateNextWord()
                     self.shareItems = [
                         self.state.shareSnippet(
-                        hard: self.isHardMode, 
-                        additional: self.isHardMode_Latvian ? "*" : nil)
+                        hard: self.isHardMode,
+                        additional: nil)
                     ]
                 }
                 .onReceive(timer) {

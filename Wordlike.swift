@@ -116,8 +116,8 @@ struct Wordlike: App {
     @State 
     fileprivate var activeSheet: ActiveSheet? = nil
     
-    @AppStorage(SettingsView.HARD_MODE_LATVIAN_KEY)
-    var isHardMode_Latvian: Bool = false
+    @AppStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
+    var isSimplifiedLatvianKeyboard: Bool = false
     
     @AppStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
@@ -142,7 +142,7 @@ struct Wordlike: App {
                             locale: .fr_FR,
                             caption: isHardMode ? "Hard mode." : nil)
                         
-                        if isHardMode_Latvian {
+                        if !isSimplifiedLatvianKeyboard {
                             LinkToGame(
                                 locale: .lv_LV(simplified: false),
                                 caption: "\(isHardMode ? "Hard mode. " : "")Extended keyboard.")
