@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Represents a 1-tile:n-characters mapping (e.g. if we 
 /// want to allow a tile to match either S or Š etc.)
-struct MultiCharacterModel : Equatable, CustomDebugStringConvertible {
+struct MultiCharacterModel : Codable, Equatable, CustomDebugStringConvertible {
     let values: Set<CharacterModel>
     
     init(values: Set<CharacterModel>) {

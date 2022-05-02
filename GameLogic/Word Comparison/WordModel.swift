@@ -1,12 +1,40 @@
 import SwiftUI
 
-struct WordModel : Equatable, CustomDebugStringConvertible {
+struct WordModel : Codable, Equatable, CustomDebugStringConvertible {
+    enum CodingKeys: String, CodingKey {
+        case word 
+    }
+    
     let word: [MultiCharacterModel]
     
     init(_ word: String, locale: Locale) {
         self.word = word.map {
             MultiCharacterModel($0, locale: locale)
         }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.word, forKey: .word)
+    }
+    
+    init(from decoder: Decoder) throws {
+        
+        do {
+            // compatibility fallback for encoded Strings
+            // assumes current locale
+            let decodedString = try decoder.singleValueContainer().decode(String.self)
+            let locale = Locale.current
+            self.word = decodedString.map {
+                MultiCharacterModel($0, locale: locale)
+            }
+        } catch {
+            // properly encoded path
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            self.word = try values.decode([MultiCharacterModel].self.self, forKey: .word)
+        }
+        
+        
     }
     
     init(characters: [MultiCharacterModel]) {
@@ -28,8 +56,8 @@ struct InternalWordModelTests: View {
     
     struct Comparison: View {
         let desc: String 
-        let left: WordModel
-        let right: WordModel
+        let left: WordModel?
+        let right: WordModel?
         let shouldMatch: Bool
         
         var body: some View {
@@ -38,16 +66,37 @@ struct InternalWordModelTests: View {
             
             return VStack(alignment: .leading) {
                 Text("Comparison: \(desc)")
-                Text("\(left.debugDescription) \(match ? "==" : "!=") \(right.debugDescription)").foregroundColor(good ? .green : .red)
+                Text(verbatim: "\(left?.debugDescription) \(match ? "==" : "!=") \(right?.debugDescription)").foregroundColor(good ? .green : .red)
             }.border(.gray)
         }
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        let encoder = JSONEncoder()
+        let decoder = JSONDecoder()
+        let codeTest = WordModel("coder", locale: lvLV)
+        
+        let encoded = try! encoder.encode(codeTest)
+        let decoded = try? decoder.decode(WordModel.self, from: encoded)
+        
+        let encodedString = try! encoder.encode("coder")
+        let decodedFromString = try? decoder.decode(WordModel.self, from: encodedString)
+        
+        
+        return VStack(alignment: .leading, spacing: 8) {
             Text("Regular character tests").font(.largeTitle)
             
             Group {
+                Comparison(
+                    desc: "Codable (from/to WordModel)", 
+                    left: codeTest, 
+                    right: decoded, 
+                    shouldMatch: true)
+                Comparison(
+                    desc: "Codable (from String)", 
+                    left: codeTest, 
+                    right: decodedFromString, 
+                    shouldMatch: true)
                 Comparison(
                     desc: "Case-insensitive match", 
                     left: WordModel("acorn", locale: enUS), 

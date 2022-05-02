@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Represents a 1:1 case-insensitive mapping
 /// to a character in a language.
-struct CharacterModel : Equatable, Hashable, CustomDebugStringConvertible {
+struct CharacterModel : Codable, Equatable, Hashable, CustomDebugStringConvertible {
     let value: String
     let locale: Locale 
     
