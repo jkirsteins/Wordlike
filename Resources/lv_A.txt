@@ -1,4 +1,3 @@
-Maksi
 abaka
 abaks
 abate
@@ -10,6 +9,7 @@ adata
 aerēt
 afiša
 afēra
+agara
 agars
 agave
 agone
