@@ -23,6 +23,7 @@ protocol Validator {
         word: String, 
         expected: String,
         model: [RowModel]?,
+        mustMatchKnown: Bool,    // e.g. hard mode
         reason: inout String?) -> String?
 }
 
@@ -44,6 +45,7 @@ class DummyValidator: Validator, ObservableObject {
         word: String, 
         expected: String,
         model: [RowModel]?,
+        mustMatchKnown: Bool,    // e.g. hard mode
         reason: inout String?) -> String? {
             fatalError()
         }
@@ -134,6 +136,7 @@ class WordValidator : Validator, ObservableObject
         word: String, 
         expected: String,
         model: [RowModel]?,
+        mustMatchKnown: Bool,    // e.g. hard mode
         reason: inout String?) -> String? {
             /* To avoid accidentally breaking input files,
              do some checks centrally (e.g. we can check length
@@ -144,7 +147,7 @@ class WordValidator : Validator, ObservableObject
                 return nil
             }
             
-            guard validateRequirements(
+            guard !mustMatchKnown || validateRequirements(
                 word: word, 
                 model: model, 
                 reason: &reason) else {

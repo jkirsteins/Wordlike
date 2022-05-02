@@ -75,8 +75,8 @@ extension GameState {
         guard let submittedWord = validator.canSubmit(
             word: current.word,
             expected: current.expected,
-            model: 
-                (hardMode ? self.rows : nil),
+            model: self.rows,
+            mustMatchKnown: hardMode,
             reason: &message) else {
                 let updatedRow = RowModel(
                     word: current.word,
