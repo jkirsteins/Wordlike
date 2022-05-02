@@ -17,24 +17,28 @@ struct LanguageLinkLabel: View {
     let extraCaption: String?
     
     var caption: (String, Color)? {
-        guard let dailyState = dailyState, turnCounter.isFresh(dailyState.date, at: Date()) else {
+        guard 
+            let dailyState = dailyState,
+            turnCounter.isFresh(dailyState.date, at: Date()),
+            dailyState.state != .notStarted
+        else {
             return ("Not started", Color.primary) 
         }
         
-        let countSubmitted = dailyState.rows.filter({ $0.isSubmitted }).count
-        
-        if nil  != dailyState.rows.first(where: {
-            row in 
-            row.isSubmitted && row.wordArray == Array(dailyState.expected)
-        }) {
+        if case .finished(_, isWon: true) = dailyState.state
+        {
             return ("Completed", palette.rightPlaceFill)
         }
         
-        if countSubmitted >= GameState.MAX_ROWS {
+        if case .finished(_, isWon: false) = dailyState.state {
             return ("Unsuccessful", Color.secondary)
         }
         
-        return ("In progress", palette.wrongPlaceFill)
+        if case .inProgress = dailyState.state {
+            return ("In progress", palette.wrongPlaceFill)
+        }
+        
+        return nil
     }
     
     init(_ locale: GameLocale, extraCaption: String?) {

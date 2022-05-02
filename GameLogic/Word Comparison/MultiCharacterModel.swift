@@ -3,29 +3,64 @@ import SwiftUI
 /// Represents a 1-tile:n-characters mapping (e.g. if we 
 /// want to allow a tile to match either S or Š etc.)
 struct MultiCharacterModel : Codable, Equatable, CustomDebugStringConvertible {
-    let values: Set<CharacterModel>
+    /// There is no OrderedSet natively, so
+    /// store the values in an array.
+    ///
+    /// Create a set on-the-fly when calculating 
+    /// intersection.
+    let values: Array<CharacterModel>
     
-    init(values: Set<CharacterModel>) {
+    static func single(_ letter: String, locale: Locale) -> MultiCharacterModel {
+        MultiCharacterModel(CharacterModel(
+            value: letter, locale: locale))
+    }
+    
+    static let empty = MultiCharacterModel(
+        "", 
+        locale: .en_US)
+    
+    init(values: Array<CharacterModel>) {
+        guard values.count > 0, let firstLocale = values.first?.locale, values.allSatisfy({ $0.locale == firstLocale }) else {
+            fatalError("All characters must have the same locale")
+        }
         self.values = values
     }
     
+    init(_ value: CharacterModel) {
+        self.values = [ value ]
+    }
+    
     init(_ value: Character, locale: Locale) {
-        self.values = Set([ CharacterModel(value: value, locale: locale) ])
+        self.values = [ CharacterModel(value: value, locale: locale) ]
     }
     
     init(_ values: String, locale: Locale) {
-        self.values = Set(Array(values).map {
+        self.values = Array(values).map {
             CharacterModel(value: $0, locale: locale)
-        })
+        }
     }
     
     static func == (lhs: MultiCharacterModel, rhs: MultiCharacterModel) -> Bool {
-        false == lhs.values.intersection(rhs.values).isEmpty
+        false == Set(lhs.values).intersection(Set(rhs.values)).isEmpty
+    }
+    
+    var locale: Locale {
+        guard 
+            let firstLocale = self.values.first?.locale,
+            self.values.allSatisfy({ $0.locale == firstLocale }) else {
+                fatalError("All locales must be the same")
+            } 
+        
+        return firstLocale
     }
     
     var debugDescription: String {
         let inner = self.values.map({ $0.debugDescription }).joined(separator: "|")
         return "[\(inner)]"
+    }
+    
+    var displayValue: String {
+        self.values.first?.value ?? ""
     }
 }
 
@@ -45,15 +80,15 @@ struct InternalMultiCharacterModelTests: View {
             let leftValues = left.map {CharacterModel(value: $0, locale: localeLeft)}
             let rightValues = right.map {CharacterModel(value: $0, locale: localeRight)}
             
-            let leftM = MultiCharacterModel(values: Set(leftValues))
-            let rightM = MultiCharacterModel(values: Set(rightValues))
+            let leftM = MultiCharacterModel(values: leftValues)
+            let rightM = MultiCharacterModel(values: rightValues)
             
             let match = leftM == rightM
             let good = (shouldMatch && match) || (!shouldMatch && !match) 
             
             return VStack(alignment: .leading) {
                 Text("Comparison: \(desc)")
-                Text(verbatim: "\(leftM.values.intersection(rightM.values))")
+                Text(verbatim: "\(Set(leftM.values).intersection(Set(rightM.values)))")
                 Text("\(leftM.debugDescription) \(match ? "==" : "!=") \(rightM.debugDescription )").foregroundColor(good ? .green : .red)
             }.border(.gray)
         }
@@ -85,6 +120,18 @@ struct InternalMultiCharacterModelTests: View {
                     desc: "Init with a String", 
                     left: MultiCharacterModel("AĀ", locale: lvLV).debugDescription, 
                     right: "[A[lv_LV]{a}|Ā[lv_LV]{ā}]", 
+                    shouldMatch: true)
+                
+                TextComparison(
+                    desc: ".displayValue should be the first", 
+                    left: MultiCharacterModel("SŠ", locale: lvLV).displayValue, 
+                    right: "S", 
+                    shouldMatch: true)
+                
+                TextComparison(
+                    desc: "Order should be deterministic", 
+                    left: MultiCharacterModel("ABCD", locale: lvLV).debugDescription, 
+                    right: "[A[lv_LV]{a}|B[lv_LV]{b}|C[lv_LV]{c}|D[lv_LV]{d}]", 
                     shouldMatch: true)
             }
             

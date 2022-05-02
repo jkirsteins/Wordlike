@@ -31,8 +31,7 @@ class GameState : ObservableObject, Identifiable, Equatable
     
     var isWon: Bool {
         rows.first(where: {
-            $0.isSubmitted && expected.validator.accepts(
-                $0.word, as: expected.word) 
+            $0.isSubmitted && $0.word == expected.word 
         }) != nil
     }
     
@@ -57,7 +56,7 @@ class GameState : ObservableObject, Identifiable, Equatable
         self.init(
             initialized: false, 
             expected: TurnAnswer(
-                word: "", 
+                word: WordModel("", locale: .current), 
                 day: 0, 
                 locale: .unknown, 
                 validator: DummyValidator()),
@@ -68,7 +67,7 @@ class GameState : ObservableObject, Identifiable, Equatable
     
     convenience init(expected: TurnAnswer) {
         let rowModels = (0..<Self.MAX_ROWS).map { _ in 
-            RowModel(word: "", expected: expected.word, isSubmitted: false)
+            RowModel(word: WordModel(), expected: expected.word, isSubmitted: false)
         }
         self.init(initialized: true, expected: expected, rows: rowModels, isTallied: false, date: Date())
     }

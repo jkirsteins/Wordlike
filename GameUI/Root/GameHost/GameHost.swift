@@ -87,6 +87,8 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
         game.id = UUID()
         game.initialized = true
         game.date = newState.date
+        
+        self.keyboardHints = safeComputeKeyboardHints()
     }
     
     // Timer sets this to hh:mm:ss until next word
@@ -98,13 +100,13 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
     @ViewBuilder
     var keyboardView: some View {
         switch(locale) {
-            case .lv_LV(simplified: true):
+        case .lv_LV(simplified: true):
             LatvianKeyboard_Simplified()
-            case .lv_LV(simplified: false):
+        case .lv_LV(simplified: false):
             LatvianKeyboard()
-            case .fr_FR:
+        case .fr_FR:
             FrenchKeyboard() 
-            default:
+        default:
             EnglishKeyboard()
         }
     }
@@ -180,11 +182,19 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
     
     /// This is called when a row was edited/submitted
     func turnStateChanged(_ newRows: [RowModel]) {
+        let newState: DailyState.State
+        switch (dailyState!.state) {
+        case .unknown, .notStarted:
+            newState = .inProgress
+        default:
+            newState = dailyState?.state ?? .inProgress
+        }
+        
         self.dailyState = DailyState(
             expected: dailyState!.expected,
             date: dailyState!.date,
             rows: newRows,
-            isTallied: dailyState!.isTallied)
+            state: newState)
     }
     
     /// This is called after the turn is finished, and after
@@ -194,7 +204,14 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
     /// finished turn.
     func turnCompletedAfterAnimations(_ state: GameState) {
         if let dailyState = self.dailyState {
-            self.dailyState = DailyState(expected: dailyState.expected, date: dailyState.date, rows: dailyState.rows, isTallied: true)
+            self.dailyState = DailyState(
+                expected: dailyState.expected, 
+                date: dailyState.date, 
+                rows: dailyState.rows, 
+                state: .finished(
+                    isTallied: true, 
+                    isWon: state.isWon)
+            )
         }
         
         stats = stats.update(from: game, with: turnCounter)
@@ -219,7 +236,7 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                 
                 if !newState.isWon {
                     // When losing, show the word
-                    toastMessageCenter.set(dailyState.expected)
+                    toastMessageCenter.set(dailyState.expected.displayValue)
                 } else {
                     // When winning, show a flavor message
                     let message: String?
@@ -253,16 +270,22 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
         return nil 
     }
     
+    @State var keyboardHints = KeyboardHints()
+    
     /// If we haven't set the right validator in GameState,
     /// we should not attempt to calculate KeyboardHints yet
-    var safeComputeKeyboardHints: KeyboardHints {
+    func safeComputeKeyboardHints() -> KeyboardHints {
         guard let safeGame = turnDataToDisplay else {
-            return KeyboardHints(hints: [:], locale: game.expected.locale)
+            return KeyboardHints(
+                hints:
+                    Dictionary<CharacterModel, TileBackgroundType>(), 
+                locale: game.expected.locale)
         }
         
         guard type(of: safeGame.expected.validator) != DummyValidator.self else {
             fatalError("Do not use GameState before a proper validator is assigned")
         }
+        
         return safeGame.keyboardHints
     }
     
@@ -277,28 +300,22 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                     /// Put behind other views to not
                     /// obscure input (that can break
                     /// context menus e.g.)
-                    if type(of: validator) == SimplifiedLatvianWordValidator.self {
-                        HardwareKeyboardInput<SimplifiedLatvianWordValidator>(
-                            focusRequests: globalTapCount)
-                            .border(debugViz ? .red : .clear)
-                    } else {
-                        HardwareKeyboardInput<WordValidator>(
-                            focusRequests: globalTapCount)
-                            .border(debugViz ? .red : .clear)
-                    }
+                    HardwareKeyboardInput<WordValidator>(
+                        focusRequests: globalTapCount)
+                        .border(debugViz ? .red : .clear)
                     
                     GameBoard(state: game)
-                    .onStateChange(
-                        edited: turnStateChanged,
-                        earlyCompleted: turnCompletedBeforeAnimations,
-                        completed: turnCompletedAfterAnimations)
-                    .contentShape(Rectangle())
+                        .onStateChange(
+                            edited: turnStateChanged,
+                            earlyCompleted: turnCompletedBeforeAnimations,
+                            completed: turnCompletedAfterAnimations)
+                        .contentShape(Rectangle())
                 }
                 /// For the KeyboardInput view
                 .environmentObject(game)
-                    
+                
                 if debugViz {
-                    Text(dailyState?.expected ?? "none")
+                    Text(dailyState?.expected.displayValue ?? "none")
                     Text(verbatim: "Focus requests: \(globalTapCount.wrappedValue)")
                     Text(verbatim: "\(game.rows.count)")
                     Text(verbatim: "\(game.rows.map { $0.isSubmitted })")
@@ -327,8 +344,7 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
         .border(debugViz ? .yellow : .clear)
         .environmentObject(toastMessageCenter)
         .environment(
-            \.keyboardHints, 
-             self.safeComputeKeyboardHints)
+            \.keyboardHints, keyboardHints)
         .environmentObject(validator)
         .onAppear {
             if shouldShowHelp {
@@ -337,7 +353,7 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
             
             if let newState = self.dailyState {
                 updateFromLoadedState(newState)
-            } 
+            }
         }
         .onChange(of: self.toastMessageCenter.message ) {
             newMessage in 

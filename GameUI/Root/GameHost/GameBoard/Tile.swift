@@ -264,8 +264,8 @@ struct Tile_Previews: PreviewProvider {
             }
             
             Row(delayRowIx: 0, model: RowModel(
-                word: "fuels",
-                expected: "fuels",
+                word: WordModel("fuels", locale: .en_US),
+                expected: WordModel("fuels", locale: .en_US),
                 isSubmitted: true))
             
             Tile(letter: "q", delay: 0, revealState: .rightPlace, animate: true) 

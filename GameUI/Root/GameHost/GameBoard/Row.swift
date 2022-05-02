@@ -79,7 +79,8 @@ struct Row: View {
             if model.isSubmitted {
                 ForEach(0..<5) { ix in
                     Tile(
-                        letter: model.char(guessAt: ix), 
+                        letter: model.char(
+                            guessAt: ix).displayValue, 
                         delay: delayRowIx + ix,
                         revealState: model.revealState(ix),
                         animate: true)
@@ -87,7 +88,8 @@ struct Row: View {
             } else {
                 ForEach(0..<5) { ix in
                     Tile(
-                        letter: model.char(guessAt: ix), 
+                        letter: model.char(
+                            guessAt: ix).displayValue, 
                         delay: delayRowIx + ix,
                         revealState: model.revealState(ix),
                         animate: true
@@ -99,8 +101,8 @@ struct Row: View {
             }
         }
         .contextMenu {
-            if let defUrl = self.model.word.definitionUrl(in: gameLocale) {
-                Text(self.model.word.uppercased())
+            if let defUrl = self.model.word.displayValue.definitionUrl(in: gameLocale) {
+                Text(self.model.word.displayValue.uppercased())
                 Link(destination: defUrl, label: {
                     Label("Look up", systemImage: "book")
                 })
@@ -130,8 +132,8 @@ struct Row: View {
 fileprivate struct SubmittableRow_Preview: View
 {
     @State var model = RowModel(
-        word: "fuels",
-        expected: "fuels",
+        word: WordModel("fuels", locale: .en_US),
+        expected: WordModel("fuels", locale: .en_US),
         isSubmitted: false)
     
     var body: some View {
@@ -150,8 +152,8 @@ fileprivate struct SubmittableRow_Preview: View
 fileprivate struct InvalidSubmittableRow_Preview: View
 {
     @State var model = RowModel(
-        word: "fuels",
-        expected: "fuels",
+        word: WordModel("fuels", locale: .en_US),
+        expected: WordModel("fuels", locale: .en_US),
         isSubmitted: false)
     
     var body: some View { 
@@ -175,32 +177,32 @@ struct Row_Previews: PreviewProvider {
             Text("Test focus hint")
             PaletteSetterView {
                 Row(delayRowIx: 0, model: RowModel(
-                    word: "lad",
-                    expected: "holly",
+                    word: WordModel("lad", locale: .en_US),
+                    expected: WordModel("holly", locale: .en_US),
                     isSubmitted: false), showFocusHint: true)
             }
         }
         VStack {
             Text("Test yellow and green L")
             Row(delayRowIx: 0, model: RowModel(
-                word: "ladle",
-                expected: "holly",
+                word: WordModel("ladle", locale: .en_US),
+                expected: WordModel("holly", locale: .en_US),
                 isSubmitted: true))
         }
         VStack {
             Row(delayRowIx: 0, model: RowModel(
-                word: "fuels",
-                expected: "fuels",
+                word: WordModel("fuels", locale: .en_US),
+                expected: WordModel("fuels", locale: .en_US),
                 isSubmitted: true))
             Row(delayRowIx: 1, model: RowModel(
-                word: "fuels",
-                expected: "hales",
+                word: WordModel("fuels", locale: .en_US),
+                expected: WordModel("hales", locale: .en_US),
                 isSubmitted: true))
             
             VStack {
                 Row(delayRowIx: 2, model: RowModel(
-                    word: "aaxaa",
-                    expected: "ababa",
+                    word: WordModel("aaxaa", locale: .en_US),
+                    expected: WordModel("ababa", locale: .en_US),
                     isSubmitted: true))
                 Text("This should show green, yellow, black, black, green.")
             }

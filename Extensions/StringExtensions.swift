@@ -4,27 +4,36 @@ import SwiftUI
 /// Used to check if a letter is valid in a given language
 /// (e.g. when processing hardware keyboard)
 extension String {
-    static var uppercasedEnAlphabet = {
-        Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map { String($0) }
-    }() 
+    static var uppercasedEnGbAlphabet = {
+        Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map { 
+            CharacterModel(value: $0, locale: .en_GB) 
+        }
+    }()
+    
+    static var uppercasedEnUsAlphabet = {
+        Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map { 
+            CharacterModel(value: $0, locale: .en_US) 
+        }
+    }()
     
     static var uppercasedFrAlphabet = {
-        // ÏËÜ should not be in the word list
         Array("AÁÀÂBCÇDEÉÈÊFGHIÎJKLMNOÔPQRSTUÙÛVWXYZ").map {
-            String($0) 
+            CharacterModel(value: $0, locale: .fr_FR) 
         }
     }() 
     
     static var uppercasedLvAlphabet = {
         Array("AĀBCČDEĒFGĢHIĪJKĶLĻMNŅOPRSŠTUŪVZŽ").map {
-            String($0) 
+            CharacterModel(value: $0, locale: .lv_LV)
         }
     }() 
     
-    static func uppercasedAlphabet(for locale: GameLocale) -> [String] {
+    static func uppercasedAlphabet(for locale: GameLocale) -> [CharacterModel] {
         switch(locale) {
-        case .en_US, .en_GB:
-            return uppercasedEnAlphabet
+        case .en_US:
+            return uppercasedEnUsAlphabet
+        case .en_GB:
+            return uppercasedEnGbAlphabet
         case .fr_FR:
             return uppercasedFrAlphabet
         case .lv_LV(_):
@@ -32,23 +41,6 @@ extension String {
         default:
             return []
         }
-    }
-    
-    /// Check if first comes before second, given
-    /// the alphabet of a specific locale
-    static func orderAsAlphabet(first: String, second: String, locale: GameLocale) -> Bool {
-        
-        let firstC = first.uppercased()
-        let secondC = second.uppercased()
-        
-        let alphabet = String.uppercasedAlphabet(for: locale)
-        
-        guard let firstIx = alphabet.firstIndex(of: firstC), let secondIx = alphabet.firstIndex(of: secondC) else {
-            // fallback
-            return first < second
-        }
-        
-        return firstIx < secondIx
     }
 }
 

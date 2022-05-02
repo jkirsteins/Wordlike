@@ -8,10 +8,20 @@ import SwiftUI
 struct SizeSettingKeyboardButton: View {
     @Binding var maxSize: CGSize 
     
-    let letter: String 
+    let letter: MultiCharacterModel 
     
     @Environment(\.keyboardHints) 
     var keyboardHints: KeyboardHints
+    
+    init(maxSize: Binding<CGSize>, letter: String, locale: Locale) {
+        self._maxSize = maxSize
+        self.letter = .single(letter, locale: locale) 
+    }
+    
+    init(maxSize: Binding<CGSize>, letter: MultiCharacterModel) {
+        self._maxSize = maxSize
+        self.letter = letter 
+    }
     
     var body: some View {
         KeyboardButton(letter: letter).background(GeometryReader {

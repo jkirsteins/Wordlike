@@ -55,7 +55,7 @@ extension GameState
                 break
             }
             
-            for ix in 0..<row.wordArray.count {
+            for ix in 0..<row.word.count {
                 result += shareSymbol(for: row.revealState(ix)) 
             }
             
@@ -79,10 +79,18 @@ struct Internal_ShareSnippet_Test: View {
     var body: some View {
         let state = GameState(
             initialized: true, 
-            expected: TurnAnswer(word: expected, day: day, locale: .en_US, validator: validator), 
+            expected: TurnAnswer(
+                word: WordModel(expected, locale: .en_US), 
+                day: day, 
+                locale: .en_US, 
+                validator: validator), 
             rows: 
                 guesses.map { w in
-                    RowModel(word: w, expected: expected, isSubmitted: true)
+                    RowModel(
+                        word: w, 
+                        expected: expected, 
+                        isSubmitted: true, 
+                        locale: .en_US)
                 },
             isTallied: false,
             date: Date() 

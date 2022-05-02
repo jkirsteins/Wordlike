@@ -2,10 +2,13 @@ import SwiftUI
 
 /// A keyboard button
 struct KeyboardButton: View {
-    let letter: String 
+    let letter: MultiCharacterModel
     
     @Environment(\.keyboardHints) 
     var keyboardHints: KeyboardHints
+    
+    @Environment(\.debug) 
+    var debug: Bool
     
     @EnvironmentObject var game: GameState
     
@@ -28,13 +31,45 @@ struct KeyboardButton: View {
         return 45
     }
     
+    var bestHint: TileBackgroundType? {
+        let hints = letter.values.map {
+            keyboardHints.hints[$0]
+        }
+        
+        if hints.contains(.rightPlace) {
+            return .rightPlace
+        }
+        
+        if hints.contains(.wrongPlace) {
+            return .wrongPlace
+        }
+        
+        return nil
+    }
+    
     var body: some View {
-        Button(letter, action: insertText)
+        Button(
+            // If debug mode is on, display all
+            // possible values this key might submit
+            debug ? (letter.values.map { $0.value }).joined() 
+            : letter.displayValue, 
+            
+            action: insertText)
             .disabled(game.isCompleted)
             .frame(minHeight: minHeight)
             .buttonStyle(
-                KeyboardButtonStyle(type: keyboardHints.hints[letter]))
+                KeyboardButtonStyle(type: bestHint))
             .aspectRatio(1.0, contentMode: .fit)
             .frame(maxWidth: 50, maxHeight: 50)
+    }
+    
+    init(letter: String, locale: Locale) {
+        self.letter = MultiCharacterModel(
+            CharacterModel(value: letter, locale: locale)
+        )
+    }
+    
+    init(letter: MultiCharacterModel) {
+        self.letter = letter
     }
 }

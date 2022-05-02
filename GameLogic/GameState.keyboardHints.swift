@@ -2,14 +2,18 @@ import SwiftUI
 
 extension GameState {
     var keyboardHints: KeyboardHints {
-        var result: Dictionary<String, TileBackgroundType> = [:]
+        var result: Dictionary<CharacterModel, TileBackgroundType> = [:]
         
-        let submittedRows = rows.filter({$0.isSubmitted})
+        let submittedRows = rows.filter({ $0.isSubmitted })
         
         for srow in submittedRows {
             for ix in 0..<srow.word.count {
                 let state = srow.revealState(ix)
-                let char = srow.char(guessAt: ix)
+                let chars = srow.char(guessAt: ix)
+                
+                guard let char = chars.values.first, chars.values.count == 1 else {
+                    fatalError("Submitted rows can't keep multiple character options")
+                }
                 
                 // don't allow overriding rightPlace
                 guard result[char] != .rightPlace else {
@@ -51,10 +55,22 @@ struct KeyboardHintsTestInternalView: View {
     let validator = WordValidator(locale: .en_US)
     
     var body: some View {
-        let state = GameState(initialized: true, expected: TurnAnswer(word: word, day: 1, locale: .en_US, validator: validator), 
-                              rows: [
-                                RowModel(word: guess, expected: word, isSubmitted: true, attemptCount: 0)
-                              ], isTallied: true, date: Date())
+        let state = GameState(
+            initialized: true, 
+            expected: TurnAnswer(
+                word: WordModel(word, locale: Locale.lv_LV), 
+                day: 1, 
+                locale: .en_US, 
+                validator: validator), 
+            rows: [
+                RowModel(
+                    word: WordModel(guess, locale: Locale.lv_LV), 
+                    expected: WordModel(word, locale: Locale.lv_LV), 
+                    isSubmitted: true, 
+                    attemptCount: 0)
+            ], 
+            isTallied: true, 
+            date: Date())
         
         return GeometryReader { gr in
             VStack {
@@ -71,12 +87,12 @@ struct KeyboardHintsTestInternalView: View {
 
 struct Internal_LatvianSimplifiedTest: View
 {
-    static let expected = "zvīņa"
+    static let expected = WordModel("zvīņa", locale: Locale.lv_LV)
     
     let state = GameState(
         initialized: true, 
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: SimplifiedLatvianWordValidator()),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: WordValidator(locale: .lv_LV(simplified: true))),
         rows: [
             RowModel(
                 word: "zvņīa", 
@@ -119,15 +135,18 @@ struct Internal_LatvianSimplifiedTest: View
 
 struct Internal_LatvianSimplifiedTest_validateUncertainPair: View
 {
-    static let expected = "kaite"
+    static let expected = WordModel("kaite", locale: .lv_LV)
     
     let state = GameState(
         initialized: true, 
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: SimplifiedLatvianWordValidator()),
+            word: Self.expected, 
+            day: 1, 
+            locale: .lv_LV(simplified: true), 
+            validator: WordValidator(locale: .lv_LV(simplified: true))),
         rows: [
             RowModel(
-                word: "kaitē", 
+                word: WordModel("kaitē", locale: .lv_LV), 
                 expected: Self.expected, 
                 isSubmitted: true, 
                 attemptCount: 0),

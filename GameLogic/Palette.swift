@@ -123,11 +123,11 @@ struct LightHCPalette : Palette
 struct PaletteInternalTestView: View {
     var body: some View {
         VStack {
-            Row(delayRowIx: 0, model: RowModel(word: "CRAZY", expected: "FUELS", isSubmitted: true))
-            Row(delayRowIx: 0, model: RowModel(word: "SLEDS", expected: "FUELS", isSubmitted: true))
-            Row(delayRowIx: 0, model: RowModel(word: "FLINT", expected: "FUELS", isSubmitted: true))
-            Row(delayRowIx: 0, model: RowModel(word: "FIL", expected: "FUELS", isSubmitted: false))
-            Row(delayRowIx: 0, model: RowModel(expected: "FUELS"))
+            Row(delayRowIx: 0, model: RowModel(word: "CRAZY", expected: "FUELS", isSubmitted: true, locale: .en_US))
+            Row(delayRowIx: 0, model: RowModel(word: "SLEDS", expected: "FUELS", isSubmitted: true, locale: .en_US))
+            Row(delayRowIx: 0, model: RowModel(word: "FLINT", expected: "FUELS", isSubmitted: true, locale: .en_US))
+            Row(delayRowIx: 0, model: RowModel(word: "FIL", expected: "FUELS", isSubmitted: false, locale: .en_US))
+            Row(delayRowIx: 0, model: RowModel(expected: "FUELS", locale: .en_US))
         }
     }
 }

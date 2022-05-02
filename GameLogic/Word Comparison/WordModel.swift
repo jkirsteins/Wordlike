@@ -1,6 +1,10 @@
 import SwiftUI
 
 struct WordModel : Codable, Equatable, CustomDebugStringConvertible {
+    static func == (lhs: WordModel, rhs: WordModel) -> Bool {
+        lhs.word == rhs.word
+    }
+    
     enum CodingKeys: String, CodingKey {
         case word 
     }
@@ -13,9 +17,8 @@ struct WordModel : Codable, Equatable, CustomDebugStringConvertible {
         }
     }
     
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.word, forKey: .word)
+    init() {
+        self.word = []
     }
     
     init(from decoder: Decoder) throws {
@@ -41,12 +44,55 @@ struct WordModel : Codable, Equatable, CustomDebugStringConvertible {
         self.word = characters
     }
     
+    var displayValue: String {
+        self.word.map {
+            $0.values.first?.value ?? ""
+        }.joined()
+    }
+    
+    var locale: Locale {
+        // if word is empty, don't crash
+        guard self.word.count > 0 else {
+            return .current
+        }
+        
+        guard let firstLocale = self.word.first?.locale,
+              self.word.allSatisfy({ $0.locale == firstLocale }) else {
+                  fatalError("All characters in a word must have the same locale.")
+              }
+        
+        return firstLocale
+    }
+    
     var debugDescription: String {
         self.word.map({ $0.debugDescription }).joined(separator: "")
     }
     
-    static func == (lhs: WordModel, rhs: WordModel) -> Bool {
-        lhs.word == rhs.word
+    var count: Int {
+        self.word.count
+    }
+    
+    subscript(_ ix: Int) -> MultiCharacterModel {
+        self.word[ix]
+    }
+    
+    func dropLast() -> WordModel {
+        WordModel(
+            characters: word.dropLast())
+    }
+    
+    func tryAdd(_ char: MultiCharacterModel) -> WordModel {
+        WordModel(
+            characters: Array((word + [char]).prefix(5)))
+    }
+    
+    func contains(_ element: MultiCharacterModel) -> Bool {
+        self.word.contains(element)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.word, forKey: .word)
     }
 }
 

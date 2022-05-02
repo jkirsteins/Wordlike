@@ -21,15 +21,16 @@ extension DailyState : Codable, Equatable
         case expected
         case date
         case rows
-        case isTallied
+        case state
     }
     
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        expected = try values.decode(String.self, forKey: .expected)
+        expected = try values.decode(WordModel.self, forKey: .expected)
         date = try values.decode(Date.self, forKey: .date)
         rows = try values.decode([RowModel].self, forKey: .rows)
-        isTallied = (try? values.decode(Bool.self, forKey: .isTallied)) ?? false
+        
+        state = (try? values.decode(DailyState.State.self, forKey: .state)) ?? .unknown
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -37,39 +38,65 @@ extension DailyState : Codable, Equatable
         try container.encode(expected, forKey: .expected)
         try container.encode(date, forKey: .date)
         try container.encode(rows, forKey: .rows)
-        try container.encode(isTallied, forKey: .isTallied)
+        try container.encode(state, forKey: .state)
     }
 } 
 
 public struct DailyState : RawRepresentable
 {
+    enum State : Codable, Equatable {
+        // Transient value for moving from `isTallied` to
+        // `state` serialization
+        case unknown
+        
+        case notStarted
+        case inProgress
+        case finished(isTallied: Bool, isWon: Bool)
+    }
+    
     /// Expected word
-    let expected: String
+    let expected: WordModel
     
     /// When was this state created?
     let date: Date
     
+    let state: DailyState.State
+    
     /// If state is tallied, it has been added to
     /// the player's statistics, and should not
     /// be considered again.
-    let isTallied: Bool 
+    var isTallied: Bool {
+        switch (state) {
+            case .finished(let isTallied, _):
+            return isTallied
+            default:
+            return false 
+        }
+    } 
     
     let rows: [RowModel]
     
-    init(expected: String, date: Date, rows: [RowModel], isTallied: Bool) {
-        self.expected = expected
+    init(expected: String, date: Date, rows: [RowModel], isTallied: Bool, state: State, locale: Locale) {
+        self.expected = WordModel(expected, locale: locale)
         self.date = date 
         self.rows = rows 
-        self.isTallied = isTallied
+        self.state = state
     }
     
-    init(expected: String) {
+    init(expected: WordModel, date: Date, rows: [RowModel], state: State) {
+        self.expected = expected
+        self.date = date 
+        self.rows = rows
+        self.state = state
+    }
+    
+    init(expected: WordModel) {
         self.date = Date()
         self.expected = expected
         self.rows = (0..<GameState.MAX_ROWS).map {
             _ in RowModel(expected: expected)
         }
-        self.isTallied = false
+        self.state = .notStarted
     }
     
     public init?(rawValue: String)

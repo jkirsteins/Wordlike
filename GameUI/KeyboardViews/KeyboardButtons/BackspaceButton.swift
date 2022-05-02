@@ -82,7 +82,10 @@ struct InternalBackspaceButtonPreview: View {
             HStack {
             BackspaceButton(maxSize: 
                             CGSize(width: side, height: side))
-                SizeConstrainedKeyboardButton(maxSize: CGSize(width: side, height: side), letter: "W")
+                SizeConstrainedKeyboardButton(
+                    maxSize: CGSize(width: side, height: side), 
+                    letter: "W", 
+                    locale: .en_US)
             }
             Text(verbatim: "\(side)")
             Slider(value: $side, in: 0.0...200.0)

@@ -81,10 +81,10 @@ struct StatsView: View {
                                 .fontWeight(.bold)
                             
                             HStack {
-                                Text(state.expected.word.uppercased())
+                                Text(state.expected.word.displayValue.uppercased())
                                     .font(Font.system(.body))
                                 
-                                if let defUrl = state.expected.word.definitionUrl(in: state.expected.locale) {
+                                if let defUrl = state.expected.word.displayValue.definitionUrl(in: state.expected.locale) {
                                     Link("See definition", destination: defUrl)
                                 }
                             }
@@ -201,9 +201,17 @@ struct StatsView_Previews: PreviewProvider {
         initialized: true, 
         expected: TurnAnswer(word: "fuels", day: 2, locale: .en_US), 
         rows: [
-            RowModel(word: "clear", expected: "fuels", isSubmitted: true),
-            RowModel(word: "duels", expected: "fuels", isSubmitted: true),
-            RowModel(word: "fuels", expected: "fuels", isSubmitted: true)
+            RowModel(
+                word: WordModel("clear", locale: .en_US),
+                expected: WordModel("fuels", locale: .en_US), isSubmitted: true),
+            RowModel(
+                word: WordModel("duels", locale: .en_US), 
+                expected: WordModel("fuels", locale: .en_US), 
+                isSubmitted: true),
+            RowModel(
+                word: WordModel("fuels", locale: .en_US),
+                expected: WordModel("fuels", locale: .en_US), 
+                isSubmitted: true)
         ],
         isTallied: false,
         date: Date())

@@ -6,6 +6,9 @@ struct EnglishKeyboard: View {
     @EnvironmentObject 
     var toastMessage: ToastMessageCenter
     
+    @Environment(\.gameLocale)
+    var gameLocale: GameLocale
+    
     let hspacing = CGFloat(1) 
     let vspacing = CGFloat(1)
     
@@ -18,45 +21,45 @@ struct EnglishKeyboard: View {
         KeyboardContainer(spacing: vspacing) {
             RowContainer(spacing: hspacing) {
                 Group {
-                    SizeSettingKeyboardButton(maxSize: $maxSize, letter: "Q")
+                    SizeSettingKeyboardButton(maxSize: $maxSize, letter: "Q", locale: gameLocale.nativeLocale)
                     
-                    KeyboardButton(letter: "W")
-                    KeyboardButton(letter: "E")
-                    KeyboardButton(letter: "R")
-                    KeyboardButton(letter: "T")
+                    KeyboardButton(letter: "W", locale: gameLocale.nativeLocale)
+                    KeyboardButton(letter: "E", locale: gameLocale.nativeLocale)
+                    KeyboardButton(letter: "R", locale: gameLocale.nativeLocale)
+                    KeyboardButton(letter: "T", locale: gameLocale.nativeLocale)
                 }
                 
                 Group {
-                    KeyboardButton(letter: "Y")
-                    KeyboardButton(letter: "U")
-                    KeyboardButton(letter: "I")
-                    KeyboardButton(letter: "O")
-                    KeyboardButton(letter: "P")
+                    KeyboardButton(letter: "Y", locale: gameLocale.nativeLocale)
+                    KeyboardButton(letter: "U", locale: gameLocale.nativeLocale)
+                    KeyboardButton(letter: "I", locale: gameLocale.nativeLocale)
+                    KeyboardButton(letter: "O", locale: gameLocale.nativeLocale)
+                    KeyboardButton(letter: "P", locale: gameLocale.nativeLocale)
                 }
             }
             
             RowContainer(spacing: hspacing ) {
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "A")
+                        maxSize: maxSize, letter: "A", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "S")
+                        maxSize: maxSize, letter: "S", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "D")
+                        maxSize: maxSize, letter: "D", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "F")
+                        maxSize: maxSize, letter: "F", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "G")
+                        maxSize: maxSize, letter: "G", locale: gameLocale.nativeLocale)
                 }
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "H")
+                        maxSize: maxSize, letter: "H", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "J")
+                        maxSize: maxSize, letter: "J", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "K")
+                        maxSize: maxSize, letter: "K", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "L")
+                        maxSize: maxSize, letter: "L", locale: gameLocale.nativeLocale)
                 }
             }
             
@@ -64,21 +67,21 @@ struct EnglishKeyboard: View {
                 BackspaceButton(maxSize: wideSize)
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Z")
+                        maxSize: maxSize, letter: "Z", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "X")
+                        maxSize: maxSize, letter: "X", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "C")
+                        maxSize: maxSize, letter: "C", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "V")
+                        maxSize: maxSize, letter: "V", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "B")
+                        maxSize: maxSize, letter: "B", locale: gameLocale.nativeLocale)
                 }
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "N")
+                        maxSize: maxSize, letter: "N", locale: gameLocale.nativeLocale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "M")
+                        maxSize: maxSize, letter: "M", locale: gameLocale.nativeLocale)
                 }
                 SubmitButton<WordValidator>(maxSize: wideSize)
             }

@@ -3,20 +3,36 @@ import SwiftUI
 struct RowModel : Equatable, Codable, Identifiable
 {
     let id: String
-    let word: String 
+    let word: WordModel 
     let isSubmitted: Bool
     let attemptCount: Int
-    let expected: String
+    let expected: WordModel
     
-    init(expected: String) {
-        self.expected = expected
-        self.word = ""
+    init(expected: String, locale: Locale) {
+        self.expected = WordModel(expected, locale: locale)
+        self.word = WordModel("", locale: locale)
         self.id = "-\(expected)"
         self.isSubmitted = false
         self.attemptCount = 0
     }
     
-    init(word: String, expected: String, isSubmitted: Bool) {
+    init(expected: WordModel) {
+        self.expected = expected
+        self.word = WordModel("", locale: expected.locale)
+        self.id = "-\(expected)"
+        self.isSubmitted = false
+        self.attemptCount = 0
+    }
+    
+    init(word: String, expected: String, isSubmitted: Bool, locale: Locale) {
+        self.word = WordModel(word, locale: locale)
+        self.expected = WordModel(expected, locale: locale)
+        self.isSubmitted = isSubmitted
+        self.attemptCount = 0
+        self.id = "\(word)-\(expected)"
+    }
+    
+    init(word: WordModel, expected: WordModel, isSubmitted: Bool) {
         self.word = word
         self.expected = expected
         self.isSubmitted = isSubmitted
@@ -24,7 +40,15 @@ struct RowModel : Equatable, Codable, Identifiable
         self.id = "\(word)-\(expected)"
     }
     
-    init(word: String, expected: String, isSubmitted: Bool, attemptCount: Int) {
+    init(word: String, expected: String, isSubmitted: Bool, attemptCount: Int, locale: Locale) {
+        self.word = WordModel(word, locale: locale)
+        self.expected = WordModel(expected, locale: locale)
+        self.isSubmitted = isSubmitted
+        self.attemptCount = attemptCount
+        self.id = "\(word)-\(expected)"
+    }
+    
+    init(word: WordModel, expected: WordModel, isSubmitted: Bool, attemptCount: Int) {
         self.word = word
         self.expected = expected
         self.isSubmitted = isSubmitted
@@ -32,12 +56,12 @@ struct RowModel : Equatable, Codable, Identifiable
         self.id = "\(word)-\(expected)"
     }
     
-    var expectedArray: [String.Element] {
-        Array(expected.uppercased())
-    }
-    
-    var wordArray: [String.Element] {
-        Array(word.uppercased())
+    init(word: String, expected: WordModel, isSubmitted: Bool, attemptCount: Int) {
+        self.word = WordModel(word, locale: expected.locale)
+        self.expected = expected
+        self.isSubmitted = isSubmitted
+        self.attemptCount = attemptCount
+        self.id = "\(word)-\(expected)"
     }
     
     var canReveal: Bool {
@@ -45,41 +69,45 @@ struct RowModel : Equatable, Codable, Identifiable
     }
     
     var focusHintIx: Int? {
-        guard wordArray.count < 5 else { return nil }
-        return wordArray.count
+        guard word.count < 5 else { return nil }
+        return word.count
     }
     
-    func char(guessAt pos: Int) -> String
+    func char(guessAt pos: Int) -> MultiCharacterModel
     {
-        guard wordArray.count > pos else { return "" }
-        return String(wordArray[pos])
+        guard word.count > pos else { 
+            return .empty 
+        }
+        return word[pos] 
     }
     
-    func char(expectAt pos: Int) -> String
+    func char(expectAt pos: Int) -> MultiCharacterModel
     {
-        guard expectedArray.count > pos else { return "" }
-        return String(expectedArray[pos])
+        guard expected.count > pos else { 
+            return .empty
+        }
+        return expected[pos]
     }
     
     /* Yellow budget is:
      total_occurences - known_occurences - yellow_occurences_at_lower_ix
      */
-    func yellowBudget(for attemptArray: [Character], at atIx: Int) -> Int {
+    func yellowBudget(for attempt: WordModel, at atIx: Int) -> Int {
         var total: Int = 0
         var known: Int = 0
         var knownUntil: Int = 0
         
-        let char = attemptArray[atIx] 
+        let char = attempt[atIx] 
         
-        for ix in 0..<self.expectedArray.count {
-            if expectedArray[ix] == char {
+        for ix in 0..<self.expected.count { 
+            if expected[ix] == char {
                 total += 1
                 
-                if attemptArray[ix] == char {
+                if attempt[ix] == char {
                     known += 1
                 }
             } else {
-                if ix < atIx && attemptArray[ix] == char {
+                if ix < atIx && attempt[ix] == char {
                     knownUntil += 1
                 }
             }
@@ -92,14 +120,14 @@ struct RowModel : Equatable, Codable, Identifiable
     {
         guard canReveal else { return nil }
         
-        guard wordArray.count > ix, expectedArray.count > ix else {
+        guard word.count > ix, expected.count > ix else {
             return nil
         }
         
         // Green letters should always be represented
         // first. There's no non-failure scenario where
         // we want a correct letter to not appear green.
-        if wordArray[ix] == expectedArray[ix] {
+        if word[ix] == expected[ix] {
             return .rightPlace
         }
         
@@ -107,9 +135,9 @@ struct RowModel : Equatable, Codable, Identifiable
         // how many we can still reveal (e.g. 1 yellow
         // letters, 2 guesses ==> only 1 guess should 
         // be revealed as yellow)
-        let budget = yellowBudget(for: wordArray, at: ix)
+        let budget = yellowBudget(for: word, at: ix)
         
-        if expectedArray.contains(wordArray[ix]) && budget > 0 {
+        if expected.contains(word[ix]) && budget > 0 {
             return .wrongPlace
         }
         
@@ -122,7 +150,8 @@ struct RowModel_Previews: PreviewProvider {
         let model = RowModel(
             word: "aaxaa",
             expected: "ababa",
-            isSubmitted: true)
+            isSubmitted: true,
+            locale: Locale.current )
         
         return VStack {
             
@@ -138,7 +167,7 @@ struct RowModel_Previews: PreviewProvider {
                 HStack {
                     ForEach(0..<5) { ix in
                         VStack {
-                            Text(verbatim: "\(model.yellowBudget(for: Array("AAXAA"), at: ix))")
+                            Text(verbatim: "\(model.yellowBudget(for: WordModel("AAXAA", locale: Locale.current), at: ix))")
                             
                             Text(verbatim: "\(model.revealState(ix)!)")
                         }

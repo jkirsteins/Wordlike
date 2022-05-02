@@ -99,11 +99,27 @@ struct HardwareKeyboardInput<ValidatorImpl: Validator & ObservableObject>: UIVie
                 return
             }
             
-            let upcaseAlphabet = String.uppercasedAlphabet(for: self.owner.game.expected.locale)
+            let locale = self.owner.game.expected.locale
+            let alphabet = String.uppercasedAlphabet(for: locale)
             
-            let upcaseLetter = text.uppercased()
+            let character: CharacterModel
+            switch(locale) {
+                case .fr_FR:
+                // French guess list doesn't include
+                // diacritics, so remove them from
+                // keyboard input
+                character = CharacterModel(
+                    value: text.folding(
+                        options: .diacriticInsensitive,
+                        locale: .fr_FR),
+                    locale: locale.nativeLocale)
+                default:
+                character = CharacterModel(
+                    value: text, 
+                    locale: locale.nativeLocale)
+            }
             
-            guard upcaseAlphabet.contains(upcaseLetter) else {
+            guard alphabet.contains(character) else {
                 // Unrecognized char, ignore
                 //
                 // If we get this wrong, the soft keyboard
@@ -111,7 +127,8 @@ struct HardwareKeyboardInput<ValidatorImpl: Validator & ObservableObject>: UIVie
                 return 
             }
             
-            self.owner.game.insertText(letter: upcaseLetter)
+            self.owner.game.insertText(
+                letter: MultiCharacterModel(character))
         }
         
         func deleteBackward() {
@@ -149,7 +166,12 @@ struct HardwareKeyboardInput<ValidatorImpl: Validator & ObservableObject>: UIVie
 struct Internal_InputCaptureView_Preview : View {
     static let validator = WordValidator(locale: .lv_LV(simplified: false))
     
-    @StateObject var game = GameState(expected: TurnAnswer(word: "ČAULA", day: 1, locale: .lv_LV(simplified: false), validator: Self.validator))
+    @StateObject var game = GameState(
+        expected: TurnAnswer(
+            word: WordModel("ČAULA", locale: .lv_LV), 
+            day: 1, 
+            locale: .lv_LV(simplified: false), 
+            validator: Self.validator))
     @StateObject var validator = Self.validator
     @StateObject var tmc = ToastMessageCenter()
     

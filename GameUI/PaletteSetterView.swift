@@ -17,16 +17,22 @@ struct PaletteSetterView<Content: View>: View {
 
 struct PaletteSetterView_Previews: PreviewProvider {
     static var previews: some View {
-        PaletteSetterView {
-            EditableRow_ForPreview()
-        }
-        
         VStack {
             Text("Dark high contrast")
-            Row(delayRowIx: 0, model: RowModel(word: "flbes", expected: "fuels", isSubmitted: true))
+            Row(
+                delayRowIx: 0, 
+                model: RowModel(
+                    word: WordModel("flbes", locale: .en_US),
+                    expected: WordModel("fuels", locale: .en_US), 
+                    isSubmitted: true))
                 .environment(\.palette, DarkHCPalette())
             Text("Light high contrast")
-            Row(delayRowIx: 0, model: RowModel(word: "flbes", expected: "fuels", isSubmitted: true))
+            Row(
+                delayRowIx: 0, 
+                model: RowModel(
+                    word: WordModel("flbes", locale: .en_US), 
+                    expected: WordModel("fuels", locale: .en_US), 
+                    isSubmitted: true))
                 .environment(\.palette,  LightHCPalette())
         }
     }

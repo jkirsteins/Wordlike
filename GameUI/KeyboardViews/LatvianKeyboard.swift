@@ -1,7 +1,9 @@
 import SwiftUI
 
 private struct KeyboardHintEnvironmentKey: EnvironmentKey {
-    static let defaultValue: KeyboardHints = KeyboardHints(hints: [:], locale: .en_US)
+    static let defaultValue: KeyboardHints = KeyboardHints(
+        hints: Dictionary<CharacterModel, TileBackgroundType>(), 
+        locale: .en_US)
 }
 
 extension EnvironmentValues {
@@ -87,37 +89,44 @@ struct LatvianKeyboard: View {
             height: maxSize.height)
     }
     
+    let locale = Locale.lv_LV
+    
+    
     var body: some View {
         KeyboardContainer(spacing: vspacing) {
             RowContainer(spacing: hspacing) {
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "E")
+                        maxSize: maxSize, letter: "E", locale: locale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Ē")
+                        maxSize: maxSize, letter: "Ē",
+                        locale: locale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "R")
+                        maxSize: maxSize, letter: "R",
+                        locale: locale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "T")
+                        maxSize: maxSize, letter: "T",
+                        locale: locale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "U")
+                        maxSize: maxSize, letter: "U",
+                        locale: locale)
                 }
                 
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Ū")
+                        maxSize: maxSize, letter: "Ū", locale: locale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "I")
+                        maxSize: maxSize, letter: "I", locale: locale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Ī")
+                        maxSize: maxSize, letter: "Ī", locale: locale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "O")
+                        maxSize: maxSize, letter: "O", locale: locale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "P")
+                        maxSize: maxSize, letter: "P", locale: locale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Ķ")
+                        maxSize: maxSize, letter: "Ķ", locale: locale)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Ļ")
+                        maxSize: maxSize, letter: "Ļ", locale: locale)
                 }
                 
                 
@@ -125,22 +134,22 @@ struct LatvianKeyboard: View {
             
             RowContainer(spacing: hspacing ) {
                 Group {
-                    SizeSettingKeyboardButton(maxSize: $maxSize, letter: "A")
-                    KeyboardButton(letter: "Ā")
-                    KeyboardButton(letter: "S")
-                    KeyboardButton(letter: "Š")
-                    KeyboardButton(letter: "D")
+                    SizeSettingKeyboardButton(maxSize: $maxSize, letter: "A", locale: locale)
+                    KeyboardButton(letter: "Ā", locale: locale)
+                    KeyboardButton(letter: "S", locale: locale)
+                    KeyboardButton(letter: "Š", locale: locale)
+                    KeyboardButton(letter: "D", locale: locale)
                 }
                 Group {
-                    KeyboardButton(letter: "F")
-                    KeyboardButton(letter: "G")
-                    KeyboardButton(letter: "Ģ")
-                    KeyboardButton(letter: "H")
-                    KeyboardButton(letter: "J")
+                    KeyboardButton(letter: "F", locale: locale)
+                    KeyboardButton(letter: "G", locale: locale)
+                    KeyboardButton(letter: "Ģ", locale: locale)
+                    KeyboardButton(letter: "H", locale: locale)
+                    KeyboardButton(letter: "J", locale: locale)
                 }
                 Group {
-                    KeyboardButton(letter: "K")
-                    KeyboardButton(letter: "L")
+                    KeyboardButton(letter: "K", locale: locale)
+                    KeyboardButton(letter: "L", locale: locale)
                 }
             }
             
@@ -148,17 +157,17 @@ struct LatvianKeyboard: View {
                 BackspaceButton(maxSize: wideSize)
                 
                 Group {
-                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Z")
-                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Ž")
-                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "C")
-                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Č")
-                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "V")
+                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Z", locale: locale)
+                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Ž", locale: locale)
+                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "C", locale: locale)
+                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Č", locale: locale)
+                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "V", locale: locale)
                 }
                 Group {
-                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "B")
-                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "N")
-                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Ņ")
-                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "M")
+                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "B", locale: locale)
+                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "N", locale: locale)
+                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Ņ", locale: locale)
+                    SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "M", locale: locale)
                 }
                 
                 SubmitButton<WordValidator>(maxSize: wideSize)

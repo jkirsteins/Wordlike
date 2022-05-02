@@ -20,47 +20,47 @@ struct FrenchKeyboard: View {
         KeyboardContainer(spacing: vspacing) {
             RowContainer(spacing: hspacing) {
                 Group {
-                    SizeSettingKeyboardButton(maxSize: $maxSize, letter: "A")
+                    SizeSettingKeyboardButton(maxSize: $maxSize, letter: "A", locale: .fr_FR)
                     
-                    KeyboardButton(letter: "Z")
-                    KeyboardButton(letter: "E")
-                    KeyboardButton(letter: "R")
-                    KeyboardButton(letter: "T")
+                    KeyboardButton(letter: "Z", locale: .fr_FR)
+                    KeyboardButton(letter: "E", locale: .fr_FR)
+                    KeyboardButton(letter: "R", locale: .fr_FR)
+                    KeyboardButton(letter: "T", locale: .fr_FR)
                 }
                 
                 Group {
-                    KeyboardButton(letter: "Y")
-                    KeyboardButton(letter: "U")
-                    KeyboardButton(letter: "I")
-                    KeyboardButton(letter: "O")
-                    KeyboardButton(letter: "P")
+                    KeyboardButton(letter: "Y", locale: .fr_FR)
+                    KeyboardButton(letter: "U", locale: .fr_FR)
+                    KeyboardButton(letter: "I", locale: .fr_FR)
+                    KeyboardButton(letter: "O", locale: .fr_FR)
+                    KeyboardButton(letter: "P", locale: .fr_FR)
                 }
             }
             
             RowContainer(spacing: hspacing) {
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Q")
+                        maxSize: maxSize, letter: "Q", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "S")
+                        maxSize: maxSize, letter: "S", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "D")
+                        maxSize: maxSize, letter: "D", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "F")
+                        maxSize: maxSize, letter: "F", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "G")
+                        maxSize: maxSize, letter: "G", locale: .fr_FR)
                 }
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "H")
+                        maxSize: maxSize, letter: "H", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "J")
+                        maxSize: maxSize, letter: "J", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "K")
+                        maxSize: maxSize, letter: "K", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "L")
+                        maxSize: maxSize, letter: "L", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "M")
+                        maxSize: maxSize, letter: "M", locale: .fr_FR)
                 }
             }
             
@@ -68,23 +68,22 @@ struct FrenchKeyboard: View {
                 BackspaceButton(maxSize: wideSize)
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "W")
+                        maxSize: maxSize, letter: "W", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "X")
+                        maxSize: maxSize, letter: "X", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "C")
+                        maxSize: maxSize, letter: "C", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "V")
+                        maxSize: maxSize, letter: "V", locale: .fr_FR)
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "B")
+                        maxSize: maxSize, letter: "B", locale: .fr_FR)
                 }
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "N")
+                        maxSize: maxSize, letter: "N", locale: .fr_FR)
                 }
                 SubmitButton<WordValidator>(maxSize: wideSize)
             }
-            
         }
     }
 }

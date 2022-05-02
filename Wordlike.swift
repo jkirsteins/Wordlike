@@ -16,6 +16,21 @@ enum GameLocale
     case fr_FR
     case lv_LV(simplified: Bool)
     
+    var nativeLocale: Locale {
+        switch(self) {
+        case .unknown:
+            return Locale.current
+        case .en_GB:
+            return Locale(identifier: "en_GB")
+        case .en_US:
+            return Locale(identifier: "en_US")
+        case .fr_FR:
+            return Locale(identifier: "fr_FR")
+        case .lv_LV(_):
+            return Locale(identifier: "lv_LV")
+        }
+    }
+    
     var localeDisplayName: String {
         switch(self) {
         case .en_US:
@@ -33,15 +48,15 @@ enum GameLocale
     
     var fileBaseName: String {
         switch(self) {
-            case .en_GB:
+        case .en_GB:
             return "en-GB"
-            case .en_US:
+        case .en_US:
             return "en"
-            case .fr_FR:
+        case .fr_FR:
             return "fr"
-            case .lv_LV(_):
+        case .lv_LV(_):
             return "lv"
-            case .unknown:
+        case .unknown:
             fatalError("Invalid locale")
         }
     }
@@ -51,9 +66,9 @@ extension UIApplication {
     func addGestureRecognizer(_ d: GlobalTapDelegate) {
         let sceneWindows =
         UIApplication.shared.connectedScenes
-        .filter { $0.activationState == .foregroundActive }
-        .first(where: { $0 is UIWindowScene })
-        .flatMap({ $0 as? UIWindowScene })?.windows
+            .filter { $0.activationState == .foregroundActive }
+            .first(where: { $0 is UIWindowScene })
+            .flatMap({ $0 as? UIWindowScene })?.windows
         
         guard let window = sceneWindows?.first else { return }
         let gesture = UITapGestureRecognizer(target: window, action: nil)
@@ -149,7 +164,7 @@ struct Wordlike: App {
                         } else {
                             LinkToGame(
                                 locale: .lv_LV(simplified: true), 
-                                validator: SimplifiedLatvianWordValidator(),
+                                validator: WordValidator(locale: .lv_LV(simplified: true)),
                                 caption: "\(isHardMode ? "Hard mode. " : "")Simplified keyboard.")
                         }
                     }
@@ -209,8 +224,8 @@ struct Wordlike: App {
                     SettingsView()
                 }
             })
-                .environment(\.turnCounter, turnCounter)
-                .environment(\.debug, debug)
+            .environment(\.turnCounter, turnCounter)
+            .environment(\.debug, debug)
         }
     }
 }

@@ -1,15 +1,8 @@
 import SwiftUI
 
 protocol Validator {
-    /// Check if a word should be accepted as the expected
-    /// (correct) answer.
-    ///
-    /// This can be a simple string equality, or it can
-    /// do more (e.g. drop accents before comparing)
-    func accepts(_ word: String, as expected: String) -> Bool
-    
     /// Returns the answer for a given turn.
-    func answer(at turnIndex: Int) -> String
+    func answer(at turnIndex: Int) -> WordModel
     
     /// Checks if word can be submitted. 
     /// If not, sets the reason message.
@@ -20,11 +13,11 @@ protocol Validator {
     /// accents while still preserving the right letters
     /// from the expected word.
     func canSubmit(
-        word: String, 
-        expected: String,
+        word: WordModel, 
+        expected: WordModel,
         model: [RowModel]?,
         mustMatchKnown: Bool,    // e.g. hard mode
-        reason: inout String?) -> String?
+        reason: inout String?) -> WordModel?
 }
 
 /// Used as a temporary invalid value.
@@ -32,21 +25,16 @@ protocol Validator {
 /// Every method invokes `fatalError()` to prevent 
 /// accidental use.
 class DummyValidator: Validator, ObservableObject {
-    func accepts(_ word: String, as expected: String) -> Bool
-    {
-        fatalError()
-    }
-    
-    func answer(at turnIndex: Int) -> String {
+    func answer(at turnIndex: Int) -> WordModel {
         fatalError()
     }
     
     func canSubmit(
-        word: String, 
-        expected: String,
+        word: WordModel, 
+        expected: WordModel,
         model: [RowModel]?,
         mustMatchKnown: Bool,    // e.g. hard mode
-        reason: inout String?) -> String? {
+        reason: inout String?) -> WordModel? {
             fatalError()
         }
 }
@@ -62,8 +50,10 @@ class WordValidator : Validator, ObservableObject
     }
     
     /// Will only set reason if validation fails
+    /// If no model given, assume no 
+    /// requirements so -> return true
     func validateRequirements(
-        word: String,
+        word: WordModel,
         model: [RowModel]?, 
         reason: inout String?) -> Bool 
     {
@@ -71,20 +61,18 @@ class WordValidator : Validator, ObservableObject
             return true
         }
         
-        var required = [String]()
-        guard let expectedArray = model.first?.expectedArray else {
-            fatalError("Row doesn't have an expected word.")
+        var required = [MultiCharacterModel]()
+        guard let expected = model.first?.expected else {
+            fatalError("Model doesn't have an expected word.")
         }
         
-        let wordArray = Array(word.uppercased())
-        
         for row in model {
-            for ix in 0..<row.wordArray.count {
+            for ix in 0..<row.word.count {
                 let revealState = row.revealState(ix)
                 switch(revealState) {
                     case .rightPlace:
-                    if !self.safeMatches(wordArray[ix], expectedArray[ix]) {
-                        reason = "\(Self.letterNumberMsg(ix)) must be \(expectedArray[ix])"
+                    if word[ix] != expected[ix] {
+                        reason = "\(Self.letterNumberMsg(ix)) must be \(expected[ix].displayValue)"
                         return false
                     }
                     case .wrongPlace:
@@ -96,7 +84,7 @@ class WordValidator : Validator, ObservableObject
         }
         
         for requiredChar in required {
-            guard self.safeContains(word, requiredChar) else {
+            guard word.contains(requiredChar) else {
                 reason = "Guess must contain \(requiredChar)"
                 return false 
             }
@@ -105,39 +93,19 @@ class WordValidator : Validator, ObservableObject
         return true
     }
     
-    /// Overloadable method to compare two characters
-    /// (child classes might drop diacritics)
-    func safeMatches(_ charA: Character, _ charB: Character) -> Bool {
-        return charA == charB
-    }
-    
-    /// Overloadable method to test if word contains a 
-    /// character.
-    /// (child classes might drop diacritics)
-    func safeContains(_ word: String, _ requiredChar: String) -> Bool {
-        word.contains(requiredChar)
-    }
-    
     /// Validator protocol 
-    func collapseHints(_ hints: Dictionary<String, TileBackgroundType>) -> Dictionary<String, TileBackgroundType> 
-    {
-        hints
-    }
-    
-    func accepts(_ word: String, as expected: String) -> Bool {
-        word.uppercased() == expected.uppercased()
-    }
-    
-    func answer(at turnIndex: Int) -> String {
-        answers[turnIndex % answers.count]
+    func answer(at turnIndex: Int) -> WordModel {
+        WordModel(
+            answers[turnIndex % answers.count],
+            locale: locale.nativeLocale)
     }
     
     func canSubmit(
-        word: String, 
-        expected: String,
+        word: WordModel, 
+        expected: WordModel,
         model: [RowModel]?,
         mustMatchKnown: Bool,    // e.g. hard mode
-        reason: inout String?) -> String? {
+        reason: inout String?) -> WordModel? {
             /* To avoid accidentally breaking input files,
              do some checks centrally (e.g. we can check length
              just here, instead of ensuring every input
@@ -154,13 +122,23 @@ class WordValidator : Validator, ObservableObject
                     return nil
                 }
             
-            guard guesses.contains(word.uppercased()) else {
+            // We need the index, because we will
+            // return the guess instead of the submitted word.
+            //
+            // The reason is that the submitted version might
+            // have multi-option characters (e.g. in 
+            // Simplified Latvian) but the guess will be
+            // a 'frozen' value
+            guard let ix = guesses.firstIndex(of: word) else
+            {
                 reason = "Not in word list"
                 return nil
             }
             
+            let result = guesses[ix]
+            
             reason = nil
-            return word
+            return result
         }
     
     /// Other stuff
@@ -172,10 +150,12 @@ class WordValidator : Validator, ObservableObject
         return Self.load("\(locale.fileBaseName)_A").shuffled(using: &random)
     }
     
-    lazy var guesses: [String] = self.loadGuesses()
+    lazy var guesses: [WordModel] = self.loadGuesses()
     
-    func loadGuesses() -> [String] {
-        Self.load("\(locale.fileBaseName)_G")
+    func loadGuesses() -> [WordModel] {
+        Self.load("\(locale.fileBaseName)_G").map {
+            WordModel($0, locale: locale.nativeLocale)
+        }
     }
     
     static func load(_ name: String) -> [String] {

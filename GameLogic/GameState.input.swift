@@ -17,13 +17,13 @@ extension GameState {
             }
         
         self.rows[ix] = RowModel(
-            word: String(row.word.dropLast()),
+            word: row.word.dropLast(),
             expected: row.expected,
             isSubmitted: row.isSubmitted)
     }
     
     /// Letter key
-    func insertText(letter: String) {
+    func insertText(letter: MultiCharacterModel) {
         guard !self.isCompleted else {
             return
         }
@@ -37,7 +37,7 @@ extension GameState {
         }
         
         self.rows[ix] = RowModel(
-            word:  String((row.word + letter).prefix(5)),
+            word:  row.word.tryAdd(letter),
             expected: row.expected,
             isSubmitted: row.isSubmitted)
     }
