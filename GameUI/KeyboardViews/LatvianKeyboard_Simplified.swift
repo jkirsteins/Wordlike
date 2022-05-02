@@ -114,20 +114,20 @@ struct LatvianKeyboard_Simplified: View {
             return letter
         }
         
-        if hints.hints[complement] == .rightPlace {
-            return complement
-        }
-        
         if hints.hints[letter] == .rightPlace {
             return letter
         }
         
-        if hints.hints[complement] == .wrongPlace {
+        if hints.hints[complement] == .rightPlace {
             return complement
         }
         
         if hints.hints[letter] == .wrongPlace {
             return letter
+        }
+        
+        if hints.hints[complement] == .wrongPlace {
+            return complement
         }
         
         // return the 'unknown' complement if the
@@ -328,8 +328,9 @@ struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementGood: View
 }
 
 /// Test behaviour if two complements of a pair are present
-/// in a word (e.g. Š and S)
-struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent: View
+/// in a word (e.g. Š and S) - green should take precedence
+/// (both color and letter)
+struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_different: View
 {
     static let expected = "maršs"
     
@@ -358,6 +359,54 @@ struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent: View
                 Divider()
                 HStack {
                     Text("It is a regression if the button displays S.")
+                    Spacer()
+                }
+                
+                ForEach(state.rows) {
+                    Row(delayRowIx: 0, model: $0)
+                }
+                LatvianKeyboard_Simplified()
+                    .environmentObject(state)
+                    .environment(\.keyboardHints, state.keyboardHints)
+                    .environment(\.rootGeometry, gr)
+            }
+        }.padding()
+    }
+}
+
+
+/// Test behaviour if two complements of a pair are present
+/// in a word (e.g. Š and S) and both are valid - 
+/// the letter without diacritics should take precedence.
+struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_valid: View
+{
+    static let expected = "knašs"
+    
+    let state = GameState(
+        initialized: true, 
+        expected: TurnAnswer(
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: SimplifiedLatvianWordValidator()),
+        rows: [
+            RowModel(
+                word: "knašs", 
+                expected: Self.expected, 
+                isSubmitted: true, 
+                attemptCount: 0),
+        ], isTallied: true, date: Date())
+    
+    var body: some View  {
+        GeometryReader { gr in
+            VStack(alignment: .leading) {
+                Text("Test that non-diacritics letter takes precedence when valid").font(.title)
+                Divider()
+                
+                HStack {
+                    Text("S key should display S.")
+                    Spacer()
+                }
+                Divider()
+                HStack {
+                    Text("It is a regression if the button displays Š.")
                     Spacer()
                 }
                 
@@ -420,7 +469,8 @@ struct LatvianKeyboard_SimplifiedTest_Previews: PreviewProvider {
     static var previews: some View {
         LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementUnknown()
         LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementGood()
-        LatvianKeyboard_SimplifiedTest_bothComplementsPresent()
+        LatvianKeyboard_SimplifiedTest_bothComplementsPresent_different()
+        LatvianKeyboard_SimplifiedTest_bothComplementsPresent_valid()
         LatvianKeyboard_SimplifiedTest_testCollapsing_onlyComplementKnown()
     }
 }
