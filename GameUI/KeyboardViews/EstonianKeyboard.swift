@@ -90,7 +90,7 @@ struct EstonianKeyboard: View {
                     SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Õ", locale: locale)
                 }
                 
-                SubmitButton<WordValidator>(maxSize: wideSize)
+                SubmitButton(maxSize: wideSize)
             }
         }
     }

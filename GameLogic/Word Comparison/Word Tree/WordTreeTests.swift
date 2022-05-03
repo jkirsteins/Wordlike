@@ -146,9 +146,7 @@ struct InternalWordTreeTestView: View {
                 in
                 
                 // prepare tree
-                let wv = WordValidator(locale: .lv_LV(simplified: false))
-                
-                let wt: WordTree = wv.loadGuessTree()
+                let wt: WordTree = WordValidator.loadGuessTree(locale: .lv_LV(simplified: false))
                 
                 // prepare models
                 let toFind = WordModel("žagas", locale: .lv_LV)

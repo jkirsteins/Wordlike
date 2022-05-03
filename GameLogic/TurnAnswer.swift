@@ -8,7 +8,7 @@ struct TurnAnswer
     let word: WordModel
     let day: Int
     let locale: GameLocale
-    let validator: Validator
+    let validator: WordValidator
     
     init(word: WordModel, day: Int, locale: GameLocale) {
         self.word = word 
@@ -26,14 +26,14 @@ struct TurnAnswer
         self.validator = WordValidator(locale: locale)
     }
     
-    init(word: WordModel, day: Int, locale: GameLocale, validator: Validator) {
+    init(word: WordModel, day: Int, locale: GameLocale, validator: WordValidator) {
         self.word = word 
         self.day = day 
         self.locale = locale 
         self.validator = validator
     }
     
-    init(word: String, day: Int, locale: GameLocale, validator: Validator) {
+    init(word: String, day: Int, locale: GameLocale, validator: WordValidator) {
         self.word = WordModel(
             word, 
             locale: locale.nativeLocale) 

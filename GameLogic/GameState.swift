@@ -59,7 +59,7 @@ class GameState : ObservableObject, Identifiable, Equatable
                 word: WordModel("", locale: .current), 
                 day: 0, 
                 locale: .unknown, 
-                validator: DummyValidator()),
+                validator: WordValidator(locale: .en_US)),
             rows: [], 
             isTallied: false, 
             date: Date())

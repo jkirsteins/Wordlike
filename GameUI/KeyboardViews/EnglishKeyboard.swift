@@ -83,7 +83,7 @@ struct EnglishKeyboard: View {
                     SizeConstrainedKeyboardButton(
                         maxSize: maxSize, letter: "M", locale: gameLocale.nativeLocale)
                 }
-                SubmitButton<WordValidator>(maxSize: wideSize)
+                SubmitButton(maxSize: wideSize)
             }
         }
     }

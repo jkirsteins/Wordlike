@@ -28,11 +28,11 @@ fileprivate struct SubmitButtonStyle: ButtonStyle {
 }
 
 /// Keyboard submit button.
-struct SubmitButton<ValidatorImpl: Validator & ObservableObject>: View {
+struct SubmitButton: View {
     let maxSize: CGSize
     
     @EnvironmentObject var game: GameState
-    @EnvironmentObject var validator: ValidatorImpl
+    @EnvironmentObject var validator: WordValidator
     
     @EnvironmentObject 
     var toastMessageCenter: ToastMessageCenter
@@ -102,7 +102,7 @@ struct SubmitButtonInternalPreview : View {
         VStack {
             Text(verbatim: "Failure: \(tmc.message?.message ?? "none")")
             
-        SubmitButton<WordValidator>(
+        SubmitButton(
             maxSize: 
                     CGSize(width: 200, height: 100))
             .environmentObject(state)

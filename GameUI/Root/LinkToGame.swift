@@ -1,18 +1,10 @@
 import SwiftUI
 
-extension LinkToGame where ValidatorImpl == WordValidator {
-    init(locale: GameLocale, caption: String? = nil, seed: Int? = nil) {
-        self.locale = locale 
-        self.validator = WordValidator(locale: locale, seed: seed)
-        self.caption = caption
-    }
-}
-
 /// Creates a standardized NavigationLink
 /// to a GameHost instance.
-struct LinkToGame<ValidatorImpl: Validator & ObservableObject>: View {
+struct LinkToGame: View {
     let locale: GameLocale
-    let validator: ValidatorImpl
+    let validator: WordValidator
     let caption: String? 
     
     @Environment(\.palette) 
@@ -24,7 +16,13 @@ struct LinkToGame<ValidatorImpl: Validator & ObservableObject>: View {
     @Environment(\.debug) 
     var debug: Bool
     
-    init(locale: GameLocale, validator: ValidatorImpl, caption: String? = nil) {
+    init(locale: GameLocale, caption: String? = nil, seed: Int? = nil) {
+        self.locale = locale 
+        self.validator = WordValidator(locale: locale, seed: seed)
+        self.caption = caption
+    }
+    
+    init(locale: GameLocale, validator: WordValidator, caption: String? = nil) {
         self.locale = locale 
         self.validator = validator
         self.caption = caption

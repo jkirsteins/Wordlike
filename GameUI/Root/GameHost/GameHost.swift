@@ -10,15 +10,9 @@ extension ActiveSheet: Identifiable {
     var id: Self { self }
 }
 
-extension GameHost where ValidatorImpl == WordValidator {
-    init(_ locale: GameLocale) {
-        self.init(locale, validator: WordValidator(locale: locale))
-    }
-}
-
 /// Represents a game of a given languages, with its
 /// own stats separate from other games.
-struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
+struct GameHost: View {
     
     @AppStorage 
     var dailyState: DailyState?
@@ -34,7 +28,7 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
         on: .main, 
         in: .common).autoconnect()
     
-    @StateObject var validator: ValidatorImpl
+    @StateObject var validator: WordValidator
     @StateObject var game: GameState = GameState()
     
     @Environment(\.turnCounter) 
@@ -50,7 +44,11 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
     /* Propogated via preferences from the underlying EditableRow. */
     @StateObject var toastMessageCenter = ToastMessageCenter()
     
-    init(_ locale: GameLocale, validator: ValidatorImpl) {
+    init(_ locale: GameLocale) {
+        self.init(locale, validator: WordValidator(locale: locale))
+    }
+    
+    init(_ locale: GameLocale, validator: WordValidator) {
         self._validator = StateObject(
             wrappedValue: validator)
         
@@ -282,10 +280,6 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                 locale: game.expected.locale)
         }
         
-        guard type(of: safeGame.expected.validator) != DummyValidator.self else {
-            fatalError("Do not use GameState before a proper validator is assigned")
-        }
-        
         return safeGame.keyboardHints
     }
     
@@ -300,7 +294,7 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                     /// Put behind other views to not
                     /// obscure input (that can break
                     /// context menus e.g.)
-                    HardwareKeyboardInput<WordValidator>(
+                    HardwareKeyboardInput(
                         focusRequests: globalTapCount)
                         .border(debugViz ? .red : .clear)
                     
@@ -353,8 +347,19 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
         }
         .border(debugViz ? .yellow : .clear)
         .task {
-            // TODO: this blocks main thread
-            let _ = validator.load()
+            let seed = validator.seed 
+            let locale = validator.locale 
+            
+            DispatchQueue.global(qos: .userInitiated).async {
+                let a = WordValidator.loadAnswers(
+                    seed: seed, 
+                    locale: locale)
+                let gt = WordValidator.loadGuessTree(locale: locale)
+                
+                DispatchQueue.main.async {
+                    validator.initialize(answers: a, guessTree: gt)
+                }
+            }
         }
         .environmentObject(toastMessageCenter)
         .environment(

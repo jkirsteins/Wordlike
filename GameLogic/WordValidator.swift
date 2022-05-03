@@ -6,7 +6,7 @@ protocol Validator {
     func answer(at turnIndex: Int) -> WordModel?
     
     /// Load the required resources (word list etc.)
-    func load()
+    func initialize(answers: [String], guessTree: WordTree)
     var ready: Bool { get } 
     
     /// Checks if word can be submitted. 
@@ -23,33 +23,6 @@ protocol Validator {
         model: [RowModel]?,
         mustMatchKnown: Bool,    // e.g. hard mode
         reason: inout String?) -> WordModel?
-}
-
-/// Used as a temporary invalid value.
-///
-/// Every method invokes `fatalError()` to prevent 
-/// accidental use.
-class DummyValidator: Validator, ObservableObject {
-    func answer(at turnIndex: Int) -> WordModel? {
-        fatalError()
-    }
-    
-    func load() {
-        fatalError()
-    }
-    
-    var ready: Bool {
-        false
-    }
-    
-    func canSubmit(
-        word: WordModel, 
-        expected: WordModel,
-        model: [RowModel]?,
-        mustMatchKnown: Bool,    // e.g. hard mode
-        reason: inout String?) -> WordModel? {
-            fatalError()
-        }
 }
 
 class WordValidator : Validator, ObservableObject
@@ -109,9 +82,9 @@ class WordValidator : Validator, ObservableObject
     }
     
     /// Validator protocol 
-    func load() {
-        let _ = self.loadAnswers()
-        let _ = self.loadGuessTree()
+    func initialize(answers: [String], guessTree: WordTree) {
+        self.answers = answers
+        self.guessTree = guessTree
         ready = true
     }
     
@@ -155,32 +128,20 @@ class WordValidator : Validator, ObservableObject
     var answers: [String]? = nil
     var guessTree: WordTree? = nil
         
-    func loadAnswers() -> [String] {
-        if let preloaded = self.answers {
-            return preloaded 
-        }
+    static func loadAnswers(seed: Int, locale: GameLocale) -> [String] {
+        var random = ArbitraryRandomNumberGenerator(seed: UInt64(seed))
         
-        var random = ArbitraryRandomNumberGenerator(seed: UInt64(self.seed))
-        
-        let answers =  Self.load("\(locale.fileBaseName)_A").shuffled(using: &random)
-        self.answers = answers 
-        return answers
+        return Self.load("\(locale.fileBaseName)_A").shuffled(using: &random)
     }
     
-    func loadGuessTree() -> WordTree {
-        if let preloaded = self.guessTree {
-            return preloaded
-        }
-        
-        let guessTree = WordTree(
-            words: self.loadGuesses(),
-            locale: self.locale.nativeLocale
+    static func loadGuessTree(locale: GameLocale) -> WordTree {
+        return WordTree(
+            words: Self.loadGuesses(locale: locale),
+            locale: locale.nativeLocale
         )
-        self.guessTree = guessTree
-        return guessTree
     }
     
-    func loadGuesses() -> [WordModel] {
+    static func loadGuesses(locale: GameLocale) -> [WordModel] {
         Self.load("\(locale.fileBaseName)_G").map {
             WordModel($0, locale: locale.nativeLocale)
         }

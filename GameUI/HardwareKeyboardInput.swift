@@ -5,10 +5,10 @@ import SwiftUI
 ///
 /// It will prevent on-screen iOS keyboard from being
 /// shown (by providing a blank UIView() as the inputView).
-struct HardwareKeyboardInput<ValidatorImpl: Validator & ObservableObject>: UIViewRepresentable 
+struct HardwareKeyboardInput: UIViewRepresentable 
 {
     @EnvironmentObject var game: GameState
-    @EnvironmentObject var validator: ValidatorImpl
+    @EnvironmentObject var validator: WordValidator
     
     @EnvironmentObject 
     var toastMessageCenter: ToastMessageCenter
@@ -179,7 +179,7 @@ struct Internal_InputCaptureView_Preview : View {
     
     var body: some View {
         VStack {
-            HardwareKeyboardInput<WordValidator>(focusRequests: $focusRequests)
+            HardwareKeyboardInput(focusRequests: $focusRequests)
                 .border(.red)
             GameBoard(state: game)
             Text(verbatim: "Focus requests: \(focusRequests)")

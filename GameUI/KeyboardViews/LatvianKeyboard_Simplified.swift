@@ -164,7 +164,7 @@ struct LatvianKeyboard_Simplified: View {
                             maxSize: maxSize, 
                             letter: keyboardLetter("M"))
                     }
-                    SubmitButton<WordValidator>(maxSize: wideSize)
+                    SubmitButton(maxSize: wideSize)
                 }
             }
             .id(hints.hints)

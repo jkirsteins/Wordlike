@@ -82,7 +82,7 @@ struct FrenchKeyboard: View {
                     SizeConstrainedKeyboardButton(
                         maxSize: maxSize, letter: "N", locale: .fr_FR)
                 }
-                SubmitButton<WordValidator>(maxSize: wideSize)
+                SubmitButton(maxSize: wideSize)
             }
         }
     }
