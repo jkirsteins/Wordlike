@@ -20,8 +20,16 @@ struct MultiCharacterModel : Codable, Equatable, CustomDebugStringConvertible {
         locale: .en_US)
     
     init(values: Array<CharacterModel>) {
-        guard values.count > 0, let firstLocale = values.first?.locale, values.allSatisfy({ $0.locale == firstLocale }) else {
-            fatalError("All characters must have the same locale")
+        guard values.count > 0 else {
+            fatalError("Character must have at least 1 value")
+        }
+        
+        guard 
+            let firstLocale = values.first?.locale,
+            values.allSatisfy({ $0.locale == firstLocale })
+        else {
+            fatalError("All characters must have the same locale. Received: \(values.map { $0.locale.identifier }.joined(separator: ","))")
+        
         }
         self.values = values
     }
