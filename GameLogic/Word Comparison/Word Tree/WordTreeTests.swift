@@ -107,7 +107,7 @@ struct InternalWordTreeTestView: View {
                 return (found, reason)
             }) { data in 
                 Text(verbatim: "Found: \(data.0?.displayValue ?? "none" )").testColor(good: data.0 == nil)
-                Text(verbatim: "Reason: \(data.1 ?? "none")").testColor(good: data.1 == "2nd letter must be L")
+                Text(verbatim: "Reason: \(data.1 ?? "none")").testColor(good: data.1 == "2nd letter must be R")
             }
             
             Test("Constraints - mention yellow", { () -> (WordModel?, String?) in
@@ -137,54 +137,34 @@ struct InternalWordTreeTestView: View {
                 Text(verbatim: "Reason: \(data.1 ?? "none")").testColor(good: data.1 == "Guess must contain B")
             }
             
-            Test("Basic speed test", { () -> (
-                // list lookup (success / seconds)
-                (Bool, Double),
-                // tree lookup 
-                (Bool, Double) ) in
+            /// Test the speed of the lookup to notice
+            /// regressions (and historically, it was
+            /// helpful to compare with a naive list lookup)
+            Test("Basic speed test", { () -> 
+                // success / seconds
+                (Bool, Double)
+                in
                 
                 // prepare tree
-                let guesses = WordValidator.load("lv_G").map {
-                    $0.uppercased()
-                }
-                
-                let wt = WordTree(locale: .lv_LV)
-                for g in guesses {
-                    let _ = wt.add(word: g)
-                }
-                
-                // prepare old validator
                 let wv = WordValidator(locale: .lv_LV(simplified: false))
+                
+                let wt: WordTree = wv.loadGuessTree()
                 
                 // prepare models
                 let toFind = WordModel("žagas", locale: .lv_LV)
-                let expected = WordModel("agars", locale: .lv_LV)
-                var reasonA: String? = nil
-                var reasonB: String? = nil
-                
+                var reason: String? = nil
                 
                 let start = Date()
-                let found1 = wv.canSubmit(
-                    word: toFind, 
-                    expected: expected, 
-                    model: nil, 
-                    mustMatchKnown: true, 
-                    reason: &reasonA)
-                let start2 = Date()
-                let found2 = wt.contains(word: toFind, mustMatch: nil, reason: &reasonB)
+                let found = wt.contains(word: toFind, mustMatch: nil, reason: &reason)
                 let end = Date()
                 
                 return (
-                    (found1 != nil, start2.timeIntervalSince(start)),
-                    (found2 != nil, end.timeIntervalSince(start2))
+                    found != nil,  end.timeIntervalSince(start)
                 )
             }) { data in
                 
-                Text(verbatim: "Found (list): \(data.0.0)").testColor(good: data.0.0)
-                Text(verbatim: "Found (tree): \(data.1.0)").testColor(good: data.1.0)
-                Text(verbatim: "Interval (list): \(data.0.1)").testColor(good: data.0.0)
-                Text(verbatim: "Interval (tree): \(data.1.1)").testColor(good: (data.1.1 < 0.0001))
-                Text(verbatim: "Interval ratio (tree/list): \(data.1.1 / data.0.1)").testColor(good: data.1.1 / data.0.1 < 0.01)
+                Text(verbatim: "Found (tree): \(data.0)").testColor(good: data.0)
+                Text(verbatim: "Interval (tree): \(data.1)").testColor(good: (data.1 < 0.0001))
             }
         }
     }

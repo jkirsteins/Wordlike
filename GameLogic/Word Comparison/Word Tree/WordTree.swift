@@ -60,11 +60,11 @@ fileprivate class Constraints {
             let expected = expected,
             expected == char
         else {
-            if expected == nil {
+            guard let expected = expected else {
                 return true 
             } 
             
-            reason = "\(WordValidator.letterNumberMsg(ix)) must be \(char.displayValue)"
+            reason = "\(WordValidator.letterNumberMsg(ix)) must be \(expected.displayValue)"
             return false
         }
         
@@ -86,19 +86,40 @@ fileprivate class Constraints {
 class WordTree {
     fileprivate let root = BranchNode()
     let locale: Locale
+    var count: Int = 0
     
     init(locale: Locale) {
         self.locale = locale 
     }
     
+    init(words: [WordModel], locale: Locale) {
+        self.locale = locale
+        
+        for word in words {
+            guard word.isUnambiguous else {
+                fatalError("Only unambiguous words can be added")
+            }
+            
+            let _ = self.add(characters: word.word.map { $0.values.first! })
+        }
+    }
+    
     func add(word: String) -> Bool {
-        guard word.count == 5 else { return false }
-        
-        var node: BranchNode = self.root 
-        
-        for char in word.map({ 
+        return self.add(characters: word.map({ 
             CharacterModel(value: $0, locale: locale) 
-        }) {
+        }))
+    }
+    
+    fileprivate func add(characters: [CharacterModel]) -> Bool {
+        guard characters.count == 5 else { return false }
+        
+        defer {
+            count += 1
+        }
+        
+        var node: BranchNode = self.root
+        
+        for char in characters {
             if let nextNode = node.children.first(where: { $0.char == char }) {
                 node = nextNode
             } else {
