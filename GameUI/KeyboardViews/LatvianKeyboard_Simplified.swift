@@ -61,21 +61,20 @@ struct LatvianKeyboard_Simplified: View {
         let complementChar = CharacterModel(
             value: complement, locale: locale)
         
-        // regular char should go first, because the 
-        // first letter determines the display
-        //
-        // it should always be added, even if 
-        // hint == .wrongLetter (because we don't ever want
-        // an empty button)
-        chars.append(regularChar)
+        // check regular char first
+        if hints.hints[regularChar] != .wrongLetter {
+            chars.append(regularChar)
+        }
         
         // the complement is optional, however
         if hints.hints[complementChar] != .wrongLetter {
             chars.append(complementChar)
         }
         
-        guard chars.count > 0 else {
-            fatalError("Model should always have at least one char (from \(letter))")
+        // something should always be added, so 
+        // we don't get an empty button
+        if chars.isEmpty {
+            chars.insert(regularChar, at: 0)
         }
         
         return MultiCharacterModel(values: chars)

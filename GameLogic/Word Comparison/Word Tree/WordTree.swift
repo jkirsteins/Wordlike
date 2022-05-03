@@ -27,6 +27,15 @@ fileprivate class Constraints {
     var unaccountedFor = Set<CharacterModel>()
     var exactMatchesPending = [Int : CharacterModel]()
     
+    /// As we traverse the tree, there might be multiple
+    /// issues with the given word (when a MultiCharModel has
+    /// multiple values, we can go down multiple
+    /// initially-valid patrs).
+    ///
+    /// This helps keep track of the depth at which we set
+    /// an error reason, and only keep the deepest message.
+    var deepestReason = -1
+    
     init(from model: [RowModel]) {
         for row in model.filter({ $0.isSubmitted }) {
             for rowIx in 0..<row.word.count {
@@ -64,7 +73,10 @@ fileprivate class Constraints {
                 return true 
             } 
             
-            reason = "\(WordValidator.letterNumberMsg(ix)) must be \(expected.displayValue)"
+            if deepestReason < ix {
+                deepestReason = ix
+                reason = "\(WordValidator.letterNumberMsg(ix)) must be \(expected.displayValue)"
+            }
             return false
         }
         
@@ -74,8 +86,10 @@ fileprivate class Constraints {
     func canAccept(characters: [CharacterModel], reason: inout String?) -> Bool {
         let accountedFor = Set(characters).intersection(unaccountedFor) 
         guard accountedFor == unaccountedFor else {
-            let missing = unaccountedFor.subtracting(accountedFor)
-            reason = "Guess must contain \(missing.map { $0.displayValue }.joined(separator: ", "))"
+            if reason == nil {
+                let missing = unaccountedFor.subtracting(accountedFor)
+                reason = "Guess must contain \(missing.map { $0.displayValue }.joined(separator: ", "))"
+            }
             return false
         }
         
@@ -231,7 +245,7 @@ class WordTree {
                 }
             }
         }
-
+        
         return nil
     }
 }

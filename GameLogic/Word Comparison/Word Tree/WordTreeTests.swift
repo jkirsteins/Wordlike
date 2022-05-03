@@ -110,6 +110,49 @@ struct InternalWordTreeTestView: View {
                 Text(verbatim: "Reason: \(data.1 ?? "none")").testColor(good: data.1 == "2nd letter must be R")
             }
             
+            Test("Constraints - keep the deepest constraint message", { () -> (WordModel?, String?) in 
+                
+                let w = WordTree(locale: .lv_LV)
+                
+                let _ = w.add(word: "soļot")
+                let _ = w.add(word: "šauju")
+                let _ = w.add(word: "sauju")
+                
+                let model = [
+                    RowModel(
+                        word: 
+                            WordModel("solis", locale: w.locale), 
+                        expected: 
+                            WordModel("soļot", locale: w.locale), 
+                        isSubmitted: true),
+                    RowModel(
+                        word: 
+                            WordModel("pļauj", locale: w.locale), 
+                        expected: 
+                            WordModel("soļot", locale: w.locale), 
+                        isSubmitted: true),
+                ]
+                
+                let trySubmit = WordModel(characters: [
+                    MultiCharacterModel("SŠ", locale: w.locale),
+                    MultiCharacterModel("A", locale: w.locale),
+                    MultiCharacterModel("U", locale: w.locale),
+                    MultiCharacterModel("J", locale: w.locale),
+                    MultiCharacterModel("U", locale: w.locale),
+                ])
+                
+                var reason: String? = nil
+                let found = w.contains(
+                    word: trySubmit, 
+                    mustMatch: model, 
+                    reason: &reason)
+                return (found, reason)
+            }) { data in 
+                Text(verbatim: "Found: \(data.0?.displayValue ?? "none" )").testColor(good: data.0 == nil)
+                Text(verbatim: "Reason: \(data.1 ?? "none")")
+                    .testColor(good: data.1 == "2nd letter must be O")
+            }
+            
             Test("Constraints - mention yellow", { () -> (WordModel?, String?) in
                 
                 let w = WordTree(locale: .en_US)
@@ -162,7 +205,7 @@ struct InternalWordTreeTestView: View {
             }) { data in
                 
                 Text(verbatim: "Found (tree): \(data.0)").testColor(good: data.0)
-                Text(verbatim: "Interval (tree): \(data.1)").testColor(good: (data.1 < 0.0001))
+                Text(verbatim: "Interval (tree): \(data.1)").testColor(good: (data.1 < 0.00025))
             }
         }
     }

@@ -8,7 +8,7 @@ struct KeyboardButton: View {
     var keyboardHints: KeyboardHints
     
     @Environment(\.debug) 
-    var debug: Bool
+    var debug: Bool 
     
     @EnvironmentObject var game: GameState
     
