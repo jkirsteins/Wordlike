@@ -2,7 +2,12 @@ import SwiftUI
 
 protocol Validator {
     /// Returns the answer for a given turn.
-    func answer(at turnIndex: Int) -> WordModel
+    /// Can return nil if validator is not yet initialized
+    func answer(at turnIndex: Int) -> WordModel?
+    
+    /// Load the required resources (word list etc.)
+    func load()
+    var ready: Bool { get } 
     
     /// Checks if word can be submitted. 
     /// If not, sets the reason message.
@@ -25,8 +30,16 @@ protocol Validator {
 /// Every method invokes `fatalError()` to prevent 
 /// accidental use.
 class DummyValidator: Validator, ObservableObject {
-    func answer(at turnIndex: Int) -> WordModel {
+    func answer(at turnIndex: Int) -> WordModel? {
         fatalError()
+    }
+    
+    func load() {
+        fatalError()
+    }
+    
+    var ready: Bool {
+        false
     }
     
     func canSubmit(
@@ -72,6 +85,8 @@ class WordValidator : Validator, ObservableObject
                 switch(revealState) {
                     case .rightPlace:
                     if word[ix] != expected[ix] {
+                        print("Expected", expected)
+                        print("Word", word)
                         reason = "\(Self.letterNumberMsg(ix)) must be \(expected[ix].displayValue)"
                         return false
                     }
@@ -94,8 +109,18 @@ class WordValidator : Validator, ObservableObject
     }
     
     /// Validator protocol 
-    func answer(at turnIndex: Int) -> WordModel {
-        WordModel(
+    func load() {
+        let _ = self.loadAnswers()
+        let _ = self.loadGuessTree()
+        ready = true
+    }
+    
+    @Published var ready: Bool = false
+    
+    func answer(at turnIndex: Int) -> WordModel? {
+        guard let answers = answers else { return nil }
+        
+        return WordModel(
             answers[turnIndex % answers.count],
             locale: locale.nativeLocale)
     }
@@ -106,6 +131,11 @@ class WordValidator : Validator, ObservableObject
         model: [RowModel]?,
         mustMatchKnown: Bool,    // e.g. hard mode
         reason: inout String?) -> WordModel? {
+            guard let guessTree = self.guessTree else {
+                reason = "Wait a sec, loading words..."
+                return nil
+            } 
+            
             /* To avoid accidentally breaking input files,
              do some checks centrally (e.g. we can check length
              just here, instead of ensuring every input
@@ -115,42 +145,40 @@ class WordValidator : Validator, ObservableObject
                 return nil
             }
             
-            guard !mustMatchKnown || validateRequirements(
+            return guessTree.contains(
                 word: word, 
-                model: model, 
-                reason: &reason) else {
-                    return nil
-                }
-            
-            // We need the index, because we will
-            // return the guess instead of the submitted word.
-            //
-            // The reason is that the submitted version might
-            // have multi-option characters (e.g. in 
-            // Simplified Latvian) but the guess will be
-            // a 'frozen' value
-            guard let ix = guesses.firstIndex(of: word) else
-            {
-                reason = "Not in word list"
-                return nil
-            }
-            
-            let result = guesses[ix]
-            
-            reason = nil
-            return result
+                mustMatch: mustMatchKnown ? model : nil,
+                reason: &reason)
         }
     
     /// Other stuff
-    lazy var answers: [String] = self.loadAnswers()
-    
+    var answers: [String]? = nil
+    var guessTree: WordTree? = nil
+        
     func loadAnswers() -> [String] {
+        if let preloaded = self.answers {
+            return preloaded 
+        }
+        
         var random = ArbitraryRandomNumberGenerator(seed: UInt64(self.seed))
         
-        return Self.load("\(locale.fileBaseName)_A").shuffled(using: &random)
+        let answers =  Self.load("\(locale.fileBaseName)_A").shuffled(using: &random)
+        self.answers = answers 
+        return answers
     }
     
-    lazy var guesses: [WordModel] = self.loadGuesses()
+    func loadGuessTree() -> WordTree {
+        if let preloaded = self.guessTree {
+            return preloaded
+        }
+        
+        let guessTree = WordTree(
+            words: self.loadGuesses(),
+            locale: self.locale.nativeLocale
+        )
+        self.guessTree = guessTree
+        return guessTree
+    }
     
     func loadGuesses() -> [WordModel] {
         Self.load("\(locale.fileBaseName)_G").map {

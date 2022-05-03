@@ -315,6 +315,7 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                 .environmentObject(game)
                 
                 if debugViz {
+                    Text(verbatim: "Validator ready: \(game.expected.validator.ready)")
                     Text(dailyState?.expected.displayValue ?? "none")
                     Text(verbatim: "Focus requests: \(globalTapCount.wrappedValue)")
                     Text(verbatim: "\(game.rows.count)")
@@ -324,24 +325,37 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                 
                 keyboardView
                     .environmentObject(game)
+                    .environment(
+                        \.keyboardSubmitEnabled,
+                         validator.ready)
             } 
             
-            if let ds = dailyState, !turnCounter.isFresh(ds.date, at: Date()) {
+            if validator.ready, let ds = dailyState, !turnCounter.isFresh(ds.date, at: Date()) {
                 Text("Rummaging in the sack for a new word...")
                     .multilineTextAlignment(.center)
                     .border(debugViz ? .red : .clear)
             }
             
-            if dailyState == nil {
+            if 
+                dailyState == nil,
+                // Answer can be nil if validator is not
+                // ready yet
+                    let answer = validator.answer(
+                        at: turnIndex) 
+            {
                 Text("Initializing state...").onAppear {
                     guard let _ = dailyState else {
-                        self.dailyState = DailyState(expected: validator.answer(at: turnIndex))
+                        self.dailyState = DailyState(expected: answer)
                         return
                     }
                 }
             }
         }
         .border(debugViz ? .yellow : .clear)
+        .task {
+            // TODO: this blocks main thread
+            let _ = validator.load()
+        }
         .environmentObject(toastMessageCenter)
         .environment(
             \.keyboardHints, keyboardHints)
@@ -383,9 +397,14 @@ struct GameHost<ValidatorImpl: Validator & ObservableObject>: View {
                 return
             }
             
-            if !turnCounter.isFresh(dailyState.date, at: newTime) {
+            if
+                // Answer might not be available before
+                // validator has initialized
+                let answer = validator.answer(at: turnIndex),
+                !turnCounter.isFresh(dailyState.date, at: newTime) 
+            {
                 stats = stats.update(from: game, with: turnCounter)
-                self.dailyState = DailyState(expected: validator.answer(at: turnIndex))
+                self.dailyState = DailyState(expected: answer)
             }
         }
         .sheet(item: $activeSheet, 

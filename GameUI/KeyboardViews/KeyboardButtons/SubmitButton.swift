@@ -5,13 +5,19 @@ fileprivate struct SubmitButtonStyle: ButtonStyle {
     
     @EnvironmentObject var game: GameState
     
+    @Environment(\.isEnabled)
+    var isEnabled: Bool
+    
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 4.0)
                 .fill(
-                    (game.isCompleted ? palette.normalKeyboardFill : palette.submitKeyboardFill)
+                    isEnabled ? 
+                    ((game.isCompleted ? palette.normalKeyboardFill : palette.submitKeyboardFill)
                         .adjust(
-                            pressed: configuration.isPressed)
+                            pressed: configuration.isPressed))
+                    :
+                        palette.normalKeyboardFill
                 )
             
             configuration.label
@@ -30,6 +36,9 @@ struct SubmitButton<ValidatorImpl: Validator & ObservableObject>: View {
     
     @EnvironmentObject 
     var toastMessageCenter: ToastMessageCenter
+    
+    @Environment(\.keyboardSubmitEnabled)
+    var enabled: Bool
     
     @AppStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
@@ -75,8 +84,8 @@ struct SubmitButton<ValidatorImpl: Validator & ObservableObject>: View {
                 }.padding(padding(gr))
             }
         })
+            .disabled(!enabled || (enabled && game.isCompleted))
             .buttonStyle(SubmitButtonStyle())
-            .disabled(game.isCompleted)
             .frame(
                 maxWidth: maxSize.width, 
                 maxHeight: maxSize.height)

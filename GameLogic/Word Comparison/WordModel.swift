@@ -120,7 +120,7 @@ struct InternalWordModelTests: View {
             
             return VStack(alignment: .leading) {
                 Text("Comparison: \(desc)")
-                Text(verbatim: "\(left?.debugDescription) \(match ? "==" : "!=") \(right?.debugDescription)").foregroundColor(good ? .green : .red)
+                Text(verbatim: "\(left?.debugDescription ?? "none") \(match ? "==" : "!=") \(right?.debugDescription ?? "none")").foregroundColor(good ? .green : .red)
             }.border(.gray)
         }
     }
