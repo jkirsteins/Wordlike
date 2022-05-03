@@ -44,6 +44,10 @@ struct KeyboardButton: View {
             return .wrongPlace
         }
         
+        if hints.contains(.wrongLetter) {
+            return .wrongLetter
+        }
+        
         return nil
     }
     
