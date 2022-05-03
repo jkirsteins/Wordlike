@@ -35,52 +35,6 @@ class WordValidator : Validator, ObservableObject
         return "\(ordinal) letter"
     }
     
-    /// Will only set reason if validation fails
-    /// If no model given, assume no 
-    /// requirements so -> return true
-    func validateRequirements(
-        word: WordModel,
-        model: [RowModel]?, 
-        reason: inout String?) -> Bool 
-    {
-        guard let model = model else {
-            return true
-        }
-        
-        var required = [MultiCharacterModel]()
-        guard let expected = model.first?.expected else {
-            fatalError("Model doesn't have an expected word.")
-        }
-        
-        for row in model {
-            for ix in 0..<row.word.count {
-                let revealState = row.revealState(ix)
-                switch(revealState) {
-                    case .rightPlace:
-                    if word[ix] != expected[ix] {
-                        print("Expected", expected)
-                        print("Word", word)
-                        reason = "\(Self.letterNumberMsg(ix)) must be \(expected[ix].displayValue)"
-                        return false
-                    }
-                    case .wrongPlace:
-                    required.append(row.char(guessAt: ix))
-                    default:
-                    continue
-                }
-            }
-        }
-        
-        for requiredChar in required {
-            guard word.contains(requiredChar) else {
-                reason = "Guess must contain \(requiredChar)"
-                return false 
-            }
-        } 
-        
-        return true
-    }
-    
     /// Validator protocol 
     func initialize(answers: [String], guessTree: WordTree) {
         self.answers = answers
