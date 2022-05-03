@@ -11,6 +11,7 @@ extension ActiveSheet: Identifiable {
 enum GameLocale
 {
     case unknown
+    case ee_EE
     case en_US
     case en_GB
     case fr_FR
@@ -21,26 +22,47 @@ enum GameLocale
         case .unknown:
             return Locale.current
         case .en_GB:
-            return Locale(identifier: "en_GB")
+            return .en_GB
         case .en_US:
-            return Locale(identifier: "en_US")
+            return .en_US
         case .fr_FR:
-            return Locale(identifier: "fr_FR")
+            return .fr_FR
         case .lv_LV(_):
-            return Locale(identifier: "lv_LV")
+            return .lv_LV
+        case .ee_EE:
+            return .ee_EE
+        }
+    }
+    
+    var flag: String {
+        switch(self) {
+        case .en_US:
+            return "🇺🇸"
+        case .en_GB:
+            return "🇬🇧"
+        case .fr_FR:
+            return "🇫🇷"
+        case .lv_LV(_):
+            return "🇱🇻"
+        case .ee_EE:
+            return "🇪🇪"
+        case .unknown:
+            return ""
         }
     }
     
     var localeDisplayName: String {
         switch(self) {
         case .en_US:
-            return "English 🇺🇸"
+            return "English \(self.flag)"
         case .en_GB:
-            return "English 🇬🇧"
+            return "English \(self.flag)"
         case .fr_FR:
-            return "Français 🇫🇷"
+            return "Français \(self.flag)"
         case .lv_LV(_):
-            return "Latviski 🇱🇻"
+            return "Latviski \(self.flag)"
+        case .ee_EE:
+            return "Eesti \(self.flag)"
         case .unknown:
             fatalError("Do not use unknown locale") 
         }
@@ -54,6 +76,8 @@ enum GameLocale
             return "en"
         case .fr_FR:
             return "fr"
+        case .ee_EE:
+            return "ee_EE"
         case .lv_LV(_):
             return "lv"
         case .unknown:

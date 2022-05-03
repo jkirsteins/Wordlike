@@ -1,6 +1,10 @@
 import SwiftUI
 
 extension Locale {
+    static var ee_EE: Locale {
+        Locale(identifier: "ee_EE")
+    }
+    
     static var lv_LV: Locale {
         Locale(identifier: "lv_LV")
     }
