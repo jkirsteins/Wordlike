@@ -51,7 +51,6 @@ struct LatvianKeyboard_Simplified: View {
             // If there is no complement, then
             // there is no way we need to do any
             // visual changes.
-            print("No complement: \(letter) \(locale) ")
             return MultiCharacterModel.single(letter, locale: locale)
         }
         

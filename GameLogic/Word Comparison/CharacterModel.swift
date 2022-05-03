@@ -5,14 +5,17 @@ import SwiftUI
 struct CharacterModel : Codable, Equatable, Hashable, CustomDebugStringConvertible {
     let value: String
     let locale: Locale 
+    let displayValue: String
     
     init(value: String, locale: Locale) {
-        self.value = value 
+        self.value = value
+        self.displayValue = self.value.uppercased()
         self.locale = locale
     }
     
     init(value: Character, locale: Locale) {
-        self.value = String(value) 
+        self.value = String(value)
+        self.displayValue = self.value.uppercased()
         self.locale = locale
     }
     

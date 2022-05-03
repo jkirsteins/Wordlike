@@ -44,6 +44,10 @@ struct WordModel : Codable, Equatable, CustomDebugStringConvertible {
         self.word = characters
     }
     
+    init(characters: [CharacterModel]) {
+        self.word = characters.map { .single($0) }
+    }
+    
     var displayValue: String {
         self.word.map {
             $0.values.first?.value ?? ""
@@ -66,6 +70,10 @@ struct WordModel : Codable, Equatable, CustomDebugStringConvertible {
     
     var debugDescription: String {
         self.word.map({ $0.debugDescription }).joined(separator: "")
+    }
+    
+    var isUnambiguous: Bool {
+        self.word.allSatisfy { $0.values.count == 1 }
     }
     
     var count: Int {

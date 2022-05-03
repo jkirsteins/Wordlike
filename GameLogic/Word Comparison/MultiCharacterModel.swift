@@ -15,6 +15,10 @@ struct MultiCharacterModel : Codable, Equatable, CustomDebugStringConvertible {
             value: letter, locale: locale))
     }
     
+    static func single(_ char: CharacterModel) -> MultiCharacterModel {
+        MultiCharacterModel(char)
+    }
+    
     static let empty = MultiCharacterModel(
         "", 
         locale: .en_US)
@@ -68,7 +72,7 @@ struct MultiCharacterModel : Codable, Equatable, CustomDebugStringConvertible {
     }
     
     var displayValue: String {
-        self.values.first?.value ?? ""
+        self.values.first?.displayValue ?? ""
     }
 }
 
