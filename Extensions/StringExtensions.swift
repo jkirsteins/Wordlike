@@ -26,7 +26,13 @@ extension String {
         Array("AĀBCČDEĒFGĢHIĪJKĶLĻMNŅOPRSŠTUŪVZŽ").map {
             CharacterModel(value: $0, locale: .lv_LV)
         }
-    }() 
+    }()
+    
+    static var uppercasedEeAlphabet = {
+        Array("QWERTYUIOPASDFGHJKLÖÄZXCVBNMÜÕ").sorted().map {
+            CharacterModel(value: $0, locale: .lv_LV)
+        }
+    }()
     
     static func uppercasedAlphabet(for locale: GameLocale) -> [CharacterModel] {
         switch(locale) {
@@ -38,7 +44,9 @@ extension String {
             return uppercasedFrAlphabet
         case .lv_LV(_):
             return uppercasedLvAlphabet
-        default:
+        case .ee_EE:
+            return uppercasedEeAlphabet
+        case .unknown:
             return []
         }
     }

@@ -32,19 +32,7 @@ extension GameState
             tries = "\(tries)\(add)"
         }
         
-        let flag: String 
-        switch(self.expected.locale) {
-            case .en_US:
-            flag = "🇺🇸"
-            case .en_GB:
-            flag = "🇬🇧"
-            case .fr_FR:
-            flag = "🇫🇷"
-            case .lv_LV(_):
-            flag = "🇱🇻"
-            case .unknown:
-            flag = ""
-        }
+        let flag: String = self.expected.locale.flag
         
         var result = "\(Bundle.main.displayName) \(flag) \(self.expected.day) \(tries)\n\n"
         
