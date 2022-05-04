@@ -49,11 +49,11 @@ struct Stats : RawRepresentable {
     /// stats instance, given state of a turn.
     func update(from game: GameState, with ps: TurnCounter) -> Stats {
         
-        // Turn can be incomplete (e.g. we want to
+        // Turn can be incomplete (i.e. !isComplete, 
+        // e.g. when we want to
         // break a streak when the turn times out), 
         // BUT 
         // it should not be tallied before.
-        
         guard !game.isTallied else {
             return self 
         }
@@ -65,7 +65,22 @@ struct Stats : RawRepresentable {
             streakablePeriods = false
         }
         
-        let newStreak = (streakablePeriods && game.isWon ? self.streak : 0) + (game.isWon ? 1 : 0) 
+        let newStreak: Int 
+        
+        /* NOTE: workaround for an obvious streak bug that
+         happened in a TestFlight build.
+         
+         If we have a 100% win rate, then current streak
+         should always be equivalent to games played.
+         */
+        if game.isWon && self.won == self.played {
+            newStreak = self.won + 1 
+        } else {
+            // if we didn't win, then count streak
+            // normally
+            newStreak = (streakablePeriods && game.isWon ? self.streak : 0) + (game.isWon ? 1 : 0)
+        }
+        
         
         let newDistribution: [Int] = (0..<GameState.MAX_ROWS).map {
             ix in 
