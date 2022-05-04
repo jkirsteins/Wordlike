@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ConfettiView",
+        "repositoryURL": "https://github.com/benlmyers/confetti-view",
+        "state": {
+          "branch": null,
+          "revision": "03ea870a943d9a3426abc52e1731041b6b9f5faf",
+          "version": "1.1.2"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

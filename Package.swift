@@ -8,16 +8,18 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "Mon app",
+    name: "Wordlike",
     platforms: [
         .iOS("15.2")
     ],
     products: [
         .iOSApplication(
-            name: "Mon app",
+            name: "Wordlike",
             targets: ["AppModule"],
-            displayVersion: "1.0",
-            bundleVersion: "1",
+            bundleIdentifier: "org.janiskirsteins.SimpleWordGame",
+            teamIdentifier: "FN5YR78T7X",
+            displayVersion: "1.0.41",
+            bundleVersion: "46",
             iconAssetName: "AppIcon",
             accentColorAssetName: "AccentColor",
             supportedDeviceFamilies: [
@@ -32,11 +34,20 @@ let package = Package(
             ]
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/benlmyers/confetti-view", "1.1.2"..<"2.0.0")
+    ],
     targets: [
         .executableTarget(
             name: "AppModule",
             path: ".",
-            exclude: ["Scripts", "LICENSE", "README.md"]
+            exclude: ["Scripts", "LICENSE", "README.md"],
+            dependencies: [
+                .product(name: "ConfettiView", package: "confetti-view")
+            ],
+            resources: [
+                .process("Resources")
+            ]
         )
     ]
 )
