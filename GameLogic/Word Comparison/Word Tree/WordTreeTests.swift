@@ -110,7 +110,7 @@ struct InternalWordTreeTestView: View {
                 Text(verbatim: "Reason: \(data.1 ?? "none")").testColor(good: data.1 == "2nd letter must be R")
             }
             
-            Test("Constraints - keep the deepest constraint message", { () -> (WordModel?, String?) in 
+            Test("Constraints - keep the deepest constraint message - match at index", { () -> (WordModel?, String?) in 
                 
                 let w = WordTree(locale: .lv_LV)
                 
@@ -151,6 +151,49 @@ struct InternalWordTreeTestView: View {
                 Text(verbatim: "Found: \(data.0?.displayValue ?? "none" )").testColor(good: data.0 == nil)
                 Text(verbatim: "Reason: \(data.1 ?? "none")")
                     .testColor(good: data.1 == "2nd letter must be O")
+            }
+            
+            Test("Constraints - keep the deepest constraint message - contain", { () -> (WordModel?, String?) in 
+                
+                let w = WordTree(locale: .lv_LV)
+                
+                let _ = w.add(word: "soļot")
+                let _ = w.add(word: "šauju")
+                let _ = w.add(word: "sauju")
+                
+                let model = [
+                    RowModel(
+                        word: 
+                            WordModel("skops", locale: w.locale), 
+                        expected: 
+                            WordModel("soļot", locale: w.locale), 
+                        isSubmitted: true),
+                    RowModel(
+                        word: 
+                            WordModel("sauja", locale: w.locale), 
+                        expected: 
+                            WordModel("soļot", locale: w.locale), 
+                        isSubmitted: true),
+                ]
+                
+                let trySubmit = WordModel(characters: [
+                    MultiCharacterModel("SŠ", locale: w.locale),
+                    MultiCharacterModel("A", locale: w.locale),
+                    MultiCharacterModel("U", locale: w.locale),
+                    MultiCharacterModel("J", locale: w.locale),
+                    MultiCharacterModel("U", locale: w.locale),
+                ])
+                
+                var reason: String? = nil
+                let found = w.contains(
+                    word: trySubmit, 
+                    mustMatch: model, 
+                    reason: &reason)
+                return (found, reason)
+            }) { data in 
+                Text(verbatim: "Found: \(data.0?.displayValue ?? "none" )").testColor(good: data.0 == nil)
+                Text(verbatim: "Reason: \(data.1 ?? "none")")
+                    .testColor(good: data.1 == "Guess must contain O")
             }
             
             Test("Constraints - mention yellow", { () -> (WordModel?, String?) in

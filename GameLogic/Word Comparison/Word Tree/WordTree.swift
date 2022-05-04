@@ -4,6 +4,17 @@ fileprivate class BranchNode {
     var children = Set<Node>()
 }
 
+//fileprivate enum ErrorReason {
+//    case unmatchedConstraint(CharacterModel, Int)
+//    case unaccountedConstraint(CharacterModel)
+//    case notFound
+//}
+
+fileprivate struct ErrorReason {
+    let reason: String
+    let depth: Int
+}
+
 fileprivate class Node : BranchNode, Hashable {
     let char: CharacterModel
     
@@ -63,7 +74,7 @@ fileprivate class Constraints {
         }
     }
     
-    func canProceed(with char: CharacterModel, at ix: Int, reason: inout String?) -> Bool {
+    func canProceed(with char: CharacterModel, at ix: Int, reason: inout ErrorReason?) -> Bool {
         let expected = exactMatchesPending[ix] 
         guard 
             let expected = expected,
@@ -73,23 +84,24 @@ fileprivate class Constraints {
                 return true 
             } 
             
-            if deepestReason < ix {
-                deepestReason = ix
-                reason = "\(WordValidator.letterNumberMsg(ix)) must be \(expected.displayValue)"
-            }
+            reason = ErrorReason(
+                reason: "\(WordValidator.letterNumberMsg(ix)) must be \(expected.displayValue)", 
+                depth: ix)
             return false
         }
         
         return true
     }
     
-    func canAccept(characters: [CharacterModel], reason: inout String?) -> Bool {
+    func canAccept(characters: [CharacterModel], reason: inout ErrorReason?) -> Bool {
         let accountedFor = Set(characters).intersection(unaccountedFor) 
         guard accountedFor == unaccountedFor else {
-            if reason == nil {
-                let missing = unaccountedFor.subtracting(accountedFor)
-                reason = "Guess must contain \(missing.map { $0.displayValue }.joined(separator: ", "))"
-            }
+            let missing = unaccountedFor.subtracting(accountedFor)
+            
+            reason = ErrorReason(
+                reason: "Guess must contain \(missing.map { $0.displayValue }.joined(separator: ", "))", 
+                depth: 4)
+            
             return false
         }
         
@@ -179,7 +191,7 @@ class WordTree {
             constraints = nil
         }
         
-        var internalReason: String? = nil
+        var internalReason: ErrorReason?
         guard let result = self.contains(
             word: word, 
             constraints: constraints, 
@@ -187,11 +199,7 @@ class WordTree {
             characters: [],
             reason: &internalReason
         ) else {
-            if internalReason == nil {
-                reason = "Not in word list"
-            } else {
-                reason = internalReason
-            }
+            reason = internalReason?.reason ?? "Not in word list"
             return nil
         }
         
@@ -204,13 +212,13 @@ class WordTree {
         constraints: Constraints?,
         node: BranchNode,
         characters: [CharacterModel],
-        reason: inout String?) -> WordModel? 
+        reason: inout ErrorReason?) -> WordModel? 
     {
         let charIx = characters.count
         guard charIx < word.count else {
             guard constraints?.canAccept(
                 characters: characters, 
-                reason: &reason) ?? true 
+                reason: &reason) != false 
             else {
                 return nil
             }
@@ -222,17 +230,31 @@ class WordTree {
             return nil
         }
         
+        var internalReasons = [ErrorReason]()
+        
         for char in word.word[charIx].values {
-            if let nextNode = node.children.first(where: { 
-                $0.char == char && 
-                (
-                    constraints?.canProceed(
-                        with: char, 
-                        at: charIx,
-                        reason: &reason) 
-                    ?? true
-                ) 
-            }) {
+            
+            for nextNode in node.children.filter(
+                // Only look at nodes that can be a match
+                { $0.char == char }
+            ) {
+                var internalReason: ErrorReason? = nil
+                defer {
+                    if let internalReason = internalReason {
+                        internalReasons.append(internalReason)
+                    }
+                }
+                
+                let satisfyConstraints =
+                constraints?.canProceed(
+                    with: char, 
+                    at: charIx, 
+                    reason: &internalReason) ?? true
+                
+                guard satisfyConstraints else {
+                    continue
+                }
+                
                 let nextChars = characters + [char]
                 
                 if let result = contains(
@@ -240,12 +262,14 @@ class WordTree {
                     constraints: constraints, 
                     node: nextNode, 
                     characters: nextChars, 
-                    reason: &reason) {
+                    reason: &internalReason) {
                     return result 
-                }
+                } 
             }
         }
         
+        // Bubble up the deepest reason
+        reason = internalReasons.max(by: { $0.depth < $1.depth })
         return nil
     }
 }

@@ -96,7 +96,6 @@ struct Row: View {
                     )
                         .environment(\.showFocusHint,
                                       showFocusHint && model.focusHintIx == ix)
-                    
                 }
             }
         }
