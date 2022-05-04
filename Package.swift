@@ -35,7 +35,8 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "AppModule",
-            path: "."
+            path: ".",
+            exclude: ["Scripts", "LICENSE", "README.md"]
         )
     ]
 )
