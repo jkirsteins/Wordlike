@@ -28,7 +28,14 @@ class DailyTurnCounter
             second: second, 
             cal: cal)
         
-        return diffInDays == 1
+        // '<=' instead of '==' b/c sometimes (e.g.
+        // debugging with bucket turn counter) we can 
+        // end up with a preceeding turn in the same day
+        //
+        // it doesn't matter in actual releases, but helps
+        // to debug and not worry if there's a bug with
+        // streaks
+        return diffInDays <= 1
     }
     
     func remainingTtl(at now: Date, in cal: Calendar) -> TimeInterval {
