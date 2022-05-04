@@ -81,7 +81,7 @@ struct GameHost: View {
             locale: self.locale,
             validator: self.validator)
         game.rows = newState.rows
-        game.isTallied = newState.isTallied
+        game.isTallied = newState.state.isTallied
         game.id = UUID()
         game.initialized = true
         game.date = newState.date
@@ -226,7 +226,7 @@ struct GameHost: View {
     /// will not call this.
     func turnCompletedBeforeAnimations(_ newState: GameState) {
         if let dailyState = self.dailyState {
-            if !dailyState.isTallied {
+            if !dailyState.state.isTallied {
                 /* Game has just been
                  completed, so
                  we can show some messages while
@@ -309,12 +309,7 @@ struct GameHost: View {
                 .environmentObject(game)
                 
                 if debugViz {
-                    Text(verbatim: "Validator ready: \(game.expected.validator.ready)")
                     Text(dailyState?.expected.displayValue ?? "none")
-                    Text(verbatim: "Focus requests: \(globalTapCount.wrappedValue)")
-                    Text(verbatim: "\(game.rows.count)")
-                    Text(verbatim: "\(game.rows.map { $0.isSubmitted })")
-                    Text(verbatim: "\(geometry?.size.width ?? 0)")
                 }
                 
                 keyboardView

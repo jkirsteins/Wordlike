@@ -21,6 +21,7 @@ extension DailyState : Codable, Equatable
         case expected
         case date
         case rows
+        case isTallied // deprecated
         case state
     }
     
@@ -30,7 +31,18 @@ extension DailyState : Codable, Equatable
         date = try values.decode(Date.self, forKey: .date)
         rows = try values.decode([RowModel].self, forKey: .rows)
         
-        state = (try? values.decode(DailyState.State.self, forKey: .state)) ?? .unknown
+        /*
+         Try to deserialize a bool first since older
+         versions didn't have the state property.
+         
+         If not present, try deserializing the state.
+         */
+        let isTallied: Bool? = (try? values.decode(Bool.self, forKey: .isTallied))
+        if isTallied == true {
+            state = .finished(isTallied: true, isWon: true)
+        } else {
+            state = (try? values.decode(DailyState.State.self, forKey: .state)) ?? .inProgress
+        }
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -52,6 +64,15 @@ public struct DailyState : RawRepresentable
         case notStarted
         case inProgress
         case finished(isTallied: Bool, isWon: Bool)
+        
+        var isTallied: Bool {
+            switch(self) {
+                case .finished(let isTallied, isWon: _):
+                return isTallied
+                default:
+                return false
+            }
+        }
     }
     
     /// Expected word
@@ -61,27 +82,8 @@ public struct DailyState : RawRepresentable
     let date: Date
     
     let state: DailyState.State
-    
-    /// If state is tallied, it has been added to
-    /// the player's statistics, and should not
-    /// be considered again.
-    var isTallied: Bool {
-        switch (state) {
-            case .finished(let isTallied, _):
-            return isTallied
-            default:
-            return false 
-        }
-    } 
-    
+
     let rows: [RowModel]
-    
-    init(expected: String, date: Date, rows: [RowModel], isTallied: Bool, state: State, locale: Locale) {
-        self.expected = WordModel(expected, locale: locale)
-        self.date = date 
-        self.rows = rows 
-        self.state = state
-    }
     
     init(expected: WordModel, date: Date, rows: [RowModel], state: State) {
         self.expected = expected
@@ -96,6 +98,7 @@ public struct DailyState : RawRepresentable
         self.rows = (0..<GameState.MAX_ROWS).map {
             _ in RowModel(expected: expected)
         }
+        
         self.state = .notStarted
     }
     
