@@ -40,10 +40,11 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "AppModule",
+            path: ".",
+            exclude: ["Scripts", "LICENSE", "README.md"],
             dependencies: [
                 .product(name: "ConfettiView", package: "confetti-view")
             ],
-            path: ".",
             resources: [
                 .process("Resources")
             ]
