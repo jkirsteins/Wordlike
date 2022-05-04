@@ -74,26 +74,29 @@ fileprivate class Constraints {
         }
     }
     
-    func canProceed(with char: CharacterModel, at ix: Int, reason: inout ErrorReason?) -> Bool {
-        let expected = exactMatchesPending[ix] 
-        guard 
-            let expected = expected,
-            expected == char
-        else {
-            guard let expected = expected else {
-                return true 
-            } 
-            
-            reason = ErrorReason(
-                reason: "\(WordValidator.letterNumberMsg(ix)) must be \(expected.displayValue)", 
-                depth: ix)
+    func canAccept(characters: [CharacterModel], reason: inout ErrorReason?) -> Bool {
+        guard characters.count == 5 else {
+            reason = ErrorReason(reason: "Not enough letters", depth: 4)
             return false
         }
         
-        return true
-    }
-    
-    func canAccept(characters: [CharacterModel], reason: inout ErrorReason?) -> Bool {
+        for ix in 0..<characters.count {
+            let expected = exactMatchesPending[ix] 
+            guard 
+                let expected = expected,
+                expected == characters[ix]
+            else {
+                guard let expected = expected else {
+                    continue 
+                } 
+                
+                reason = ErrorReason(
+                    reason: "\(WordValidator.letterNumberMsg(ix)) must be \(expected.displayValue)", 
+                    depth: ix)
+                return false
+            }
+        }
+        
         let accountedFor = Set(characters).intersection(unaccountedFor) 
         guard accountedFor == unaccountedFor else {
             let missing = unaccountedFor.subtracting(accountedFor)
@@ -243,16 +246,6 @@ class WordTree {
                     if let internalReason = internalReason {
                         internalReasons.append(internalReason)
                     }
-                }
-                
-                let satisfyConstraints =
-                constraints?.canProceed(
-                    with: char, 
-                    at: charIx, 
-                    reason: &internalReason) ?? true
-                
-                guard satisfyConstraints else {
-                    continue
                 }
                 
                 let nextChars = characters + [char]

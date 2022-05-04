@@ -153,6 +153,51 @@ struct InternalWordTreeTestView: View {
                     .testColor(good: data.1 == "2nd letter must be O")
             }
             
+            Test("Constraints - don't show wrong message when word doesn't exist", { () -> (WordModel?, String?) in 
+                
+                let w = WordTree(locale: .lv_LV)
+                
+                // Add a word that will match
+                // at least >= 2 first letters, to
+                // ensure one of the errors is
+                // about the wrong placement of Ā
+                //
+                // This error should not take precedence
+                // over "word does not exist"
+                let _ = w.add(word: "šāvis")
+                
+                // Model should ensure A is green in 2nd pos
+                let model = [
+                    RowModel(
+                        word: 
+                            WordModel("salts", locale: w.locale), 
+                        expected: 
+                            WordModel("paika", locale: w.locale), 
+                        isSubmitted: true)
+                ]
+                
+                // Doesn't exist - this should be the
+                // error message
+                let trySubmit = WordModel(characters: [
+                    MultiCharacterModel("Š", locale: w.locale),
+                    MultiCharacterModel("AĀ", locale: w.locale),
+                    MultiCharacterModel("V", locale: w.locale),
+                    MultiCharacterModel("I", locale: w.locale),
+                    MultiCharacterModel("E", locale: w.locale),
+                ])
+                
+                var reason: String? = nil
+                let found = w.contains(
+                    word: trySubmit, 
+                    mustMatch: model, 
+                    reason: &reason)
+                return (found, reason)
+            }) { data in 
+                Text(verbatim: "Found: \(data.0?.displayValue ?? "none" )").testColor(good: data.0 == nil)
+                Text(verbatim: "Reason: \(data.1 ?? "none")")
+                    .testColor(good: data.1 == "Not in word list")
+            }
+            
             Test("Constraints - keep the deepest constraint message - contain", { () -> (WordModel?, String?) in 
                 
                 let w = WordTree(locale: .lv_LV)
