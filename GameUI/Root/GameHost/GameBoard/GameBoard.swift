@@ -116,12 +116,6 @@ struct GameBoard: View {
                         isActive: $isActive,
                         keyboardHints: state.keyboardHints )
             }
-            
-            if (debug) {
-                Text(verbatim: "Did respond: \(didRespond)")
-                Text(verbatim: "Is completed: \(state.isCompleted)")
-                Text(verbatim: "Active: \(isActive)")
-            }
         }
         .onChange(of: state.id) {
             _ in

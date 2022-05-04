@@ -319,7 +319,9 @@ struct GameHost: View {
                          validator.ready)
             } 
             
-            if validator.ready, let ds = dailyState, !turnCounter.isFresh(ds.date, at: Date()) {
+            if 
+                (turnDataToDisplay == nil && dailyState == nil) ||
+                    (dailyState != nil && !turnCounter.isFresh(dailyState!.date, at: Date())) {
                 Text("Rummaging in the sack for a new word...")
                     .multilineTextAlignment(.center)
                     .border(debugViz ? .red : .clear)
@@ -343,7 +345,7 @@ struct GameHost: View {
         .border(debugViz ? .yellow : .clear)
         .task {
             let seed = validator.seed 
-            let locale = validator.locale 
+            let locale = validator.locale
             
             DispatchQueue.global(qos: .userInitiated).async {
                 let a = WordValidator.loadAnswers(

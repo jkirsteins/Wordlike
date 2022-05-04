@@ -1,11 +1,18 @@
 import SwiftUI
 
-/// Extension that contains the logic for generating
-/// the shareable snippet of a finished round.
-extension GameState
-{
-    public func shareSymbol(for revealState: TileBackgroundType?) -> String {
-        switch(revealState) {
+extension Optional where Wrapped == TileBackgroundType {
+    var shareSymbol: String {
+        if let wrappedVal = self {
+            return wrappedVal.shareSymbol
+        }
+        
+        return "⬛"
+    }
+}
+
+extension TileBackgroundType {
+    var shareSymbol: String {
+        switch(self) {
         case .rightPlace:
             return "🟩"
         case .wrongPlace:
@@ -13,6 +20,15 @@ extension GameState
         default:
             return "⬛"
         }
+    }
+}
+
+/// Extension that contains the logic for generating
+/// the shareable snippet of a finished round.
+extension GameState
+{
+    public func shareSymbol(for revealState: TileBackgroundType?) -> String {
+        return revealState.shareSymbol
     }
     
     public func shareSnippet(hard: Bool, additional: String?) -> String {

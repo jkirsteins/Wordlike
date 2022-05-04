@@ -30,9 +30,7 @@ class GameState : ObservableObject, Identifiable, Equatable
     }
     
     var isWon: Bool {
-        rows.first(where: {
-            $0.isSubmitted && $0.word == expected.word 
-        }) != nil
+        rows.isWon(expected: expected.word)
     }
     
     var submittedRows: Int {

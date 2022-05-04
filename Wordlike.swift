@@ -8,7 +8,9 @@ extension ActiveSheet: Identifiable {
     var id: Self { self }
 }
 
-enum GameLocale
+// This is more a "game mode" than just a locale
+// E.g. lv_LV contains game mode config.
+enum GameLocale 
 {
     case unknown
     case ee_EE
@@ -16,6 +18,11 @@ enum GameLocale
     case en_GB
     case fr_FR
     case lv_LV(simplified: Bool)
+    
+    /// For use with @AppStorage etc.
+    var turnStateKey: String {
+        "turnState.\(self.fileBaseName)"
+    }
     
     var nativeLocale: Locale {
         switch(self) {
@@ -165,31 +172,63 @@ struct Wordlike: App {
     
     @State var tapDelegate: GlobalTapDelegate? = nil
     
+    // For sharing summary of the progress
+    @State var isSharing: Bool = false
+    @State var shareItems: [Any] = []
+    
+    let listedLocales: [Locale] = [
+        .en_US,
+        .en_GB,
+        .fr_FR,
+        .lv_LV
+    ]
+    
+    func gameLocale(_ loc: Locale) -> GameLocale? {
+        switch(loc) {
+        case .en_US: return .en_US
+        case .en_GB: return .en_GB
+        case .fr_FR: return .fr_FR
+        case .lv_LV: return .lv_LV(simplified: false)
+        case .ee_EE: return .ee_EE
+        default:
+            return nil
+        }
+    }
+    
+    var isSharingDisabled: Bool {
+        for loc in self.listedLocales { 
+            guard let gl = gameLocale(loc) else { 
+                continue 
+            }
+            
+            let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
+            
+            if let ds = ds, ds.isFinished == true {
+                return false 
+            }
+        }
+        
+        return true
+    }
+    
     @SceneBuilder
     var body: some Scene {
         WindowGroup { 
             NavigationView {
                 PaletteSetterView {
                     List {
-                        LinkToGame(
-                            locale: .en_US, 
-                            caption: isHardMode ? "Hard mode." : nil)
-                        LinkToGame(
-                            locale: .en_GB,
-                            caption: isHardMode ? "Hard mode." : nil)
-                        LinkToGame(
-                            locale: .fr_FR,
-                            caption: isHardMode ? "Hard mode." : nil)
-                        
-                        if !isSimplifiedLatvianKeyboard {
-                            LinkToGame(
-                                locale: .lv_LV(simplified: false),
-                                caption: "\(isHardMode ? "Hard mode. " : "")Extended keyboard.")
-                        } else {
-                            LinkToGame(
-                                locale: .lv_LV(simplified: true), 
-                                validator: WordValidator(locale: .lv_LV(simplified: true)),
-                                caption: "\(isHardMode ? "Hard mode. " : "")Simplified keyboard.")
+                        ForEach(listedLocales, id: \.identifier) { loc in
+                            if case .lv_LV = loc {
+                                // Process lv_LV separately due to the
+                                // simplified game mode
+                                LinkToGame(
+                                    locale: .lv_LV(simplified: isSimplifiedLatvianKeyboard),
+                                    caption: "\(isHardMode ? "Hard mode. " : "")\(isSimplifiedLatvianKeyboard ? "Simplified" : "Extended") keyboard.")
+                            } else if let gl = gameLocale(loc) {
+                                LinkToGame(
+                                    locale: gl, 
+                                    caption: isHardMode ? "Hard mode." : nil)
+                            }
                         }
                     }
                 }
@@ -198,6 +237,59 @@ struct Wordlike: App {
                 .navigationTitle(
                     Bundle.main.displayName)
                 .toolbar {
+                    ToolbarItem(placement: .bottomBar) {
+                        Button(action: { 
+                            let lines = self.listedLocales.map { 
+                                (loc: Locale) -> String? in
+                                guard let gl = gameLocale(loc) else { return nil }
+                                
+                                let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
+                                
+                                guard 
+                                    let ds = ds, 
+                                        ds.isFinished == true,
+                                    let lastRow = ds.rows.lastSubmitted,
+                                    let rowSnippet = lastRow.shareSnippet
+                                else { return nil }
+                                
+                                let flag = gl.flag
+                                
+                                let tries: String 
+                                if ds.isWon {
+                                    tries = "\(ds.rows.submittedCount)/6"
+                                } else {
+                                    tries = "X/6"
+                                }
+                                
+                                return "\(flag) \(tries)\(self.isHardMode ? "*" : "") \(rowSnippet)"
+                            }.filter { $0 != nil }.map { $0! }
+                            
+                            guard lines.count > 0 else {
+                                return
+                            }
+                            
+                            let day = turnCounter.turnIndex(at: Date())
+                            self.shareItems = [
+                                (
+                                    ["Wordlike Day \(day)", ""] + lines
+                                ).joined(separator: "\n")
+                            ]
+                            
+                            self.isSharing.toggle()
+                        }, label: {
+                            Label(
+                                "Share your progress", 
+                                systemImage: "square.and.arrow.up")
+                        })
+                            .disabled(self.isSharingDisabled)
+                            .tint(.primary)
+                            .contextMenu {
+                                Text(
+                                    "Summarize the day in a single message."
+                                ).fixedSize()
+                            }
+                    }
+                    
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(
                             action: { 
@@ -205,12 +297,10 @@ struct Wordlike: App {
                             }, 
                             label: {
                                 Label(
-                                    "Help", 
+                                    "Settings", 
                                     systemImage: "gear")
-                                    .foregroundColor(
-                                        Color(
-                                            UIColor.label))
                             }) 
+                            .tint(.primary)
                             .contextMenu {
                                 Button {
                                     self.debug.toggle()
@@ -227,29 +317,37 @@ struct Wordlike: App {
                         .font(.largeTitle )
                         .fontWeight(.bold)
                     
-                    
                     Text("Please select a language in the left side menu.")
                 }
             }
-            .onAppear {
-                self.tapDelegate = GlobalTapDelegate($globalTapCount)
-                UIApplication.shared.addGestureRecognizer(
-                    tapDelegate!
-                )
-            }
-            .environment(
-                \.globalTapCount, 
-                 $globalTapCount)
-            .sheet(item: $activeSheet, onDismiss: {
-                // nothing to do on dismiss
-            }, content: { item in
-                switch(item) {
-                case .settings: 
-                    SettingsView()
+            .sheetWithDetents(
+                isPresented: $isSharing,
+                detents: [.medium(),.large()]) { 
+                } content: {
+                    ActivityViewController(activityItems: $shareItems, callback: {
+                        isSharing = false
+                        shareItems = []
+                    })
                 }
-            })
-            .environment(\.turnCounter, turnCounter)
-            .environment(\.debug, debug)
+                .onAppear {
+                    self.tapDelegate = GlobalTapDelegate($globalTapCount)
+                    UIApplication.shared.addGestureRecognizer(
+                        tapDelegate!
+                    )
+                }
+                .environment(
+                    \.globalTapCount, 
+                     $globalTapCount)
+                .sheet(item: $activeSheet, onDismiss: {
+                    // nothing to do on dismiss
+                }, content: { item in
+                    switch(item) {
+                    case .settings: 
+                        SettingsView()
+                    }
+                })
+                .environment(\.turnCounter, turnCounter)
+                .environment(\.debug, debug)
         }
     }
 }

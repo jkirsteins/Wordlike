@@ -1,5 +1,26 @@
 import SwiftUI
 
+extension Array where Element == RowModel {
+    func isWon(expected word: WordModel) -> Bool {
+        self.first(where: {
+            $0.isSubmitted && $0.word == word 
+        }) != nil
+    }
+    
+    var lastSubmitted: RowModel? {
+        last { $0.isSubmitted }
+    }
+    
+    var submittedCount: Int {
+        self.filter({$0.isSubmitted}).count
+    }
+    
+    /// Either won or lost, but all rows have been submitted
+    func isFinished(expected word: WordModel) -> Bool  {
+        self.isWon(expected: word) || self.submittedCount == 6
+    }
+}
+
 struct RowModel : Equatable, Codable, Identifiable
 {
     let id: String
@@ -71,6 +92,19 @@ struct RowModel : Equatable, Codable, Identifiable
     var focusHintIx: Int? {
         guard word.count < 5 else { return nil }
         return word.count
+    }
+    
+    var shareSnippet: String? {
+        var result = ""
+        guard self.isSubmitted else {
+            return nil
+        }
+        
+        for ix in 0..<self.word.count {
+            result += self.revealState(ix).shareSymbol 
+        }
+        
+        return result 
     }
     
     func char(guessAt pos: Int) -> MultiCharacterModel
