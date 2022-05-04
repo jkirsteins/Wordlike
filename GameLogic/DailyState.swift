@@ -85,6 +85,14 @@ public struct DailyState : RawRepresentable
 
     let rows: [RowModel]
     
+    var isWon: Bool {
+        rows.isWon(expected: self.expected)
+    }
+    
+    var isFinished: Bool {
+        rows.isFinished(expected: self.expected)
+    }
+    
     init(expected: WordModel, date: Date, rows: [RowModel], state: State) {
         self.expected = expected
         self.date = date 
