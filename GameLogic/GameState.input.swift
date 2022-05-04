@@ -44,7 +44,7 @@ extension GameState {
     
     /// Submit key
     func submit(
-        validator: Validator, 
+        validator: WordValidator, 
         hardMode: Bool,
         toastMessageCenter: ToastMessageCenter
     ) {

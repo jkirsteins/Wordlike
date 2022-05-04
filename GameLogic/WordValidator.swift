@@ -1,31 +1,6 @@
 import SwiftUI
 
-protocol Validator {
-    /// Returns the answer for a given turn.
-    /// Can return nil if validator is not yet initialized
-    func answer(at turnIndex: Int) -> WordModel?
-    
-    /// Load the required resources (word list etc.)
-    func initialize(answers: [String], guessTree: WordTree)
-    var ready: Bool { get } 
-    
-    /// Checks if word can be submitted. 
-    /// If not, sets the reason message.
-    /// If so, returns a sanitized version that should
-    /// be stored in the row.
-    ///
-    /// The sanitized version can help with e.g. ignoring
-    /// accents while still preserving the right letters
-    /// from the expected word.
-    func canSubmit(
-        word: WordModel, 
-        expected: WordModel,
-        model: [RowModel]?,
-        mustMatchKnown: Bool,    // e.g. hard mode
-        reason: inout String?) -> WordModel?
-}
-
-class WordValidator : Validator, ObservableObject
+class WordValidator : ObservableObject
 {
     static func letterNumberMsg(_ ix: Int) -> String {
         guard let ordinal = (ix+1).ordinal else {
