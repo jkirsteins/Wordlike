@@ -217,19 +217,86 @@ struct Wordlike: App {
             NavigationView {
                 PaletteSetterView {
                     List {
-                        ForEach(listedLocales, id: \.identifier) { loc in
-                            if case .lv_LV = loc {
-                                // Process lv_LV separately due to the
-                                // simplified game mode
-                                LinkToGame(
-                                    locale: .lv_LV(simplified: isSimplifiedLatvianKeyboard),
-                                    caption: "\(isHardMode ? "Hard mode. " : "")\(isSimplifiedLatvianKeyboard ? "Simplified" : "Extended") keyboard.")
-                            } else if let gl = gameLocale(loc) {
-                                LinkToGame(
-                                    locale: gl, 
-                                    caption: isHardMode ? "Hard mode." : nil)
+                        Section(content: {
+                            ForEach(listedLocales, id: \.identifier) { loc in
+                                if case .lv_LV = loc {
+                                    // Process lv_LV separately due to the
+                                    // simplified game mode
+                                    LinkToGame(
+                                        locale: .lv_LV(simplified: isSimplifiedLatvianKeyboard),
+                                        caption: "\(isHardMode ? "Hard mode. " : "")\(isSimplifiedLatvianKeyboard ? "Simplified" : "Extended") keyboard.")
+                                } else if let gl = gameLocale(loc) {
+                                    LinkToGame(
+                                        locale: gl, 
+                                        caption: isHardMode ? "Hard mode." : nil)
+                                }
                             }
-                        }
+                        }, header: {
+                            
+                        }, footer: {
+                            VStack {
+                                Spacer().frame(maxHeight: 24)
+                                HStack() {
+                                    Spacer()
+                                    VStack(spacing: 4) {
+                                    Button(action: { 
+                                        let lines = self.listedLocales.map { 
+                                            (loc: Locale) -> String? in
+                                            guard let gl = gameLocale(loc) else { return nil }
+                                            
+                                            let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
+                                            
+                                            guard 
+                                                let ds = ds, 
+                                                    ds.isFinished == true,
+                                                let lastRow = ds.rows.lastSubmitted,
+                                                let rowSnippet = lastRow.shareSnippet
+                                            else { return nil }
+                                            
+                                            let flag = gl.flag
+                                            
+                                            let tries: String 
+                                            if ds.isWon {
+                                                tries = "\(ds.rows.submittedCount)/6"
+                                            } else {
+                                                tries = "X/6"
+                                            }
+                                            
+                                            return "\(flag) \(tries)\(self.isHardMode ? "*" : "") \(rowSnippet)"
+                                        }.filter { $0 != nil }.map { $0! }
+                                        
+                                        guard lines.count > 0 else {
+                                            return
+                                        }
+                                        
+                                        let day = turnCounter.turnIndex(at: Date())
+                                        self.shareItems = [
+                                            (
+                                                ["Wordlike Day \(day)", ""] + lines
+                                            ).joined(separator: "\n")
+                                        ]
+                                        
+                                        self.isSharing.toggle()
+                                    }, label: {
+                                        Label(
+                                            
+                                            "Share a summary", 
+                                            systemImage: "square.and.arrow.up")
+                                    })
+                                        .disabled(self.isSharingDisabled)
+                                        .tint(.primary)
+                                        
+                                        Text("Share a summary for every game you have completed today.")
+                                            .multilineTextAlignment(.center)
+                                            .fixedSize(horizontal: false, vertical: true )
+                                            .font(.caption)
+                                    }
+                                        
+                                    Spacer()
+                                }
+                                Spacer().frame(maxHeight: 24)
+                            }
+                        })
                     }
                 }
                 .listStyle(.insetGrouped)
@@ -237,59 +304,6 @@ struct Wordlike: App {
                 .navigationTitle(
                     Bundle.main.displayName)
                 .toolbar {
-                    ToolbarItem(placement: .bottomBar) {
-                        Button(action: { 
-                            let lines = self.listedLocales.map { 
-                                (loc: Locale) -> String? in
-                                guard let gl = gameLocale(loc) else { return nil }
-                                
-                                let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
-                                
-                                guard 
-                                    let ds = ds, 
-                                        ds.isFinished == true,
-                                    let lastRow = ds.rows.lastSubmitted,
-                                    let rowSnippet = lastRow.shareSnippet
-                                else { return nil }
-                                
-                                let flag = gl.flag
-                                
-                                let tries: String 
-                                if ds.isWon {
-                                    tries = "\(ds.rows.submittedCount)/6"
-                                } else {
-                                    tries = "X/6"
-                                }
-                                
-                                return "\(flag) \(tries)\(self.isHardMode ? "*" : "") \(rowSnippet)"
-                            }.filter { $0 != nil }.map { $0! }
-                            
-                            guard lines.count > 0 else {
-                                return
-                            }
-                            
-                            let day = turnCounter.turnIndex(at: Date())
-                            self.shareItems = [
-                                (
-                                    ["Wordlike Day \(day)", ""] + lines
-                                ).joined(separator: "\n")
-                            ]
-                            
-                            self.isSharing.toggle()
-                        }, label: {
-                            Label(
-                                "Share your progress", 
-                                systemImage: "square.and.arrow.up")
-                        })
-                            .disabled(self.isSharingDisabled)
-                            .tint(.primary)
-                            .contextMenu {
-                                Text(
-                                    "Summarize the day in a single message."
-                                ).fixedSize()
-                            }
-                    }
-                    
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(
                             action: { 
