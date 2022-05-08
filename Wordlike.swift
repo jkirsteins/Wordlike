@@ -203,7 +203,10 @@ struct Wordlike: App {
             
             let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
             
-            if let ds = ds, ds.isFinished == true {
+            if let ds = ds, 
+                ds.isFinished == true, 
+                turnCounter.isFresh(ds.date, at: Date()) 
+            {
                 return false 
             }
         }
