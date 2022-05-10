@@ -12375,6 +12375,10 @@ pilnā
 pilon
 pilos
 pilot
+pilta
+pilti
+pilts
+piltā
 pilus
 pilēm
 pilēs
@@ -17410,8 +17414,11 @@ vilnā
 vilnī
 vilos
 vilsi
+vilti
 vilto
+vilts
 viltu
+viltā
 viltū
 vilās
 vilču
@@ -18030,6 +18037,11 @@ zilbi
 zilbē
 zilie
 zilos
+zilta
+zilti
+zilts
+ziltu
+ziltā
 zilum
 zilus
 zilāk
@@ -19034,6 +19046,11 @@ zūdās
 ķilda
 ķildu
 ķildā
+ķilta
+ķilti
+ķilts
+ķiltu
+ķiltā
 ķipar
 ķipii
 ķipim
