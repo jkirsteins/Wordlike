@@ -33,6 +33,12 @@ class WordValidator : ObservableObject
         model: [RowModel]?,
         mustMatchKnown: Bool,    // e.g. hard mode
         reason: inout String?) -> WordModel? {
+            
+            if word == expected {
+                reason = nil
+                return expected
+            }
+            
             guard let guessTree = self.guessTree else {
                 reason = "Wait a sec, loading words..."
                 return nil
@@ -110,12 +116,53 @@ class WordValidator : ObservableObject
 }
 
 struct InternalLetterNumberMessageTest: View {
+    let validator: WordValidator = {
+        let r = WordValidator(
+            locale: .lv_LV(simplified: true))
+        let a = WordValidator.loadAnswers(
+            seed: r.seed, 
+            locale: r.locale)
+        let gt = WordValidator.loadGuessTree(
+            locale: r.locale)
+        
+        r.initialize(answers: a, guessTree: gt)
+        return r
+    }()
+    
+    var testAmbiguousSubmit: AnyView {
+        let word = WordModel(characters: [
+            MultiCharacterModel("p", locale: .lv_LV),
+            MultiCharacterModel("l", locale: .lv_LV),
+            MultiCharacterModel("uū", locale: .lv_LV),
+            MultiCharacterModel("k", locale: .lv_LV),
+            MultiCharacterModel("a", locale: .lv_LV),
+        ])
+        let expected = WordModel("plūka", locale: .lv_LV)
+        
+        var reason: String? = nil
+        let result = validator.canSubmit(
+            word: word, 
+            expected: expected, 
+            model: nil, 
+            mustMatchKnown: false, 
+            reason: &reason)
+        
+        return AnyView(VStack {
+            Text("Can submit ambiguous and have it match the expected")
+            Text("Expected: \(expected.displayValue)")
+            Text("Got: \(result?.displayValue ?? "none")").testColor(good: result?.displayValue == "plūka")
+            Text("Reason: \(reason ?? "none")").testColor(good: reason == nil)
+        })
+    }
+    
     var body: some View {
         VStack {
         Text(verbatim: "0 == \(WordValidator.letterNumberMsg(0)) ==> 1st")
             Text(verbatim: "2 == \(WordValidator.letterNumberMsg(2)) ==> 3rd")
             Text(verbatim: "21 == \(WordValidator.letterNumberMsg(21)) ==> 22nd")
         }
+        
+        testAmbiguousSubmit
     }
 }
 

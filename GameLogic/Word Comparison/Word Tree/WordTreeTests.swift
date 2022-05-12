@@ -3,61 +3,88 @@ import SwiftUI
 struct InternalWordTreeTestView: View {
     var body: some View {
         TestList("WordTree tests") {
-            Test(
-                "Test simple insert and lookup", 
-                { () -> (Bool, Bool, Bool, WordModel?, WordModel?) in
-                    let w = WordTree(locale: .en_US)
-                    return  (
-                        w.add(word: "fuel"), 
-                        w.add(word: "fuelss"),
-                        w.add(word: "fuels"),
-                        w.contains("fuels"),
-                        w.contains("fuel")
-                    )
-                }) 
-            { data in 
-                Text(verbatim: "Failed to insert fuel: \(data.0)").testColor(good: data.0 == false)
-                Text(verbatim: "Failed to insert fuelss: \(data.1)").testColor(good: data.1 == false)
-                Text(verbatim: "Inserted fuels: \(data.2)").testColor(good: data.2)
-                Text(verbatim: "Retrieved fuels: \(data.3?.displayValue ?? "none")").testColor(good: data.3 != nil)
-                Text(verbatim: "Retrieved fuel (as a subset of fuels): \(data.4?.displayValue ?? "none")").testColor(good: data.4 != nil)
-            }
-            
-            Test(
-                "Lookup should fail if word not present", 
-                { () -> (WordModel?) in
-                    let w = WordTree(locale: .en_US)
-                    return  (
-                        w.contains("fuels")
-                    )
-                }) 
-            { data in 
-                Text(verbatim: "Retrieved fuels: \(data?.displayValue ?? "none")").testColor(good: data == nil)
-            }
-            
-            Test(
-                "Retrieved words should be unambiguous", 
-                { () -> (WordModel?) in
-                    let w = WordTree(locale: .lv_LV)
-                    let word = WordModel(characters: [
-                        MultiCharacterModel("sš", locale: .lv_LV),
-                        MultiCharacterModel("v", locale: .lv_LV),
-                        MultiCharacterModel("ī", locale: .lv_LV),
-                        MultiCharacterModel("k", locale: .lv_LV),
-                        MultiCharacterModel("a", locale: .lv_LV),
-                    ])
-                    var reason: String? = nil
-                    let _ = w.add(word: "svīka")
-                    let _ = w.add(word: "švīka")
-                    let found = w.contains(
-                        word: word, 
-                        mustMatch: nil, 
-                        reason: &reason)
-                    return found
-                }) 
-            { data in 
-                Text("Retrieved word: \(data?.displayValue ?? "none")").testColor(good: data != nil)
-                Text(verbatim: "Is unambiguous: \(data?.isUnambiguous ?? false)").testColor(good: data?.isUnambiguous == true)
+            Group {
+                Test(
+                    "Test simple insert and lookup", 
+                    { () -> (Bool, Bool, Bool, WordModel?, WordModel?) in
+                        let w = WordTree(locale: .en_US)
+                        return  (
+                            w.add(word: "fuel"), 
+                            w.add(word: "fuelss"),
+                            w.add(word: "fuels"),
+                            w.contains("fuels"),
+                            w.contains("fuel")
+                        )
+                    }) 
+                { data in 
+                    Text(verbatim: "Failed to insert fuel: \(data.0)").testColor(good: data.0 == false)
+                    Text(verbatim: "Failed to insert fuelss: \(data.1)").testColor(good: data.1 == false)
+                    Text(verbatim: "Inserted fuels: \(data.2)").testColor(good: data.2)
+                    Text(verbatim: "Retrieved fuels: \(data.3?.displayValue ?? "none")").testColor(good: data.3 != nil)
+                    Text(verbatim: "Retrieved fuel (as a subset of fuels): \(data.4?.displayValue ?? "none")").testColor(good: data.4 != nil)
+                }
+                
+                Test(
+                    "Test that ambiguous matching prefers expected word", 
+                    { () -> (WordModel?, String?) in
+                        let w = WordTree(locale: .lv_LV)
+                        let _ = w.add(word: "pluka") 
+                        let _ = w.add(word: "plūka")
+                        
+                        let word = WordModel(characters: [
+                            MultiCharacterModel("p", locale: .lv_LV),
+                            MultiCharacterModel("l", locale: .lv_LV),
+                            MultiCharacterModel("uū", locale: .lv_LV),
+                            MultiCharacterModel("k", locale: .lv_LV),
+                            MultiCharacterModel("a", locale: .lv_LV),
+                        ])
+                        
+                        var reason: String? = nil
+                        let result = w.contains(word: word, mustMatch: nil, reason: &reason)
+                        
+                        return (result, reason)
+                    }) 
+                { data in 
+                    Text(verbatim: "Retrieved fuels: \(data.0?.displayValue ?? "none")").testColor(good: data.0?.displayValue == "plūka")
+                    Text(verbatim: "Reason: \(data.1 ?? "none")").testColor(good: data.1 == nil)
+                }
+                
+                Test(
+                    "Lookup should fail if word not present", 
+                    { () -> (WordModel?) in
+                        let w = WordTree(locale: .en_US)
+                        return  (
+                            w.contains("fuels")
+                        )
+                    }) 
+                { data in 
+                    Text(verbatim: "Retrieved fuels: \(data?.displayValue ?? "none")").testColor(good: data == nil)
+                }
+                
+                Test(
+                    "Retrieved words should be unambiguous", 
+                    { () -> (WordModel?) in
+                        let w = WordTree(locale: .lv_LV)
+                        let word = WordModel(characters: [
+                            MultiCharacterModel("sš", locale: .lv_LV),
+                            MultiCharacterModel("v", locale: .lv_LV),
+                            MultiCharacterModel("ī", locale: .lv_LV),
+                            MultiCharacterModel("k", locale: .lv_LV),
+                            MultiCharacterModel("a", locale: .lv_LV),
+                        ])
+                        var reason: String? = nil
+                        let _ = w.add(word: "svīka")
+                        let _ = w.add(word: "švīka")
+                        let found = w.contains(
+                            word: word, 
+                            mustMatch: nil, 
+                            reason: &reason)
+                        return found
+                    }) 
+                { data in 
+                    Text("Retrieved word: \(data?.displayValue ?? "none")").testColor(good: data != nil)
+                    Text(verbatim: "Is unambiguous: \(data?.isUnambiguous ?? false)").testColor(good: data?.isUnambiguous == true)
+                }
             }
             
             Test("Constraints - ignore unsubmitted rows", { () -> (WordModel?, String?) in
