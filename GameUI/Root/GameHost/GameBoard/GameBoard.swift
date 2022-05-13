@@ -5,15 +5,33 @@ struct GridPadding {
     static let compact = CGFloat(2.0)
 }
 
-fileprivate class ViewModel : ObservableObject {
+/// Track various params about the reveal state of
+/// the board.
+///
+/// So we can synchronize the flips across rows,
+/// and the jumps, and the messages after flips/before jumps
+/// etc. etc. etc.
+class BoardRevealModel : ObservableObject {
+    
+    /// How many letters have been revealed
     @Published var revealedCount: Int = 0
+    
+    /// A finish is one of:
+    ///   - when lost turn and all tiles revealed
+    ///   - when turn won, tiles revealed, AND wave finished
+    @Published var didFinish: Bool = false
+    
+    /// Early finish is when all tiles are revealed
+    @Published var didEarlyFinish: Bool = false
+    
+    /// Which row can start revealing its letters
     @Published var rowStartIx: Int = 0
 }
 
 struct GameBoard: View {
     @Environment(\.colorScheme) var colorScheme
     
-    @StateObject fileprivate var vm = ViewModel()
+    @StateObject var vm = BoardRevealModel()
     
     @State var isActive: Int = 0
     
@@ -76,38 +94,44 @@ struct GameBoard: View {
                     model: $state.rows[ix], 
                     tag: ix,
                     isActive: $isActive,
-                    keyboardHints: state.keyboardHints,
-                    revealedCount: $vm.revealedCount,
-                    rowStartIx: $vm.rowStartIx)
+                    keyboardHints: state.keyboardHints)
             }
         }
+        .environmentObject(vm)
         .onReceive(
-            self.vm.$revealedCount.debounce(
-                for: 0.75, scheduler: DispatchQueue.main)) {
-                    nrc in 
-            
-                    guard 
-                        let callback = completed,
-                        !didRespond, 
-                            state.isCompleted,
-                        nrc == self.state.submittedRows * 5
-                    else {
-                        return
-                    }
-            
-                    didRespond = true
-                    callback(state)
-        }
-        .onChange(of: state.rows) { _ in 
+            self.vm.$didEarlyFinish
+        ) { def in
             guard 
-                let callback = earlyCompleted,
-                !didEarlyRespond,
-                state.isCompleted
+                def,
+                let earlyCallback = earlyCompleted,
+                !didEarlyRespond, 
+                    state.isCompleted
             else {
                 return
             }
             
-            didEarlyRespond = true 
+            didEarlyRespond = true
+            earlyCallback(state)
+        }
+        .onReceive(
+            // We debounce to add a bit of delay
+            // after all the animations finish
+            self.vm.$didFinish.debounce(
+                for: 1.0, scheduler: DispatchQueue.main)
+        ) { df in
+            
+            /* If we lose, do callback
+             without waiting */
+            guard 
+                df,
+                let callback = completed,
+                !didRespond, 
+                    state.isCompleted
+            else {
+                return
+            }
+            
+            didRespond = true
             callback(state)
         }
         .onChange(of: state.id) {

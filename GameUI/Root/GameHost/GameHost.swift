@@ -44,11 +44,16 @@ struct GameHost: View {
     /* Propogated via preferences from the underlying EditableRow. */
     @StateObject var toastMessageCenter = ToastMessageCenter()
     
-    init(_ locale: GameLocale) {
-        self.init(locale, validator: WordValidator(locale: locale))
+    init(_ locale: GameLocale, seed: Int? = nil) {
+        self.init(
+            locale, 
+            validator: WordValidator(
+                locale: locale,
+                seed: seed)
+        )
     }
     
-    init(_ locale: GameLocale, validator: WordValidator) {
+    fileprivate init(_ locale: GameLocale, validator: WordValidator) {
         self._validator = StateObject(
             wrappedValue: validator)
         

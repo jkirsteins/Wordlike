@@ -159,6 +159,8 @@ struct RevealModifierTestView: View {
             FlippableTile(
                 letter: from, 
                 flipped: to,
+                tag: 0,
+                jumpIx: nil,
                 midCallback: {
                     mid = true
                 },
@@ -166,6 +168,9 @@ struct RevealModifierTestView: View {
                     to = nil
                     mid = false
                     uuid = UUID()
+                },
+                jumpCallback: { _ in
+                    
                 },
                 duration: duration)
                 .id(uuid)

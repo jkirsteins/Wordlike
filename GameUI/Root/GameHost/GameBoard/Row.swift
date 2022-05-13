@@ -1,5 +1,12 @@
 import SwiftUI
 
+fileprivate class ViewModel : ObservableObject
+{
+    @Published var localRevealedCount: Int = 0
+    @Published var localFlipStartIx: Int = 0
+    @Published var jumpIx: Int? = nil
+}
+
 struct Row: View 
 {
     let delayRowIx: Int
@@ -8,35 +15,27 @@ struct Row: View
     
     let duration = CGFloat(0.25)
     
-    /// Fully revealed
-    @Binding var revealedCount: Int
+    @StateObject fileprivate var vm = ViewModel()
     
-    /// Can start next flip or next row
-    @Binding var rowStartIx: Int
-    @State var localFlipStartIx: Int = 0
+    @EnvironmentObject 
+    var boardReveal: BoardRevealModel
     
     init(model: RowModel) {
         self.delayRowIx = 0
         self.model = model 
         self.showFocusHint = false
-        self._revealedCount = .constant(0)
-        self._rowStartIx = .constant(0)
     }
     
-    init(delayRowIx: Int, model: RowModel, showFocusHint: Bool, revealedCount: Binding<Int>, rowStartIx: Binding<Int>) {
+    init(delayRowIx: Int, model: RowModel, showFocusHint: Bool) {
         self.delayRowIx = delayRowIx
         self.model = model 
         self.showFocusHint = showFocusHint
-        self._revealedCount = revealedCount
-        self._rowStartIx = rowStartIx
     }
     
-    init(delayRowIx: Int, model: RowModel, revealedCount: Binding<Int>, rowStartIx: Binding<Int>) {
+    init(delayRowIx: Int, model: RowModel) {
         self.delayRowIx = delayRowIx
         self.model = model 
         self.showFocusHint = false
-        self._revealedCount = revealedCount
-        self._rowStartIx = rowStartIx
     }
     
     @Environment(\.horizontalSizeClass) 
@@ -66,7 +65,7 @@ struct Row: View
         
         return TileModel(
             letter: model.displayValue, 
-            state: self.model.revealState(ix))
+            state: .maskedFilled)
     }
     
     var adjustedRevealThreshold: Int {
@@ -75,10 +74,10 @@ struct Row: View
     
     func canFlip(at ix: Int) -> Bool {
         guard ix > 0 else {
-            return delayRowIx <= rowStartIx 
+            return delayRowIx <= boardReveal.rowStartIx 
         } 
         
-        return ix <= localFlipStartIx  
+        return ix <= vm.localFlipStartIx  
     }
     
     func flippedModel(at ix: Int) -> TileModel? {
@@ -108,20 +107,32 @@ struct Row: View
                 FlippableTile(
                     letter: maskedModel(at: ix), 
                     flipped: flippedModel(at: ix),
+                    tag: ix,
+                    jumpIx: vm.jumpIx,
                     midCallback: {
-                        localFlipStartIx += 1
+                        vm.localFlipStartIx += 1
                         if (ix == 0) {
-                            rowStartIx += 1
+                            boardReveal.rowStartIx += 1
                         }
                     },
                     flipCallback: {
-                        revealedCount += 1
+                        boardReveal.revealedCount += 1
+                        vm.localRevealedCount += 1
+                    },
+                    jumpCallback: { ji in
+                        guard  ji < 4 else {
+                            boardReveal.didFinish = true
+                            vm.jumpIx = nil
+                            return
+                        }
+                        
+                        vm.jumpIx = ji + 1
                     },
                     duration: 0.35)
+                    
                     .environment(
                         \.showFocusHint,
                          showFocusHint && model.focusHintIx == ix)
-//                    .id("\(ix)-\(canFlip(at: ix)))-tile")
             }
         }
         .contextMenu {
@@ -141,6 +152,35 @@ struct Row: View
                 }
             } else {
                 self.count = CGFloat(nc)
+            }
+        }
+        .onReceive(
+            self.vm.$localRevealedCount.debounce(for: 0.1, scheduler: DispatchQueue.main)
+        ) {
+            nrc in 
+            
+            guard 
+                nrc == 5
+                    else {
+                        return
+                    }
+            
+            // All tiles are revealed
+            self.boardReveal.didEarlyFinish = true 
+            
+            guard 
+                self.model.expected == self.model.word 
+            else {
+                // If word is not right, it's also
+                // the full finish.
+                self.boardReveal.didFinish = true
+                return
+            }
+            
+            withAnimation(.easeInOut(duration: 0.5)) {
+                // didFinish will be set when jumpIx
+                // set back to nil
+                self.vm.jumpIx = 0
             }
         }
     }
@@ -196,6 +236,7 @@ fileprivate struct InvalidSubmittableRow_Preview: View
 }
 
 struct Row_Previews: PreviewProvider {
+    static let st = BoardRevealModel()
     static var previews: some View {
         VStack {
             Text("Test focus hint")
@@ -205,14 +246,14 @@ struct Row_Previews: PreviewProvider {
                     expected: WordModel("holly", locale: .en_US),
                     isSubmitted: false))
             }
-        }
+        }.environmentObject(st)
         VStack {
             Text("Test yellow and green L")
             Row(model: RowModel(
                 word: WordModel("ladle", locale: .en_US),
                 expected: WordModel("holly", locale: .en_US),
                 isSubmitted: true))
-        }
+        }.environmentObject(st)
         VStack {
             Row(model: RowModel(
                 word: WordModel("fuels", locale: .en_US),
@@ -233,6 +274,6 @@ struct Row_Previews: PreviewProvider {
             
             SubmittableRow_Preview()
             InvalidSubmittableRow_Preview()
-        }
+        }.environmentObject(st)
     }
 }

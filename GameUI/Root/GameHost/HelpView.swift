@@ -20,11 +20,10 @@ struct HelpView: View {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     Tile("w", .rightPlace)
-                    ForEach(Array("eary"), id: \.self) {
-                        (char: Character) in
-                        
-                        Tile(String(char))
-                    }
+                    Tile("e")
+                    Tile("a")
+                    Tile("r")
+                    Tile("y")
                 }
                 Text("The letter **W** is in the word and in the correct spot.")
             }
@@ -33,22 +32,18 @@ struct HelpView: View {
                 HStack {
                     Tile("p")
                     Tile("i", .wrongPlace)
-                    ForEach(Array("lls"), id: \.self) {
-                        (char: Character) in
-                        
-                        Tile(String(char))
-                    }
+                    Tile("l")
+                    Tile("l")
+                    Tile("s")
                 }
                 Text("The letter **I** is in the word but in a different spot.")
             }
             
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    ForEach(Array("vag"), id: \.self) {
-                        (char: Character) in
-                        
-                        Tile(String(char))
-                    }
+                    Tile("v")
+                    Tile("a")
+                    Tile("g")
                     Tile("u", .wrongLetter)
                     Tile("e")
                 }
