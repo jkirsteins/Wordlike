@@ -9,7 +9,12 @@ extension GameState {
         for srow in submittedRows {
             for ix in 0..<srow.word.count {
                 let state = srow.revealState(ix)
-                let chars = srow.char(guessAt: ix)
+                
+                guard 
+                    let chars = srow.char(guessAt: ix)
+                else {
+                    continue 
+                }
                 
                 guard let char = chars.values.first, chars.values.count == 1 else {
                     fatalError("Submitted rows can't keep multiple character options")
@@ -75,7 +80,7 @@ struct KeyboardHintsTestInternalView: View {
         return GeometryReader { gr in
             VStack {
                 Text(verbatim: "\(state.keyboardHints)")
-                Row(delayRowIx: 0, model: state.rows[0])
+                Row(model: state.rows[0])
                 EnglishKeyboard()
                     .environmentObject(state)
                     .environment(\.keyboardHints, state.keyboardHints)
@@ -122,7 +127,7 @@ struct Internal_LatvianSimplifiedTest: View
                 }
                 
                 ForEach(state.rows) {
-                    Row(delayRowIx: 0, model: $0)
+                    Row(model: $0)
                 }
                 LatvianKeyboard_Simplified()
                     .environmentObject(state)
@@ -173,7 +178,7 @@ struct Internal_LatvianSimplifiedTest_validateUncertainPair: View
                 }
                 
                 ForEach(state.rows) {
-                    Row(delayRowIx: 0, model: $0)
+                    Row(model: $0)
                 }
                 LatvianKeyboard_Simplified()
                     .environmentObject(state)

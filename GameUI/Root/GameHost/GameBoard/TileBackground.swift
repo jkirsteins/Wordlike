@@ -1,15 +1,27 @@
 import SwiftUI
 
-enum TileBackgroundType
+enum TileBackgroundType : Equatable, Hashable
 {
     case maskedEmpty
     case maskedFilled
     case wrongLetter
     case wrongPlace
     case rightPlace
+    indirect case darker(TileBackgroundType)
+    
+    var isMasked: Bool {
+        switch(self) {
+            case .maskedEmpty, .maskedFilled:
+            return true 
+            default:
+            return false
+        }
+    }
     
     func strokeColor(from palette: Palette) -> Color {
         switch(self) {
+            case .darker(let type):
+            return type.strokeColor(from: palette).darker
             case .maskedEmpty:
             return palette.maskedEmptyStroke
         case .maskedFilled:
@@ -25,6 +37,8 @@ enum TileBackgroundType
     
     func fillColor(from palette: Palette) -> Color {
         switch(self) {
+        case .darker(let type):
+            return type.strokeColor(from: palette).darker
         case .maskedEmpty:
             return palette.maskedEmptyFill
         case .maskedFilled:
@@ -44,13 +58,16 @@ struct TileBackgroundView: View {
     
     @Environment(\.palette) var palette: Palette
     
+    let cornerRadius = CGFloat(0.0)
+    
     var body: some View {
-        Rectangle()
+        RoundedRectangle(cornerRadius: cornerRadius)
             .strokeBorder(
                 type.strokeColor(from: palette), 
-                lineWidth: 2)
+                lineWidth: 1)
             .background(
                 type.fillColor(from: palette))
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
     }
 }
 
@@ -111,6 +128,24 @@ struct TileBackgroundView_Previews: PreviewProvider {
                 )
                     .aspectRatio(1, contentMode: .fit)
                     .frame(maxWidth: 100)
+            }.environment(\.palette, LightPalette())
+        }
+        
+        HStack {
+            VStack {
+                Tile("Q", .wrongLetter)
+                Tile("Q", .maskedEmpty)
+                Tile("Q", .maskedFilled)
+                Tile("Q", .wrongPlace)
+                Tile("Q", .rightPlace)
+            }
+            
+            VStack {
+                Tile("Q", .wrongLetter)
+                Tile("Q", .maskedEmpty)
+                Tile("Q", .maskedFilled)
+                Tile("Q", .wrongPlace)
+                Tile("Q", .rightPlace)
             }.environment(\.palette, LightPalette())
         }
     }

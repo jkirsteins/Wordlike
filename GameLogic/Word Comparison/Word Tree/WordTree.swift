@@ -50,12 +50,14 @@ fileprivate class Constraints {
     init(from model: [RowModel]) {
         for row in model.filter({ $0.isSubmitted }) {
             for rowIx in 0..<row.word.count {
-                guard let rs = row.revealState(rowIx) else {
+                let rs = row.revealState(rowIx) 
+                
+                guard !rs.isMasked else {
                     continue 
                 }
                 
-                let multiChar = row.char(guessAt: rowIx)
-                guard 
+                guard
+                    let multiChar = row.char(guessAt: rowIx),
                     let char = multiChar.values.first,
                     multiChar.values.count == 1 
                 else {

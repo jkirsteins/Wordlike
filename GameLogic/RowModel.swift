@@ -107,18 +107,18 @@ struct RowModel : Equatable, Codable, Identifiable
         return result 
     }
     
-    func char(guessAt pos: Int) -> MultiCharacterModel
+    func char(guessAt pos: Int) -> MultiCharacterModel?
     {
         guard word.count > pos else { 
-            return .empty 
+            return nil
         }
         return word[pos] 
     }
     
-    func char(expectAt pos: Int) -> MultiCharacterModel
+    func char(expectAt pos: Int) -> MultiCharacterModel?
     {
         guard expected.count > pos else { 
-            return .empty
+            return nil
         }
         return expected[pos]
     }
@@ -150,12 +150,17 @@ struct RowModel : Equatable, Codable, Identifiable
         return total - known - knownUntil
     }
     
-    func revealState(_ ix: Int) -> TileBackgroundType?
+    func revealState(_ ix: Int) -> TileBackgroundType
     {
-        guard canReveal else { return nil }
+        guard canReveal else {
+            if nil != self.char(guessAt: ix) {
+                return .maskedFilled
+            }
+            return .maskedEmpty
+        }
         
         guard word.count > ix, expected.count > ix else {
-            return nil
+            fatalError("Invalid index")
         }
         
         // Green letters should always be represented
@@ -194,7 +199,7 @@ struct RowModel_Previews: PreviewProvider {
             
             VStack {
                 
-                Row(delayRowIx: 0, model: model)
+                Row(model: model)
                 
                 Text("Expected: ABABA")
                 
@@ -203,7 +208,7 @@ struct RowModel_Previews: PreviewProvider {
                         VStack {
                             Text(verbatim: "\(model.yellowBudget(for: WordModel("AAXAA", locale: Locale.current), at: ix))")
                             
-                            Text(verbatim: "\(model.revealState(ix)!)")
+                            Text(verbatim: "\(model.revealState(ix))")
                         }
                     }
                 }

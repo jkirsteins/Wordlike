@@ -5,15 +5,43 @@ struct GridPadding {
     static let compact = CGFloat(2.0)
 }
 
+/// Track various params about the reveal state of
+/// the board.
+///
+/// So we can synchronize the flips across rows,
+/// and the jumps, and the messages after flips/before jumps
+/// etc. etc. etc.
+class BoardRevealModel : ObservableObject {
+    
+    /// How many letters have been revealed
+    @Published var revealedCount: Int = 0
+    
+    /// A finish is one of:
+    ///   - when lost turn and all tiles revealed
+    ///   - when turn won, tiles revealed, AND wave finished
+    @Published var didFinish: Bool = false
+    
+    /// Early finish is when all tiles are revealed
+    @Published var didEarlyFinish: Bool = false
+    
+    /// Which row can start revealing its letters
+    @Published var rowStartIx: Int = 0
+}
+
 struct GameBoard: View {
     @Environment(\.colorScheme) var colorScheme
+    
+    @StateObject var vm = BoardRevealModel()
     
     @State var isActive: Int = 0
     
     // Controls if we call the complete callback
     @State var didRespond = false
+    @State var didEarlyRespond = false
     
     @ObservedObject var state: GameState
+    let earlyCompleted: ((GameState)->())? 
+    let completed: ((GameState)->())? 
     
     func allSubmitted(until row: Int) -> Bool {
         if row == 0 {
@@ -28,52 +56,6 @@ struct GameBoard: View {
         return allSubmitted(until: row) && !state.rows[row].isSubmitted 
     } 
     
-    //    var onCompleteCallback: ((GameState)->())? = nil
-    
-    func onStateChange(
-        edited: @escaping ([RowModel])->(),
-        
-        // Turn was completed, but callback is before animations are finished. Not called if turn was already finished when the view appeared.
-        earlyCompleted: @escaping (GameState)->(),
-        
-        // Both turn and animations have completed. This 
-        // has a delay relative to earlyCompleted:
-        completed: @escaping (GameState)->()) -> some View {
-            return self.onChange(of: self.state.rows) {
-                newRows in 
-                
-                DispatchQueue.main.async {
-                    edited(newRows)
-                }
-                
-                guard state.isCompleted, !didRespond else 
-                { 
-                    return 
-                }
-                didRespond = true
-                
-                DispatchQueue.main.async {
-                    earlyCompleted(state)
-                }
-                
-                Task {
-                    // allow time to finish animating a single
-                    // row
-                    try? await Task.sleep(nanoseconds: 2_000_000_000)
-                    DispatchQueue.main.async {
-                        completed(state)    
-                    }  
-                }
-            }.task {
-                if state.isCompleted {
-                    // allow time to finish animating
-                    // all rows that just appeared
-                    try? await Task.sleep(nanoseconds: UInt64(state.submittedRows) * 500_000_000) 
-                    completed(state)
-                }
-            }
-        }
-    
     func recalculateActive() {
         for ix in 0..<state.rows.count {
             if canEdit(row: ix) {
@@ -82,8 +64,6 @@ struct GameBoard: View {
             }
         }
     }
-    
-    @State var didCompleteCallback = false
     
     @Environment(\.horizontalSizeClass) 
     var horizontalSizeClass
@@ -109,13 +89,50 @@ struct GameBoard: View {
                 ix in 
                 
                 EditableRow(
-                        editable: !state.isCompleted,
-                        delayRowIx: ix,
-                        model: $state.rows[ix], 
-                        tag: ix,
-                        isActive: $isActive,
-                        keyboardHints: state.keyboardHints )
+                    editable: !state.isCompleted,
+                    delayRowIx: ix,
+                    model: $state.rows[ix], 
+                    tag: ix,
+                    isActive: $isActive,
+                    keyboardHints: state.keyboardHints)
             }
+        }
+        .environmentObject(vm)
+        .onReceive(
+            self.vm.$didEarlyFinish
+        ) { def in
+            guard 
+                def,
+                let earlyCallback = earlyCompleted,
+                !didEarlyRespond, 
+                    state.isCompleted
+            else {
+                return
+            }
+            
+            didEarlyRespond = true
+            earlyCallback(state)
+        }
+        .onReceive(
+            // We debounce to add a bit of delay
+            // after all the animations finish
+            self.vm.$didFinish.debounce(
+                for: 1.0, scheduler: DispatchQueue.main)
+        ) { df in
+            
+            /* If we lose, do callback
+             without waiting */
+            guard 
+                df,
+                let callback = completed,
+                !didRespond, 
+                    state.isCompleted
+            else {
+                return
+            }
+            
+            didRespond = true
+            callback(state)
         }
         .onChange(of: state.id) {
             _ in
@@ -124,7 +141,6 @@ struct GameBoard: View {
              we don't want to pop up the keyboard)
              */
             recalculateActive()
-//            didRespond = false
         }
         .onTapGesture {
             recalculateActive()
@@ -141,7 +157,10 @@ fileprivate struct InternalPreview: View
     
     var body: some View {
         VStack {
-            GameBoard(state: state)
+            GameBoard(
+                state: state, 
+                earlyCompleted: nil, 
+                completed: nil)
             Button("Reset") {
                 self.state =     GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: .en_US, validator: WordValidator(locale: .en_US)))
             }

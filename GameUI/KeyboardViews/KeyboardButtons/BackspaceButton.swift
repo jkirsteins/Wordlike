@@ -28,13 +28,19 @@ struct BackspaceButton: View {
     @EnvironmentObject var game: GameState
     
     func padding(_ gp: GeometryProxy) -> CGFloat {
-        let minEdge = max(gp.size.width, gp.size.height)
+        let minEdge = min(gp.size.width, gp.size.height)
         
         let div: CGFloat 
         
         if minEdge < 30 {
             return 0
-        } 
+        }
+        if minEdge < 35 {
+            return 1
+        }
+        if minEdge < 40 {
+            return 2
+        }
         else if minEdge < 50 {
             div = 9.0
         } 

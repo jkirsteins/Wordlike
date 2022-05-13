@@ -4,8 +4,8 @@ import SwiftUI
 /// to a GameHost instance.
 struct LinkToGame: View {
     let locale: GameLocale
-    let validator: WordValidator
     let caption: String? 
+    let seed: Int?
     
     @Environment(\.palette) 
     var palette: Palette
@@ -18,20 +18,14 @@ struct LinkToGame: View {
     
     init(locale: GameLocale, caption: String? = nil, seed: Int? = nil) {
         self.locale = locale 
-        self.validator = WordValidator(locale: locale, seed: seed)
-        self.caption = caption
-    }
-    
-    init(locale: GameLocale, validator: WordValidator, caption: String? = nil) {
-        self.locale = locale 
-        self.validator = validator
+        self.seed = seed
         self.caption = caption
     }
     
     var body: some View {
         NavigationLink(destination: {
             GeometryReader { gr in
-                GameHost(locale, validator: validator)
+                GameHost(locale, seed: seed)
                 /* We set the environment explicitly, because
                  it will not be handled by the palette wrapper
                  (it is instantiated, not nested) */

@@ -19,10 +19,6 @@ struct MultiCharacterModel : Codable, Equatable, CustomDebugStringConvertible {
         MultiCharacterModel(char)
     }
     
-    static let empty = MultiCharacterModel(
-        "", 
-        locale: .en_US)
-    
     init(values: Array<CharacterModel>) {
         guard values.count > 0 else {
             fatalError("Character must have at least 1 value")

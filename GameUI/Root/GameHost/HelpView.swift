@@ -19,38 +19,33 @@ struct HelpView: View {
             
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    Tile(letter: "w", delay: 0, revealState: .rightPlace, animate: false)
-                    ForEach(Array("eary"), id: \.self) {
-                        (char: Character) in
-                        
-                        Tile(letter: String(char), delay: 0, revealState: nil, animate: false)
-                    }
+                    Tile("w", .rightPlace)
+                    Tile("e")
+                    Tile("a")
+                    Tile("r")
+                    Tile("y")
                 }
                 Text("The letter **W** is in the word and in the correct spot.")
             }
             
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    Tile(letter: "p", delay: 0, revealState: nil, animate: false)
-                    Tile(letter: "i", delay: 0, revealState: .wrongPlace, animate: false)
-                    ForEach(Array("lls"), id: \.self) {
-                        (char: Character) in
-                        
-                        Tile(letter: String(char), delay: 0, revealState: nil, animate: false)
-                    }
+                    Tile("p")
+                    Tile("i", .wrongPlace)
+                    Tile("l")
+                    Tile("l")
+                    Tile("s")
                 }
                 Text("The letter **I** is in the word but in a different spot.")
             }
             
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    ForEach(Array("vag"), id: \.self) {
-                        (char: Character) in
-                        
-                        Tile(letter: String(char), delay: 0, revealState: nil, animate: false)
-                    }
-                    Tile(letter: "u", delay: 0, revealState: .wrongLetter, animate: false)
-                    Tile(letter: "e", delay: 0, revealState: nil, animate: false)
+                    Tile("v")
+                    Tile("a")
+                    Tile("g")
+                    Tile("u", .wrongLetter)
+                    Tile("e")
                 }
                 Text("The letter **U** is not in the word in any spot.")
             }
