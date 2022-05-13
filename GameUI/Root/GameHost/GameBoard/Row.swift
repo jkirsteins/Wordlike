@@ -13,45 +13,43 @@ struct Shake: GeometryEffect {
     }
 }
 
-struct BlinkViewModifier: ViewModifier {
+struct Row: View 
+{
+    let delayRowIx: Int
+    let model: RowModel
+    let showFocusHint: Bool
     
-    let duration: Double
-    @State private var blinking: Bool = false
+    let duration = CGFloat(0.25)
     
-    func body(content: Content) -> some View {
-        content
-            .opacity(blinking ? 0 : 1)
-            .onAppear {
-                withAnimation(
-                    .easeInOut(duration: duration).repeatForever()) {
-                        blinking = true
-                    }
-            }
+    /// Fully revealed
+    @Binding var revealedCount: Int
+    
+    /// Can start next flip or next row
+    @Binding var rowStartIx: Int
+    @State var localFlipStartIx: Int = 0
+    
+    init(model: RowModel) {
+        self.delayRowIx = 0
+        self.model = model 
+        self.showFocusHint = false
+        self._revealedCount = .constant(0)
+        self._rowStartIx = .constant(0)
     }
-}
-
-extension View {
-    func blinking(duration: Double = 0.75) -> some View {
-        modifier(BlinkViewModifier(duration: duration))
-    }
-}
-
-struct Row: View {
     
-    var delayRowIx: Int
-    var model: RowModel
-    var showFocusHint: Bool 
-    
-    init(delayRowIx: Int, model: RowModel, showFocusHint: Bool) {
+    init(delayRowIx: Int, model: RowModel, showFocusHint: Bool, revealedCount: Binding<Int>, rowStartIx: Binding<Int>) {
         self.delayRowIx = delayRowIx
         self.model = model 
         self.showFocusHint = showFocusHint
+        self._revealedCount = revealedCount
+        self._rowStartIx = rowStartIx
     }
     
-    init(delayRowIx: Int, model: RowModel) {
+    init(delayRowIx: Int, model: RowModel, revealedCount: Binding<Int>, rowStartIx: Binding<Int>) {
         self.delayRowIx = delayRowIx
         self.model = model 
         self.showFocusHint = false
+        self._revealedCount = revealedCount
+        self._rowStartIx = rowStartIx
     }
     
     @Environment(\.horizontalSizeClass) 
@@ -72,31 +70,63 @@ struct Row: View {
         return GridPadding.normal
     }
     
+    func maskedModel(at ix: Int) -> TileModel {
+        let isEmpty = self.model.char(guessAt: ix) == .empty
+        
+        return TileModel(
+            letter: model.char(guessAt: ix).displayValue,
+            state: isEmpty ? .maskedEmpty : .maskedFilled
+        )
+    }
+    
+    var adjustedRevealThreshold: Int {
+        delayRowIx * 5   
+    }
+    
+    func canFlip(at ix: Int) -> Bool {
+        guard ix > 0 else {
+            return delayRowIx <= rowStartIx 
+        } 
+        
+        return ix <= localFlipStartIx  
+    }
+    
+    func flippedModel(at ix: Int) -> TileModel? {
+        guard 
+            canFlip(at: ix)
+        else { 
+            return nil 
+        }
+        
+        let rs = self.model.revealState(ix)
+        guard !rs.isMasked else { return nil } 
+        
+        return TileModel(
+            letter: model.char(guessAt: ix).displayValue,
+            state: rs
+        )
+    }
+    
     var body: some View {
         HStack(spacing: hspacing) {
-            // Poor way to get the animations
-            // working when submission state triggers
-            if model.isSubmitted {
-                ForEach(0..<5) { ix in
-                    Tile(
-                        letter: model.char(
-                            guessAt: ix).displayValue, 
-                        delay: delayRowIx + ix,
-                        revealState: model.revealState(ix),
-                        animate: true)
-                }
-            } else {
-                ForEach(0..<5) { ix in
-                    Tile(
-                        letter: model.char(
-                            guessAt: ix).displayValue, 
-                        delay: delayRowIx + ix,
-                        revealState: model.revealState(ix),
-                        animate: true
-                    )
-                        .environment(\.showFocusHint,
-                                      showFocusHint && model.focusHintIx == ix)
-                }
+            ForEach(0..<5, id: \.self) { ix in
+                FlippableTile(
+                    letter: maskedModel(at: ix), 
+                    flipped: flippedModel(at: ix),
+                    midCallback: {
+                        localFlipStartIx += 1
+                        if (ix == 0) {
+                            rowStartIx += 1
+                        }
+                    },
+                    flipCallback: {
+                        revealedCount += 1
+                    },
+                    duration: 0.35)
+                    .environment(
+                        \.showFocusHint,
+                         showFocusHint && model.focusHintIx == ix)
+//                    .id("\(ix)-\(canFlip(at: ix)))-tile")
             }
         }
         .contextMenu {
@@ -111,7 +141,7 @@ struct Row: View {
         .onChange(of: model.attemptCount) {
             nc in 
             if nc > 0 {
-                withAnimation(.linear(duration: 0.33)) {
+                withAnimation(.linear(duration: 0.25)) {
                     self.count = CGFloat(nc)
                 }
             } else {
@@ -137,7 +167,7 @@ fileprivate struct SubmittableRow_Preview: View
     
     var body: some View {
         VStack {
-            Row(delayRowIx: 0, model: model)
+            Row(model: model)
             Button("Submit") {
                 model = RowModel(
                     word: model.word,
@@ -157,7 +187,7 @@ fileprivate struct InvalidSubmittableRow_Preview: View
     
     var body: some View { 
         VStack {
-            Row(delayRowIx: 0, model: model)
+            Row(model: model)
             
             Button("Submit Invalid (\(model.attemptCount))") {
                 model = RowModel(
@@ -175,31 +205,31 @@ struct Row_Previews: PreviewProvider {
         VStack {
             Text("Test focus hint")
             PaletteSetterView {
-                Row(delayRowIx: 0, model: RowModel(
+                Row(model: RowModel(
                     word: WordModel("lad", locale: .en_US),
                     expected: WordModel("holly", locale: .en_US),
-                    isSubmitted: false), showFocusHint: true)
+                    isSubmitted: false))
             }
         }
         VStack {
             Text("Test yellow and green L")
-            Row(delayRowIx: 0, model: RowModel(
+            Row(model: RowModel(
                 word: WordModel("ladle", locale: .en_US),
                 expected: WordModel("holly", locale: .en_US),
                 isSubmitted: true))
         }
         VStack {
-            Row(delayRowIx: 0, model: RowModel(
+            Row(model: RowModel(
                 word: WordModel("fuels", locale: .en_US),
                 expected: WordModel("fuels", locale: .en_US),
                 isSubmitted: true))
-            Row(delayRowIx: 1, model: RowModel(
+            Row(model: RowModel(
                 word: WordModel("fuels", locale: .en_US),
                 expected: WordModel("hales", locale: .en_US),
                 isSubmitted: true))
             
             VStack {
-                Row(delayRowIx: 2, model: RowModel(
+                Row(model: RowModel(
                     word: WordModel("aaxaa", locale: .en_US),
                     expected: WordModel("ababa", locale: .en_US),
                     isSubmitted: true))

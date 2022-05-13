@@ -214,7 +214,7 @@ struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementUnknown: View
                 }
                 
                 ForEach(state.rows) {
-                    Row(delayRowIx: 0, model: $0)
+                    Row(model: $0)
                 }
                 LatvianKeyboard_Simplified()
                     .environmentObject(state)
@@ -260,7 +260,7 @@ struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementGood: View
                 }
                 
                 ForEach(state.rows) {
-                    Row(delayRowIx: 0, model: $0)
+                    Row(model: $0)
                 }
                 LatvianKeyboard_Simplified()
                     .environmentObject(state)
@@ -307,7 +307,7 @@ struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_different: View
                 }
                 
                 ForEach(state.rows) {
-                    Row(delayRowIx: 0, model: $0)
+                    Row(model: $0)
                 }
                 LatvianKeyboard_Simplified()
                     .environmentObject(state)
@@ -355,7 +355,7 @@ struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_valid: View
                 }
                 
                 ForEach(state.rows) {
-                    Row(delayRowIx: 0, model: $0)
+                    Row(model: $0)
                 }
                 LatvianKeyboard_Simplified()
                     .environmentObject(state)
@@ -398,7 +398,7 @@ struct LatvianKeyboard_SimplifiedTest_testCollapsing_onlyComplementKnown: View
                 Divider()
                 
                 ForEach(state.rows) {
-                    Row(delayRowIx: 0, model: $0)
+                    Row(model: $0)
                 }
                 LatvianKeyboard_Simplified()
                     .environmentObject(state)

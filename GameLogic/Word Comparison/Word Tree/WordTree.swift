@@ -50,7 +50,9 @@ fileprivate class Constraints {
     init(from model: [RowModel]) {
         for row in model.filter({ $0.isSubmitted }) {
             for rowIx in 0..<row.word.count {
-                guard let rs = row.revealState(rowIx) else {
+                let rs = row.revealState(rowIx) 
+                
+                guard !rs.isMasked else {
                     continue 
                 }
                 

@@ -39,6 +39,9 @@ struct EditableRow : View
     let tag: Int
     @Binding var isActive: Int
     
+    @Binding var revealedCount: Int
+    @Binding var rowStartIx: Int
+    
     let editable: Bool
     
     let keyboardHints: KeyboardHints
@@ -49,13 +52,17 @@ struct EditableRow : View
         model: Binding<RowModel>, 
         tag: Int, 
         isActive: Binding<Int>,
-        keyboardHints: KeyboardHints) {
+        keyboardHints: KeyboardHints,
+        revealedCount: Binding<Int>,
+        rowStartIx: Binding<Int>) {
             self.editable = editable
             self.delayRowIx = delayRowIx
             self._model = model
             self.tag = tag
             self._isActive = isActive
             self.keyboardHints = keyboardHints
+            self._revealedCount = revealedCount
+            self._rowStartIx = rowStartIx
         }
     
     init(
@@ -63,13 +70,17 @@ struct EditableRow : View
         model: Binding<RowModel>, 
         tag: Int, 
         isActive: Binding<Int>,
-        keyboardHints: KeyboardHints) {
+        keyboardHints: KeyboardHints,
+        revealedCount: Binding<Int>,
+        rowStartIx: Binding<Int>) {
             self.editable = true
             self.delayRowIx = delayRowIx
             self._model = model
             self.tag = tag
             self._isActive = isActive
             self.keyboardHints = keyboardHints
+            self._revealedCount = revealedCount
+            self._rowStartIx = rowStartIx
         }
     
     @State var background: Color = Color(UIColor.systemFill)
@@ -80,6 +91,8 @@ struct EditableRow : View
         return Row(
             delayRowIx: delayRowIx, 
             model: model, 
-            showFocusHint: showFocusHint)
+            showFocusHint: showFocusHint,
+            revealedCount: $revealedCount,
+            rowStartIx: $rowStartIx)
     }
 }

@@ -150,12 +150,17 @@ struct RowModel : Equatable, Codable, Identifiable
         return total - known - knownUntil
     }
     
-    func revealState(_ ix: Int) -> TileBackgroundType?
+    func revealState(_ ix: Int) -> TileBackgroundType
     {
-        guard canReveal else { return nil }
+        guard canReveal else {
+            guard self.char(guessAt: ix) == .empty else {
+                return .maskedFilled
+            }
+            return .maskedEmpty
+        }
         
         guard word.count > ix, expected.count > ix else {
-            return nil
+            fatalError("Invalid index")
         }
         
         // Green letters should always be represented
@@ -194,7 +199,7 @@ struct RowModel_Previews: PreviewProvider {
             
             VStack {
                 
-                Row(delayRowIx: 0, model: model)
+                Row(model: model)
                 
                 Text("Expected: ABABA")
                 
@@ -203,7 +208,7 @@ struct RowModel_Previews: PreviewProvider {
                         VStack {
                             Text(verbatim: "\(model.yellowBudget(for: WordModel("AAXAA", locale: Locale.current), at: ix))")
                             
-                            Text(verbatim: "\(model.revealState(ix)!)")
+                            Text(verbatim: "\(model.revealState(ix))")
                         }
                     }
                 }

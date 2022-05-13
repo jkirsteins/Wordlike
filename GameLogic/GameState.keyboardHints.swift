@@ -75,7 +75,7 @@ struct KeyboardHintsTestInternalView: View {
         return GeometryReader { gr in
             VStack {
                 Text(verbatim: "\(state.keyboardHints)")
-                Row(delayRowIx: 0, model: state.rows[0])
+                Row(model: state.rows[0])
                 EnglishKeyboard()
                     .environmentObject(state)
                     .environment(\.keyboardHints, state.keyboardHints)
@@ -122,7 +122,7 @@ struct Internal_LatvianSimplifiedTest: View
                 }
                 
                 ForEach(state.rows) {
-                    Row(delayRowIx: 0, model: $0)
+                    Row(model: $0)
                 }
                 LatvianKeyboard_Simplified()
                     .environmentObject(state)
@@ -173,7 +173,7 @@ struct Internal_LatvianSimplifiedTest_validateUncertainPair: View
                 }
                 
                 ForEach(state.rows) {
-                    Row(delayRowIx: 0, model: $0)
+                    Row(model: $0)
                 }
                 LatvianKeyboard_Simplified()
                     .environmentObject(state)

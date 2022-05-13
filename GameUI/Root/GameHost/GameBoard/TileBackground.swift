@@ -8,6 +8,15 @@ enum TileBackgroundType
     case wrongPlace
     case rightPlace
     
+    var isMasked: Bool {
+        switch(self) {
+            case .maskedEmpty, .maskedFilled:
+            return true 
+            default:
+            return false
+        }
+    }
+    
     func strokeColor(from palette: Palette) -> Color {
         switch(self) {
             case .maskedEmpty:

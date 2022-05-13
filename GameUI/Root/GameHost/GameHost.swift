@@ -298,11 +298,12 @@ struct GameHost: View {
                         focusRequests: globalTapCount)
                         .border(debugViz ? .red : .clear)
                     
-                    GameBoard(state: game)
-                        .onStateChange(
-                            edited: turnStateChanged,
-                            earlyCompleted: turnCompletedBeforeAnimations,
-                            completed: turnCompletedAfterAnimations)
+                    GameBoard(
+                        state: game,
+                        earlyCompleted: turnCompletedBeforeAnimations,
+                        completed: turnCompletedAfterAnimations
+                    )
+                        .onChange(of: game.rows, perform: turnStateChanged)
                         .contentShape(Rectangle())
                 }
                 /// For the KeyboardInput view

@@ -19,17 +19,13 @@ struct PaletteSetterView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Text("Dark high contrast")
-            Row(
-                delayRowIx: 0, 
-                model: RowModel(
+            Row(model: RowModel(
                     word: WordModel("flbes", locale: .en_US),
                     expected: WordModel("fuels", locale: .en_US), 
                     isSubmitted: true))
                 .environment(\.palette, DarkHCPalette())
             Text("Light high contrast")
-            Row(
-                delayRowIx: 0, 
-                model: RowModel(
+            Row(model: RowModel(
                     word: WordModel("flbes", locale: .en_US), 
                     expected: WordModel("fuels", locale: .en_US), 
                     isSubmitted: true))

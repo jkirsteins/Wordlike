@@ -181,7 +181,10 @@ struct Internal_InputCaptureView_Preview : View {
         VStack {
             HardwareKeyboardInput(focusRequests: $focusRequests)
                 .border(.red)
-            GameBoard(state: game)
+            GameBoard(
+                state: game, 
+                earlyCompleted: nil, 
+                completed: nil)
             Text(verbatim: "Focus requests: \(focusRequests)")
             Button("Focus") {
                 focusRequests += 1
