@@ -7,15 +7,27 @@ fileprivate struct BackspaceButtonStyle: ButtonStyle {
     
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
+            
+            RoundedRectangle(cornerRadius: 4.0)
+                .fill(
+                    palette.normalKeyboardFill
+                        .darker
+                )
+            
+            VStack {
             RoundedRectangle(cornerRadius: 4.0)
                 .fill(
                     palette.normalKeyboardFill
                         .adjust(
                             pressed: configuration.isPressed)
                 )
+                Spacer().frame(maxHeight: 1)
+            }
             
             configuration.label
-                .foregroundColor(.white)
+                .foregroundColor(
+                    palette.keyboardText(for: nil)
+                )
         }
         .clipShape(RoundedRectangle(cornerRadius: 4.0))
     }
@@ -102,5 +114,6 @@ struct InternalBackspaceButtonPreview: View {
 struct BackspaceButton_Previews: PreviewProvider {
     static var previews: some View {
         InternalBackspaceButtonPreview()
+            .environment(\.palette, LightPalette2())
     }
 }

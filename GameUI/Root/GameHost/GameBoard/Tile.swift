@@ -71,13 +71,34 @@ struct Tile: View {
     }
     
     var foregroundColor: Color {
-        isMasked ? palette.maskedTextColor : palette.revealedTextColor
+        guard type != .wrongLetter else {
+            return palette.revealedWrongLetterColor
+        }
+        
+        return isMasked ? palette.maskedTextColor : palette.revealedTextColor
+    }
+    
+    let maxd = Double(3.0)
+    
+    var randRotate: Double {
+        let x = maxd * drand48()
+        let r = (maxd/2.0) - x
+        return r
     }
     
     var body: some View {
         GeometryReader { gr in 
             ZStack {
-                TileBackgroundView(type: type)
+                TileBackgroundView(type: .darker(type))
+                    .overlay(
+                        VStack {
+                            TileBackgroundView(type: type)
+//                            Spacer().frame(maxHeight: 2)
+                        }
+                    )
+                    .rotationEffect(
+                        .degrees(randRotate)
+                    )
                 
                 if showFocusHint {
                     // This is the cursor branch.

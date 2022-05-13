@@ -11,7 +11,7 @@ struct PaletteSetterView<Content: View>: View {
     var body: some View {
         content()
             .environment(\.palette, 
-                          high ? (colorScheme == .dark ? DarkHCPalette() as Palette: LightHCPalette() as Palette) : (colorScheme == .dark ? DarkPalette() as Palette: LightPalette() as Palette))
+                          high ? (colorScheme == .dark ? DarkHCPalette() as Palette: LightHCPalette() as Palette) : (colorScheme == .dark ? DarkPalette() as Palette: LightPalette2() as Palette))
     }
 }
 

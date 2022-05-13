@@ -1,5 +1,81 @@
 import SwiftUI
 
+struct KeyboardButtonStyle: ButtonStyle {
+    @Environment(\.palette) var palette: Palette
+    
+    let type: TileBackgroundType?
+    
+    func fontSize(_ gr: GeometryProxy) -> Double {
+        if gr.size.height < 50 {
+            // Hardcode some value which is used for
+            // small previews (like in a keyboard
+            // accessory view)
+            return 12
+        }
+        
+        return gr.size.height/1.5
+    }
+    
+    func padding(_ gr: GeometryProxy) -> Double {
+        if gr.size.height < 50 {
+            // Hardcode some value which is used for
+            // small previews (like in a keyboard
+            // accessory view)
+            return 0
+        }
+        
+        return 4
+    }
+    
+    var computedType: TileBackgroundType {
+        return type ?? .wrongLetter
+    }
+    
+    func textColor(_ configuration: Configuration) -> Color {
+        palette.keyboardText(for: type).adjust(pressed: configuration.isPressed)
+    }
+    
+    func fillBackground(_ configuration: Configuration) -> Color {
+        let result = type == .wrongLetter ?
+        palette.keyboardFill(for: type)
+        :
+        palette.keyboardFill(for: type)
+            .darker
+        
+        return result.adjust(pressed: configuration.isPressed)
+    }
+    
+    func makeBody(configuration: Configuration) -> some View {
+        ZStack {
+            VStack {
+                if type == .wrongLetter {
+                    Spacer().frame(maxHeight: 2)
+                }
+                RoundedRectangle(cornerRadius: 4.0)
+                    .fill(fillBackground(configuration))
+            }
+            
+            if type != .wrongLetter {
+                VStack {
+                    RoundedRectangle(cornerRadius: 4.0)
+                    .fill(
+                            palette.keyboardFill(for: type)
+                                .adjust(
+                                    pressed: configuration.isPressed)
+                            
+                        )
+                    Spacer().frame(maxHeight: 1)
+                }
+            }
+            
+            
+            configuration.label
+                .foregroundColor(textColor(configuration))
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 4.0))
+    }
+}
+
 /// A keyboard button
 struct KeyboardButton: View {
     let letter: MultiCharacterModel
@@ -75,5 +151,20 @@ struct KeyboardButton: View {
     
     init(letter: MultiCharacterModel) {
         self.letter = letter
+    }
+}
+
+struct KeyboardButton_Previews: PreviewProvider {
+    static var previews: some View {
+        KeyboardButton(letter: "Q", locale: .en_US)
+            .environmentObject(GameState())
+            .scaleEffect(4.0)
+        
+        VStack {
+            Text("Keyboard with Light palette v2")
+            
+            _PaletteInternalTestView()
+                .environment(\.palette, LightPalette2())
+        }.padding()
     }
 }

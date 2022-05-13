@@ -8,20 +8,36 @@ fileprivate struct SubmitButtonStyle: ButtonStyle {
     @Environment(\.isEnabled)
     var isEnabled: Bool
     
+    func fillColor(_ configuration: Configuration) -> Color {
+        isEnabled ? 
+        ((game.isCompleted ? palette.normalKeyboardFill : palette.submitKeyboardFill)
+            .adjust(
+                pressed: configuration.isPressed))
+        :
+        palette.normalKeyboardFill
+    }
+    
+    func foregroundColor(_ configuration: Configuration) -> Color {
+        guard isEnabled else {
+            return palette.keyboardText(for: nil)
+        }
+        
+        return configuration.isPressed ? .white.darker : .white
+    }
+    
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 4.0)
-                .fill(
-                    isEnabled ? 
-                    ((game.isCompleted ? palette.normalKeyboardFill : palette.submitKeyboardFill)
-                        .adjust(
-                            pressed: configuration.isPressed))
-                    :
-                        palette.normalKeyboardFill
-                )
+                .fill(fillColor(configuration).darker)
+            
+            VStack {
+            RoundedRectangle(cornerRadius: 4.0)
+                .fill(fillColor(configuration))
+                Spacer().frame(maxHeight: 1)
+            }
             
             configuration.label
-                .foregroundColor(configuration.isPressed ? .white.darker : .white)
+                .foregroundColor(foregroundColor(configuration))
         }
         .clipShape(RoundedRectangle(cornerRadius: 4.0))
     }
