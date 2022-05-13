@@ -58,7 +58,7 @@ struct FlippableTile: View {
     
     var body: some View {
         nonJumpingBody
-            .jumping(jumping: $jumping, duration: 0.3)
+            .jumping(jumping: $jumping, duration: 0.25)
             .onChange(of: jumpIx) { nx in
                 jumping = (tag == nx)
             }

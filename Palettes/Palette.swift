@@ -28,9 +28,20 @@ protocol Palette
     
     func keyboardFill(for type: TileBackgroundType?) -> Color
     func keyboardText(for type: TileBackgroundType?) -> Color
+    
+    var inProgressUiLabel: Color { get }
+    var completedUiLabel: Color { get }
 }
 
 extension Palette {
+    var completedUiLabel: Color {
+        rightPlaceFill
+    }
+    
+    var inProgressUiLabel: Color {
+        wrongPlaceFill
+    }
+    
     var revealedWrongLetterColor: Color {
         revealedTextColor
     }

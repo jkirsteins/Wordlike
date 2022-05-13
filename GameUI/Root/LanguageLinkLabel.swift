@@ -27,7 +27,7 @@ struct LanguageLinkLabel: View {
         
         if case .finished(_, isWon: true) = dailyState.state
         {
-            return ("Completed", palette.rightPlaceFill)
+            return ("Completed", palette.completedUiLabel)
         }
         
         if case .finished(_, isWon: false) = dailyState.state {
@@ -35,7 +35,7 @@ struct LanguageLinkLabel: View {
         }
         
         if case .inProgress = dailyState.state {
-            return ("In progress", palette.wrongPlaceFill)
+            return ("In progress", palette.inProgressUiLabel)
         }
         
         return nil

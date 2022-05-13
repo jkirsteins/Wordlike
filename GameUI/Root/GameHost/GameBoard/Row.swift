@@ -13,6 +13,7 @@ struct Row: View
     let model: RowModel
     let showFocusHint: Bool
     
+    // Duration for reveal
     let duration = CGFloat(0.25)
     
     @StateObject fileprivate var vm = ViewModel()
@@ -128,7 +129,7 @@ struct Row: View
                         
                         vm.jumpIx = ji + 1
                     },
-                    duration: 0.35)
+                    duration: duration)
                     
                     .environment(
                         \.showFocusHint,
@@ -177,19 +178,11 @@ struct Row: View
                 return
             }
             
-            withAnimation(.easeInOut(duration: 0.5)) {
-                // didFinish will be set when jumpIx
-                // set back to nil
-                self.vm.jumpIx = 0
-            }
+            self.vm.jumpIx = 0
         }
     }
     
     @State var count: CGFloat = 0.0
-    
-    //    let shakeDuration = 0.055
-    let shakeDuration = 1.0
-    let shakeRepeat = 1
 }
 
 

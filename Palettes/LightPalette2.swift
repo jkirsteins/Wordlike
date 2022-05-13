@@ -33,6 +33,14 @@ struct LightPalette2 : Palette
         revealedTextColor
     }
     
+    var inProgressUiLabel: Color {
+        wrongPlaceFill.darker
+    }
+    
+    var completedUiLabel: Color {
+        rightPlaceFill.darker
+    }
+    
     func keyboardFill(for type: TileBackgroundType?) -> Color {
         guard let type = type else { 
             return Color(hex: 0xefefef) 
