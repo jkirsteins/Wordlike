@@ -18,7 +18,7 @@ let package = Package(
             targets: ["AppModule"],
             bundleIdentifier: "org.janiskirsteins.SimpleWordGame",
             teamIdentifier: "FN5YR78T7X",
-            displayVersion: "1.0.47",
+            displayVersion: "1.0.48",
             bundleVersion: "53",
             iconAssetName: "AppIcon",
             accentColorAssetName: "AccentColor",
