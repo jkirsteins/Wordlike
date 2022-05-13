@@ -51,16 +51,19 @@ struct SubmitButton: View {
     }
     
     func padding(_ gp: GeometryProxy) -> CGFloat {
-        let minEdge = max(gp.size.width, gp.size.height)
+        let minEdge = min(gp.size.width, gp.size.height)
         
         let div: CGFloat 
         
         if minEdge < 30 {
             return 0
         } 
-        else if minEdge < 50 {
+        else if minEdge < 40 {
+            div = 15.0
+        }
+        else if minEdge < 45 {
             div = 9.0
-        } 
+        }
         else {
             div = 6.0
         }
