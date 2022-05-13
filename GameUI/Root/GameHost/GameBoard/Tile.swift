@@ -76,7 +76,7 @@ struct Tile: View {
             ZStack {
                 TileBackgroundView( 
                     type: type)
-                    
+                
                 if showFocusHint {
                     // This is the cursor branch.
                     // 
@@ -155,7 +155,7 @@ struct Tile_Previews: PreviewProvider {
         VStack {
             Tile(model: TileModel(letter: "Q", state: .maskedFilled))
             
-            Tile(model: TileModel(letter: "Q", state: .maskedFilled, justTyped: true))
+            Tile(model: TileModel(letter: "Q", state: .rightPlace, justTyped: true))
         }
     }
 }
