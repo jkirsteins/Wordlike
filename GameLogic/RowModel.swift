@@ -107,18 +107,18 @@ struct RowModel : Equatable, Codable, Identifiable
         return result 
     }
     
-    func char(guessAt pos: Int) -> MultiCharacterModel
+    func char(guessAt pos: Int) -> MultiCharacterModel?
     {
         guard word.count > pos else { 
-            return .empty 
+            return nil
         }
         return word[pos] 
     }
     
-    func char(expectAt pos: Int) -> MultiCharacterModel
+    func char(expectAt pos: Int) -> MultiCharacterModel?
     {
         guard expected.count > pos else { 
-            return .empty
+            return nil
         }
         return expected[pos]
     }
@@ -153,7 +153,7 @@ struct RowModel : Equatable, Codable, Identifiable
     func revealState(_ ix: Int) -> TileBackgroundType
     {
         guard canReveal else {
-            guard self.char(guessAt: ix) == .empty else {
+            if nil != self.char(guessAt: ix) {
                 return .maskedFilled
             }
             return .maskedEmpty

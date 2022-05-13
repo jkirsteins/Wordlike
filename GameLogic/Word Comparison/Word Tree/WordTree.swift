@@ -56,8 +56,8 @@ fileprivate class Constraints {
                     continue 
                 }
                 
-                let multiChar = row.char(guessAt: rowIx)
-                guard 
+                guard
+                    let multiChar = row.char(guessAt: rowIx),
                     let char = multiChar.values.first,
                     multiChar.values.count == 1 
                 else {

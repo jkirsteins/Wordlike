@@ -1,18 +1,5 @@
 import SwiftUI
 
-/// See: https://www.objc.io/blog/2019/10/01/swiftui-shake-animation/
-struct Shake: GeometryEffect {
-    var amount: CGFloat = 4
-    var shakesPerUnit = 6
-    var animatableData: CGFloat
-    
-    func effectValue(size: CGSize) -> ProjectionTransform {
-        return ProjectionTransform(CGAffineTransform(translationX:
-                                                        amount * sin(animatableData * .pi * CGFloat(shakesPerUnit)),
-                                                     y: 0))
-    }
-}
-
 struct Row: View 
 {
     let delayRowIx: Int
@@ -70,13 +57,16 @@ struct Row: View
         return GridPadding.normal
     }
     
-    func maskedModel(at ix: Int) -> TileModel {
-        let isEmpty = self.model.char(guessAt: ix) == .empty
+    func maskedModel(at ix: Int) -> TileModel? {
+        guard 
+            let model = self.model.char(guessAt: ix)
+        else {
+            return nil
+        }
         
         return TileModel(
-            letter: model.char(guessAt: ix).displayValue,
-            state: isEmpty ? .maskedEmpty : .maskedFilled
-        )
+            letter: model.displayValue, 
+            state: self.model.revealState(ix))
     }
     
     var adjustedRevealThreshold: Int {
@@ -99,10 +89,15 @@ struct Row: View
         }
         
         let rs = self.model.revealState(ix)
-        guard !rs.isMasked else { return nil } 
+        guard 
+            !rs.isMasked,
+            let fm = model.char(guessAt: ix)
+        else { 
+            return nil 
+        } 
         
         return TileModel(
-            letter: model.char(guessAt: ix).displayValue,
+            letter: fm.displayValue,
             state: rs
         )
     }

@@ -10,24 +10,27 @@ struct Tile: View {
     @Environment(\.showFocusHint) 
     var showFocusHint: Bool
     
-    let model: TileModel
+    let model: TileModel?
     
-    @State var scaleSize = CGSize(width: 1.0, height: 1.0)
+    @State var pulsing = false
     
-    let pulseHalfDuration = 0.25 / 4.0
+    var letter: String { 
+        model?.letter ?? "" 
+    }
     
-    var letter: String { model.letter }
-    var type: TileBackgroundType { model.state }
+    var type: TileBackgroundType { 
+        model?.state ?? .maskedEmpty 
+    }
     
     var isEmpty: Bool {
         letter == ""
     }
     
     init() {
-        self.model = TileModel()
+        self.model = nil
     }
     
-    init(model: TileModel) {
+    init(model: TileModel?) {
         self.model = model
     }
     
@@ -74,8 +77,7 @@ struct Tile: View {
     var body: some View {
         GeometryReader { gr in 
             ZStack {
-                TileBackgroundView( 
-                    type: type)
+                TileBackgroundView(type: type)
                 
                 if showFocusHint {
                     // This is the cursor branch.
@@ -130,15 +132,17 @@ struct Tile: View {
             minHeight: Self.MIN_SIZE)
         .aspectRatio(1, contentMode: .fit)
         
-        .scaleEffect(self.scaleSize)
-        
-        .animation(
-            Animation.easeInOut(duration: pulseHalfDuration),
-            value: self.scaleSize)
-        
-        .onAppear {
-            // TODO: bulge animation when typing
+        .onChange(of: self.model?.letter) { (nl: String?) in
+            guard nl != nil else {
+                self.pulsing = false 
+                return 
+            }
+            self.pulsing = true
         }
+        
+        .pulsing(pulsing: $pulsing, 
+                 maxScale: 1.1,
+                 duration: 0.125)
     }
 }
 

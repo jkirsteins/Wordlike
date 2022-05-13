@@ -9,7 +9,12 @@ extension GameState {
         for srow in submittedRows {
             for ix in 0..<srow.word.count {
                 let state = srow.revealState(ix)
-                let chars = srow.char(guessAt: ix)
+                
+                guard 
+                    let chars = srow.char(guessAt: ix)
+                else {
+                    continue 
+                }
                 
                 guard let char = chars.values.first, chars.values.count == 1 else {
                     fatalError("Submitted rows can't keep multiple character options")
