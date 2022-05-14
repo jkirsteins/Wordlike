@@ -11,7 +11,7 @@ struct PaletteSetterView<Content: View>: View {
     var body: some View {
         content()
             .environment(\.palette, 
-                          high ? (colorScheme == .dark ? DarkHCPalette() as Palette: LightHCPalette() as Palette) : (colorScheme == .dark ? DarkPalette() as Palette: LightPalette2() as Palette))
+                          high ? (colorScheme == .dark ? DarkHCPalette() as Palette: LightHCPalette() as Palette) : (colorScheme == .dark ? DarkPalette2() as Palette: LightPalette2() as Palette))
     }
 }
 
@@ -30,6 +30,6 @@ struct PaletteSetterView_Previews: PreviewProvider {
                     expected: WordModel("fuels", locale: .en_US), 
                     isSubmitted: true))
                 .environment(\.palette,  LightHCPalette())
-        }
+        }.environmentObject(BoardRevealModel())
     }
 }

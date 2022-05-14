@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DarkPalette : Palette
 {
-    let name = "Dark"
+    let name = "Dark (old)"
     
     let maskedFilledStroke: Color = Color(hex: 0x565758)
     let maskedEmptyStroke: Color = Color(hex: 0x3a3a3c)
@@ -29,7 +29,7 @@ struct DarkPalette : Palette
 struct DarkPalette_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            Text("Dark palette")
+            Text("Dark palette (old)")
             
             _PaletteInternalTestView()
                 .environment(\.palette, DarkPalette())

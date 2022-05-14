@@ -29,7 +29,7 @@ struct LightPalette : Palette
 struct LightPalette_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            Text("Light palette")
+            Text("Light palette (old)")
             
             _PaletteInternalTestView()
                 .environment(\.palette, LightPalette())

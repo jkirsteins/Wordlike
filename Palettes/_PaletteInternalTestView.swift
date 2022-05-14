@@ -1,9 +1,14 @@
 import SwiftUI
 
 struct _PaletteInternalTestView: View {
+    @Environment(\.palette)
+    var palette: Palette 
+    
     var body: some View {
         GeometryReader { gr in 
             VStack {
+                ToastBanner(message: "Message in \(palette.name) palette")
+                
                 Row(model: RowModel(word: "CRAZY", expected: "FUELS", isSubmitted: true, locale: .en_US))
                 Row(model: RowModel(word: "SLEDS", expected: "FUELS", isSubmitted: true, locale: .en_US))
                 Row(model: RowModel(word: "FLINT", expected: "FUELS", isSubmitted: true, locale: .en_US))
