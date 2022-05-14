@@ -12,6 +12,7 @@ struct FlippableTile: View {
     let jumpCallback: (Int)->()
     
     let duration: CGFloat
+    let jumpDuration: CGFloat 
     
     @State var jumping: Bool = false
     
@@ -21,6 +22,7 @@ struct FlippableTile: View {
          flipCallback: @escaping ()->(),
          jumpCallback: @escaping (Int)->()) {
         let duration = CGFloat(0.25)
+        self.jumpDuration = 0.25
         self.letter = letter 
         self.flipped = flipped
         self.tag = tag 
@@ -36,7 +38,8 @@ struct FlippableTile: View {
          midCallback: @escaping ()->(),
          flipCallback: @escaping ()->(), 
          jumpCallback: @escaping (Int)->(),
-         duration: CGFloat) {
+         duration: CGFloat,
+         jumpDuration: CGFloat) {
         self.letter = letter 
         self.flipped = flipped
         self.tag = tag 
@@ -45,6 +48,7 @@ struct FlippableTile: View {
         self.flipCallback = flipCallback
         self.jumpCallback = jumpCallback
         self.duration = duration
+        self.jumpDuration = jumpDuration
     }
     
     var revealConfig: RevealConfig {
@@ -58,7 +62,7 @@ struct FlippableTile: View {
     
     var body: some View {
         nonJumpingBody
-            .jumping(jumping: $jumping, duration: 0.25)
+            .jumping(jumping: $jumping, duration: jumpDuration)
             .onChange(of: jumpIx) { nx in
                 jumping = (tag == nx)
             }
@@ -71,18 +75,19 @@ struct FlippableTile: View {
     
     @ViewBuilder
     var nonJumpingBody: some View {
-        
-        if flipped == nil {
-            Tile(model: letter)
-        } 
-        
-        if let flipped = flipped {
-            Tile(model: letter)
-                .modifier(RevealModifier(
-                    config: revealConfig, 
-                    revealed: {
-                        Tile(model: flipped)
-                    }))
+        VStack {
+            if flipped == nil {
+                Tile(model: letter)
+            } 
+            
+            if let flipped = flipped {
+                Tile(model: letter)
+                    .modifier(RevealModifier(
+                        config: revealConfig, 
+                        revealed: {
+                            Tile(model: flipped)
+                        }))
+            }
         }
     }
 }

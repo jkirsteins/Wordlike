@@ -172,7 +172,8 @@ struct RevealModifierTestView: View {
                 jumpCallback: { _ in
                     
                 },
-                duration: duration)
+                duration: duration,
+                jumpDuration: 0.25)
                 .id(uuid)
             
             Text("Duration: \(duration)")

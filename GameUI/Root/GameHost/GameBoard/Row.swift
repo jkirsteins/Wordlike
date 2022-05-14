@@ -129,7 +129,12 @@ struct Row: View
                         
                         vm.jumpIx = ji + 1
                     },
-                    duration: duration)
+                    /* stagger the flip duration, so 
+                     when multiple rows are animating,
+                     it looks less rigid
+                     */
+                    duration: duration + drand48() * 0.2,
+                    jumpDuration: 0.25)
                     
                     .environment(
                         \.showFocusHint,

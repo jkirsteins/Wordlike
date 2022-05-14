@@ -42,54 +42,15 @@ enum GameLocale
     }
     
     var flag: String {
-        switch(self) {
-        case .en_US:
-            return "🇺🇸"
-        case .en_GB:
-            return "🇬🇧"
-        case .fr_FR:
-            return "🇫🇷"
-        case .lv_LV(_):
-            return "🇱🇻"
-        case .ee_EE:
-            return "🇪🇪"
-        case .unknown:
-            return ""
-        }
+        nativeLocale.flag
     }
     
     var localeDisplayName: String {
-        switch(self) {
-        case .en_US:
-            return "English \(self.flag)"
-        case .en_GB:
-            return "English \(self.flag)"
-        case .fr_FR:
-            return "Français \(self.flag)"
-        case .lv_LV(_):
-            return "Latviski \(self.flag)"
-        case .ee_EE:
-            return "Eesti \(self.flag)"
-        case .unknown:
-            fatalError("Do not use unknown locale") 
-        }
+        nativeLocale.displayName
     }
     
     var fileBaseName: String {
-        switch(self) {
-        case .en_GB:
-            return "en-GB"
-        case .en_US:
-            return "en"
-        case .fr_FR:
-            return "fr"
-        case .ee_EE:
-            return "ee_EE"
-        case .lv_LV(_):
-            return "lv"
-        case .unknown:
-            fatalError("Invalid locale")
-        }
+        nativeLocale.fileBaseName
     }
 }
 
@@ -216,6 +177,99 @@ struct Wordlike: App {
     
     @SceneBuilder
     var body: some Scene {
+        WindowGroup {
+            NavigationView {
+                PaletteSetterView {
+                    NavigationList(
+                        shareCallback: { 
+                            let lines = self.listedLocales.map { 
+                                (loc: Locale) -> String? in
+                                guard let gl = gameLocale(loc) else { return nil }
+                                
+                                let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
+                                
+                                guard 
+                                    let ds = ds, 
+                                        ds.isFinished == true,
+                                    let lastRow = ds.rows.lastSubmitted,
+                                    let rowSnippet = lastRow.shareSnippet,
+                                    turnCounter.isFresh(ds.date, at: Date())
+                                else { return nil }
+                                
+                                let flag = gl.flag
+                                
+                                let tries: String 
+                                if ds.isWon {
+                                    tries = "\(ds.rows.submittedCount)/6"
+                                } else {
+                                    tries = "X/6"
+                                }
+                                
+                                return "\(flag) \(tries)\(self.isHardMode ? "*" : "") \(rowSnippet)"
+                            }.filter { $0 != nil }.map { $0! }
+                            
+                            guard lines.count > 0 else {
+                                return
+                            }
+                            
+                            let day = turnCounter.turnIndex(at: Date())
+                            self.shareItems = [
+                                (
+                                    ["Wordlike Day \(day)", ""] + lines
+                                ).joined(separator: "\n")
+                            ]
+                            
+                            self.isSharing.toggle()
+                        },
+                        gearCallback: {
+                            self.activeSheet = .settings
+                        },
+                        debug: $debug
+                    )
+                    
+                    VStack {
+                        Text("Welcome!")
+                            .foregroundColor(Color.accentColor)
+                            .font(.largeTitle )
+                            .fontWeight(.bold)
+                        
+                        Text("Please select a language in the left side menu.")
+                    }
+                }
+            }
+            .sheetWithDetents(
+                isPresented: $isSharing,
+                detents: [.medium(),.large()]) { 
+                } content: {
+                    ActivityViewController(activityItems: $shareItems, callback: {
+                        isSharing = false
+                        shareItems = []
+                    })
+                }
+                .onAppear {
+                    self.tapDelegate = GlobalTapDelegate($globalTapCount)
+                    UIApplication.shared.addGestureRecognizer(
+                        tapDelegate!
+                    )
+                }
+                .environment(
+                    \.globalTapCount, 
+                     $globalTapCount)
+                .sheet(item: $activeSheet, onDismiss: {
+                    // nothing to do on dismiss
+                }, content: { item in
+                    switch(item) {
+                    case .settings: 
+                        SettingsView()
+                    }
+                })
+                .environment(\.turnCounter, turnCounter)
+                .environment(\.debug, debug)
+        }
+    }
+    
+    @SceneBuilder
+    var old_body: some Scene {
         WindowGroup { 
             NavigationView {
                 PaletteSetterView {
@@ -242,59 +296,59 @@ struct Wordlike: App {
                                 HStack() {
                                     Spacer()
                                     VStack(spacing: 4) {
-                                    Button(action: { 
-                                        let lines = self.listedLocales.map { 
-                                            (loc: Locale) -> String? in
-                                            guard let gl = gameLocale(loc) else { return nil }
+                                        Button(action: { 
+                                            let lines = self.listedLocales.map { 
+                                                (loc: Locale) -> String? in
+                                                guard let gl = gameLocale(loc) else { return nil }
+                                                
+                                                let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
+                                                
+                                                guard 
+                                                    let ds = ds, 
+                                                        ds.isFinished == true,
+                                                    let lastRow = ds.rows.lastSubmitted,
+                                                    let rowSnippet = lastRow.shareSnippet
+                                                else { return nil }
+                                                
+                                                let flag = gl.flag
+                                                
+                                                let tries: String 
+                                                if ds.isWon {
+                                                    tries = "\(ds.rows.submittedCount)/6"
+                                                } else {
+                                                    tries = "X/6"
+                                                }
+                                                
+                                                return "\(flag) \(tries)\(self.isHardMode ? "*" : "") \(rowSnippet)"
+                                            }.filter { $0 != nil }.map { $0! }
                                             
-                                            let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
-                                            
-                                            guard 
-                                                let ds = ds, 
-                                                    ds.isFinished == true,
-                                                let lastRow = ds.rows.lastSubmitted,
-                                                let rowSnippet = lastRow.shareSnippet
-                                            else { return nil }
-                                            
-                                            let flag = gl.flag
-                                            
-                                            let tries: String 
-                                            if ds.isWon {
-                                                tries = "\(ds.rows.submittedCount)/6"
-                                            } else {
-                                                tries = "X/6"
+                                            guard lines.count > 0 else {
+                                                return
                                             }
                                             
-                                            return "\(flag) \(tries)\(self.isHardMode ? "*" : "") \(rowSnippet)"
-                                        }.filter { $0 != nil }.map { $0! }
-                                        
-                                        guard lines.count > 0 else {
-                                            return
-                                        }
-                                        
-                                        let day = turnCounter.turnIndex(at: Date())
-                                        self.shareItems = [
-                                            (
-                                                ["Wordlike Day \(day)", ""] + lines
-                                            ).joined(separator: "\n")
-                                        ]
-                                        
-                                        self.isSharing.toggle()
-                                    }, label: {
-                                        Label(
+                                            let day = turnCounter.turnIndex(at: Date())
+                                            self.shareItems = [
+                                                (
+                                                    ["Wordlike Day \(day)", ""] + lines
+                                                ).joined(separator: "\n")
+                                            ]
                                             
-                                            "Share a summary", 
-                                            systemImage: "square.and.arrow.up")
-                                    })
-                                        .disabled(self.isSharingDisabled)
-                                        .tint(.primary)
+                                            self.isSharing.toggle()
+                                        }, label: {
+                                            Label(
+                                                
+                                                "Share a summary", 
+                                                systemImage: "square.and.arrow.up")
+                                        })
+                                            .disabled(self.isSharingDisabled)
+                                            .tint(.primary)
                                         
                                         Text("Share a summary for every game you have completed today.")
                                             .multilineTextAlignment(.center)
                                             .fixedSize(horizontal: false, vertical: true )
                                             .font(.caption)
                                     }
-                                        
+                                    
                                     Spacer()
                                 }
                                 Spacer().frame(maxHeight: 24)

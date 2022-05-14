@@ -1,9 +1,38 @@
 import SwiftUI
 
-struct Tile: View {
-    static let MAX_SIZE = CGFloat(75)
-    static let MIN_SIZE = CGFloat(24)
+fileprivate let MAX_SIZE = CGFloat(75)
+fileprivate let MIN_SIZE = CGFloat(24)
+
+extension Tile where Background == InternalFillColor {
+    init() {
+        self.model = nil
+        self.bg = TileBackgroundView(type: .maskedEmpty)
+        self.aspectRatio = 1.0
+    }
     
+    init(model: TileModel?) {
+        self.model = model
+        self.bg = TileBackgroundView(type: model?.state ?? .maskedEmpty)
+        self.aspectRatio = 1.0
+    }
+    
+    init(_ letter: String) {
+        let t: TileBackgroundType = letter.count == 0 ? .maskedEmpty : .maskedFilled
+        self.model = TileModel(
+            letter: letter, 
+            state: t)
+        self.bg = TileBackgroundView(type: t)
+        self.aspectRatio = 1.0
+    }
+    
+    init(_ letter: String, _ type: TileBackgroundType) {
+        self.model = TileModel(letter: letter, state: type)
+        self.bg = TileBackgroundView(type: type)
+        self.aspectRatio = 1.0
+    }
+}
+
+struct Tile<Background: View>: View {
     @Environment(\.palette) 
     var palette: Palette
     
@@ -13,6 +42,9 @@ struct Tile: View {
     let model: TileModel?
     
     @State var pulsing = false
+    
+    let bg: TileBackgroundView<Background>
+    let aspectRatio: CGFloat
     
     var letter: String { 
         model?.letter ?? "" 
@@ -26,22 +58,17 @@ struct Tile: View {
         letter == ""
     }
     
-    init() {
+    init(
+type: TileBackgroundType, 
+lineWidth: CGFloat, 
+    aspectRatio: CGFloat,
+    @ViewBuilder _ bgItem: ()->Background) {
         self.model = nil
-    }
-    
-    init(model: TileModel?) {
-        self.model = model
-    }
-    
-    init(_ letter: String) {
-        self.model = TileModel(
-            letter: letter, 
-            state: letter.count == 0 ? .maskedEmpty : .maskedFilled)
-    }
-    
-    init(_ letter: String, _ type: TileBackgroundType) {
-        self.model = TileModel(letter: letter, state: type)
+        self.aspectRatio = aspectRatio
+        self.bg = TileBackgroundView(
+            type: type, 
+            lineWidth: lineWidth, 
+            background: bgItem())
     }
     
     func fontSize(_ gr: GeometryProxy) -> Double {
@@ -92,8 +119,8 @@ struct Tile: View {
                 TileBackgroundView(type: .darker(type))
                     .overlay(
                         VStack {
-                            TileBackgroundView(type: type)
-//                            Spacer().frame(maxHeight: 2)
+                            bg
+                            //                            Spacer().frame(maxHeight: 2)
                         }
                     )
                     .rotationEffect(
@@ -108,16 +135,16 @@ struct Tile: View {
                     // (except animations)
                     ZStack {
                         
-                    Text("_") 
-                        .font( 
-                            .system(size: fontSize(gr), weight: .bold))
-                        .textCase(.uppercase)
-                        .padding(padding(gr))
-                        .scaledToFit()
-                        .minimumScaleFactor(0.19)
-                        .lineLimit(1)
-                        .foregroundColor(foregroundColor)
-                        .blinking(duration: 0.5)
+                        Text("_") 
+                            .font( 
+                                .system(size: fontSize(gr), weight: .bold))
+                            .textCase(.uppercase)
+                            .padding(padding(gr))
+                            .scaledToFit()
+                            .minimumScaleFactor(0.19)
+                            .lineLimit(1)
+                            .foregroundColor(foregroundColor)
+                            .blinking(duration: 0.5)
                     }
                     
                 }
@@ -140,19 +167,16 @@ struct Tile: View {
                 }
             }
         }
-        // frame w maxWidth must come before aspectRatio
-        // (otherwise bounds will be off in small environments, e.g. keyboard accessory)
-        
-        // aspectRatio must come after maxWidth
-        // (otherwise bounds will be off in small environments, e.g. keyboard accessory)
+        /* aspectRatio must come before AND after frame
+         (see the visual test for aspect ratios)
+         */
+        // -- start: aspectRatio->frame->aspectRatio
+        .aspectRatio(aspectRatio, contentMode: .fit)
         .frame(
-            maxWidth: Self.MAX_SIZE, 
-            maxHeight: Self.MAX_SIZE)
-        .frame(
-            minWidth: Self.MIN_SIZE, 
-            minHeight: Self.MIN_SIZE)
-        .aspectRatio(1, contentMode: .fit)
-        
+            minWidth: MIN_SIZE,
+            maxWidth: MAX_SIZE)
+        .aspectRatio(aspectRatio, contentMode: .fit)
+        // -- end: aspectRatio->frame->aspectRatio
         .onChange(of: self.model?.letter) { (nl: String?) in
             guard nl != nil else {
                 self.pulsing = false 
@@ -169,7 +193,46 @@ struct Tile: View {
 
 struct Tile_Previews: PreviewProvider {
     static let wa = Array("fuels")
+    static let locales: [Locale] = [
+        .lv_LV, .en_GB, .en_US, .fr_FR
+    ]
     static var previews: some View {
+        
+        VStack {
+            Text("Check that aspect ratio is preserved")
+            Divider()
+            
+            VStack {
+                Tile("A")
+                    .border(.red)
+                Tile("B")
+                    .border(.red)
+            }.frame(maxWidth: 30)
+            
+            HStack {
+                Tile("A")
+                    .border(.red)
+                Tile("B")
+                    .border(.red)
+                Spacer()
+            }.frame(maxHeight: 30)
+        }
+        
+        VStack {
+            TileFlag()
+                .environment(\.locale, .lv_LV)
+            
+        PaletteSetterView {
+            HStack {
+                ForEach(locales, id: \.self) { loc in
+                    Tile(type: .maskedEmpty, lineWidth: 1, aspectRatio: Flag.aspectRatio) {
+                        Flag()
+                    }.environment(\.locale, loc)
+                }
+            }.padding()
+        }
+        }
+        
         PaletteSetterView {
             VStack {
                 Text("Blinking cursor test")

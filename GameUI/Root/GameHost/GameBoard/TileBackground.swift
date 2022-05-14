@@ -9,6 +9,38 @@ enum TileBackgroundType : Equatable, Hashable
     case rightPlace
     indirect case darker(TileBackgroundType)
     
+    static var randomNonDark: TileBackgroundType {
+        switch(drand48()) {
+        case let x where x > 0.0 && x <= 0.2:
+            return .wrongPlace
+        case let x where x > 0.2 && x <= 0.3:
+            return .rightPlace
+        case let x where x > 0.3 && x <= 0.4:
+            return .wrongLetter
+        case let x where x > 0.4 && x <= 0.5:
+            return .maskedFilled
+        default:
+            return .maskedEmpty
+        }
+    }
+    
+    static func random(not exclude: TileBackgroundType) -> TileBackgroundType {
+        let res = Self.random 
+        if res == exclude {
+            return .random(not: exclude)
+        }
+        return res
+    }
+    
+    static var random: TileBackgroundType {
+        switch(drand48()) {
+        case let x where x > 0.1 && x <= 0.2:
+            return .darker(.randomNonDark)
+        default:
+            return .randomNonDark
+        }
+    }
+    
     var isMasked: Bool {
         switch(self) {
             case .maskedEmpty, .maskedFilled:
@@ -53,26 +85,74 @@ enum TileBackgroundType : Equatable, Hashable
     }
 }
 
-struct TileBackgroundView: View {
+struct InternalFillColor: View {
+    @Environment(\.palette)
+    var palette: Palette
+    
     let type: TileBackgroundType
+    
+    var body: some View {
+        type.fillColor(from: palette)
+    }
+}
+
+extension TileBackgroundView where Background == InternalFillColor {
+    init(type: TileBackgroundType) {
+        self.type = type
+        self.background = {
+            InternalFillColor(type: type)
+        } 
+        self.lineWidth = 1.0
+    }
+}
+
+struct TileBackgroundView<Background: View>: View {
+    let type: TileBackgroundType
+    var background: ()->Background 
     
     @Environment(\.palette) var palette: Palette
     
     let cornerRadius = CGFloat(0.0)
+    let lineWidth: CGFloat
+    
+    init(
+        type: TileBackgroundType, 
+        lineWidth: CGFloat, 
+        @ViewBuilder background: @escaping ()->Background) 
+    {
+        self.type = type 
+        self.background = background
+        self.lineWidth = lineWidth
+    }
+    
+    init(type: TileBackgroundType, lineWidth: CGFloat, background: Background) {
+        self.type = type 
+        self.background = { background }
+        self.lineWidth = lineWidth
+    }
     
     var body: some View {
         RoundedRectangle(cornerRadius: cornerRadius)
             .strokeBorder(
                 type.strokeColor(from: palette), 
-                lineWidth: 1)
-            .background(
-                type.fillColor(from: palette))
+                lineWidth: lineWidth)
+            .background(background())
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
     }
 }
 
 struct TileBackgroundView_Previews: PreviewProvider {
     static var previews: some View {
+        TileBackgroundView(
+            type: .maskedEmpty, 
+            lineWidth: 2.0
+        ) {
+            Flag()
+                .environment(\.locale, .lv_LV)
+        }
+        .aspectRatio(1, contentMode: .fit)
+        .frame(maxWidth: 100, maxHeight: 100)
+        
         HStack {
             VStack {
                 TileBackgroundView(
