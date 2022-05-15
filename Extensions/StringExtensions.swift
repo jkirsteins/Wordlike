@@ -35,18 +35,18 @@ extension String {
     }()
     
     static func uppercasedAlphabet(for locale: GameLocale) -> [CharacterModel] {
-        switch(locale) {
-        case .en_US:
+        switch(locale.nativeLocale.identifier) {
+        case Locale.en_US.identifier:
             return uppercasedEnUsAlphabet
-        case .en_GB:
+        case Locale.en_GB.identifier:
             return uppercasedEnGbAlphabet
-        case .fr_FR:
+        case Locale.fr_FR.identifier:
             return uppercasedFrAlphabet
-        case .lv_LV(_):
+        case Locale.lv_LV.identifier:
             return uppercasedLvAlphabet
-        case .ee_EE:
+        case Locale.ee_EE.identifier:
             return uppercasedEeAlphabet
-        case .unknown:
+        default:
             return []
         }
     }
@@ -72,15 +72,17 @@ extension String
     /// locale (i.e. to a thesaurus page)
     func definitionUrl(in locale: GameLocale) -> URL? {
         let lowself = self.lowercased()
-        switch(locale) {
-        case .fr_FR:
+        switch(locale.nativeLocale.identifier) {
+        case Locale.fr_FR.identifier:
             let stripped = lowself.folding(options: .diacriticInsensitive, locale: Locale(identifier: "FR"))
             
             return URL(string: "https://1mot.net/\(stripped)")
-        case .lv_LV(_):
+        case Locale.lv_LV.identifier:
             let encoded = lowself.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
             return URL(string: "https://tezaurs.lv/\(encoded!)")
-        case .en_US, .en_GB:
+        case Locale.en_GB.identifier:
+            return URL(string: "https://www.collinsdictionary.com/dictionary/english/\(lowself)")
+        case Locale.en_US.identifier:
             return URL(string: "https://www.dictionary.com/browse/\(lowself)")
         default:    
             return nil
@@ -117,7 +119,7 @@ struct InternalDefinitionUrlTestView_Previews: PreviewProvider {
             InternalDefinitionUrlTestView(word: "ĀLAVA", locale: .lv_LV(simplified: false))
             InternalDefinitionUrlTestView(word: "FRÈRE", locale: .fr_FR)
             InternalDefinitionUrlTestView(word: "FUELS", locale: .en_US)
-            InternalDefinitionUrlTestView(word: "FUELS", locale: .en_GB)
+            InternalDefinitionUrlTestView(word: "CHIRT", locale: .en_GB)
         }
     }
 }

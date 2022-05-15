@@ -71,11 +71,6 @@ struct JumpModifierTestView: View {
                     maxDistance: 150.0,
                     duration: 5)
             
-            //            Text("Defaults")
-            //                .frame(minWidth: 150, minHeight: 150)
-            //                .border(Color.gray, width: 2)
-            //                .jumping(jumping: $jumping)
-            //            
             Button("Jump") {
                 jumping.toggle()
             }

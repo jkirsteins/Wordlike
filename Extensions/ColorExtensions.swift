@@ -41,6 +41,10 @@ extension Color {
         return Color.multiply(comps, by: 0.8)
     }
     
+    func darker(_ times: Int) -> Color {
+        times == 1 ? self.darker : self.darker.darker(times - 1)
+    }
+    
     /// Lighten a color
     var lighter: Color {
         guard let comps = self.rgba else {
@@ -50,11 +54,15 @@ extension Color {
         return Color.multiply(comps, by: 1.2)
     }
     
+    func lighter(_ times: Int) -> Color {
+        times == 1 ? self.lighter : self.lighter.lighter(times - 1)
+    }
+    
     /// Multiple all components of a color
     static func multiply(_ comps: RGBA, by ratio: CGFloat) -> Color { 
-        let r = min(max(comps.red * ratio, 0.0), 1.0)
-        let g = min(max(comps.green * ratio, 0.0), 1.0)
-        let b = min(max(comps.blue * ratio, 0.0), 1.0)
+        let r = min(max(comps.red * ratio, 0.1), 1.0)
+        let g = min(max(comps.green * ratio, 0.1), 1.0)
+        let b = min(max(comps.blue * ratio, 0.1), 1.0)
         return Color(red: r, green: g, blue: b)
     }
     

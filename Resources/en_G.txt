@@ -1949,7 +1949,6 @@ chirm
 chiro
 chirp
 chirr
-chirt
 chiru
 chits
 chive

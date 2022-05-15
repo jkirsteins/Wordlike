@@ -185,20 +185,24 @@ struct Internal_LatvianSimplifiedTest_validateUncertainPair: View
                     .environment(\.keyboardHints, state.keyboardHints)
                     .environment(\.rootGeometry, gr)
             }
-        }.padding()
+        }
+        .padding()
     }
 }
 
 struct KeyboardHintsTestInternalView_Previews: PreviewProvider {
     static var previews: some View {
-        KeyboardHintsTestInternalView(word: "fuels", guess: "clues")
-        
-        VStack {
-            Text("Regression test: A should be yellow in the keyboard").font(.title)
-            KeyboardHintsTestInternalView(word: "buzza", guess: "maman")
-        }.padding()
-        
-        Internal_LatvianSimplifiedTest()
-        Internal_LatvianSimplifiedTest_validateUncertainPair( )
+        Group {
+            KeyboardHintsTestInternalView(word: "fuels", guess: "clues")
+            
+            VStack {
+                Text("Regression test: A should be yellow in the keyboard").font(.title)
+                KeyboardHintsTestInternalView(word: "buzza", guess: "maman")
+            }.padding()
+            
+            Internal_LatvianSimplifiedTest()
+            Internal_LatvianSimplifiedTest_validateUncertainPair( )
+        }
+        .environmentObject(BoardRevealModel())
     }
 }

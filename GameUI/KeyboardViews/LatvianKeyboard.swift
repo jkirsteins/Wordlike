@@ -13,66 +13,6 @@ extension EnvironmentValues {
     }
 }
 
-struct KeyboardButtonStyle: ButtonStyle {
-    @Environment(\.palette) var palette: Palette
-    
-    let type: TileBackgroundType?
-    
-    func fontSize(_ gr: GeometryProxy) -> Double {
-        if gr.size.height < 50 {
-            // Hardcode some value which is used for
-            // small previews (like in a keyboard
-            // accessory view)
-            return 12
-        }
-        
-        return gr.size.height/1.5
-    }
-    
-    func padding(_ gr: GeometryProxy) -> Double {
-        if gr.size.height < 50 {
-            // Hardcode some value which is used for
-            // small previews (like in a keyboard
-            // accessory view)
-            return 0
-        }
-        
-        return 4
-    }
-    
-    var computedType: TileBackgroundType {
-        return type ?? .wrongLetter
-    }
-    
-    func textColor(_ configuration: Configuration) -> Color {
-        guard let type = type else {
-            return .white
-        }
-        
-        guard type != .wrongLetter else {
-            return .white
-        }
-        
-        return .white
-    }
-    
-    func makeBody(configuration: Configuration) -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 4.0)
-                .fill(
-                    Color.keyboardFill(
-                        for: type, from: palette)
-                        .adjust(
-                            pressed: configuration.isPressed)
-                )
-            
-            configuration.label
-                .foregroundColor(textColor(configuration))
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 4.0))
-    }
-}
-
 /// Latvian qwerty keyboard
 struct LatvianKeyboard: View {
     @State var maxSize: CGSize = .zero
