@@ -205,6 +205,9 @@ struct LanguageRow: View {
     @Environment(\.palette)
     var palette: Palette 
     
+    @Environment(\.verticalSizeClass)
+    var vsc: UserInterfaceSizeClass?
+    
     var body: some View {
         HStack(alignment: .center) {
             HStack(alignment: .top) {
@@ -216,7 +219,7 @@ struct LanguageRow: View {
                     Text(title)
                         .fontWeight(.bold)
                         .fixedSize()
-                    if let extraCaption = extraCaption {
+                    if let extraCaption = extraCaption, let vsc = vsc, vsc != .compact {
                         ForEach(extraCaption, id: \.self) {
                             Text($0)
                                 .fixedSize()
@@ -342,8 +345,14 @@ struct NavigationList: View {
             .padding(16)
         /* We need to cap max width for iPad portrait 
          mode*/
-            .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.width)
+            .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.portrait.width)
     }
+    
+    @Environment(\.horizontalSizeClass)
+    var hsc: UserInterfaceSizeClass?
+    
+    @Environment(\.verticalSizeClass)
+    var vsc: UserInterfaceSizeClass?
     
     /// When changing the `innerBody` be sure
     /// to verify the aspect ratio visual tests for
@@ -352,15 +361,17 @@ struct NavigationList: View {
     var innerBody: some View {
         VStack(alignment: .leading) {
             
-            VStack(alignment: .center) {
-                Spacer().frame(minHeight: 32)
-                Logo()
-                    .frame(
-                        maxWidth: .infinity,
-                        minHeight: 130)
-                    .debugBorder(.yellow)
-                Spacer().frame(minHeight: 32)
-            }.debugBorder(.white)
+            if let vsc = vsc, vsc != .compact {
+                VStack(alignment: .center) {
+                    Spacer().frame(minHeight: 32)
+                    Logo()
+                        .frame(
+                            maxWidth: .infinity,
+                            minHeight: 130)
+                        .debugBorder(.yellow)
+                    Spacer().frame(minHeight: 32)
+                }.debugBorder(.white)
+            }
             
             ForEach(Locale.supportedLocales, id: \.self) {
                 loc in 
@@ -411,6 +422,9 @@ struct Footer: View {
     
     @AppStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
+    
+    @Environment(\.verticalSizeClass)
+    var vsc: UserInterfaceSizeClass?
     
     @AppStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
     var isSimplifiedLatvianKeyboard: Bool = false
@@ -466,10 +480,12 @@ struct Footer: View {
                         .disabled(self.isSharingDisabled)
                         .tint(.primary)
                     
-                    Text("Share a summary for every game you have completed today.")
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true )
-                        .font(.caption)
+                    if let vsc = vsc, vsc != .compact {
+                        Text("Share a summary for every game you have completed today.")
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true )
+                            .font(.caption)
+                    }
                 }
                 
                 Spacer()

@@ -75,6 +75,9 @@ struct AppView: View {
         return true
     }
     
+    @Environment(\.horizontalSizeClass)
+    var sizeClassH: UserInterfaceSizeClass?
+    
     var body: some View {
         NavigationView {
             PaletteSetterView {
@@ -160,7 +163,16 @@ struct AppView: View {
 }
 
 struct AppView_Previews: PreviewProvider {
-    static let configurations: [MockDeviceConfig] = MockDeviceConfig.mandatoryScreenshotConfigs 
+    static let configurations: [MockDeviceConfig] =
+    [
+        .inch58_iPhone12Pro,
+        .inch4_iPhoneSE,
+        .inch4_iPhoneSE2
+    ] 
+    + MockDeviceConfig.mandatoryScreenshotConfigs + 
+    [
+        .inch129_iPadPro4
+    ] 
     
     static var previews: some View {
         ForEach(configurations) { 
