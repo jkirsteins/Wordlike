@@ -148,7 +148,7 @@ struct SettingsView: View {
                     
                     Divider()
                     
-                    // GitHub 
+                    // Social
                     Group {
                         HStack {
                             VStack(alignment: .leading) {
@@ -161,6 +161,21 @@ struct SettingsView: View {
                             
                             Link(destination: URL(string: "https://github.com/jkirsteins/SimpleWordGame")!, label: {
                                 Text("GitHub")
+                            })
+                                .frame(minWidth: Self.minRightWidth)
+                        }
+                        
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text("Author")
+                                Text("Made by Jānis Kiršteins.")
+                                    .font(.caption)
+                            }
+                            
+                            Spacer()
+                            
+                            Link(destination: URL(string: "https://twitter.com/jkirsteins")!, label: {
+                                Text("Twitter")
                             })
                                 .frame(minWidth: Self.minRightWidth)
                         }
