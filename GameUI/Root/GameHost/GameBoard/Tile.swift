@@ -73,7 +73,7 @@ lineWidth: CGFloat,
     
     func fontSize(_ gr: GeometryProxy) -> Double {
         
-        if gr.size.height < 40 {
+        if gr.size.height < 30 {
             // Hardcode some value which is used for
             // small previews (like in a keyboard
             // accessory view)
@@ -84,7 +84,7 @@ lineWidth: CGFloat,
     }
     
     func padding(_ gr: GeometryProxy) -> Double {
-        if gr.size.height < 40 {
+        if gr.size.height < 50 {
             // Hardcode some value which is used for
             // small previews (like in a keyboard
             // accessory view)

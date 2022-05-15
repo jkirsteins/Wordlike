@@ -596,8 +596,9 @@ struct InternalDeviceSizeTestView: View {
                 .border(.red, width: 2)
                 .aspectRatio(wp/hp, contentMode: .fit)
                 .frame(
-                    maxWidth: wp,
-                    maxHeight: hp)
+                    minWidth: wp,
+                    minHeight: hp)
+                .scaleEffect(0.75)
             }
             .aspectRatio(wp/hp, contentMode: .fit)
             .border(.white)

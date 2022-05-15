@@ -53,7 +53,7 @@ fileprivate struct EnglishLogo: View {
     }
 }
 
-fileprivate struct LatvianLogo: View {
+fileprivate struct ShortLatvianLogo: View {
     var body: some View {
         VStack {
             HStack {
@@ -62,13 +62,31 @@ fileprivate struct LatvianLogo: View {
                 AgitatedTile("r")
                 AgitatedTile("d")
                 AgitatedTile("u")
+                Text("-").fontWeight(.bold).font(.title)
+                Tile("_").opacity(0).frame(maxWidth: 8)
             }
             HStack {
+                Tile("_").opacity(0).frame(maxWidth: 8)
                 AgitatedTile("l")
                 AgitatedTile("i")
                 AgitatedTile("s")
                 Tile("_").opacity(0)
                 Tile("_").opacity(0)
+                Text("-").fontWeight(.bold).font(.title).opacity(0)
+            }
+        }
+    }
+}
+
+fileprivate struct LatvianLogo: View {
+    var body: some View {
+        GeometryReader { gr in
+            VStack {
+                if gr.size.width < 300 {
+                    ShortLatvianLogo()
+                } else {
+                    ShortLatvianLogo()
+                }
             }
         }
     }
