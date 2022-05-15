@@ -359,60 +359,55 @@ struct NavigationList: View {
     /// different sizes.
     @ViewBuilder
     var innerBody: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 48) {
             
             if let vsc = vsc, vsc != .compact {
                 VStack(alignment: .center) {
-                    Spacer().frame(minHeight: 32)
                     Logo()
                         .frame(
                             maxWidth: .infinity,
                             minHeight: 130)
                         .debugBorder(.yellow)
-                    Spacer().frame(minHeight: 32)
                 }.debugBorder(.white)
             }
             
-            ForEach(Locale.supportedLocales, id: \.self) {
-                loc in 
-                
-                if let gameLoc = gameLocale(loc) {
-                    NavigationLink(destination: {
-                        GeometryReader { gr in
-                            GameHost(
-                                gameLoc, 
-                                seed: seedFor(loc))
-                            /* We set the environment explicitly, because
-                             it will not be handled by the palette wrapper
-                             (it is instantiated, not nested) */
-                                .environment(\.rootGeometry, gr)
-                                .environment(\.globalTapCount, globalTapCount)
-                                .environment(\.debug, debug)
-                                .environment(\.palette, palette)
-                        }
-                        .padding()
-                    }, label: {
-                        LanguageRow()
-                            .environment(\.locale, loc)
-                    })
-                        .buttonStyle(LanguageRowButtonStyle())
+            VStack(spacing: 8) {
+                ForEach(Locale.supportedLocales, id: \.self) {
+                    loc in 
+                    
+                    if let gameLoc = gameLocale(loc) {
+                        NavigationLink(destination: {
+                            GeometryReader { gr in
+                                GameHost(
+                                    gameLoc, 
+                                    seed: seedFor(loc))
+                                /* We set the environment explicitly, because
+                                 it will not be handled by the palette wrapper
+                                 (it is instantiated, not nested) */
+                                    .environment(\.rootGeometry, gr)
+                                    .environment(\.globalTapCount, globalTapCount)
+                                    .environment(\.debug, debug)
+                                    .environment(\.palette, palette)
+                            }
+                            .padding()
+                        }, label: {
+                            LanguageRow()
+                                .environment(\.locale, loc)
+                        })
+                            .buttonStyle(LanguageRowButtonStyle())
+                    }
                 }
             }
             .debugBorder(.red)
             
-            VStack {
-                Spacer()
-                Footer(
-                    shareCallback: shareCallback,
-                    gearCallback: gearCallback,
-                    debug: $debug)
-                    .padding()
-                    .debugBorder(.green)
-                Spacer().frame(maxHeight: 16)
-            }
-            .debugBorder(.red)
+            Footer(
+                shareCallback: shareCallback,
+                gearCallback: gearCallback,
+                debug: $debug)
+                .debugBorder(.green)
+                
         }
-        .debugBorder(.green)
+        .debugBorder(.red)
     }
 }
 
@@ -465,32 +460,30 @@ struct Footer: View {
     }
     
     var body: some View {
-        VStack {
-            HStack() {
-                Spacer()
-                VStack(spacing: 4) {
-                    Button(action: { 
-                        shareCallback()
-                    }, label: {
-                        Label(
-                            
-                            "Share a summary", 
-                            systemImage: "square.and.arrow.up")
-                    })
-                        .disabled(self.isSharingDisabled)
-                        .tint(.primary)
-                    
-                    if let vsc = vsc, vsc != .compact {
-                        Text("Share a summary for every game you have completed today.")
-                            .multilineTextAlignment(.center)
-                            .fixedSize(horizontal: false, vertical: true )
-                            .font(.caption)
-                    }
-                }
+        HStack() {
+            Spacer()
+            VStack(spacing: 4) {
+                Button(action: { 
+                    shareCallback()
+                }, label: {
+                    Label(
+                        
+                        "Share a summary", 
+                        systemImage: "square.and.arrow.up")
+                })
+                    .disabled(self.isSharingDisabled)
+                    .tint(.primary)
                 
-                Spacer()
+                if let vsc = vsc, vsc != .compact {
+                    Text("Share a summary for every game you have completed today.")
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true )
+                        .font(.caption)
+                }
             }
+            Spacer()
         }
+        .debugBorder(.red)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(
