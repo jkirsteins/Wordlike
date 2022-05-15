@@ -340,6 +340,9 @@ struct NavigationList: View {
          enough). But we do need the titlebar for the buttons.*/
             .navigationBarTitleDisplayMode(.inline)
             .padding(16)
+        /* We need to cap max width for iPad portrait 
+         mode*/
+            .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.width)
     }
     
     /// When changing the `innerBody` be sure
@@ -543,120 +546,11 @@ struct Tiles: View {
     }
 }
 
-/// For previewing in different sizes
-/// (or just aspect ratios, if not enough space)
-struct InternalDeviceSizeTestView: View {
-    let combo: (CGFloat, CGFloat, String, String, CGFloat)
-    
-    @State var debug: Bool = true
-    @State var locale: Locale = .current
-    
-    var wp: CGFloat {
-        combo.0/combo.4
-    }
-    
-    var hp: CGFloat {
-        combo.1/combo.4
-    }
-    
-    @State var actualSize: CGSize = .zero
-    
-    var body: some View {
-        VStack {
-            HStack {
-                VStack {
-                    Text(combo.3)
-                    Text("\(String(format: "%.2f", wp))x\(String(format: "%.2f", hp))")
-                    
-                    Text("\(String(format: "%.2f", actualSize.width))x\(String(format: "%.2f", actualSize.height))")
-                    
-                    Text("Aspect: \(String(format: "%.2f", wp/hp)) vs actual \(String(format: "%.2f", actualSize.width/actualSize.height))")
-                }
-                VStack {
-                    Button("Debug") {
-                        debug.toggle()
-                    }
-                    HStack {
-                        Button("EN") {
-                            locale = .en_US
-                        }
-                        Button("FR") {
-                            locale = .fr_FR
-                        }
-                        Button("LV") {
-                            locale = .lv_LV
-                        }
-                    }
-                }
-            }.padding()
-            
-            PaletteSetterView {
-                GeometryReader { gr in
-                    NavigationView {
-                        
-                        NavigationList(shareCallback: { 
-                            
-                        }, gearCallback: {
-                            
-                        }, debug: $debug)
-                        EmptyView()
-                    }
-                    .debugBorder(.yellow)
-                    .onAppear {
-                        actualSize = gr.size
-                    }
-                    .onChange(of: gr.size) { ns in 
-                        actualSize = ns
-                    }
-                }
-                .border(.red, width: 2)
-                .aspectRatio(wp/hp, contentMode: .fit)
-                .frame(
-                    minWidth: wp,
-                    minHeight: hp)
-                .scaleEffect(0.75)
-            }
-            .aspectRatio(wp/hp, contentMode: .fit)
-            .border(.white)
-        }
-        .environment(\.locale, locale)
-        .environment(\.debug, debug)
-    }
-}
-
 struct NavigationList_Previews: PreviewProvider {
     
-    static let devices: [(CGFloat, CGFloat, String, String, CGFloat)] = [        
-        // Required for screenshots
-        (1125, 2436, "6.5 inch", "iPhone 11 Pro", 3),
-        (1242, 2208, "5.5 inch", "iPhone 6s Plus", 3),
-        
-        // Just for testing
-        (640, 1136, "4 inch", "iPhone SE", 2),
-        (750, 1334, "4 inch", "iPhone SE (2nd gen)", 2),
-        (1242, 2688, "4 inch", "iPhone 11 Pro Max", 3)
-    ]
-    
     static var previews: some View {
-        ForEach(devices, id: \.3) {
-            combo in 
-            
-            InternalDeviceSizeTestView(combo: combo)
-        }
         
-        ForEach(Locale.supportedLocales, id: \.self) {
-            loc in
-            PaletteSetterView {
-                NavigationView {
-                    NavigationList(shareCallback: { 
-                        
-                    }, gearCallback: {
-                        
-                    }, debug: .constant(false))
-                    EmptyView()
-                }
-            }.environment(\.locale, loc)
-        }
+        AppView_Previews.previews
         
     }
 }

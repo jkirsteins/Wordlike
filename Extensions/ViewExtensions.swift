@@ -13,6 +13,11 @@ fileprivate struct DebugBorder<Content: View>: View {
 }
 
 extension View {
+    func screenshotView(_ closure: @escaping ScreenshotMakerClosure) -> some View {
+        let screenshotView = ScreenshotMakerView(closure)
+        return overlay(screenshotView.allowsHitTesting(false))
+    }
+    
     func debugBorder(_ color: Color) -> some View {
         DebugBorder(color: color) {
             self
