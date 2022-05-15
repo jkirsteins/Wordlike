@@ -80,7 +80,9 @@ extension String
         case .lv_LV(_):
             let encoded = lowself.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
             return URL(string: "https://tezaurs.lv/\(encoded!)")
-        case .en_US, .en_GB:
+            case .en_GB:
+            return URL(string: "https://www.collinsdictionary.com/dictionary/english/\(lowself)")
+        case .en_US:
             return URL(string: "https://www.dictionary.com/browse/\(lowself)")
         default:    
             return nil
@@ -117,7 +119,7 @@ struct InternalDefinitionUrlTestView_Previews: PreviewProvider {
             InternalDefinitionUrlTestView(word: "ĀLAVA", locale: .lv_LV(simplified: false))
             InternalDefinitionUrlTestView(word: "FRÈRE", locale: .fr_FR)
             InternalDefinitionUrlTestView(word: "FUELS", locale: .en_US)
-            InternalDefinitionUrlTestView(word: "FUELS", locale: .en_GB)
+            InternalDefinitionUrlTestView(word: "CHIRT", locale: .en_GB)
         }
     }
 }
