@@ -3750,6 +3750,7 @@ bekai
 bekar
 bekas
 bekon
+bekot
 bekām
 bekās
 belza
@@ -8492,6 +8493,7 @@ kraķī
 kredo
 krejo
 krekl
+kremt
 kremē
 kreol
 krepa
