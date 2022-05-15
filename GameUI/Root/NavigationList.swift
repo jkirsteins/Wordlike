@@ -187,12 +187,14 @@ struct LanguageRow: View {
     @AppStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
     
-    var extraCaption: String? {
+    var extraCaption: [String]? {
         if locale == .lv_LV {
-            return "\(isHardMode ? "Hard mode. " : "")\(isSimplifiedLatvianKeyboard ? "Simplified" : "Extended") keyboard."
+            let row1 = isHardMode ? "Hard mode. " : ""
+            let row2 = "\(isSimplifiedLatvianKeyboard ? "Simplified" : "Extended") keyboard."
+            return "\(row1)\n\(row2)".split(separator: "\n").map { String($0) }
         }
         else {
-            return isHardMode ? "Hard mode." : nil
+            return isHardMode ? ["Hard mode."] : nil
         }
     }
     
@@ -204,44 +206,39 @@ struct LanguageRow: View {
     var palette: Palette 
     
     var body: some View {
-        HStack(alignment: .top) {
-            TileFlag()
-                .frame(maxWidth: 50)
-            
-            VStack(alignment: .leading) {
-                Text(title)
-                    .fontWeight(.bold)
-                if let extraCaption = extraCaption {
-                    Text(extraCaption)
-                        .font(.caption)
+        HStack(alignment: .center) {
+            HStack(alignment: .top) {
+                TileFlag()
+                    .frame(
+                        minWidth: 50,
+                        maxWidth: 50)
+                VStack(alignment: .leading) {
+                    Text(title)
+                        .fontWeight(.bold)
+                        .fixedSize()
+                    if let extraCaption = extraCaption {
+                        ForEach(extraCaption, id: \.self) {
+                            Text($0)
+                                .fixedSize()
+                                .lineLimit(1)
+                                .font(.caption)
+                        }
+                    }
+                    ProgressLabel(locale).fixedSize()
                 }
-                ProgressLabel(locale)
             }
             
             Spacer()
             
-            Divider()
-                .frame(maxHeight: 40)
-            
-            VStack {
-                Spacer()
             InternalStatWidget(
-                locale, 
-                extraCaption: extraCaption)
-                Spacer()
-            }.frame(maxHeight: 40)
+                        locale)
+                        .fixedSize()
             
-            VStack {
-                Image(systemName: "chevron.forward.circle")
-                    .resizable()
-                    .aspectRatio(1, contentMode: .fit)
-                    .padding(.vertical, 8)
-                    .padding(.leading, 8)
-                    .foregroundColor(.primary)
-            }
-            .frame(maxHeight: 30)
+            Image(systemName: "chevron.forward")
+                .font(.caption)
+                .foregroundColor(.primary)
         }
-        .padding(.vertical, 8)
+        .padding(.horizontal, 8)
     }
 }
 
@@ -260,41 +257,40 @@ struct InternalStatWidget: View {
     var turnCounter: TurnCounter
     
     let locale: Locale
-    let extraCaption: String?
     
-    init(_ locale: Locale, extraCaption: String?) {
+    init(_ locale: Locale) {
         self.locale = locale 
         self._stats = AppStorage(
             wrappedValue: Stats(), 
             "stats.\(locale.fileBaseName)")
-        self.extraCaption = extraCaption
         self._dailyState = AppStorage("turnState.\(locale.fileBaseName)", store: nil)
     }
     
     var body: some View {
-        Group {
+        HStack {
             if stats.played > 0 {
                 HStack {
+                    Divider()
+                    
                     VStack {
                         Text("\(stats.streak) / \(stats.maxStreak)")
-                            .font(.body)
+                            .font(.caption)
                             .multilineTextAlignment(.center)
                         Text("Streak")
-                            .font(.body)
+                            .font(.caption)
                             .multilineTextAlignment(.center)
                     }
                     VStack {
                         Text("\(Double(stats.won) / Double(stats.played) * 100, specifier: "%.0f")")
-                            .font(.body)
+                            .font(.caption)
                         Text("Win %")
-                            .font(.body)
+                            .font(.caption)
                             .multilineTextAlignment(.center)
                     }.frame(minWidth: 30)
                 }
             }
         }
         .minimumScaleFactor(0.02)
-        .frame(maxHeight: 30)
     }
 }
 
@@ -337,11 +333,28 @@ struct NavigationList: View {
         }
     }
     
+    @ViewBuilder
     var body: some View {
-        VStack {
-            Logo()
+        innerBody
+        /* We don't need the title bar taking a lot
+         of space (e.g. on iPhone SE it's borderline
+         enough). But we do need the titlebar for the buttons.*/
+        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    @ViewBuilder
+    var innerBody: some View {
+        VStack(alignment: .leading) {
+            Spacer()
             
-            Spacer().frame(maxHeight: 48)
+            HStack {
+                Spacer()
+            Logo()
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, minHeight: 120)
+            
+            Spacer()
             
             ForEach(Locale.supportedLocales, id: \.self) {
                 loc in 
@@ -368,12 +381,13 @@ struct NavigationList: View {
                 }
             }
             
-            Spacer().frame(maxHeight: 48)
+            Spacer()
             Footer(
                 shareCallback: shareCallback,
                 gearCallback: gearCallback,
                 debug: $debug)
-        }.padding()
+            Spacer()
+        }
     }
 }
 
@@ -476,8 +490,7 @@ struct Footer: View {
 struct LanguageRowButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-        //            .padding()
-        //            .background(.quaternary, in: Capsule())
+            .contentShape(Rectangle())
             .opacity(configuration.isPressed ? 0.5 : 1)
     }
 }
@@ -523,7 +536,43 @@ struct Tiles: View {
 
 struct NavigationList_Previews: PreviewProvider {
     
+    static let devices: [(CGFloat, CGFloat, String, String, CGFloat)] = [        
+        // Required for screenshots
+        (1125, 2436, "6.5 inch", "iPhone 11 Pro", 3),
+        (1242, 2208, "5.5 inch", "iPhone 6s Plus", 3),
+        
+        // Just for testing
+        (640, 1136, "4 inch", "iPhone SE", 2),
+        (750, 1334, "4 inch", "iPhone SE (2nd gen)", 2),
+        (1242, 2688, "4 inch", "iPhone 11 Pro Max", 3)
+    ]
+    
     static var previews: some View {
+        ForEach(devices, id: \.3) {
+            combo in 
+            
+            VStack {
+                Text(combo.3)
+                Group {
+                    PaletteSetterView {
+                        NavigationView {
+                            
+                            NavigationList(shareCallback: { 
+                                
+                            }, gearCallback: {
+                                
+                            }, debug: .constant(false))
+                            EmptyView()
+                        }
+                    }
+                }
+                .frame(
+                    maxWidth: combo.0/combo.4, 
+                    maxHeight: combo.1/combo.4)
+                .border(.red)
+            }
+        }
+        
         ForEach(Locale.supportedLocales, id: \.self) {
             loc in
             PaletteSetterView {

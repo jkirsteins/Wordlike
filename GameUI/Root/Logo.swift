@@ -91,6 +91,15 @@ struct Logo_Previews: PreviewProvider {
         .lv_LV
     ]
     static var previews: some View {
+        VStack {
+            Text("Logo on iPhone SE")
+            Group {
+                Logo()
+            }
+            .frame(maxWidth: 320, maxHeight: 568)
+            .border(.red)
+        }
+        
         ForEach(Self.locales, id: \.self) { loc in 
             PaletteSetterView {
                 VStack {
