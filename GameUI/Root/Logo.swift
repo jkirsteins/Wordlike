@@ -37,6 +37,8 @@ fileprivate struct EnglishLogo: View {
                 AgitatedTile("d")
                 Tile("_").opacity(0)
             }
+            .frame(maxWidth: .infinity)
+            
             HStack {
                 Tile("_").opacity(0)
                 AgitatedTile("l")
@@ -44,7 +46,10 @@ fileprivate struct EnglishLogo: View {
                 AgitatedTile("k")
                 AgitatedTile("e")
             }
+            .frame(maxWidth: .infinity)
         }
+        .frame(maxWidth: .infinity)
+        .debugBorder(.green)
     }
 }
 
@@ -74,14 +79,26 @@ struct Logo: View {
     var locale: Locale 
     
     var body: some View {
-        VStack {
-            switch(locale.identifier) {
-            case Locale.lv_LV.identifier:
-                LatvianLogo()
-            case Locale.fr_FR.identifier:
-                FrenchLogo()
-            default:
-                EnglishLogo()
+        HStack {
+            VStack(alignment: .leading) {
+                /* Switch on region not language code,
+                 because we want to display the localized logo
+                 even if rest of UI is expected to be in a 
+                 different language.*/
+                switch(locale.languageCode, locale.regionCode) {
+                    /* In Latvia look at either region or
+                     language code to influence the logo. */
+                case 
+                    (_, Locale.lv_LV.regionCode),
+                    (Locale.lv_LV.languageCode, _):
+                    LatvianLogo()
+                    
+                    /* In other languages go by language code */
+                case (Locale.fr_FR.languageCode, _):
+                    FrenchLogo()
+                default:
+                    EnglishLogo()
+                }
             }
         }
     }
@@ -95,21 +112,54 @@ struct Logo_Previews: PreviewProvider {
         .lv_LV
     ]
     static var previews: some View {
-        VStack {
-            Text("Logo on iPhone SE")
-            Group {
-                Logo()
+        VStack(alignment: .leading) {
+            Text("Multiple together")
+            
+            HStack {
+                VStack {
+                    Logo()
+                        .environment(\.locale, .lv_LV)
+                }
             }
-            .frame(maxWidth: 320, maxHeight: 568)
+            .padding(2)
+            .border(.red)
+            
+            HStack {
+                Logo()
+                    .environment(\.locale, .fr_FR)
+            }
+            .padding(2)
+            .border(.red)
+            
+            HStack {
+                Logo()
+                    .environment(\.locale, .en_US)
+            }
+            .padding(2)
+            .border(.red)
+            
+            Divider()
+            
+            Text("The inner logo should have the same width/no extra padding")
+            
+            HStack {
+                EnglishLogo()
+                    .frame(maxWidth: .infinity)
+                    .border(.green, width: 2)
+            }
             .border(.red)
         }
+        .padding(24)
+        .frame(maxWidth: .infinity)
+        .border(.green)
         
         ForEach(Self.locales, id: \.self) { loc in 
             PaletteSetterView {
                 VStack {
                     Text("Logo in \(loc.identifier)")
                     Logo()
-                }
+                        .border(.red)
+                }.border(.green)
             }
             .padding()
             .environment(\.locale, loc)

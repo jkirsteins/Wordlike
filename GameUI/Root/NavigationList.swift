@@ -231,8 +231,8 @@ struct LanguageRow: View {
             Spacer()
             
             InternalStatWidget(
-                        locale)
-                        .fixedSize()
+                locale)
+                .fixedSize()
             
             Image(systemName: "chevron.forward")
                 .font(.caption)
@@ -338,21 +338,24 @@ struct NavigationList: View {
         /* We don't need the title bar taking a lot
          of space (e.g. on iPhone SE it's borderline
          enough). But we do need the titlebar for the buttons.*/
-        .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.inline)
+            .padding(16)
     }
     
+    /// When changing the `innerBody` be sure
+    /// to verify the aspect ratio visual tests for
+    /// different sizes.
     @ViewBuilder
     var innerBody: some View {
         VStack(alignment: .leading) {
-            Spacer()
             
-            HStack {
-                Spacer()
-            Logo()
-                Spacer()
-            }
-            
-            Spacer()
+            VStack {
+                Spacer().frame(minHeight: 32)
+                Logo()
+                    .frame(minHeight: 100)
+                    .debugBorder(.yellow)
+                Spacer().frame(minHeight: 32)
+            }.debugBorder(.white)
             
             ForEach(Locale.supportedLocales, id: \.self) {
                 loc in 
@@ -370,7 +373,8 @@ struct NavigationList: View {
                                 .environment(\.globalTapCount, globalTapCount)
                                 .environment(\.debug, debug)
                                 .environment(\.palette, palette)
-                        }.padding()
+                        }
+                        .padding()
                     }, label: {
                         LanguageRow()
                             .environment(\.locale, loc)
@@ -378,14 +382,21 @@ struct NavigationList: View {
                         .buttonStyle(LanguageRowButtonStyle())
                 }
             }
+            .debugBorder(.red)
             
-            Spacer()
-            Footer(
-                shareCallback: shareCallback,
-                gearCallback: gearCallback,
-                debug: $debug)
-            Spacer()
-        }.padding(.horizontal, 16)
+            VStack {
+                Spacer()
+                Footer(
+                    shareCallback: shareCallback,
+                    gearCallback: gearCallback,
+                    debug: $debug)
+                    .padding()
+                    .debugBorder(.green)
+                Spacer().frame(maxHeight: 16)
+            }
+            .debugBorder(.red)
+        }
+        .debugBorder(.green)
     }
 }
 
@@ -436,7 +447,6 @@ struct Footer: View {
     
     var body: some View {
         VStack {
-            Spacer().frame(maxHeight: 24)
             HStack() {
                 Spacer()
                 VStack(spacing: 4) {
@@ -459,7 +469,6 @@ struct Footer: View {
                 
                 Spacer()
             }
-            Spacer().frame(maxHeight: 24)
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -532,6 +541,71 @@ struct Tiles: View {
     }
 }
 
+/// For previewing in different sizes
+/// (or just aspect ratios, if not enough space)
+struct InternalDeviceSizeTestView: View {
+    let combo: (CGFloat, CGFloat, String, String, CGFloat)
+    
+    @State var debug: Bool = true
+    
+    var wp: CGFloat {
+        combo.0/combo.4
+    }
+    
+    var hp: CGFloat {
+        combo.1/combo.4
+    }
+    
+    @State var actualSize: CGSize = .zero
+    
+    var body: some View {
+        VStack {
+            HStack {
+                VStack {
+                    Text(combo.3)
+                    Text("\(String(format: "%.2f", wp))x\(String(format: "%.2f", hp))")
+                    
+                    Text("\(String(format: "%.2f", actualSize.width))x\(String(format: "%.2f", actualSize.height))")
+                    
+                    Text("Aspect: \(String(format: "%.2f", wp/hp)) vs actual \(String(format: "%.2f", actualSize.width/actualSize.height))")
+                }
+                Button("Debug") {
+                    debug.toggle()
+                }
+            }.padding()
+            
+            PaletteSetterView {
+                GeometryReader { gr in
+                    NavigationView {
+                        
+                        NavigationList(shareCallback: { 
+                            
+                        }, gearCallback: {
+                            
+                        }, debug: $debug)
+                        EmptyView()
+                    }
+                    .debugBorder(.yellow)
+                    .onAppear {
+                        actualSize = gr.size
+                    }
+                    .onChange(of: gr.size) { ns in 
+                        actualSize = ns
+                    }
+                }
+                .border(.red, width: 2)
+                .aspectRatio(wp/hp, contentMode: .fit)
+                .frame(
+                    maxWidth: wp,
+                    maxHeight: hp)
+            }
+            .aspectRatio(wp/hp, contentMode: .fit)
+            .border(.white)
+        }
+        .environment(\.debug, debug)
+    }
+}
+
 struct NavigationList_Previews: PreviewProvider {
     
     static let devices: [(CGFloat, CGFloat, String, String, CGFloat)] = [        
@@ -549,26 +623,7 @@ struct NavigationList_Previews: PreviewProvider {
         ForEach(devices, id: \.3) {
             combo in 
             
-            VStack {
-                Text(combo.3)
-                Group {
-                    PaletteSetterView {
-                        NavigationView {
-                            
-                            NavigationList(shareCallback: { 
-                                
-                            }, gearCallback: {
-                                
-                            }, debug: .constant(false))
-                            EmptyView()
-                        }
-                    }
-                }
-                .frame(
-                    maxWidth: combo.0/combo.4, 
-                    maxHeight: combo.1/combo.4)
-                .border(.red)
-            }
+            InternalDeviceSizeTestView(combo: combo)
         }
         
         ForEach(Locale.supportedLocales, id: \.self) {
