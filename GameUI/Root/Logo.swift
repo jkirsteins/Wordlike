@@ -1,11 +1,13 @@
 import SwiftUI
 
+fileprivate let SPACING = GridPadding.normal
+
 fileprivate struct FrenchLogo: View {
     @State var wtype: TileBackgroundType = .rightPlace
     
     var body: some View {
-        VStack {
-            HStack {
+        VStack(spacing: SPACING) {
+            HStack(spacing: SPACING) {
                 AgitatedTile("M")
                 AgitatedTile("o")
                 AgitatedTile("t")
@@ -13,7 +15,7 @@ fileprivate struct FrenchLogo: View {
                 AgitatedTile("d")
                 AgitatedTile("e")
             }
-            HStack {
+            HStack(spacing: SPACING) {
                 AgitatedTile("j")
                 AgitatedTile("o")
                 AgitatedTile("u")
@@ -29,8 +31,8 @@ fileprivate struct EnglishLogo: View {
     @State var wtype: TileBackgroundType = .rightPlace
     
     var body: some View {
-        VStack {
-            HStack {
+        VStack(spacing: SPACING) {
+            HStack(spacing: SPACING) {
                 AgitatedTile("W")
                 AgitatedTile("o")
                 AgitatedTile("r")
@@ -39,7 +41,7 @@ fileprivate struct EnglishLogo: View {
             }
             .frame(maxWidth: .infinity)
             
-            HStack {
+            HStack(spacing: SPACING) {
                 Tile("_").opacity(0)
                 AgitatedTile("l")
                 AgitatedTile("i")
@@ -54,18 +56,44 @@ fileprivate struct EnglishLogo: View {
 }
 
 fileprivate struct ShortLatvianLogo: View {
+    
+    let maxd = Double(12.0)
+    
+    var randRotate: Double {
+        let x = maxd * drand48()
+        let r = (maxd/2.0) - x
+        return r
+    }
+    
+    @Environment(\.palette)
+    var palette: Palette
+    
     var body: some View {
-        VStack {
-            HStack {
+        /* smaller SPACING because the "-" at the end
+         makes everything smaller already
+        */
+        VStack(alignment: .leading, spacing: SPACING/2) {
+            HStack(spacing: SPACING/2) {
                 AgitatedTile("V")
                 AgitatedTile("ā")
                 AgitatedTile("r")
                 AgitatedTile("d")
                 AgitatedTile("u")
-                Text("-").fontWeight(.bold).font(.title)
+                RoundedRectangle(cornerRadius: 2)
+                    .fill(palette.revealedTextColor)
+                    .frame(maxWidth: 14, maxHeight: 6)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 2).stroke(palette.wrongLetterStroke)
+                    )
+                    .rotationEffect(.degrees(randRotate))
+//                Text("-").fontWeight(.bold).font(.title)
+//                    .front
+//                    .border(.black)
                 Tile("_").opacity(0).frame(maxWidth: 8)
             }
-            HStack {
+            .frame(maxWidth: .infinity)
+            
+            HStack(spacing: SPACING/2) {
                 Tile("_").opacity(0).frame(maxWidth: 8)
                 AgitatedTile("l")
                 AgitatedTile("i")
@@ -74,21 +102,15 @@ fileprivate struct ShortLatvianLogo: View {
                 Tile("_").opacity(0)
                 Text("-").fontWeight(.bold).font(.title).opacity(0)
             }
+            .frame(maxWidth: .infinity)
         }
     }
 }
 
 fileprivate struct LatvianLogo: View {
     var body: some View {
-        GeometryReader { gr in
-            VStack {
-                if gr.size.width < 300 {
-                    ShortLatvianLogo()
-                } else {
-                    ShortLatvianLogo()
-                }
-            }
-        }
+        ShortLatvianLogo()
+            .frame(maxWidth: .infinity)
     }
 }
 
@@ -97,8 +119,8 @@ struct Logo: View {
     var locale: Locale 
     
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
+        HStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
                 /* Switch on region not language code,
                  because we want to display the localized logo
                  even if rest of UI is expected to be in a 

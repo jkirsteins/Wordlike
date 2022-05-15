@@ -349,10 +349,12 @@ struct NavigationList: View {
     var innerBody: some View {
         VStack(alignment: .leading) {
             
-            VStack {
+            VStack(alignment: .center) {
                 Spacer().frame(minHeight: 32)
                 Logo()
-                    .frame(minHeight: 100)
+                    .frame(
+                        maxWidth: .infinity,
+                        minHeight: 130)
                     .debugBorder(.yellow)
                 Spacer().frame(minHeight: 32)
             }.debugBorder(.white)
@@ -547,6 +549,7 @@ struct InternalDeviceSizeTestView: View {
     let combo: (CGFloat, CGFloat, String, String, CGFloat)
     
     @State var debug: Bool = true
+    @State var locale: Locale = .current
     
     var wp: CGFloat {
         combo.0/combo.4
@@ -569,8 +572,21 @@ struct InternalDeviceSizeTestView: View {
                     
                     Text("Aspect: \(String(format: "%.2f", wp/hp)) vs actual \(String(format: "%.2f", actualSize.width/actualSize.height))")
                 }
-                Button("Debug") {
-                    debug.toggle()
+                VStack {
+                    Button("Debug") {
+                        debug.toggle()
+                    }
+                    HStack {
+                        Button("EN") {
+                            locale = .en_US
+                        }
+                        Button("FR") {
+                            locale = .fr_FR
+                        }
+                        Button("LV") {
+                            locale = .lv_LV
+                        }
+                    }
                 }
             }.padding()
             
@@ -603,6 +619,7 @@ struct InternalDeviceSizeTestView: View {
             .aspectRatio(wp/hp, contentMode: .fit)
             .border(.white)
         }
+        .environment(\.locale, locale)
         .environment(\.debug, debug)
     }
 }
