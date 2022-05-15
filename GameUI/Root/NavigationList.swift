@@ -72,14 +72,14 @@ struct Flag : View {
     static let defaultImage = UIImage()
     
     var image: UIImage {
-        switch(locale) {
-        case .en_GB:
+        switch(locale.identifier) {
+        case Locale.en_GB.identifier:
             return FlagAssets.gbFlag
-        case .en_US:
+        case Locale.en_US.identifier:
             return FlagAssets.usFlag
-        case .fr_FR:
+        case Locale.fr_FR.identifier:
             return FlagAssets.frFlag
-        case .lv_LV:
+        case Locale.lv_LV.identifier:
             return FlagAssets.lvFlag
         default:
             return Self.defaultImage
@@ -310,11 +310,11 @@ struct NavigationList: View {
     var isSimplifiedLatvianKeyboard: Bool = false
     
     func seedFor(_ loc: Locale) -> Int? {
-        switch(loc) {
+        switch(loc.identifier) {
             // Ensure GB seed is not the same as US
-        case .en_GB:
+        case Locale.en_GB.identifier:
             return 1337
-        case .en_US:
+        case Locale.en_US.identifier:
             return 42
         default:
             return nil
@@ -322,12 +322,12 @@ struct NavigationList: View {
     }
     
     func gameLocale(_ loc: Locale) -> GameLocale? {
-        switch(loc) {
-        case .en_US: return .en_US
-        case .en_GB: return .en_GB
-        case .fr_FR: return .fr_FR
-        case .lv_LV: return .lv_LV(simplified: isSimplifiedLatvianKeyboard)
-        case .ee_EE: return .ee_EE
+        switch(loc.identifier) {
+        case Locale.en_US.identifier: return .en_US
+        case Locale.en_GB.identifier: return .en_GB
+        case Locale.fr_FR.identifier: return .fr_FR
+        case Locale.lv_LV.identifier: return .lv_LV(simplified: isSimplifiedLatvianKeyboard)
+        case Locale.ee_EE.identifier: return .ee_EE
         default:
             return nil
         }
@@ -406,12 +406,12 @@ struct Footer: View {
     @Binding var debug: Bool
     
     func gameLocale(_ loc: Locale) -> GameLocale? {
-        switch(loc) {
-        case .en_US: return .en_US
-        case .en_GB: return .en_GB
-        case .fr_FR: return .fr_FR
-        case .lv_LV: return .lv_LV(simplified: isSimplifiedLatvianKeyboard)
-        case .ee_EE: return .ee_EE
+        switch(loc.identifier) {
+        case Locale.en_US.identifier: return .en_US
+        case Locale.en_GB.identifier: return .en_GB
+        case Locale.fr_FR.identifier: return .fr_FR
+        case Locale.lv_LV.identifier: return .lv_LV(simplified: isSimplifiedLatvianKeyboard)
+        case Locale.ee_EE.identifier: return .ee_EE
         default:
             return nil
         }

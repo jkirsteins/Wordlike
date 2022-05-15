@@ -9,6 +9,7 @@ fileprivate struct FrenchLogo: View {
                 AgitatedTile("M")
                 AgitatedTile("o")
                 AgitatedTile("t")
+                Tile("_").opacity(0).frame(maxWidth: 8)
                 AgitatedTile("d")
                 AgitatedTile("e")
             }
@@ -18,6 +19,7 @@ fileprivate struct FrenchLogo: View {
                 AgitatedTile("u")
                 AgitatedTile("r")
                 Tile("_").opacity(0)
+                Tile("_").opacity(0).frame(maxWidth: 8)
             }
         }
     }
@@ -72,13 +74,15 @@ struct Logo: View {
     var locale: Locale 
     
     var body: some View {
-        switch(locale) {
-            case .lv_LV:
-            LatvianLogo()
-            case .fr_FR:
-            FrenchLogo()
+        VStack {
+            switch(locale.identifier) {
+            case Locale.lv_LV.identifier:
+                LatvianLogo()
+            case Locale.fr_FR.identifier:
+                FrenchLogo()
             default:
-            EnglishLogo()
+                EnglishLogo()
+            }
         }
     }
 }

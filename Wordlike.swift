@@ -145,12 +145,12 @@ struct Wordlike: App {
     ]
     
     func gameLocale(_ loc: Locale) -> GameLocale? {
-        switch(loc) {
-        case .en_US: return .en_US
-        case .en_GB: return .en_GB
-        case .fr_FR: return .fr_FR
-        case .lv_LV: return .lv_LV(simplified: false)
-        case .ee_EE: return .ee_EE
+        switch(loc.identifier) {
+        case Locale.en_US.identifier: return .en_US
+        case Locale.en_GB.identifier: return .en_GB
+        case Locale.fr_FR.identifier: return .fr_FR
+        case Locale.lv_LV.identifier: return .lv_LV(simplified: false)
+        case Locale.ee_EE.identifier: return .ee_EE
         default:
             return nil
         }
