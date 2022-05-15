@@ -9032,6 +9032,7 @@ kļūme
 kļūmi
 kļūmē
 kļūsi
+kļūtu
 kļūšu
 kņada
 kņadu
