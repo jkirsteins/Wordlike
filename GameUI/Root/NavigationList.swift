@@ -189,7 +189,7 @@ struct LanguageRow: View {
     
     var extraCaption: String? {
         if locale == .lv_LV {
-            return "\(isHardMode ? "Hard mode. " : "")\(isSimplifiedLatvianKeyboard ? "Simplified" : "Ext.") keyboard."
+            return "\(isHardMode ? "Hard mode. " : "")\(isSimplifiedLatvianKeyboard ? "Simplified" : "Extended") keyboard."
         }
         else {
             return isHardMode ? "Hard mode." : nil
