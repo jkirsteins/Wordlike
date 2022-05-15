@@ -238,7 +238,6 @@ struct LanguageRow: View {
                 .font(.caption)
                 .foregroundColor(.primary)
         }
-        .padding(.horizontal, 8)
     }
 }
 
@@ -352,7 +351,6 @@ struct NavigationList: View {
             Logo()
                 Spacer()
             }
-            .frame(maxWidth: .infinity, minHeight: 120)
             
             Spacer()
             
@@ -387,7 +385,7 @@ struct NavigationList: View {
                 gearCallback: gearCallback,
                 debug: $debug)
             Spacer()
-        }
+        }.padding(.horizontal, 16)
     }
 }
 
