@@ -214,7 +214,9 @@ struct LanguageRow: View {
                 TileFlag()
                     .frame(
                         minWidth: 50,
-                        maxWidth: 50)
+                        maxWidth: 50,
+                        minHeight: 32)
+                    .debugBorder(.orange)
                 VStack(alignment: .leading) {
                     Text(title)
                         .fontWeight(.bold)

@@ -280,6 +280,14 @@ struct MockDeviceConfig: Equatable, Hashable, Identifiable {
         sizeClasses: .iphone
     )
     
+    static let inch58_iPhone11Pro = MockDeviceConfig(
+        width: 375, 
+        height: 812, 
+        scaleFactor: 3,
+        comment: "5.8 inch (iPhone 11 Pro)",
+        sizeClasses: .iphone
+    )
+    
     static let inch55_iPhone8Plus = MockDeviceConfig(
         width: 414, 
         height: 736, 

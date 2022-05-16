@@ -165,6 +165,7 @@ struct AppView: View {
 struct AppView_Previews: PreviewProvider {
     static let configurations: [MockDeviceConfig] =
     [
+        .inch58_iPhone11Pro,
         .inch58_iPhone12Pro,
         .inch4_iPhoneSE,
         .inch4_iPhoneSE2
