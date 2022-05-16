@@ -219,7 +219,9 @@ struct GameHost: View {
         
         stats = stats.update(from: game, with: turnCounter)
         
-        activeSheet = .stats
+        if activeSheet == nil {
+            activeSheet = .stats
+        }
     }
     
     /// This is called when a turn is finished. It is called
@@ -428,7 +430,11 @@ struct GameHost: View {
             PaletteSetterView {
                 switch (item) {
                 case .help:
-                    HelpView().padding(16)
+                    HelpView(isShowing: Binding(get: {
+                        activeSheet == .help
+                    }, set: {
+                        activeSheet = $0 ? .help :.none 
+                    }))
                 case .stats:
                     StatsView(stats: stats, state: game)
                 case .settings:
