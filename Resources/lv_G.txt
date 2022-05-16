@@ -15265,9 +15265,14 @@ spēļu
 spēšu
 spīde
 spīdi
+spīds
 spīdu
 spīdē
+spīga
 spīgo
+spīgs
+spīgu
+spīgā
 spīle
 spīli
 spīlē
