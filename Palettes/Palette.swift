@@ -31,6 +31,10 @@ protocol Palette
     
     var inProgressUiLabel: Color { get }
     var completedUiLabel: Color { get }
+    
+    /// For when a word is known invalid (hint
+    /// before we submit)
+    var unknownWordTextColor: Color { get }
 }
 
 extension Palette {

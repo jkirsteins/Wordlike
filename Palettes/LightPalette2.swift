@@ -6,6 +6,10 @@ struct LightPalette2 : Palette
 {
     let name = "Light"
     
+    var unknownWordTextColor: Color {
+        .red.darker
+    }
+    
     let maskedFilledStroke: Color = .black
     let maskedEmptyStroke: Color = .gray
     let wrongLetterStroke: Color = .black

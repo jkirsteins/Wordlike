@@ -9,7 +9,8 @@ struct AgitatedTile: View {
     
     let letter: String
     let fixedType: Bool 
-    let jumpDuration: TimeInterval
+    let jumpDuration: TimeInterval = Row.JUMP_DURATION
+    let flipDuration: TimeInterval = Row.FLIP_DURATION
     
     let timer: Publishers.Delay<Publishers.Autoconnect<Timer.TimerPublisher>, DispatchQueue>?
     let secs: TimeInterval?
@@ -20,7 +21,6 @@ struct AgitatedTile: View {
         self.secs = nil
         self.timer = nil
         self.fixedType = true // stick to given type
-        self.jumpDuration = 0.35
         
         self._type = State(wrappedValue: model.state)
     }
@@ -28,7 +28,6 @@ struct AgitatedTile: View {
     init(_ letter: String, secs: TimeInterval? = 5.0) {
         self.letter = letter
         self.secs = secs 
-        self.jumpDuration = 1.5
         self.fixedType = false // allow randomizing type
         self._type = State(wrappedValue: .random)
         
@@ -70,7 +69,7 @@ struct AgitatedTile: View {
                 jumpCallback: { _ in 
                     jumping = false
                 },
-                duration: 1.5,
+                duration: flipDuration + drand48() * 0.2,
                 jumpDuration: jumpDuration)
             
             if let timer = timer {

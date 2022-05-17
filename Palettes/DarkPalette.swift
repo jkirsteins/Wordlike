@@ -4,6 +4,10 @@ struct DarkPalette : Palette
 {
     let name = "Dark (old)"
     
+    var unknownWordTextColor: Color {
+        .red
+    }
+    
     let maskedFilledStroke: Color = Color(hex: 0x565758)
     let maskedEmptyStroke: Color = Color(hex: 0x3a3a3c)
     let wrongLetterStroke: Color = Color(hex: 0x3a3a3c)

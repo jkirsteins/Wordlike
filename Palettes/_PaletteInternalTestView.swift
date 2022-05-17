@@ -4,6 +4,12 @@ struct _PaletteInternalTestView: View {
     @Environment(\.palette)
     var palette: Palette 
     
+    static let validator = WordValidator.testing([
+        "CRAZY",
+        "SLEDS",
+        "FLINT"
+    ])
+    
     var body: some View {
         GeometryReader { gr in 
             VStack {
@@ -12,14 +18,15 @@ struct _PaletteInternalTestView: View {
                 Row(model: RowModel(word: "CRAZY", expected: "FUELS", isSubmitted: true, locale: .en_US))
                 Row(model: RowModel(word: "SLEDS", expected: "FUELS", isSubmitted: true, locale: .en_US))
                 Row(model: RowModel(word: "FLINT", expected: "FUELS", isSubmitted: true, locale: .en_US))
+                Row(model: RowModel(word: "FILMS", expected: "FUELS", isSubmitted: false, locale: .en_US))
                 Row(model: RowModel(word: "FIL", expected: "FUELS", isSubmitted: false, locale: .en_US))
-                Row(model: RowModel(expected: "FUELS", locale: .en_US))
                 
                 EnglishKeyboard()
             }
             .environment(\.rootGeometry, gr)
             .environmentObject(BoardRevealModel())
             .environmentObject(GameState())
+            .environmentObject(Self.validator)
             .environment(
                 \.keyboardHints, 
                  KeyboardHints(

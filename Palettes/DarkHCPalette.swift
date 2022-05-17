@@ -6,6 +6,10 @@ struct DarkHCPalette : Palette
     
     let name = "Dark (high contrast)"
     
+    var unknownWordTextColor: Color {
+        wrongPlaceFill
+    }
+    
     var maskedFilledStroke: Color {
         wrapped.maskedFilledStroke
     } 

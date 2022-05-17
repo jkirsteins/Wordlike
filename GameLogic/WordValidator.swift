@@ -10,6 +10,14 @@ class WordValidator : ObservableObject
         return "\(ordinal) letter"
     }
     
+    static func testing(_ words: [String]) -> WordValidator {
+        let v = WordValidator(locale: .en_US)
+        let wt = WordTree(locale: .en_US)
+        words.forEach { let _ = wt.add(word: $0) }
+        v.initialize(answers: words, guessTree: wt)
+        return v
+    }
+    
     /// Validator protocol 
     func initialize(answers: [String], guessTree: WordTree) {
         self.answers = answers

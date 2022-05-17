@@ -36,8 +36,8 @@ struct Tile<Background: View>: View {
     @Environment(\.palette) 
     var palette: Palette
     
-    @Environment(\.showFocusHint) 
-    var showFocusHint: Bool
+    @Environment(\.tileConfig) 
+    var tileConfig: TileConfig
     
     let model: TileModel?
     
@@ -99,6 +99,10 @@ lineWidth: CGFloat,
     }
     
     var foregroundColor: Color {
+        if let colorOverride = tileConfig.colorOverride {
+            return colorOverride
+        }
+        
         guard type != .wrongLetter else {
             return palette.revealedWrongLetterColor
         }
@@ -115,7 +119,7 @@ lineWidth: CGFloat,
     }
     
     var body: some View {
-        GeometryReader { gr in 
+        GeometryReader { gr in
             ZStack {
                 TileBackgroundView(type: .darker(type))
                     .overlay(
@@ -128,7 +132,7 @@ lineWidth: CGFloat,
                         .degrees(randRotate)
                     )
                 
-                if showFocusHint {
+                if tileConfig.showCursor {
                     // This is the cursor branch.
                     // 
                     // Text() modifiers need to be same
@@ -150,7 +154,7 @@ lineWidth: CGFloat,
                     
                 }
                 
-                if !showFocusHint, let letter = letter {
+                if !tileConfig.showCursor, let letter = letter {
                     Text(letter) 
                         .font( 
                             .system(size: fontSize(gr), weight: .bold))
@@ -237,7 +241,14 @@ struct Tile_Previews: PreviewProvider {
         PaletteSetterView {
             VStack {
                 Text("Blinking cursor test")
-                Tile().environment(\.showFocusHint, true)
+                Tile().environment(\.tileConfig, TileConfig(showCursor: true))
+            }
+        }
+        
+        PaletteSetterView {
+            VStack {
+                Text("Color override test")
+                Tile().environment(\.tileConfig, TileConfig(colorOverride: .red))
             }
         }
         

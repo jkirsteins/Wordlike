@@ -4,6 +4,10 @@ struct DarkPalette2 : Palette
 {
     let name = "Dark"
     
+    var unknownWordTextColor: Color {
+        .red
+    }
+    
     var maskedFilledStroke: Color {
         maskedEmptyStroke.lighter(3)
     }

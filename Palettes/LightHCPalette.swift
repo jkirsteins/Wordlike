@@ -4,6 +4,10 @@ struct LightHCPalette : Palette
 {
     let wrapped = LightPalette2()
     
+    var unknownWordTextColor: Color {
+        wrongPlaceFill
+    }
+    
     let name = "Light (high contrast)"
     
     var maskedFilledStroke: Color {
