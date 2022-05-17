@@ -9,8 +9,14 @@ struct LightPalette2 : Palette
     let maskedFilledStroke: Color = .black
     let maskedEmptyStroke: Color = .gray
     let wrongLetterStroke: Color = .black
-    let wrongPlaceStroke: Color = .yellow.darker
-    let rightPlaceStroke: Color = .green.darker
+    
+    var wrongPlaceStroke: Color { 
+        wrongPlaceFill.darker
+    }
+    
+    var rightPlaceStroke: Color {
+        rightPlaceFill.darker
+    }
     
     let maskedFilledFill: Color = .white
     let maskedEmptyFill: Color = .white
@@ -53,9 +59,9 @@ struct LightPalette2 : Palette
         case .maskedEmpty, .maskedFilled:
             return .red
         case .rightPlace:
-            return .green
+            return rightPlaceFill
         case .wrongPlace:
-            return .yellow
+            return wrongPlaceFill
         case .wrongLetter:
             return .white
         }

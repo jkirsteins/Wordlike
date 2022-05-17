@@ -51,7 +51,7 @@ struct DarkPalette2 : Palette
     
     func keyboardFill(for type: TileBackgroundType?) -> Color {
         guard let type = type else { 
-            return wrongLetterFill 
+            return wrongLetterFill
         }
         
         switch(type)
@@ -65,7 +65,7 @@ struct DarkPalette2 : Palette
         case .wrongPlace:
             return wrongPlaceFill
         case .wrongLetter:
-            return maskedEmptyFill.lighter
+            return Color(UIColor.systemBackground)
         }
     }
     
@@ -81,7 +81,7 @@ struct DarkPalette2 : Palette
         case .wrongPlace:
             return toastBackground
         case .wrongLetter:
-            return toastBackground.darker(2)
+            return Color(UIColor.systemFill).lighter
         }
     }
 }
@@ -94,6 +94,8 @@ struct DarkPalette2_Previews: PreviewProvider {
             
             _PaletteInternalTestView()
                 .environment(\.palette, DarkPalette2())
-        }.padding()
+        }
+        .preferredColorScheme(.dark)
+        .padding()
     }
 }

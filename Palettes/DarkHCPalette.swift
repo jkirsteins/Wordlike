@@ -2,28 +2,86 @@ import SwiftUI
 
 struct DarkHCPalette : Palette
 {
+    let wrapped = DarkPalette2()
+    
     let name = "Dark (high contrast)"
     
-    let maskedFilledStroke: Color = Color(hex: 0x565758)
-    let maskedEmptyStroke: Color = Color(hex: 0x3a3a3c)
-    let wrongLetterStroke: Color = Color(hex: 0x3a3a3c)
-    let wrongPlaceStroke: Color = Color(hex: 0x85C0f9)
-    let rightPlaceStroke: Color = Color(hex: 0xF5793A)
+    var maskedFilledStroke: Color {
+        wrapped.maskedFilledStroke
+    } 
     
-    let maskedFilledFill: Color = Color(hex: 0x121213)
-    let maskedEmptyFill: Color = Color(hex: 0x121213)
-    let wrongLetterFill: Color = Color(hex: 0x3a3a3c)
+    var maskedEmptyStroke: Color {
+        wrapped.maskedEmptyStroke
+    }
+    
+    var wrongLetterStroke: Color {
+        wrapped.wrongLetterStroke
+    }
+    
+    var wrongPlaceStroke: Color {
+        wrongPlaceFill.lighter(2)
+    }
+    
+    var rightPlaceStroke: Color {
+        rightPlaceFill.lighter(2)
+    }
+    
+    var maskedFilledFill: Color {
+        wrapped.maskedFilledFill
+    }
+    
+    var maskedEmptyFill: Color {
+        wrapped.maskedEmptyFill
+    }
+    
+    var wrongLetterFill: Color {
+        wrapped.wrongLetterFill
+    }
+    
     let wrongPlaceFill: Color = Color(hex: 0x85C0f9)
     let rightPlaceFill: Color = Color(hex: 0xF5793A)
     
-    let maskedTextColor: Color = Color(hex: 0xffffff)
-    let revealedTextColor: Color = Color(hex: 0xffffff)
+    var maskedTextColor: Color {
+        wrapped.maskedTextColor
+    }
     
-    let toastBackground = Color.white
-    let toastForeground = Color(hex: 0x121213)
+    var revealedTextColor: Color {
+        wrapped.revealedTextColor
+    }
     
-    var normalKeyboardFill = Color(hex: 0x828385)
-    var submitKeyboardFill = Color.blue
+    var toastBackground: Color {
+        wrapped.toastBackground
+    }
+    
+    var toastForeground: Color {
+        wrapped.toastForeground
+    }
+    
+    var normalKeyboardFill: Color {
+        wrapped.normalKeyboardFill
+    }
+    
+    var submitKeyboardFill: Color {
+        wrapped.submitKeyboardFill
+    }
+    
+    func keyboardFill(for type: TileBackgroundType?) -> Color {
+        switch(type)
+        {
+        case .darker(let innerType):
+            return keyboardFill(for: innerType)
+        case .rightPlace:
+            return rightPlaceFill
+        case .wrongPlace:
+            return wrongPlaceFill
+            default:
+            return wrapped.keyboardFill(for: type)
+        }
+    }
+    
+    func keyboardText(for type: TileBackgroundType?) -> Color {
+        wrapped.keyboardText(for: type)
+    }
 }
 
 struct DarkHCPalette_Previews: PreviewProvider {
@@ -34,6 +92,8 @@ struct DarkHCPalette_Previews: PreviewProvider {
             _PaletteInternalTestView()
                 .environment(\.palette, DarkHCPalette())
         }
+        .preferredColorScheme(.dark)
+        .padding()
     }
 }
 
