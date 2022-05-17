@@ -107,7 +107,6 @@ struct Row: View
             ForEach(0..<5, id: \.self) { ix in
                 FlippableTile(
                     letter: maskedModel(at: ix), 
-                    flipped: flippedModel(at: ix),
                     tag: ix,
                     jumpIx: vm.jumpIx,
                     midCallback: {
@@ -134,7 +133,14 @@ struct Row: View
                      it looks less rigid
                      */
                     duration: duration + drand48() * 0.2,
-                    jumpDuration: 0.25)
+                    jumpDuration: 0.25, 
+                    revealedObject: { ()->AgitatedTile? in
+                        if let f = flippedModel(at: ix) {
+                            return AgitatedTile(model: f)
+                        } else {
+                            return nil
+                        }
+                    })
                     
                     .environment(
                         \.showFocusHint,

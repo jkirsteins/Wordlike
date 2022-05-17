@@ -1,9 +1,33 @@
 import SwiftUI
 
-struct FlippableTile: View {
+extension FlippableTile where Revealed == Tile<InternalFillColor> {
+    init(letter: TileModel?, flipped: TileModel?,
+         tag: Int, jumpIx: Int?,
+         midCallback: @escaping ()->(),
+         flipCallback: @escaping ()->(), 
+         jumpCallback: @escaping (Int)->(),
+         duration: CGFloat,
+         jumpDuration: CGFloat) {
+        self.letter = letter 
+        self.tag = tag 
+        self.jumpIx = jumpIx
+        self.midCallback = midCallback
+        self.flipCallback = flipCallback
+        self.jumpCallback = jumpCallback
+        self.duration = duration
+        self.jumpDuration = jumpDuration
+        
+        if let flipped = flipped {
+            revealedObject = Tile(model: flipped)
+        } else {
+            revealedObject = nil
+        }
+    }
+}
+
+struct FlippableTile<Revealed: View>: View {
     let letter: TileModel?
-    let flipped: TileModel?
-    
+
     let tag: Int 
     let jumpIx: Int?
     
@@ -16,40 +40,7 @@ struct FlippableTile: View {
     
     @State var jumping: Bool = false
     
-    init(letter: TileModel?, flipped: TileModel?,
-         tag: Int, jumpIx: Int?,
-         midCallback: @escaping ()->(),
-         flipCallback: @escaping ()->(),
-         jumpCallback: @escaping (Int)->()) {
-        let duration = CGFloat(0.25)
-        self.jumpDuration = 0.25
-        self.letter = letter 
-        self.flipped = flipped
-        self.tag = tag 
-        self.jumpIx = jumpIx
-        self.midCallback = midCallback
-        self.flipCallback = flipCallback
-        self.jumpCallback = jumpCallback
-        self.duration = duration
-    }
-    
-    init(letter: TileModel?, flipped: TileModel?,
-         tag: Int, jumpIx: Int?,
-         midCallback: @escaping ()->(),
-         flipCallback: @escaping ()->(), 
-         jumpCallback: @escaping (Int)->(),
-         duration: CGFloat,
-         jumpDuration: CGFloat) {
-        self.letter = letter 
-        self.flipped = flipped
-        self.tag = tag 
-        self.jumpIx = jumpIx
-        self.midCallback = midCallback
-        self.flipCallback = flipCallback
-        self.jumpCallback = jumpCallback
-        self.duration = duration
-        self.jumpDuration = jumpDuration
-    }
+    let revealedObject: Revealed?
     
     var revealConfig: RevealConfig {
         RevealConfig(
@@ -58,6 +49,26 @@ struct FlippableTile: View {
             callbackStep: 1, 
             callback: midCallback,
             finalCallback: flipCallback)
+    }
+    
+    init(letter: TileModel?, 
+         tag: Int, jumpIx: Int?,
+         midCallback: @escaping ()->(),
+         flipCallback: @escaping ()->(), 
+         jumpCallback: @escaping (Int)->(),
+         duration: CGFloat,
+         jumpDuration: CGFloat,
+         revealedObject: ()->Revealed?) 
+    {
+        self.letter = letter 
+        self.tag = tag 
+        self.jumpIx = jumpIx
+        self.midCallback = midCallback
+        self.flipCallback = flipCallback
+        self.jumpCallback = jumpCallback
+        self.duration = duration
+        self.jumpDuration = jumpDuration
+        self.revealedObject = revealedObject()
     }
     
     var body: some View {
@@ -76,16 +87,16 @@ struct FlippableTile: View {
     @ViewBuilder
     var nonJumpingBody: some View {
         VStack {
-            if flipped == nil {
+            if revealedObject == nil {
                 Tile(model: letter)
             } 
             
-            if let flipped = flipped {
+            if let revealedObject = revealedObject {
                 Tile(model: letter)
                     .modifier(RevealModifier(
                         config: revealConfig, 
                         revealed: {
-                            Tile(model: flipped)
+                            revealedObject
                         }))
             }
         }

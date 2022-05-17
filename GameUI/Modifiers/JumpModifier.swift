@@ -22,7 +22,7 @@ struct JumpModifier: ViewModifier {
             .offset(x: 0, y: distance)
             .onChange(of: jumping) { np in
                 withAnimation(
-                    .easeInOut(duration: halfDuration)) {
+                    .easeOut(duration: halfDuration)) {
                         distance = (np ? -maxDistance : 0.0)
                         
                         if np {
@@ -86,5 +86,6 @@ struct JumpModifierTestView_Previews: PreviewProvider {
         JumpModifierTestView()
         
         Row(model: RowModel(word: WordModel("plain", locale: .en_US), expected: WordModel("plain", locale: .en_US), isSubmitted: true))
+            .environmentObject(BoardRevealModel())
     }
 }

@@ -3,28 +3,50 @@ import Combine
 
 /// A tile that will move occasionally on its own. FUN!
 struct AgitatedTile: View {
-    @State var type: TileBackgroundType = .random 
+    @State var type: TileBackgroundType
     @State var flipped: TileModel? = nil
     @State var jumping: Bool = false
     
     let letter: String
+    let fixedType: Bool 
+    let jumpDuration: TimeInterval
     
-    let timer: Publishers.Delay<Publishers.Autoconnect<Timer.TimerPublisher>, DispatchQueue>
+    let timer: Publishers.Delay<Publishers.Autoconnect<Timer.TimerPublisher>, DispatchQueue>?
+    let secs: TimeInterval?
+    @State var delayedUntil: Date? = nil
     
-    init(_ letter: String, secs: TimeInterval = 5.0) {
+    init(model: TileModel) {
+        self.letter = model.letter
+        self.secs = nil
+        self.timer = nil
+        self.fixedType = true // stick to given type
+        self.jumpDuration = 0.35
+        
+        self._type = State(wrappedValue: model.state)
+    }
+    
+    init(_ letter: String, secs: TimeInterval? = 5.0) {
         self.letter = letter
+        self.secs = secs 
+        self.jumpDuration = 1.5
+        self.fixedType = false // allow randomizing type
+        self._type = State(wrappedValue: .random)
         
-        let it = Timer.publish(
-            every: secs, 
-            on: .main, 
-            in: .common)
-            .autoconnect()
-        
-        // Stagger potential actions a bit
-        let delay: DispatchQueue.SchedulerTimeType.Stride = .seconds(10*drand48())
-        
-        self.timer = it
-            .delay(for: delay, scheduler: DispatchQueue.main)
+        if let secs = secs {
+            let it = Timer.publish(
+                every: secs, 
+                on: .main, 
+                in: .common)
+                .autoconnect()
+            
+            // Stagger potential actions a bit
+            let delay: DispatchQueue.SchedulerTimeType.Stride = .seconds(10*drand48())
+            
+            self.timer = it
+                .delay(for: delay, scheduler: DispatchQueue.main)
+        } else {
+            self.timer = nil
+        }
     }
     
     var body: some View {
@@ -49,15 +71,11 @@ struct AgitatedTile: View {
                     jumping = false
                 },
                 duration: 1.5,
-                jumpDuration: 1.5)
+                jumpDuration: jumpDuration)
             
-            EmptyView().onReceive(timer) { received in
-                let r = drand48()
-                
-                if r < 0.05 {
-                    jumping = true
-                } else if r < 0.1 {
-                    flipped = TileModel(letter: letter, state: TileBackgroundType.random(not: type))
+            if let timer = timer {
+                EmptyView().onReceive(timer) { received in
+                    applyEffect(0.1)
                 }
             }
         }.onAppear {
@@ -69,6 +87,32 @@ struct AgitatedTile: View {
         .onDisappear {
             
         }
+        .onTapGesture {
+            applyEffect(1.0, ignoreDelay: true)
+        }
+    }
+    
+    func applyEffect(_ ratio: Double = 1.0, ignoreDelay: Bool = false) {
+        let now = Date()
+        if 
+            !ignoreDelay,
+            let delayedUntil = delayedUntil, 
+                now < delayedUntil 
+        {
+            return
+        }
+        
+        let r = drand48() / ratio 
+        
+        if fixedType || r < 0.5 {
+            jumping = true
+        } else if !fixedType && r < 1 {
+            flipped = TileModel(letter: letter, state: TileBackgroundType.random(not: type))
+        }
+        
+        if let secs = secs {
+            delayedUntil = Date().addingTimeInterval(secs)
+        }
     }
 }
 
@@ -76,12 +120,11 @@ struct RandomFlippingTile_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             HStack {
-                AgitatedTile("H")
+                AgitatedTile("H", secs: nil)
                 AgitatedTile("E")
                 AgitatedTile("L")
                 AgitatedTile("L")
                 AgitatedTile("O")
-                
             }
         }
     }
