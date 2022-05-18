@@ -149,9 +149,9 @@ struct AppView: View {
             .environment(
                 \.globalTapCount, 
                  $globalTapCount)
-            .sheet(item: $activeSheet, onDismiss: {
+            .safeSheet(item: $activeSheet, onDismiss: {
                 // nothing to do on dismiss
-            }, content: { item in
+            }, { item in
                 switch(item) {
                 case .settings: 
                     SettingsView()
@@ -163,8 +163,7 @@ struct AppView: View {
 }
 
 struct AppView_Previews: PreviewProvider {
-    static let configurations: [MockDeviceConfig] =
-    [
+    static let configurationsWithDupes = [
         .inch58_iPhone11Pro,
         .inch58_iPhone12Pro,
         .inch4_iPhoneSE,
@@ -173,7 +172,16 @@ struct AppView_Previews: PreviewProvider {
     + MockDeviceConfig.mandatoryScreenshotConfigs + 
     [
         .inch129_iPadPro4
-    ] 
+    ]
+    
+    static var configurations: [MockDeviceConfig] {
+        Array(Set(configurationsWithDupes)).sorted {
+            let ix1 = configurationsWithDupes.firstIndex(of: $0)!
+            let ix2 = configurationsWithDupes.firstIndex(of: $1)!
+            
+            return ix1 < ix2
+        }
+    }
     
     static var previews: some View {
         ForEach(configurations) { 

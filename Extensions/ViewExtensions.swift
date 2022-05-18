@@ -1,5 +1,27 @@
 import SwiftUI
 
+fileprivate struct _DebugView<Wrapped: View>: View {
+    @Environment(\.debug)
+    var debug: Bool
+    
+    @ViewBuilder let wrapped: ()->Wrapped
+    
+    var body: some View {
+        if debug {
+            wrapped()
+        }
+    }
+}
+
+extension View {
+    func debugBelow<T: View>(@ViewBuilder _ content: @escaping ()->T) -> some View {
+        return _DebugView {
+            self 
+            content()
+        }
+    }
+}
+
 fileprivate struct DebugBorder<Content: View>: View {
     let color: Color
     @ViewBuilder let content: ()->Content 

@@ -417,7 +417,7 @@ struct GameHost: View {
                 self.dailyState = DailyState(expected: answer)
             }
         }
-        .sheet(item: $activeSheet, 
+        .safeSheet(item: $activeSheet, 
                onDismiss: {
             
             // assuming this is the first
@@ -430,11 +430,7 @@ struct GameHost: View {
             PaletteSetterView {
                 switch (item) {
                 case .help:
-                    HelpView(isShowing: Binding(get: {
-                        activeSheet == .help
-                    }, set: {
-                        activeSheet = $0 ? .help :.none 
-                    }))
+                    HelpView()
                 case .stats:
                     StatsView(stats: stats, state: game)
                 case .settings:

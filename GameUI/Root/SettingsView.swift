@@ -55,205 +55,195 @@ struct SettingsView: View {
     @State var emailCopied = false
     
     var body: some View {
-        GeometryReader { gr in 
-            ScrollView {
-                VStack(spacing: 16) {
-                    Text("Settings")
-                        .font(Font.system(.title).smallCaps())
-                        .fontWeight(.bold)
-                    
-                    HStack {
-                        
-                        Toggle(isOn: $isHighContrast) {
-                            VStack(alignment: .leading) {
-                                Text("High contrast mode")
-                                Text("For improved color vision.")
-                                    .font(.caption)
-                            }
-                        }
-                    }
-                    
-                    Divider()
-                    
-                    Group {
-                        Toggle(isOn: $isHardMode) {
-                            VStack(alignment: .leading) {
-                                Text("Hard mode")
-                                Text("Any revealed hints must be used in subsequent guesses.")
-                                    .font(.caption)
-                            }
-                        }
-                        
-                        Toggle(isOn: $isSimplifiedLatvianKeyboard) {
-                            VStack(alignment: .leading) {
-                                Text("Simplified Latvian keyboard")
-                                Text("Do not require precise use of diacritics.")
-                                    .font(.caption)
-                            }
-                        }
-                    }
-                    
-                    Divider()
-                    
-                    // Feedback group
-                    Group { 
-                        
-                        if MailView.canSendMail {
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text("Feedback")
-                                    Text("You can send feedback via e-mail.").font(.caption)
-                                }
-                                Spacer()
-                                Button("Send") {
-                                    activeSheet = .mail
-                                }.frame(minWidth: Self.minRightWidth)
-                            }
-                        }
-                        
-                        HStack {
-                            VStack(alignment: .leading) {
-                                if MailView.canSendMail {
-                                    Text("Feedback (manual)")
-                                } else {
-                                    Text("Feedback")
-                                }
-                                Text("Click to copy feedback e-mail address.").font(.caption)
-                            }
-                            Spacer()
-                            HStack {
-                                if emailCopied {
-                                    Text("Copied")
-                                        .font(.caption)
-                                        .foregroundColor(Color(UIColor.secondaryLabel))
-                                        .task {
-                                            try? await Task.sleep(nanoseconds: 2_000_000_000)
-                                            emailCopied = false
-                                        }
-                                } else {
-                                    Button(action: {
-                                        UIPasteboard.general.setValue(
-                                            Self.feedbackEmail,
-                                            forPasteboardType: UTType.plainText.identifier)
-                                        
-                                        emailCopied = true
-                                    }, label: {
-                                        Image(systemName: "doc.on.clipboard")
-                                    }) 
-                                }
-                            }.frame(minWidth: Self.minRightWidth)
-                            
-                        }
-                    }
-                    
-                    Divider()
-                    
-                    // Social
-                    Group {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("Source code")
-                                Text("This game was created using Swift Playgrounds 4 on an iPad.\n\nThe source code is freely available.")
-                                    .font(.caption)
-                            }
-                            
-                            Spacer()
-                            
-                            Link(destination: URL(string: "https://github.com/jkirsteins/SimpleWordGame")!, label: {
-                                Text("GitHub")
-                            })
-                                .frame(minWidth: Self.minRightWidth)
-                        }
-                        
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("Author")
-                                Text("Made by Jānis Kiršteins.")
-                                    .font(.caption)
-                            }
-                            
-                            Spacer()
-                            
-                            Link(destination: URL(string: "https://twitter.com/jkirsteins")!, label: {
-                                Text("Twitter")
-                            })
-                                .frame(minWidth: Self.minRightWidth)
-                        }
-                    }
-                    
-                    // Debug group
-                    if debug {
-                        Group { 
-                            
-                            Divider()
-                            
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text("Reset all state").font(.body)
-                                    Text("Clear all historical stats and today's progress").font(.caption)
-                                }
-                                Spacer()
-                                Button("Full reset") {
-                                    if let bundleID = Bundle.main.bundleIdentifier {
-                                        UserDefaults.standard.removePersistentDomain(forName: bundleID)
-                                    }
-                                }
-                            }
-                            
-                            Divider()
-                            
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text("Reset turn (EN)").font(.body)
-                                    Text("Reset today's state only (EN)").font(.caption)
-                                }
-                                Spacer()
-                                Button("Reset") {
-                                    dailyStateEn = nil
-                                }
-                            }
-                            
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text("Reset turn (FR)").font(.body)
-                                    Text("Reset today's state only (FR)").font(.caption)
-                                }
-                                Spacer()
-                                Button("Reset") {
-                                    dailyStateFr = nil
-                                }
-                            }
-                            
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text("Reset turn (LV)").font(.body)
-                                    Text("Reset today's state only (LV)").font(.caption)
-                                }
-                                Spacer()
-                                Button("Reset") {
-                                    dailyStateLv = nil
-                                }
-                            }
-                            
-                            Divider()
-                        }
+        VStack(spacing: 16) {
+            HStack {
+                
+                Toggle(isOn: $isHighContrast) {
+                    VStack(alignment: .leading) {
+                        Text("High contrast mode")
+                        Text("For improved color vision.")
+                            .font(.caption)
                     }
                 }
-                .padding(24)
-                .sheet(item: $activeSheet, onDismiss: {
+            }
+            
+            Divider()
+            
+            Group {
+                Toggle(isOn: $isHardMode) {
+                    VStack(alignment: .leading) {
+                        Text("Hard mode")
+                        Text("Any revealed hints must be used in subsequent guesses.")
+                            .font(.caption)
+                    }
+                }
+                
+                Toggle(isOn: $isSimplifiedLatvianKeyboard) {
+                    VStack(alignment: .leading) {
+                        Text("Simplified Latvian keyboard")
+                        Text("Do not require precise use of diacritics.")
+                            .font(.caption)
+                    }
+                }
+            }
+            
+            Divider()
+            
+            // Feedback group
+            Group { 
+                
+                if MailView.canSendMail {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Feedback")
+                            Text("You can send feedback via e-mail.").font(.caption)
+                        }
+                        Spacer()
+                        Button("Send") {
+                            activeSheet = .mail
+                        }.frame(minWidth: Self.minRightWidth)
+                    }
+                }
+                
+                HStack {
+                    VStack(alignment: .leading) {
+                        if MailView.canSendMail {
+                            Text("Feedback (manual)")
+                        } else {
+                            Text("Feedback")
+                        }
+                        Text("Click to copy feedback e-mail address.").font(.caption)
+                    }
+                    Spacer()
+                    HStack {
+                        if emailCopied {
+                            Text("Copied")
+                                .font(.caption)
+                                .foregroundColor(Color(UIColor.secondaryLabel))
+                                .task {
+                                    try? await Task.sleep(nanoseconds: 2_000_000_000)
+                                    emailCopied = false
+                                }
+                        } else {
+                            Button(action: {
+                                UIPasteboard.general.setValue(
+                                    Self.feedbackEmail,
+                                    forPasteboardType: UTType.plainText.identifier)
+                                
+                                emailCopied = true
+                            }, label: {
+                                Image(systemName: "doc.on.clipboard")
+                            }) 
+                        }
+                    }.frame(minWidth: Self.minRightWidth)
                     
-                }, content: { item in
-                    switch(item) {
-                    case .mail: 
-                        MailView(data: $mailData) { _ in
-                            
+                }
+            }
+            
+            Divider()
+            
+            // Social
+            Group {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Source code")
+                        Text("This game was created using Swift Playgrounds 4 on an iPad.\n\nThe source code is freely available.")
+                            .font(.caption)
+                    }
+                    
+                    Spacer()
+                    
+                    Link(destination: URL(string: "https://github.com/jkirsteins/SimpleWordGame")!, label: {
+                        Text("GitHub")
+                    })
+                        .frame(minWidth: Self.minRightWidth)
+                }
+                
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Author")
+                        Text("Made by Jānis Kiršteins.")
+                            .font(.caption)
+                    }
+                    
+                    Spacer()
+                    
+                    Link(destination: URL(string: "https://twitter.com/jkirsteins")!, label: {
+                        Text("Twitter")
+                    })
+                        .frame(minWidth: Self.minRightWidth)
+                }
+            }
+            
+            // Debug group
+            if debug {
+                Group { 
+                    
+                    Divider()
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Reset all state").font(.body)
+                            Text("Clear all historical stats and today's progress").font(.caption)
+                        }
+                        Spacer()
+                        Button("Full reset") {
+                            if let bundleID = Bundle.main.bundleIdentifier {
+                                UserDefaults.standard.removePersistentDomain(forName: bundleID)
+                            }
                         }
                     }
-                })
-                .frame(width: gr.size.width)      
-                .frame(minHeight: gr.size.height)
+                    
+                    Divider()
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Reset turn (EN)").font(.body)
+                            Text("Reset today's state only (EN)").font(.caption)
+                        }
+                        Spacer()
+                        Button("Reset") {
+                            dailyStateEn = nil
+                        }
+                    }
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Reset turn (FR)").font(.body)
+                            Text("Reset today's state only (FR)").font(.caption)
+                        }
+                        Spacer()
+                        Button("Reset") {
+                            dailyStateFr = nil
+                        }
+                    }
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Reset turn (LV)").font(.body)
+                            Text("Reset today's state only (LV)").font(.caption)
+                        }
+                        Spacer()
+                        Button("Reset") {
+                            dailyStateLv = nil
+                        }
+                    }
+                    
+                    Divider()
+                }
             }
         }
+        .navigationTitle("Settings")
+        .sheet(item: $activeSheet, onDismiss: {
+            
+        }, content: { item in
+            switch(item) {
+            case .mail: 
+                MailView(data: $mailData) { _ in
+                    
+                }
+            }
+        })
     }
 }
 
