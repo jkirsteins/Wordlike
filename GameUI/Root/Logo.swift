@@ -121,20 +121,16 @@ struct Logo: View {
     var body: some View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
-                /* Switch on region not language code,
-                 because we want to display the localized logo
-                 even if rest of UI is expected to be in a 
-                 different language.*/
-                switch(locale.languageCode, locale.regionCode) {
-                    /* In Latvia look at either region or
-                     language code to influence the logo. */
-                case 
-                    (_, Locale.lv_LV.regionCode),
-                    (Locale.lv_LV.languageCode, _):
+                /* Go by region code,
+                 because in playgrounds we can't
+                 properly define the app's 
+                 language support (so Locale.current
+                 might not match the language preference
+                 defined in device Settings) */
+                switch(locale.regionCode) {
+                case (Locale.lv_LV.regionCode):
                     LatvianLogo()
-                    
-                    /* In other languages go by language code */
-                case (Locale.fr_FR.languageCode, _):
+                case (Locale.fr_FR.regionCode):
                     FrenchLogo()
                 default:
                     EnglishLogo()
