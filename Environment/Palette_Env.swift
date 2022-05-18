@@ -1,7 +1,7 @@
 import SwiftUI
 
 private struct PaletteKey: EnvironmentKey {
-    static let defaultValue: Palette = DarkPalette()
+    static let defaultValue: Palette = LightPalette2()
 }
 
 extension EnvironmentValues {

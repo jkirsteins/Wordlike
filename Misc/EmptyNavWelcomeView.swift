@@ -3,14 +3,18 @@ import SwiftUI
 struct EmptyNavWelcomeView: View {
     var body: some View {
         VStack {
-            Tiles(
+            AbstractTiles(
                 "WELCOME!", 
                 cols: 8, 
                 minWidth: 30, 
-                maxWidth: 100)
+                maxWidth: 100,
+                producer: {
+                    AgitatedTile($0)
+                })
 
             Text("Select a language in the left side menu to start the game.")
         }
+        .padding()
     }
 }
 

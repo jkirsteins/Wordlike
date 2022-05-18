@@ -518,24 +518,27 @@ struct LanguageRowButtonStyle: ButtonStyle {
     }
 }
 
-struct Tiles: View {
+struct AbstractTiles<TileType: View>: View {
     let word: [String] 
     let minWidth: CGFloat
     let maxWidth: CGFloat
     let items: [GridItem]
+    let producer: (String)->TileType
     
-    static let spacing = CGFloat(2)
+    let spacing = CGFloat(2)
     
     init(
         _ word: String, 
         cols: Int,
         minWidth: CGFloat,
-        maxWidth: CGFloat
+        maxWidth: CGFloat,
+        producer: @escaping (String)->TileType
     ) {
+        self.producer = producer
         self.items = .init(
             repeating: GridItem(
                 .flexible(minimum: minWidth, maximum: maxWidth),
-                spacing: Self.spacing,
+                spacing: self.spacing,
                 alignment: .center), 
             count: cols)
         self.minWidth = minWidth
@@ -548,10 +551,10 @@ struct Tiles: View {
     }
     
     var body: some View {
-        LazyVGrid(columns: self.items, spacing: Self.spacing) {
+        LazyVGrid(columns: self.items, spacing: self.spacing) {
             ForEach(Array(word.enumerated()), id: \.offset) {
-                p in 
-                Tile(p.element, randomType)
+                p in
+                producer(p.element)
             }
         }
     }
