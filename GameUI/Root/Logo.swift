@@ -13,7 +13,7 @@ fileprivate struct FrenchLogo: View {
                 AgitatedTile("t")
                 Tile("_").opacity(0).frame(maxWidth: 8)
                 AgitatedTile("d")
-                AgitatedTile("e")
+                AgitatedTile("u")
             }
             HStack(spacing: SPACING) {
                 AgitatedTile("j")
