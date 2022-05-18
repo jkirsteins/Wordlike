@@ -125,7 +125,7 @@ struct AppView: View {
                     gearCallback: {
                         self.activeSheet = .settings
                     },
-                    debug: $innerDebug
+                    outerDebug: $innerDebug
                 )
                 
                 EmptyNavWelcomeView()

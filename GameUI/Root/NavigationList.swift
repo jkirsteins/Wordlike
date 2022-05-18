@@ -302,7 +302,11 @@ struct NavigationList: View {
     
     let shareCallback: ()->()
     let gearCallback: ()->()
-    @Binding var debug: Bool
+    
+    @Environment(\.debug) 
+    var envDebug: Bool
+    
+    @Binding var outerDebug: Bool
     
     @Environment(\.palette) 
     var palette: Palette
@@ -388,7 +392,7 @@ struct NavigationList: View {
                                  (it is instantiated, not nested) */
                                     .environment(\.rootGeometry, gr)
                                     .environment(\.globalTapCount, globalTapCount)
-                                    .environment(\.debug, debug)
+                                    .environment(\.debug, outerDebug || envDebug)
                                     .environment(\.palette, palette)
                             }
                             .padding()
@@ -402,14 +406,32 @@ struct NavigationList: View {
             }
             .debugBorder(.red)
             
-            Footer(
-                shareCallback: shareCallback,
-                gearCallback: gearCallback,
-                debug: $debug)
+            Footer(shareCallback: shareCallback)
                 .debugBorder(.green)
                 
         }
         .debugBorder(.red)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(
+                    action: { 
+                        gearCallback()
+                    }, 
+                    label: {
+                        Label(
+                            "Settings", 
+                            systemImage: "gear")
+                    }) 
+                    .tint(.primary)
+                    .contextMenu {
+                        Button {
+                            self.outerDebug.toggle()
+                        } label: {
+                            Label("Toggle debug mode", systemImage: "hammer")
+                        }
+                    }
+            }
+        }
     }
 }
 
@@ -427,8 +449,6 @@ struct Footer: View {
     var isSimplifiedLatvianKeyboard: Bool = false
     
     let shareCallback: ()->()
-    let gearCallback: ()->()
-    @Binding var debug: Bool
     
     func gameLocale(_ loc: Locale) -> GameLocale? {
         switch(loc.identifier) {
@@ -486,27 +506,6 @@ struct Footer: View {
             Spacer()
         }
         .debugBorder(.red)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(
-                    action: { 
-                        gearCallback()
-                    }, 
-                    label: {
-                        Label(
-                            "Settings", 
-                            systemImage: "gear")
-                    }) 
-                    .tint(.primary)
-                    .contextMenu {
-                        Button {
-                            self.debug.toggle()
-                        } label: {
-                            Label("Toggle debug mode", systemImage: "hammer")
-                        }
-                    }
-            }
-        }
     }
 }
 

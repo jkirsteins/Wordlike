@@ -141,6 +141,9 @@ struct Logo: View {
                 }
             }
         }
+        .debugBelow {
+            Text(verbatim: locale.identifier)
+        }
     }
 }
 

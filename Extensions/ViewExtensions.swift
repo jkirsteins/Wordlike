@@ -1,13 +1,19 @@
 import SwiftUI
 
-fileprivate struct _DebugView<Wrapped: View>: View {
+fileprivate struct _DebugView<Wrapped: View, WrappedDebug: View>: View {
     @Environment(\.debug)
     var debug: Bool
     
     @ViewBuilder let wrapped: ()->Wrapped
+    @ViewBuilder let wrappedDebug: ()->WrappedDebug
     
     var body: some View {
         if debug {
+            VStack {
+                wrapped()
+                wrappedDebug()
+            }
+        } else {
             wrapped()
         }
     }
@@ -15,10 +21,10 @@ fileprivate struct _DebugView<Wrapped: View>: View {
 
 extension View {
     func debugBelow<T: View>(@ViewBuilder _ content: @escaping ()->T) -> some View {
-        return _DebugView {
-            self 
-            content()
-        }
+        return _DebugView(
+            wrapped: { self }, 
+            wrappedDebug: content
+        )
     }
 }
 
