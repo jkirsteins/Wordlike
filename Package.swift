@@ -19,7 +19,7 @@ let package = Package(
             bundleIdentifier: "org.janiskirsteins.SimpleWordGame",
             teamIdentifier: "FN5YR78T7X",
             displayVersion: "1.0.54",
-            bundleVersion: "68",
+            bundleVersion: "70",
             iconAssetName: "AppIcon",
             accentColorAssetName: "AccentColor",
             supportedDeviceFamilies: [
