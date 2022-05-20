@@ -35,7 +35,7 @@ struct SheetRoot<SheetContent: View>: View {
                 .modifier(_OptNavTitleModifier(
                     title: title))
                 
-                .navigationBarTitleDisplayMode(.large)
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         UIButtonClose {
