@@ -35,43 +35,15 @@ extension GameState
         
         var rowValues: [String] = []
         
-        var match: [TileBackgroundType?] = [
-            nil, nil, nil, nil, nil
-        ]
-        var expected = Set<CharacterModel>()
-        
-        var isHard = true
         for row in self.rows {
             var result = ""
             guard row.isSubmitted else {
                 break
             }
             
-            // check expected before this row
-            for e in expected {
-                if !row.word.contains(MultiCharacterModel(e)) {
-                    isHard = false
-                }
-            }
-            
             // add expected from this row as 2nd step
             for ix in 0..<row.word.count {
                 let rs = row.revealState(ix)
-                if rs == .wrongPlace {
-                    expected.insert(row.word[ix].values[0])
-                }
-                
-                if rs == .rightPlace {
-                    match[ix] = .rightPlace
-                }
-                
-                // check if we expect a .rightPlace...
-                if let exp = match[ix] {
-                    if exp == .rightPlace, row.word[ix] != self.expected.word[ix] {
-                    isHard = false
-                    }
-                }
-                    
                 result += shareSymbol(for: rs) 
             }
             
@@ -85,7 +57,7 @@ extension GameState
             tries = "X/6"
         }
         
-        if isHard {
+        if rows.checkHardMode(expected: self.expected.word) {
             tries = "\(tries)*"
         }
         
@@ -95,7 +67,10 @@ extension GameState
         
         result += rowValues.joined(separator: "\n")
         
-        return result
+        /* Add a last newline, in case sharer wants
+        to add a comment (so it's not on the same line by 
+        default */
+        return result + "\n"
     }
 }
 

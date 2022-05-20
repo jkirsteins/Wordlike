@@ -26,9 +26,6 @@ struct AppView: View {
     @AppStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
     var isSimplifiedLatvianKeyboard: Bool = false
     
-    @AppStorage(SettingsView.HARD_MODE_KEY)
-    var isHardMode: Bool = false
-    
     @State var globalTapCount = 0
     
     @State var tapDelegate: GlobalTapDelegate? = nil
@@ -106,7 +103,9 @@ struct AppView: View {
                                 tries = "X/6"
                             }
                             
-                            return "\(flag) \(tries)\(self.isHardMode ? "*" : "") \(rowSnippet)"
+                            let isHardMode = ds.rows.checkHardMode(expected: WordModel(characters: ds.expected.word))
+                            
+                            return "\(flag) \(tries) \(rowSnippet)\(isHardMode ? "*" : "")"
                         }.filter { $0 != nil }.map { $0! }
                         
                         guard lines.count > 0 else {
@@ -117,7 +116,7 @@ struct AppView: View {
                         self.shareItems = [
                             (
                                 ["Wordlike Day \(day)", ""] + lines
-                            ).joined(separator: "\n")
+                            ).joined(separator: "\n") + "\n"
                         ]
                         
                         self.isSharing.toggle()

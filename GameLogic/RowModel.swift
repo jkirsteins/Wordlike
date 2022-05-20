@@ -19,6 +19,47 @@ extension Array where Element == RowModel {
     func isFinished(expected word: WordModel) -> Bool  {
         self.isWon(expected: word) || self.submittedCount == 6
     }
+    
+    /// Check if rows abide by hard mode rules
+    /// (doesn't verify if model is finished though)
+    func checkHardMode(expected: WordModel) -> Bool {
+        var wrongPlaces = Set<CharacterModel>()
+        var rightPlaces: [Bool] = [
+            false, false, false, false, false
+        ]
+        
+        for row in self {
+            guard row.isSubmitted else {
+                break
+            }
+            
+            // check expected before this row
+            for e in wrongPlaces {
+                if !row.word.contains(MultiCharacterModel(e)) {
+                    return false
+                }
+            }
+            
+            // add expected from this row as 2nd step
+            for ix in 0..<row.word.count {
+                let rs = row.revealState(ix)
+                if rs == .wrongPlace {
+                    wrongPlaces.insert(row.word[ix].values[0])
+                }
+                
+                if rs == .rightPlace {
+                    rightPlaces[ix] = true
+                }
+                
+                // check if we expect a .rightPlace...
+                if rightPlaces[ix], row.word[ix] != expected.word[ix] {
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
 }
 
 struct RowModel : Equatable, Codable, Identifiable
