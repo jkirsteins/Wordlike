@@ -31,7 +31,52 @@ extension GameState
         return revealState.shareSymbol
     }
     
-    public func shareSnippet(hard: Bool, additional: String?) -> String {
+    public func shareSnippet() -> String {
+        
+        var rowValues: [String] = []
+        
+        var match: [TileBackgroundType?] = [
+            nil, nil, nil, nil, nil
+        ]
+        var expected = Set<CharacterModel>()
+        
+        var isHard = true
+        for row in self.rows {
+            var result = ""
+            guard row.isSubmitted else {
+                break
+            }
+            
+            // check expected before this row
+            for e in expected {
+                if !row.word.contains(MultiCharacterModel(e)) {
+                    isHard = false
+                }
+            }
+            
+            // add expected from this row as 2nd step
+            for ix in 0..<row.word.count {
+                let rs = row.revealState(ix)
+                if rs == .wrongPlace {
+                    expected.insert(row.word[ix].values[0])
+                }
+                
+                if rs == .rightPlace {
+                    match[ix] = .rightPlace
+                }
+                
+                // check if we expect a .rightPlace...
+                if let exp = match[ix] {
+                    if exp == .rightPlace, row.word[ix] != self.expected.word[ix] {
+                    isHard = false
+                    }
+                }
+                    
+                result += shareSymbol(for: rs) 
+            }
+            
+            rowValues.append(result) 
+        }
         
         var tries: String
         if isWon {
@@ -40,31 +85,13 @@ extension GameState
             tries = "X/6"
         }
         
-        if hard {
+        if isHard {
             tries = "\(tries)*"
-        }
-        
-        if let add = additional {
-            tries = "\(tries)\(add)"
         }
         
         let flag: String = self.expected.locale.flag
         
         var result = "\(Bundle.main.displayName) \(flag) \(self.expected.day) \(tries)\n\n"
-        
-        var rowValues: [String] = []
-        for row in self.rows {
-            var result = ""
-            guard row.isSubmitted else {
-                break
-            }
-            
-            for ix in 0..<row.word.count {
-                result += shareSymbol(for: row.revealState(ix)) 
-            }
-            
-            rowValues.append(result) 
-        }
         
         result += rowValues.joined(separator: "\n")
         
@@ -73,12 +100,11 @@ extension GameState
 }
 
 struct Internal_ShareSnippet_Test: View {
+    let comment: String
     let expected: String 
     let guesses: [String] 
     let day: Int
     let validator = WordValidator(locale: .en_US)
-    let hard: Bool 
-    let additional: String?
     
     var body: some View {
         let state = GameState(
@@ -99,7 +125,10 @@ struct Internal_ShareSnippet_Test: View {
             isTallied: false,
             date: Date() 
         )
-        return Text(state.shareSnippet(hard: hard, additional: additional))
+        return VStack {
+            Text(comment)
+            Text(state.shareSnippet())
+        }
     }
 }
 
@@ -107,6 +136,7 @@ struct Internal_ShareSnippet_Test_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Internal_ShareSnippet_Test(
+                comment: "Should have asterisk (hard mode)",
                 expected: "comma", 
                 guesses: ["plain", 
                           "warms",
@@ -114,20 +144,27 @@ struct Internal_ShareSnippet_Test_Previews: PreviewProvider {
                           "aboma",
                           "douma",
                           "momma"], 
-                day: 5,
-                hard: true,
-                additional: nil)
+                day: 5)
                 .border(.red)
             
             Internal_ShareSnippet_Test(
+                comment: "No hard mode (missing 'a' on second guess)",
                 expected: "baton", 
-                guesses: ["audio", 
+                guesses: [
+                    "leaps",
+                    "fuels",
+                    "baton"
+                ], 
+                day: 2)
+                .border(.red)
+            
+            Internal_ShareSnippet_Test(
+                comment: "No hard mode (incorrect rightPlace)",
+                expected: "baton", 
+                guesses: ["balts", 
                           "toads",
-                          "about",
                           "baton"], 
-                day: 2,
-                hard: false,
-                additional: "^")
+                day: 2)
                 .border(.red)
         }
     }

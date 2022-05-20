@@ -44,9 +44,6 @@ struct StatsView: View {
     // TODO: duplicated with GameHostView
     @State var nextWordIn: String = "..."
     
-    @AppStorage(SettingsView.HARD_MODE_KEY)
-    var isHardMode: Bool = false
-    
     // Share sheet
     @State var isSharing: Bool = false
     @State var shareItems: [Any] = []
@@ -186,9 +183,7 @@ struct StatsView: View {
         }.onAppear {
             recalculateNextWord()
             self.shareItems = [
-                self.state.shareSnippet(
-                    hard: self.isHardMode,
-                    additional: nil)
+                self.state.shareSnippet()
             ]
         }
         .onReceive(timer) {
