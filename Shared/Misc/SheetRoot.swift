@@ -1,7 +1,7 @@
 import SwiftUI
 
 fileprivate struct _OptNavTitleModifier: ViewModifier {
-    let title: String? 
+    let title: String?
     
     func body(content: Content) -> some View {
         if let title = title {
@@ -18,48 +18,70 @@ struct SheetRoot<SheetContent: View>: View {
     @Binding var isPresented: Bool
     @ViewBuilder let content: ()->SheetContent
     
-    var body: some View {
+    var closePlacement: ToolbarItemPlacement {
+#if os(iOS)
+        .primaryAction
+#else
+        .confirmationAction
+#endif
+    }
+    
+    var innerBody: some View {
+#if os(iOS)
         NavigationView {
-            GeometryReader { gr in 
+            GeometryReader { gr in
                 ScrollView {
                     content()
                         .padding()
-                        .frame(width: gr.size.width)      
+                        .frame(width: gr.size.width)
                         .frame(minHeight: gr.size.height)
-                }
-                
-                /* Sometimes we don't know the 
-                 title initially (e.g. when
-                 a single sheet can house different
-                 content based on the item */
-                .modifier(_OptNavTitleModifier(
-                    title: title))
-                
-                #if os(iOS)
-                .navigationBarTitleDisplayMode(.inline)
-                #endif
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        UIButtonClose {
-                            isPresented = false
-                        }
-                    }
                 }
             }
         }
+#else
+        ScrollView {
+            content()
+                .padding()
+        }
+#endif
+    }
+    
+    @Environment(\.presentationMode)
+    var presentationMode
+    
+    var body: some View {
+        innerBody
+        
+        /* Sometimes we don't know the
+         title initially (e.g. when
+         a single sheet can house different
+         content based on the item */
+            .modifier(_OptNavTitleModifier(
+                title: title))
+        
+#if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+#endif
+            .toolbar {
+                ToolbarItem(placement: closePlacement) {
+                    UIButtonClose {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            }
     }
 }
 
 extension View {
-    func safeSheet<Content: View, Item: Identifiable>(item: Binding<Item?>, 
-onDismiss: (()->())? = nil,
-    @ViewBuilder _ content: @escaping (Item)->Content
+    func safeSheet<Content: View, Item: Identifiable>(item: Binding<Item?>,
+                                                      onDismiss: (()->())? = nil,
+                                                      @ViewBuilder _ content: @escaping (Item)->Content
     ) -> some View {
         return self.sheet(item: item, onDismiss: onDismiss) {  current in
             SheetRoot(title: nil, isPresented: Binding(get: {
                 current.id == item.wrappedValue?.id
-            }, set: { t in 
-                item.wrappedValue = (t ? current : nil) 
+            }, set: { t in
+                item.wrappedValue = (t ? current : nil)
             })) {
                 content(current)
             }
@@ -67,10 +89,10 @@ onDismiss: (()->())? = nil,
     }
     
     func safeSheet<Content: View>(
-    _ title: String, isPresented: Binding<Bool>,
-    @ViewBuilder _ content: @escaping ()->Content
+        _ title: String, isPresented: Binding<Bool>,
+        @ViewBuilder _ content: @escaping ()->Content
     ) -> some View {
-        return self.sheet(isPresented: isPresented) {  
+        return self.sheet(isPresented: isPresented) {
             SheetRoot(title: title, isPresented: isPresented) {
                 content()
             }

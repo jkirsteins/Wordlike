@@ -64,8 +64,8 @@ struct AppView: View {
             let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
             
             if let ds = ds,
-                ds.isFinished == true,
-                turnCounter.isFresh(ds.date, at: Date())
+               ds.isFinished == true,
+               turnCounter.isFresh(ds.date, at: Date())
             {
                 return false
             }
@@ -74,15 +74,32 @@ struct AppView: View {
         return true
     }
     
+    //    @State var testPresented = false
+    //    var body: some View {
+    //        NavigationList(shareCallback: {}, gearCallback: {}, outerDebug: .constant(false))
+    //
+    //    }
+    //    var testbody1: some View {
+    //        Button("Hello") {
+    //            testPresented = true
+    //        }.sheet(isPresented: $testPresented) {
+    //            SheetRoot(title: "Test", isPresented: .constant(true)) {
+    //                HelpView()
+    //            }
+    //        }
+    //    }
+    
     var body: some View {
         innerBody
-        #if os(macOS)
-            .frame(
-                minWidth: MockDeviceConfig.inch4_iPhoneSE.portrait.width,
-                maxWidth: 1000,
-                maxHeight: MockDeviceConfig.inch4_iPhoneSE.portrait.height)
-        #endif
+#if os(macOS)
+            .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.landscape.width)
+#endif
     }
+    
+#if os(macOS)
+    func toggleSidebar() { NSApp.keyWindow?.firstResponder?.tryToPerform(#selector(NSSplitViewController.toggleSidebar(_:)), with: nil)
+    }
+#endif
     
     var innerBody: some View {
         NavigationView {
@@ -97,7 +114,7 @@ struct AppView: View {
                             
                             guard
                                 let ds = ds,
-                                    ds.isFinished == true,
+                                ds.isFinished == true,
                                 let lastRow = ds.rows.lastSubmitted,
                                 let rowSnippet = lastRow.shareSnippet,
                                 turnCounter.isFresh(ds.date, at: Date())
@@ -139,6 +156,15 @@ struct AppView: View {
                 EmptyNavWelcomeView()
             }
         }
+        #if os(macOS)
+        .toolbar{
+            ToolbarItem(placement: .status){
+                Button(action: toggleSidebar, label: {
+                    Image(systemName: "sidebar.left") })
+            }
+            
+        }
+        #endif
         // TODO: sharing on macOS
 #if os(iOS)
         .sheetWithDetents(

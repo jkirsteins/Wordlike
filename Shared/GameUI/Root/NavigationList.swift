@@ -398,7 +398,7 @@ struct NavigationList: View {
 #if os(iOS)
         return .navigationBarTrailing
 #else
-        return .navigation
+        return .automatic
 #endif
     }
     
@@ -422,7 +422,7 @@ struct NavigationList: View {
             VStack(spacing: 8) {
                 ForEach(Locale.supportedLocales, id: \.self) {
                     loc in
-                    
+
                     if let gameLoc = gameLocale(loc) {
                         NavigationLink(destination: {
                             GeometryReader { gr in
@@ -447,7 +447,7 @@ struct NavigationList: View {
                 }
             }
             .debugBorder(.red)
-            
+
             Footer(shareCallback: shareCallback)
                 .debugBorder(.green)
             
@@ -543,17 +543,19 @@ struct Footer: View {
                     shareCallback()
                 }, label: {
                     Label(
-                        
+
                         "Share a summary",
                         systemImage: "square.and.arrow.up")
                 })
                 .disabled(self.isSharingDisabled)
                 .tint(.primary)
-                
+
                 if !isCompactVertically {
                     Text("Share a summary for every game you have completed today.")
                         .multilineTextAlignment(.center)
+                    #if os(iOS)
                         .fixedSize(horizontal: false, vertical: true )
+                    #endif
                         .font(.caption)
                 }
             }

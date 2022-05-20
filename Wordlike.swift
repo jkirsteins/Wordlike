@@ -8,6 +8,9 @@ struct Wordlike: App {
         WindowGroup {
             AppView()
         }
+        .commands {
+            SidebarCommands()
+        }
     }
     
 }

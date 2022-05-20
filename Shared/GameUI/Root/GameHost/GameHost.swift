@@ -279,7 +279,7 @@ struct GameHost: View {
         #if os(iOS)
         return .navigationBarLeading
         #else
-        return .navigation
+        return .automatic
         #endif
     }
     
@@ -287,7 +287,7 @@ struct GameHost: View {
         #if os(iOS)
         return .navigationBarTrailing
         #else
-        return .navigation
+        return .automatic
         #endif
     }
     
