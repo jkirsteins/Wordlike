@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Label used in the root listview
 struct LanguageLinkLabel: View {
-    @AppStorage
+    @AppStateStorage
     var dailyState: DailyState?
     
     @Environment(\.turnCounter) 
@@ -10,7 +10,7 @@ struct LanguageLinkLabel: View {
     
     @Environment(\.palette) var palette: Palette
     
-    @AppStorage
+    @AppStateStorage
     var stats: Stats
     
     let locale: GameLocale
@@ -44,8 +44,9 @@ struct LanguageLinkLabel: View {
     init(_ locale: GameLocale, extraCaption: String?) {
         self.locale = locale
         self.extraCaption = extraCaption
-        self._dailyState = AppStorage("turnState.\(locale.fileBaseName)", store: nil)
-        self._stats = AppStorage(
+        
+        self._dailyState = AppStateStorage("turnState.\(locale.fileBaseName)", store: nil)
+        self._stats = AppStateStorage(
             wrappedValue: Stats(), 
             "stats.\(locale.fileBaseName)")
     }

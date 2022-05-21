@@ -133,7 +133,7 @@ struct CircleFlag : View {
 }
 
 struct ProgressLabel: View {
-    @AppStorage
+    @AppStateStorage
     var dailyState: DailyState?
     
     @Environment(\.turnCounter)
@@ -146,7 +146,7 @@ struct ProgressLabel: View {
     
     init(_ locale: Locale) {
         self.locale = locale
-        self._dailyState = AppStorage("turnState.\(locale.fileBaseName)", store: nil)
+        self._dailyState = AppStateStorage("turnState.\(locale.fileBaseName)", store: nil)
     }
     
     var caption: (String, Color)? {
@@ -191,10 +191,10 @@ struct LanguageRow: View {
     @Environment(\.locale)
     var locale: Locale
     
-    @AppStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
+    @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
     var isSimplifiedLatvianKeyboard: Bool = false
     
-    @AppStorage(SettingsView.HARD_MODE_KEY)
+    @AppStateStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
     
     var extraCaption: [String]? {
@@ -271,10 +271,10 @@ struct LanguageRow: View {
 
 struct InternalStatWidget: View {
     
-    @AppStorage
+    @AppStateStorage
     var stats: Stats
     
-    @AppStorage
+    @AppStateStorage
     var dailyState: DailyState?
     
     @Environment(\.palette)
@@ -287,10 +287,10 @@ struct InternalStatWidget: View {
     
     init(_ locale: Locale) {
         self.locale = locale
-        self._stats = AppStorage(
+        self._stats = AppStateStorage(
             wrappedValue: Stats(),
             "stats.\(locale.fileBaseName)")
-        self._dailyState = AppStorage("turnState.\(locale.fileBaseName)", store: nil)
+        self._dailyState = AppStateStorage("turnState.\(locale.fileBaseName)", store: nil)
     }
     
     var body: some View {
@@ -337,7 +337,7 @@ struct NavigationList: View {
     @Environment(\.globalTapCount)
     var globalTapCount: Binding<Int>
     
-    @AppStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
+    @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
     var isSimplifiedLatvianKeyboard: Bool = false
     
     func seedFor(_ loc: Locale) -> Int? {
@@ -481,7 +481,7 @@ struct Footer: View {
     @Environment(\.turnCounter)
     var turnCounter: TurnCounter
     
-    @AppStorage(SettingsView.HARD_MODE_KEY)
+    @AppStateStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
     
 #if os(iOS)
@@ -489,7 +489,7 @@ struct Footer: View {
     var vsc: UserInterfaceSizeClass?
 #endif
     
-    @AppStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
+    @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
     var isSimplifiedLatvianKeyboard: Bool = false
     
     let shareCallback: ()->()
@@ -512,7 +512,7 @@ struct Footer: View {
                 continue
             }
             
-            let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
+            let ds : DailyState? = AppStateStorage(gl.turnStateKey, store: nil).wrappedValue
             
             if let ds = ds,
                ds.isFinished == true,

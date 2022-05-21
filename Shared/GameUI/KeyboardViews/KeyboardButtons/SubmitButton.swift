@@ -56,7 +56,7 @@ struct SubmitButton: View {
     @Environment(\.keyboardSubmitEnabled)
     var enabled: Bool
     
-    @AppStorage(SettingsView.HARD_MODE_KEY)
+    @AppStateStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
     
     func submitAction() {

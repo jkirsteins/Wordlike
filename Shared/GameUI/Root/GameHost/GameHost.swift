@@ -14,13 +14,13 @@ extension ActiveSheet: Identifiable {
 /// own stats separate from other games.
 struct GameHost: View {
     
-    @AppStorage
+    @AppStateStorage
     var dailyState: DailyState?
     
-    @AppStorage
+    @AppStateStorage
     var stats: Stats
     
-    @AppStorage
+    @AppStateStorage
     var shouldShowHelp: Bool
     
     @State var timer = Timer.publish(
@@ -57,17 +57,17 @@ struct GameHost: View {
         self._validator = StateObject(
             wrappedValue: validator)
         
-        self._stats = AppStorage(
+        self._stats = AppStateStorage(
             wrappedValue: Stats(),
             "stats.\(locale.fileBaseName)")
         
-        self._dailyState = AppStorage(
+        self._dailyState = AppStateStorage(
             wrappedValue: nil,
             "turnState.\(locale.fileBaseName)")
         
         // Showing help should not be dependent
         // on the name (unlike turn state and stats)
-        self._shouldShowHelp = AppStorage(
+        self._shouldShowHelp = AppStateStorage(
             wrappedValue: true, "shouldShowHelp")
         
         self.locale = locale

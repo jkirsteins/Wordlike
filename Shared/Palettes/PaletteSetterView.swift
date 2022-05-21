@@ -3,7 +3,7 @@ import SwiftUI
 struct PaletteSetterView<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     
-    @AppStorage(SettingsView.HIGH_CONTRAST_KEY) 
+    @AppStateStorage(SettingsView.HIGH_CONTRAST_KEY) 
     var high: Bool = false
     
     @ViewBuilder var content: ()->Content

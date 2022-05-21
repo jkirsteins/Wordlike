@@ -36,22 +36,22 @@ struct SettingsView: View {
     
     @State fileprivate var activeSheet: ActiveSheet? = nil
     
-    @AppStorage(SettingsView.HIGH_CONTRAST_KEY)
+    @AppStateStorage(SettingsView.HIGH_CONTRAST_KEY)
     var isHighContrast: Bool = false
     
-    @AppStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
+    @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
     var isSimplifiedLatvianKeyboard: Bool = false
     
-    @AppStorage(SettingsView.HARD_MODE_KEY)
+    @AppStateStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
     
-    @AppStorage("turnState.en")
+    @AppStateStorage("turnState.en")
     var dailyStateEn: DailyState?
     
-    @AppStorage("turnState.fr")
+    @AppStateStorage("turnState.fr")
     var dailyStateFr: DailyState?
     
-    @AppStorage("turnState.lv")
+    @AppStateStorage("turnState.lv")
     var dailyStateLv: DailyState?
     
     @State var emailCopied = false

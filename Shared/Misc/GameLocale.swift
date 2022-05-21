@@ -11,7 +11,7 @@ enum GameLocale
     case fr_FR
     case lv_LV(simplified: Bool)
     
-    /// For use with @AppStorage etc.
+    /// For use with @AppStateStorage etc.
     var turnStateKey: String {
         "turnState.\(self.fileBaseName)"
     }

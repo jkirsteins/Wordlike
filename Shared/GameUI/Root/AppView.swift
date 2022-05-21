@@ -28,7 +28,7 @@ struct AppView: View {
     @State
     fileprivate var activeSheet: ActiveSheet? = nil
     
-    @AppStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
+    @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
     var isSimplifiedLatvianKeyboard: Bool = false
     
     @State var globalTapCount = 0
@@ -64,42 +64,13 @@ struct AppView: View {
         }
     }
     
-    var isSharingDisabled: Bool {
-        for loc in self.listedLocales {
-            guard let gl = gameLocale(loc) else {
-                continue
-            }
-            
-            let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
-            
-            if let ds = ds,
-               ds.isFinished == true,
-               turnCounter.isFresh(ds.date, at: Date())
-            {
-                return false
-            }
-        }
-        
-        return true
-    }
-    
-    //    @State var testPresented = false
-    //    var body: some View {
-    //        NavigationList(shareCallback: {}, gearCallback: {}, outerDebug: .constant(false))
-    //
-    //    }
-    //    var testbody1: some View {
-    //        Button("Hello") {
-    //            testPresented = true
-    //        }.sheet(isPresented: $testPresented) {
-    //            SheetRoot(title: "Test", isPresented: .constant(true)) {
-    //                HelpView()
-    //            }
-    //        }
-    //    }
-    
+    @Environment(\.scenePhase) var scenePhase
+
     var body: some View {
         innerBody
+            .onChange(of: scenePhase) { _ in
+                CloudStorageSync.shared.synchronize()
+            }
 #if os(macOS)
             .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.landscape.width)
 #endif
@@ -119,7 +90,7 @@ struct AppView: View {
                             (loc: Locale) -> String? in
                             guard let gl = gameLocale(loc) else { return nil }
                             
-                            let ds : DailyState? = AppStorage(gl.turnStateKey, store: nil).wrappedValue
+                            let ds : DailyState? = AppStateStorage(gl.turnStateKey, store: nil).wrappedValue
                             
                             guard
                                 let ds = ds,

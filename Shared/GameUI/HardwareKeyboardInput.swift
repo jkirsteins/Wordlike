@@ -13,7 +13,7 @@ struct HardwareKeyboardInput: UIViewRepresentable
     @EnvironmentObject 
     var toastMessageCenter: ToastMessageCenter
     
-    @AppStorage(SettingsView.HARD_MODE_KEY)
+    @AppStateStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
     
     /// Using an externally-controlled focus request
