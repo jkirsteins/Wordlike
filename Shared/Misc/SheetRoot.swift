@@ -26,32 +26,9 @@ struct SheetRoot<SheetContent: View>: View {
 #endif
     }
     
-    var innerBody: some View {
-#if os(iOS)
-        NavigationView {
-            GeometryReader { gr in
-                ScrollView {
-                    content()
-                        .padding()
-                        .frame(width: gr.size.width)
-                        .frame(minHeight: gr.size.height)
-                }
-            }
-        }
-#else
-        ScrollView {
-            content()
-                .padding()
-        }
-#endif
-    }
-    
-    @Environment(\.presentationMode)
-    var presentationMode
-    
-    var body: some View {
-        innerBody
-        
+    var paddedContentWithNavigation: some View {
+        content()
+            .padding()
         /* Sometimes we don't know the
          title initially (e.g. when
          a single sheet can house different
@@ -69,6 +46,31 @@ struct SheetRoot<SheetContent: View>: View {
                     }
                 }
             }
+    }
+    
+    var innerBody: some View {
+#if os(iOS)
+        NavigationView {
+            GeometryReader { gr in
+                ScrollView {
+                    paddedContentWithNavigation
+                        .frame(width: gr.size.width)
+                        .frame(minHeight: gr.size.height)
+                }
+            }
+        }
+#else
+        ScrollView {
+            paddedContentWithNavigation
+        }
+#endif
+    }
+    
+    @Environment(\.presentationMode)
+    var presentationMode
+    
+    var body: some View {
+        innerBody
     }
 }
 

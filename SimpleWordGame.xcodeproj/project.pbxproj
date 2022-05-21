@@ -12,6 +12,9 @@
 		E70D82022837E3D500D4F2FF /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70D82012837E3D500D4F2FF /* UIImageExtensions.swift */; };
 		E70D82042837EDC100D4F2FF /* NSColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70D82032837EDC100D4F2FF /* NSColorExtensions.swift */; };
 		E70D82072837F57B00D4F2FF /* ConfettiView in Frameworks */ = {isa = PBXBuildFile; productRef = E70D82062837F57B00D4F2FF /* ConfettiView */; };
+		E73463262839323700265F8F /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E73463252839323700265F8F /* Media.xcassets */; };
+		E73463272839323700265F8F /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E73463252839323700265F8F /* Media.xcassets */; };
+		E7346329283936E500265F8F /* ShareableString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7346328283936E500265F8F /* ShareableString.swift */; };
 		E7F29BA12837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA22837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA32837DB3C005792DA /* ShowFocusHint_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B102837DB3A005792DA /* ShowFocusHint_Env.swift */; };
@@ -232,10 +235,12 @@
 		E70D81FE2837E16100D4F2FF /* NativeTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeTypes.swift; sourceTree = "<group>"; };
 		E70D82012837E3D500D4F2FF /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		E70D82032837EDC100D4F2FF /* NSColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSColorExtensions.swift; sourceTree = "<group>"; };
-		E7F299612837DABB005792DA /* SimpleWordGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleWordGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E7F299672837DABB005792DA /* SimpleWordGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleWordGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E7346324283931AB00265F8F /* SimpleWordGame (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "SimpleWordGame (iOS).entitlements"; sourceTree = "<group>"; };
+		E73463252839323700265F8F /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		E7346328283936E500265F8F /* ShareableString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareableString.swift; sourceTree = "<group>"; };
+		E7F299612837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E7F299672837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299692837DABB005792DA /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
-		E7F299782837DAF2005792DA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../Downloads/SimpleWordGame.swiftpm/Assets.xcassets; sourceTree = "<group>"; };
 		E7F29B0C2837DB3A005792DA /* SimpleWordGame (iOS)-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SimpleWordGame (iOS)-Bridging-Header.h"; sourceTree = "<group>"; };
 		E7F29B0D2837DB3A005792DA /* SimpleWordGame (macOS)-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SimpleWordGame (macOS)-Bridging-Header.h"; sourceTree = "<group>"; };
 		E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootGeometry_Env.swift; sourceTree = "<group>"; };
@@ -397,6 +402,7 @@
 		E7F299542837DAB9005792DA = {
 			isa = PBXGroup;
 			children = (
+				E7346324283931AB00265F8F /* SimpleWordGame (iOS).entitlements */,
 				E7F29B3A2837DB3B005792DA /* gh_screenshot.png */,
 				E7F29B392837DB3B005792DA /* README.md */,
 				E7F29B192837DB3B005792DA /* Wordlike.swift */,
@@ -412,7 +418,6 @@
 		E7F299592837DABA005792DA /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				E7F299782837DAF2005792DA /* Assets.xcassets */,
 				E7F29B1A2837DB3B005792DA /* appstore.png */,
 				E7F29B0E2837DB3A005792DA /* Environment */,
 				E7F29B1B2837DB3B005792DA /* Extensions */,
@@ -424,6 +429,7 @@
 				E7F29B0C2837DB3A005792DA /* SimpleWordGame (iOS)-Bridging-Header.h */,
 				E7F29B0D2837DB3A005792DA /* SimpleWordGame (macOS)-Bridging-Header.h */,
 				E70D81FE2837E16100D4F2FF /* NativeTypes.swift */,
+				E73463252839323700265F8F /* Media.xcassets */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -431,8 +437,8 @@
 		E7F299622837DABB005792DA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E7F299612837DABB005792DA /* SimpleWordGame.app */,
-				E7F299672837DABB005792DA /* SimpleWordGame.app */,
+				E7F299612837DABB005792DA /* Wordlike.app */,
+				E7F299672837DABB005792DA /* Wordlike.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -568,6 +574,7 @@
 				E7F29B5B2837DB3C005792DA /* ToastMessageCenter.swift */,
 				E7F29B5C2837DB3C005792DA /* ArbitraryRandomNumberGenerator.swift */,
 				E7F29B5D2837DB3C005792DA /* TestViews.swift */,
+				E7346328283936E500265F8F /* ShareableString.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -741,7 +748,7 @@
 				E70D82062837F57B00D4F2FF /* ConfettiView */,
 			);
 			productName = "SimpleWordGame (iOS)";
-			productReference = E7F299612837DABB005792DA /* SimpleWordGame.app */;
+			productReference = E7F299612837DABB005792DA /* Wordlike.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E7F299662837DABB005792DA /* SimpleWordGame (macOS) */ = {
@@ -761,7 +768,7 @@
 				E7F8F8CC2837DF8C001435E0 /* ConfettiView */,
 			);
 			productName = "SimpleWordGame (macOS)";
-			productReference = E7F299672837DABB005792DA /* SimpleWordGame.app */;
+			productReference = E7F299672837DABB005792DA /* Wordlike.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -813,6 +820,7 @@
 			files = (
 				E7F29BDF2837DB3C005792DA /* GB.pdf in Resources */,
 				E7F29BED2837DB3C005792DA /* lv_G.txt in Resources */,
+				E73463262839323700265F8F /* Media.xcassets in Resources */,
 				E7F29BE32837DB3C005792DA /* fr_A.txt in Resources */,
 				E7F29BEF2837DB3C005792DA /* lv_A.txt in Resources */,
 				E7F29BCD2837DB3C005792DA /* LV.pdf in Resources */,
@@ -833,6 +841,7 @@
 			files = (
 				E7F29BE02837DB3C005792DA /* GB.pdf in Resources */,
 				E7F29BEE2837DB3C005792DA /* lv_G.txt in Resources */,
+				E73463272839323700265F8F /* Media.xcassets in Resources */,
 				E7F29BE42837DB3C005792DA /* fr_A.txt in Resources */,
 				E7F29BF02837DB3C005792DA /* lv_A.txt in Resources */,
 				E7F29BCE2837DB3C005792DA /* LV.pdf in Resources */,
@@ -875,6 +884,7 @@
 				E7F29BBF2837DB3C005792DA /* BundleExtensions.swift in Sources */,
 				E7F29BC52837DB3C005792DA /* UIApplicationExtensions.swift in Sources */,
 				E7F29BBD2837DB3C005792DA /* ColorExtensions.swift in Sources */,
+				E7346329283936E500265F8F /* ShareableString.swift in Sources */,
 				E7F29C8F2837DB3D005792DA /* GameState.swift in Sources */,
 				E7F29C4B2837DB3D005792DA /* SizeConstrainedKeyboardButton.swift in Sources */,
 				E7F29C5B2837DB3D005792DA /* NavigationList.swift in Sources */,
@@ -1108,7 +1118,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1162,7 +1172,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -1176,7 +1186,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "SimpleWordGame (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = FN5YR78T7X;
@@ -1194,8 +1206,9 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.janiskirsteins.SimpleWordGame;
-				PRODUCT_NAME = SimpleWordGame;
+				PRODUCT_NAME = Wordlike;
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shared/SimpleWordGame (iOS)-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1209,7 +1222,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "SimpleWordGame (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = FN5YR78T7X;
@@ -1227,8 +1242,9 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.janiskirsteins.SimpleWordGame;
-				PRODUCT_NAME = SimpleWordGame;
+				PRODUCT_NAME = Wordlike;
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shared/SimpleWordGame (iOS)-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1242,6 +1258,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -1259,7 +1276,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.janiskirsteins.SimpleWordGame;
-				PRODUCT_NAME = SimpleWordGame;
+				PRODUCT_NAME = Wordlike;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shared/SimpleWordGame (macOS)-Bridging-Header.h";
@@ -1273,6 +1290,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -1290,7 +1308,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.janiskirsteins.SimpleWordGame;
-				PRODUCT_NAME = SimpleWordGame;
+				PRODUCT_NAME = Wordlike;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shared/SimpleWordGame (macOS)-Bridging-Header.h";

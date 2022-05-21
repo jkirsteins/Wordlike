@@ -11,12 +11,12 @@ extension ActiveSheet: Identifiable {
 struct FlagAssets {
     
     static func flagFromName(_ name: String) -> NativeImage? {
-        #if os(iOS)
-        // TODO: figure out why UIImage(named:) doesn't work
-        return flagFromName_old(name)
-        #else
+//        #if os(iOS)
+//        // TODO: figure out why UIImage(named:) doesn't work
+//        return flagFromName_old(name)
+//        #else
         return NativeImage(named: name)
-        #endif
+//        #endif
     }
     
 #if os(iOS)

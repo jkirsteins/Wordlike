@@ -1,5 +1,10 @@
 import SwiftUI
 
+#if os(iOS)
+import UniformTypeIdentifiers
+import LinkPresentation
+#endif
+
 fileprivate enum ActiveSheet {
     case settings
 }
@@ -34,7 +39,11 @@ struct AppView: View {
     
     // For sharing summary of the progress
     @State var isSharing: Bool = false
+#if os(iOS)
+    @State var shareItems: [UIActivityItemSource] = []
+#else
     @State var shareItems: [Any] = []
+#endif
     
     let listedLocales: [Locale] = [
         .en_US,
@@ -131,7 +140,7 @@ struct AppView: View {
                             
                             let isHardMode = ds.rows.checkHardMode(expected: WordModel(characters: ds.expected.word))
                             
-                            return "\(flag) \(tries) \(rowSnippet)\(isHardMode ? "*" : "")"
+                            return "\(flag) \(tries)\(isHardMode ? "*" : " ")\t\(rowSnippet)"
                         }.filter { $0 != nil }.map { $0! }
                         
                         guard lines.count > 0 else {
@@ -139,11 +148,21 @@ struct AppView: View {
                         }
                         
                         let day = turnCounter.turnIndex(at: Date())
+#if os(iOS)
+                        self.shareItems = [
+                            ShareableString(
+                                (
+                                    ["Wordlike Day \(day)", ""] + lines
+                                ).joined(separator: "\n") + "\n"
+                            )
+                        ]
+#else
                         self.shareItems = [
                             (
                                 ["Wordlike Day \(day)", ""] + lines
                             ).joined(separator: "\n") + "\n"
                         ]
+#endif
                         
                         self.isSharing.toggle()
                     },
@@ -156,7 +175,7 @@ struct AppView: View {
                 EmptyNavWelcomeView()
             }
         }
-        #if os(macOS)
+#if os(macOS)
         .toolbar{
             ToolbarItem(placement: .status){
                 Button(action: toggleSidebar, label: {
@@ -164,40 +183,42 @@ struct AppView: View {
             }
             
         }
-        #endif
+#endif
         // TODO: sharing on macOS
 #if os(iOS)
         .sheetWithDetents(
             isPresented: $isSharing,
-            detents: [.medium(),.large()]) {
-            } content: {
+            detents: [.medium(),.large()],
+            onDismiss: {
+            },
+            content: {
                 ActivityViewController(activityItems: $shareItems, callback: {
                     isSharing = false
                     shareItems = []
                 })
-            }
-#endif
-            .onAppear {
-#if os(iOS)
-                self.tapDelegate = GlobalTapDelegate($globalTapCount)
-                UIApplication.shared.addGestureRecognizer(
-                    tapDelegate!
-                )
-#endif
-            }
-            .environment(
-                \.globalTapCount,
-                 $globalTapCount)
-            .safeSheet(item: $activeSheet, onDismiss: {
-                // nothing to do on dismiss
-            }, { item in
-                switch(item) {
-                case .settings:
-                    SettingsView()
-                }
             })
-            .environment(\.turnCounter, turnCounter)
-            .environment(\.debug, innerDebug || outerDebug)
+#endif
+        .onAppear {
+#if os(iOS)
+            self.tapDelegate = GlobalTapDelegate($globalTapCount)
+            UIApplication.shared.addGestureRecognizer(
+                tapDelegate!
+            )
+#endif
+        }
+        .environment(
+            \.globalTapCount,
+             $globalTapCount)
+        .safeSheet(item: $activeSheet, onDismiss: {
+            // nothing to do on dismiss
+        }, { item in
+            switch(item) {
+            case .settings:
+                SettingsView()
+            }
+        })
+        .environment(\.turnCounter, turnCounter)
+        .environment(\.debug, innerDebug || outerDebug)
     }
 }
 

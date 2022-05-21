@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct ActivityViewController: UIViewControllerRepresentable {
-    @Binding var activityItems: [Any]
+    @Binding var activityItems: [UIActivityItemSource]
     var excludedActivityTypes: [UIActivity.ActivityType]? = nil
     
     var callback: (()->())

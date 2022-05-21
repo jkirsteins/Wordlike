@@ -46,7 +46,12 @@ struct StatsView: View {
     
     // Share sheet
     @State var isSharing: Bool = false
+    
+#if os(iOS)
+    @State var shareItems: [UIActivityItemSource] = []
+    #else
     @State var shareItems: [Any] = []
+    #endif
     
     /// Recalculate the hh:mm:ss string until next turn
     func recalculateNextWord() {
@@ -175,18 +180,26 @@ struct StatsView: View {
 #if os(iOS)
             .sheetWithDetents(
                 isPresented: $isSharing,
-                detents: [.medium(),.large()]) { 
-                } content: {
+                detents: [.medium(),.large()],
+                onDismiss: {
+                },
+                content: {
                     ActivityViewController(activityItems: $shareItems, callback: {
                         isSharing = false
                     })
-                }
+                })
 #endif
         }.onAppear {
             recalculateNextWord()
+            #if os(iOS)
+            self.shareItems = [
+                ShareableString(self.state.shareSnippet())
+            ]
+            #else
             self.shareItems = [
                 self.state.shareSnippet()
             ]
+            #endif
         }
         .onReceive(timer) {
             _ in 
