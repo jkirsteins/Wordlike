@@ -22,7 +22,7 @@ fileprivate struct _DebugView<Wrapped: View, WrappedDebug: View>: View {
 extension View {
     func debugBelow<T: View>(@ViewBuilder _ content: @escaping ()->T) -> some View {
         return _DebugView(
-            wrapped: { self }, 
+            wrapped: { self },
             wrappedDebug: content
         )
     }
@@ -30,7 +30,7 @@ extension View {
 
 fileprivate struct DebugBorder<Content: View>: View {
     let color: Color
-    @ViewBuilder let content: ()->Content 
+    @ViewBuilder let content: ()->Content
     
     @Environment(\.debug)
     var debug: Bool
@@ -47,6 +47,18 @@ extension View {
         return overlay(screenshotView.allowsHitTesting(false))
     }
 #endif
+    
+    func safeNavigationTitle(_ title: String) -> some View {
+        if #available(iOS 14.0, *) {
+            return AnyView(self.navigationTitle(title))
+        } else {
+            return AnyView(self.navigationBarTitle(title))
+        }
+    }
+    
+//    func safeNavigationTitle(_ title: String) -> some View {
+//        self.navigationBarTitle(title)
+//    }
     
     func debugBorder(_ color: Color) -> some View {
         DebugBorder(color: color) {

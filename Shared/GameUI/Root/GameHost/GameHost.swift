@@ -328,7 +328,7 @@ struct GameHost: View {
                         earlyCompleted: turnCompletedBeforeAnimations,
                         completed: turnCompletedAfterAnimations
                     )
-                    .onChange(of: game.rows, perform: turnStateChanged)
+                    .safeOnChange(of: game.rows, perform: turnStateChanged)
                     .contentShape(Rectangle())
                 }
                 /// For the KeyboardInput view
@@ -397,12 +397,12 @@ struct GameHost: View {
                 updateFromLoadedState(newState)
             }
         }
-        .onChange(of: self.toastMessageCenter.message ) {
+        .safeOnChange(of: self.toastMessageCenter.message ) {
             newMessage in
             
             self.clearToastAt = Date() + 2.0
         }
-        .onChange(of: self.dailyState) {
+        .safeOnChange(of: self.dailyState) {
             newState in
             
             if let newState = newState {

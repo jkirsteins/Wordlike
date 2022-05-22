@@ -16,7 +16,7 @@ struct PulseModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .scaleEffect(scale)
-            .onChange(of: pulsing) { np in
+            .safeOnChange(of: pulsing) { np in
                 
                 withAnimation(
                     .easeInOut(duration: halfDuration)) {

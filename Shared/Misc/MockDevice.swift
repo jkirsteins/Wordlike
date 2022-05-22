@@ -147,7 +147,7 @@ struct MockDevice<Content: View>: View {
                     gr in 
                     Color.clear.onAppear {
                         self.viewPort = gr.size
-                    }.onChange(of: gr.size) {
+                    }.safeOnChange(of: gr.size) {
                         newSize in 
                         self.viewPort = newSize
                     }

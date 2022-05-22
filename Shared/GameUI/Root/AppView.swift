@@ -64,13 +64,14 @@ struct AppView: View {
         }
     }
     
-    @Environment(\.scenePhase) var scenePhase
+    // TODO: fix scenePhase for iOS13
+//    @Environment(\.scenePhase) var scenePhase
 
     var body: some View {
         innerBody
-            .onChange(of: scenePhase) { _ in
-                CloudStorageSync.shared.synchronize()
-            }
+//            .safeOnChange(of: scenePhase) { _ in
+//                CloudStorageSync.shared.synchronize()
+//            }
 #if os(macOS)
             .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.landscape.width)
 #endif

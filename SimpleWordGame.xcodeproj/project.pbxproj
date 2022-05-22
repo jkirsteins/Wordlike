@@ -21,6 +21,14 @@
 		E73463302839442900265F8F /* CloudStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E734632E2839442900265F8F /* CloudStorage.swift */; };
 		E73463322839452C00265F8F /* AppStateStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73463312839452C00265F8F /* AppStateStorage.swift */; };
 		E73463332839452C00265F8F /* AppStateStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73463312839452C00265F8F /* AppStateStorage.swift */; };
+		E7CFCEBC283AD7960019AAF5 /* SafeLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CFCEBB283AD7960019AAF5 /* SafeLink.swift */; };
+		E7CFCEBD283AD7960019AAF5 /* SafeLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CFCEBB283AD7960019AAF5 /* SafeLink.swift */; };
+		E7CFCEBF283ADA440019AAF5 /* SafeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CFCEBE283ADA440019AAF5 /* SafeLabel.swift */; };
+		E7CFCEC0283ADA440019AAF5 /* SafeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CFCEBE283ADA440019AAF5 /* SafeLabel.swift */; };
+		E7CFCEC2283ADB310019AAF5 /* SafeOnChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CFCEC1283ADB310019AAF5 /* SafeOnChange.swift */; };
+		E7CFCEC3283ADB310019AAF5 /* SafeOnChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CFCEC1283ADB310019AAF5 /* SafeOnChange.swift */; };
+		E7CFCEC5283ADBD50019AAF5 /* SafeMisc.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CFCEC4283ADBD50019AAF5 /* SafeMisc.swift */; };
+		E7CFCEC6283ADBD50019AAF5 /* SafeMisc.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CFCEC4283ADBD50019AAF5 /* SafeMisc.swift */; };
 		E7F29BA12837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA22837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA32837DB3C005792DA /* ShowFocusHint_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B102837DB3A005792DA /* ShowFocusHint_Env.swift */; };
@@ -247,6 +255,10 @@
 		E734632B2839441100265F8F /* CloudStorageSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStorageSync.swift; sourceTree = "<group>"; };
 		E734632E2839442900265F8F /* CloudStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStorage.swift; sourceTree = "<group>"; };
 		E73463312839452C00265F8F /* AppStateStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateStorage.swift; sourceTree = "<group>"; };
+		E7CFCEBB283AD7960019AAF5 /* SafeLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeLink.swift; sourceTree = "<group>"; };
+		E7CFCEBE283ADA440019AAF5 /* SafeLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeLabel.swift; sourceTree = "<group>"; };
+		E7CFCEC1283ADB310019AAF5 /* SafeOnChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeOnChange.swift; sourceTree = "<group>"; };
+		E7CFCEC4283ADBD50019AAF5 /* SafeMisc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeMisc.swift; sourceTree = "<group>"; };
 		E7F299612837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299672837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299692837DABB005792DA /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
@@ -587,6 +599,10 @@
 				E734632B2839441100265F8F /* CloudStorageSync.swift */,
 				E734632E2839442900265F8F /* CloudStorage.swift */,
 				E73463312839452C00265F8F /* AppStateStorage.swift */,
+				E7CFCEBB283AD7960019AAF5 /* SafeLink.swift */,
+				E7CFCEBE283ADA440019AAF5 /* SafeLabel.swift */,
+				E7CFCEC1283ADB310019AAF5 /* SafeOnChange.swift */,
+				E7CFCEC4283ADBD50019AAF5 /* SafeMisc.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -881,6 +897,7 @@
 				E7F29C7D2837DB3D005792DA /* GameState.input.swift in Sources */,
 				E7F29BBB2837DB3C005792DA /* StringExtensions.swift in Sources */,
 				E7F29BFD2837DB3C005792DA /* LightHCPalette.swift in Sources */,
+				E7CFCEC2283ADB310019AAF5 /* SafeOnChange.swift in Sources */,
 				E7F29C5F2837DB3D005792DA /* LanguageLinkLabel.swift in Sources */,
 				E734632C2839441100265F8F /* CloudStorageSync.swift in Sources */,
 				E7F29BF52837DB3C005792DA /* DarkHCPalette.swift in Sources */,
@@ -912,6 +929,7 @@
 				E7F29C692837DB3D005792DA /* FlippableTile.swift in Sources */,
 				E7F29BF92837DB3C005792DA /* _PaletteInternalTestView.swift in Sources */,
 				E7F29C612837DB3D005792DA /* StatsHeader.swift in Sources */,
+				E7CFCEBC283AD7960019AAF5 /* SafeLink.swift in Sources */,
 				E7F29C992837DB3D005792DA /* CharacterModel.swift in Sources */,
 				E7F29C9B2837DB3D005792DA /* WordTree.swift in Sources */,
 				E7F29C272837DB3C005792DA /* ParticlesModifier.swift in Sources */,
@@ -938,6 +956,7 @@
 				E7F29C792837DB3D005792DA /* GameHost.swift in Sources */,
 				E7F29BAB2837DB3C005792DA /* GameLocale_Env.swift in Sources */,
 				E7F29BC32837DB3C005792DA /* IntExtensions.swift in Sources */,
+				E7CFCEBF283ADA440019AAF5 /* SafeLabel.swift in Sources */,
 				E7F29C2F2837DB3C005792DA /* TestViews.swift in Sources */,
 				E7F29C572837DB3D005792DA /* LinkToGame.swift in Sources */,
 				E7F29C772837DB3D005792DA /* HelpView.swift in Sources */,
@@ -962,6 +981,7 @@
 				E7F29C492837DB3C005792DA /* FrenchKeyboard.swift in Sources */,
 				E734632F2839442900265F8F /* CloudStorage.swift in Sources */,
 				E7F29BA72837DB3C005792DA /* GlobalTapCount_Env.swift in Sources */,
+				E7CFCEC5283ADBD50019AAF5 /* SafeMisc.swift in Sources */,
 				E7F29C532837DB3D005792DA /* KeyboardButton.swift in Sources */,
 				E7F29C2D2837DB3C005792DA /* ArbitraryRandomNumberGenerator.swift in Sources */,
 				E7F29C172837DB3C005792DA /* SheetPresentationForSwiftUI.swift in Sources */,
@@ -1007,6 +1027,7 @@
 				E7F29BBE2837DB3C005792DA /* ColorExtensions.swift in Sources */,
 				E7F29C902837DB3D005792DA /* GameState.swift in Sources */,
 				E7F29C4C2837DB3D005792DA /* SizeConstrainedKeyboardButton.swift in Sources */,
+				E7CFCEC0283ADA440019AAF5 /* SafeLabel.swift in Sources */,
 				E73463302839442900265F8F /* CloudStorage.swift in Sources */,
 				E7F29C5C2837DB3D005792DA /* NavigationList.swift in Sources */,
 				E7F29C982837DB3D005792DA /* MultiCharacterModel.swift in Sources */,
@@ -1032,9 +1053,11 @@
 				E7F29BFC2837DB3C005792DA /* DarkPalette.swift in Sources */,
 				E70D82042837EDC100D4F2FF /* NSColorExtensions.swift in Sources */,
 				E7F29C462837DB3C005792DA /* RowContainer.swift in Sources */,
+				E7CFCEC3283ADB310019AAF5 /* SafeOnChange.swift in Sources */,
 				E7F29C1C2837DB3C005792DA /* EmptyNavWelcomeView.swift in Sources */,
 				E7F29C3E2837DB3C005792DA /* LatvianKeyboard_Simplified.swift in Sources */,
 				E7F29C382837DB3C005792DA /* JumpModifier.swift in Sources */,
+				E7CFCEBD283AD7960019AAF5 /* SafeLink.swift in Sources */,
 				E7F29C242837DB3C005792DA /* SheetRoot.swift in Sources */,
 				E7F29C842837DB3D005792DA /* DailyTurnCounter.swift in Sources */,
 				E7F29C742837DB3D005792DA /* Tile.swift in Sources */,
@@ -1043,6 +1066,7 @@
 				E7F29C8C2837DB3D005792DA /* RowModel.swift in Sources */,
 				E7F29C1A2837DB3C005792DA /* ScreenshotMaker.swift in Sources */,
 				E7F29C502837DB3D005792DA /* BackspaceButton.swift in Sources */,
+				E7CFCEC6283ADBD50019AAF5 /* SafeMisc.swift in Sources */,
 				E7F29C7A2837DB3D005792DA /* GameHost.swift in Sources */,
 				E7F29BAC2837DB3C005792DA /* GameLocale_Env.swift in Sources */,
 				E7F29BC42837DB3C005792DA /* IntExtensions.swift in Sources */,

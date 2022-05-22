@@ -1,5 +1,10 @@
 import SwiftUI
+#if canImport(UniformTypeIdentifiers)
 import UniformTypeIdentifiers
+#endif
+
+import MobileCoreServices
+
 
 fileprivate enum ActiveSheet {
     case mail
@@ -120,8 +125,8 @@ struct SettingsView: View {
                 }
                 Spacer()
                 HStack {
-                    if emailCopied {
-                        Text("Copied")
+                    if emailCopied, #available(iOS 15, *) {
+                            Text("Copied")
                             .font(.caption)
                             .foregroundColor(Color(NativeColor.secondaryLabel))
                             .task {
@@ -131,12 +136,18 @@ struct SettingsView: View {
                     } else {
                         Button(action: {
 #if os(iOS)
-                            NativePasteboard.general.setValue(
-                                Self.feedbackEmail,
-                                forPasteboardType: UTType.plainText.identifier)
+                            if #available(iOS 14.0, *) {
+                                NativePasteboard.general.setValue(
+                                    Self.feedbackEmail,
+                                    forPasteboardType: UTType.plainText.identifier)
+                            } else {
+                                NativePasteboard.general.setValue(
+                                    Self.feedbackEmail,
+                                    forPasteboardType: kUTTypePlainText as String)
+                            }
 #else
-                            NativePasteboard.general.setString(
-                                Self.feedbackEmail, forType: .string)
+                                NativePasteboard.general.setString(
+                                    Self.feedbackEmail, forType: .string)
 #endif
                             
                             emailCopied = true
@@ -161,10 +172,14 @@ struct SettingsView: View {
                 
                 Spacer()
                 
-                Link(destination: URL(string: "https://github.com/jkirsteins/SimpleWordGame")!, label: {
-                    Text("GitHub")
-                })
-                .frame(minWidth: Self.minRightWidth)
+                if #available(iOS 14.0, *) {
+                    Link(destination: URL(string: "https://github.com/jkirsteins/SimpleWordGame")!, label: {
+                        Text("GitHub")
+                    })
+                    .frame(minWidth: Self.minRightWidth)
+                } else {
+                    // Fallback on earlier versions
+                }
             }
             
             HStack {
@@ -176,7 +191,7 @@ struct SettingsView: View {
                 
                 Spacer()
                 
-                Link(destination: URL(string: "https://twitter.com/jkirsteins")!, label: {
+                SafeLink(destination: URL(string: "https://twitter.com/jkirsteins")!, label: {
                     Text("Twitter")
                 })
                 .frame(minWidth: Self.minRightWidth)
@@ -264,7 +279,7 @@ struct SettingsView: View {
             // Since optional, the divider is included inside
             optDebugSettings
         }
-        .navigationTitle("Settings")
+        .safeNavigationTitle("Settings")
         
         // Feedback e-mail sheet is only available in iOS
 #if os(iOS)

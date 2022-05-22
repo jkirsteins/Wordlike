@@ -74,10 +74,10 @@ struct FlippableTile<Revealed: View>: View {
     var body: some View {
         nonJumpingBody
             .jumping(jumping: $jumping, duration: jumpDuration)
-            .onChange(of: jumpIx) { nx in
+            .safeOnChange(of: jumpIx) { nx in
                 jumping = (tag == nx)
             }
-            .onChange(of: jumping) { nj in 
+            .safeOnChange(of: jumping) { nj in 
                 if !nj {
                     jumpCallback(tag)
                 }

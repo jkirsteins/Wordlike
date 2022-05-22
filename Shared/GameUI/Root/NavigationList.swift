@@ -464,12 +464,14 @@ struct NavigationList: View {
                             "Settings",
                             systemImage: "gear")
                     })
-                .tint(.primary)
+                .safeTint(.primary)
                 .contextMenu {
                     Button {
                         self.outerDebug.toggle()
                     } label: {
-                        Label("Toggle debug mode", systemImage: "hammer")
+                        SafeLabel(
+                            "Toggle debug mode",
+                            systemImage: "hammer")
                     }
                 }
             }

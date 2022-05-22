@@ -181,7 +181,7 @@ lineWidth: CGFloat,
             maxWidth: MAX_SIZE)
         .aspectRatio(aspectRatio, contentMode: .fit)
         // -- end: aspectRatio->frame->aspectRatio
-        .onChange(of: self.model?.letter) { (nl: String?) in
+        .safeOnChange(of: self.model?.letter) { (nl: String?) in
             guard nl != nil else {
                 self.pulsing = false 
                 return 

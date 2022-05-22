@@ -31,7 +31,7 @@ struct SizeSettingKeyboardButton: View {
                 .onAppear {
                     maxSize = proxy.size
                 }
-                .onChange(of: proxy.size) { newSize in
+                .safeOnChange(of: proxy.size) { newSize in
                     maxSize = newSize
                 }
         })

@@ -185,13 +185,13 @@ struct Row: View
         .contextMenu {
             if let defUrl = self.model.word.displayValue.definitionUrl(in: gameLocale) {
                 Text(self.model.word.displayValue.uppercased())
-                Link(destination: defUrl, label: {
+                SafeLink(destination: defUrl, label: {
                     Label("Look up", systemImage: "book")
                 })
             } 
         }
         .modifier(Shake(animatableData: count))
-        .onChange(of: model.attemptCount) {
+        .safeOnChange(of: model.attemptCount) {
             nc in 
             if nc > 0 {
                 withAnimation(.linear(duration: Self.SHAKE_DURATION)) {

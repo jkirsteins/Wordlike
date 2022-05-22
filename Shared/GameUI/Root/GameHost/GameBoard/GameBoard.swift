@@ -136,7 +136,7 @@ struct GameBoard: View {
             didRespond = true
             callback(state)
         }
-        .onChange(of: state.id) {
+        .safeOnChange(of: state.id) {
             _ in
             /* State can change when we've
              e.g. stats sheet on top (in which case

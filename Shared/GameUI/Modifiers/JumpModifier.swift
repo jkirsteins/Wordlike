@@ -20,7 +20,7 @@ struct JumpModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .offset(x: 0, y: distance)
-            .onChange(of: jumping) { np in
+            .safeOnChange(of: jumping) { np in
                 withAnimation(
                     .easeOut(duration: halfDuration)) {
                         distance = (np ? -maxDistance : 0.0)
