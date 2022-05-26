@@ -49,9 +49,9 @@ struct StatsView: View {
     
 #if os(iOS)
     @State var shareItems: [UIActivityItemSource] = []
-    #else
+#else
     @State var shareItems: [Any] = []
-    #endif
+#endif
     
     /// Recalculate the hh:mm:ss string until next turn
     func recalculateNextWord() {
@@ -178,28 +178,21 @@ struct StatsView: View {
                 self.maxBarWidth = newWidth
             }
 #if os(iOS)
-            .sheetWithDetents(
-                isPresented: $isSharing,
-                detents: [.medium(),.large()],
-                onDismiss: {
-                },
-                content: {
-                    ActivityViewController(activityItems: $shareItems, callback: {
-                        isSharing = false
-                    })
-                })
+            .safeSharingSheet(isSharing: $isSharing, activityItems: $shareItems, callback: {
+                isSharing = false
+            })
 #endif
         }.onAppear {
             recalculateNextWord()
-            #if os(iOS)
+#if os(iOS)
             self.shareItems = [
                 ShareableString(self.state.shareSnippet())
             ]
-            #else
+#else
             self.shareItems = [
                 self.state.shareSnippet()
             ]
-            #endif
+#endif
         }
         .onReceive(timer) {
             _ in 
@@ -232,25 +225,27 @@ struct StatsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ForEach(AppView_Previews.configurations) {
-            MockDevice(config: $0) {
-                SheetRoot(title: nil, isPresented: .constant(true)) {
-                    PaletteSetterView {
-                        StatsView(stats: Stats(
-                            played: 63, 
-                            won: 61,
-                            maxStreak: 27,
-                            streak: 4,
-                            guessDistribution: [
-                                1, 
-                                3,
-                                16,
-                                24,
-                                11,
-                                6
-                            ],
-                            lastWinAt: nil), state: state)
-                    }.navigationTitle("Test 1")
+        if #available(iOS 15.0, *) {
+            ForEach(AppView_Previews.configurations) {
+                MockDevice(config: $0) {
+                    SheetRoot(title: nil, isPresented: .constant(true)) {
+                        PaletteSetterView {
+                            StatsView(stats: Stats(
+                                played: 63, 
+                                won: 61,
+                                maxStreak: 27,
+                                streak: 4,
+                                guessDistribution: [
+                                    1, 
+                                    3,
+                                    16,
+                                    24,
+                                    11,
+                                    6
+                                ],
+                                lastWinAt: nil), state: state)
+                        }.navigationTitle("Test 1")
+                    }
                 }
             }
         }

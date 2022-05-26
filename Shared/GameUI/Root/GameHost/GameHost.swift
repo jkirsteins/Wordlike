@@ -276,19 +276,19 @@ struct GameHost: View {
     }
     
     var leadingToolbarPlacement: ToolbarItemPlacement {
-        #if os(iOS)
+#if os(iOS)
         return .navigationBarLeading
-        #else
+#else
         return .automatic
-        #endif
+#endif
     }
     
     var trailingToolbarPlacement: ToolbarItemPlacement {
-        #if os(iOS)
+#if os(iOS)
         return .navigationBarTrailing
-        #else
+#else
         return .automatic
-        #endif
+#endif
     }
     
     @State var keyboardHints = KeyboardHints()
@@ -310,39 +310,37 @@ struct GameHost: View {
     var bodyUnconstrained: some View {
         VStack {
             if let game = turnDataToDisplay {
-                ZStack {
+                    ZStack {
 #if os(iOS)
-                    /// Allow input from keyboard
-                    /// on iPad and macOS Catalyst
-                    ///
-                    /// Put behind other views to not
-                    /// obscure input (that can break
-                    /// context menus e.g.)
-                    HardwareKeyboardInput(
-                        focusRequests: globalTapCount)
-                    .debugBorder(.red)
+                        /// Allow input from keyboard
+                        /// on iPad and macOS Catalyst
+                        ///
+                        /// Put behind other views to not
+                        /// obscure input (that can break
+                        /// context menus e.g.)
+                        HardwareKeyboardInput(
+                            focusRequests: globalTapCount)
+                        .debugBorder(.red)
 #endif
+                        
+                        GameBoard(
+                            state: game,
+                            earlyCompleted: turnCompletedBeforeAnimations,
+                            completed: turnCompletedAfterAnimations
+                        )
+                        .onChange(of: game.rows, perform: turnStateChanged)
+                        .contentShape(Rectangle())
+                    }
                     
-                    GameBoard(
-                        state: game,
-                        earlyCompleted: turnCompletedBeforeAnimations,
-                        completed: turnCompletedAfterAnimations
-                    )
-                    .onChange(of: game.rows, perform: turnStateChanged)
-                    .contentShape(Rectangle())
-                }
-                /// For the KeyboardInput view
-                .environmentObject(game)
+                    if debugViz {
+                        Text(dailyState?.expected.displayValue ?? "none")
+                    }
+                    
+                    keyboardView
+                        .environment(
+                            \.keyboardSubmitEnabled,
+                             validator.ready)
                 
-                if debugViz {
-                    Text(dailyState?.expected.displayValue ?? "none")
-                }
-                
-                keyboardView
-                    .environmentObject(game)
-                    .environment(
-                        \.keyboardSubmitEnabled,
-                         validator.ready)
             }
             
             if
@@ -369,7 +367,7 @@ struct GameHost: View {
             }
         }
         .border(debugViz ? .yellow : .clear)
-        .task {
+        .onAppear {
             let seed = validator.seed
             let locale = validator.locale
             
@@ -384,6 +382,7 @@ struct GameHost: View {
                 }
             }
         }
+        .environmentObject(game)
         .environmentObject(toastMessageCenter)
         .environment(
             \.keyboardHints, keyboardHints)
@@ -467,9 +466,6 @@ struct GameHost: View {
                         Label(
                             "Help",
                             systemImage: "questionmark.circle")
-                        .foregroundColor(
-                            Color(
-                                NativeColor.label))
                     })
             }
             ToolbarItem(placement: trailingToolbarPlacement) {
@@ -481,9 +477,6 @@ struct GameHost: View {
                         Label(
                             "Stats",
                             systemImage: "chart.bar")
-                        .foregroundColor(
-                            Color(
-                                NativeColor.label))
                     })
             }
         }

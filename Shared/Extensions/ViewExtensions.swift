@@ -53,4 +53,49 @@ extension View {
             self
         }
     }
+    
+    func safeTint(_ tint: Color) -> some View {
+        if #available(iOS 15.0, *) {
+            return AnyView(self.tint(tint))
+        } else {
+            return AnyView(self)
+        }
+    }
+}
+
+extension View {
+    /* NOTE: BE CAREFUL ON iOS14
+     The fallback on iOS14 is to use .sheet() modifier.
+     
+     This will break, if safeSharingSheet() is invoked on the same
+     level as another .sheet() modifier.
+     
+     The call site should wrap this call in .background(EmptyView().safeSharingSheet...)
+     */
+    func safeSharingSheet(
+        isSharing: Binding<Bool>,
+        activityItems: Binding<[UIActivityItemSource]>,
+        callback: @escaping ()->()) -> some View
+    {
+        if #available(iOS 15.0, *) {
+            return AnyView(self.sheetWithDetents(
+                isPresented: isSharing,
+                detents: [.medium(),.large()],
+                onDismiss: {
+                },
+                content: {
+                    ActivityViewController(
+                        activityItems: activityItems,
+                        callback: callback)
+                }))
+        } else {
+            return AnyView(
+                self.sheet(isPresented: isSharing, onDismiss: {}, content: {
+                ActivityViewController(
+                    activityItems: activityItems,
+                    callback: callback)
+
+            }))
+        }
+    }
 }

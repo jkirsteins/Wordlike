@@ -19,6 +19,7 @@ struct RevealModifier<Revealed: View>: ViewModifier {
     let revealed: Revealed
     
     @State private var currentStep: Int = 0
+    @State private var alreadyAppeared = false
     @State private var degrees: CGFloat = 0.0
     
     init(config: RevealConfig, @ViewBuilder revealed: ()->Revealed) {
@@ -107,6 +108,8 @@ struct RevealModifier<Revealed: View>: ViewModifier {
             perspective: 0.0
         )
         .onAppear {
+            guard !alreadyAppeared else { return }
+            alreadyAppeared = true
             currentStep = 1
             withAnimation(anim(for: currentStep)) 
             {

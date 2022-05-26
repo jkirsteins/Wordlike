@@ -21,6 +21,8 @@
 		E73463302839442900265F8F /* CloudStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E734632E2839442900265F8F /* CloudStorage.swift */; };
 		E73463322839452C00265F8F /* AppStateStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73463312839452C00265F8F /* AppStateStorage.swift */; };
 		E73463332839452C00265F8F /* AppStateStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73463312839452C00265F8F /* AppStateStorage.swift */; };
+		E736C9A8283FCF11001F2C2C /* AppStoreCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E736C9A7283FCF11001F2C2C /* AppStoreCompat.swift */; };
+		E736C9A9283FCF11001F2C2C /* AppStoreCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E736C9A7283FCF11001F2C2C /* AppStoreCompat.swift */; };
 		E7F29BA12837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA22837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA32837DB3C005792DA /* ShowFocusHint_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B102837DB3A005792DA /* ShowFocusHint_Env.swift */; };
@@ -247,6 +249,7 @@
 		E734632B2839441100265F8F /* CloudStorageSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStorageSync.swift; sourceTree = "<group>"; };
 		E734632E2839442900265F8F /* CloudStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStorage.swift; sourceTree = "<group>"; };
 		E73463312839452C00265F8F /* AppStateStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateStorage.swift; sourceTree = "<group>"; };
+		E736C9A7283FCF11001F2C2C /* AppStoreCompat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreCompat.swift; sourceTree = "<group>"; };
 		E7F299612837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299672837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299692837DABB005792DA /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
@@ -587,6 +590,7 @@
 				E734632B2839441100265F8F /* CloudStorageSync.swift */,
 				E734632E2839442900265F8F /* CloudStorage.swift */,
 				E73463312839452C00265F8F /* AppStateStorage.swift */,
+				E736C9A7283FCF11001F2C2C /* AppStoreCompat.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -791,7 +795,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1340;
 				TargetAttributes = {
 					E7F299602837DABB005792DA = {
 						CreatedOnToolsVersion = 13.3.1;
@@ -915,6 +919,7 @@
 				E7F29C992837DB3D005792DA /* CharacterModel.swift in Sources */,
 				E7F29C9B2837DB3D005792DA /* WordTree.swift in Sources */,
 				E7F29C272837DB3C005792DA /* ParticlesModifier.swift in Sources */,
+				E736C9A8283FCF11001F2C2C /* AppStoreCompat.swift in Sources */,
 				E7F29C9D2837DB3D005792DA /* WordTreeTests.swift in Sources */,
 				E70D81FF2837E16100D4F2FF /* NativeTypes.swift in Sources */,
 				E7F29BF72837DB3C005792DA /* Palette.swift in Sources */,
@@ -993,6 +998,7 @@
 				E7F29C602837DB3D005792DA /* LanguageLinkLabel.swift in Sources */,
 				E7F29BF62837DB3C005792DA /* DarkHCPalette.swift in Sources */,
 				E7F29C482837DB3C005792DA /* LatvianKeyboard.swift in Sources */,
+				E736C9A9283FCF11001F2C2C /* AppStoreCompat.swift in Sources */,
 				E7F29C762837DB3D005792DA /* GameBoard.swift in Sources */,
 				E7F29C322837DB3C005792DA /* PulseModifier.swift in Sources */,
 				E7F29C962837DB3D005792DA /* WordModel.swift in Sources */,
@@ -1136,7 +1142,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1190,7 +1196,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -1217,7 +1223,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1253,7 +1259,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1279,6 +1285,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1311,6 +1318,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;

@@ -65,7 +65,20 @@ struct AppView: View {
     }
     
     @Environment(\.scenePhase) var scenePhase
-
+    
+    var testbody: some View {
+        FlippableTile(
+            letter: TileModel(letter: "A", state: .wrongLetter),
+            flipped: TileModel(letter: "B", state: .rightPlace),
+            tag: 0,
+            jumpIx: nil,
+            midCallback: {},
+            flipCallback: {},
+            jumpCallback: { _ in },
+            duration: 3,
+            jumpDuration: 3)
+    }
+    
     var body: some View {
         innerBody
             .onChange(of: scenePhase) { _ in
@@ -90,7 +103,7 @@ struct AppView: View {
                             (loc: Locale) -> String? in
                             guard let gl = gameLocale(loc) else { return nil }
                             
-                            let ds : DailyState? = AppStateStorage(gl.turnStateKey, store: nil).wrappedValue
+                            let ds : DailyState? = AppStateStorage(wrappedValue: nil, gl.turnStateKey, store: nil).wrappedValue
                             
                             guard
                                 let ds = ds,
@@ -157,17 +170,14 @@ struct AppView: View {
 #endif
         // TODO: sharing on macOS
 #if os(iOS)
-        .sheetWithDetents(
-            isPresented: $isSharing,
-            detents: [.medium(),.large()],
-            onDismiss: {
-            },
-            content: {
-                ActivityViewController(activityItems: $shareItems, callback: {
+        /* NOTE: wrapping in background() because otherwise multiple .sheet() modifiers will not work (and safeSharingSheet and safeSheet
+         will both evaluate to .sheet() under the hood on iOS14 */
+        .background(
+            EmptyView()
+                .safeSharingSheet(isSharing: $isSharing, activityItems: $shareItems, callback: {
                     isSharing = false
                     shareItems = []
-                })
-            })
+                }))
 #endif
         .onAppear {
 #if os(iOS)
@@ -180,14 +190,18 @@ struct AppView: View {
         .environment(
             \.globalTapCount,
              $globalTapCount)
-        .safeSheet(item: $activeSheet, onDismiss: {
-            // nothing to do on dismiss
-        }, { item in
-            switch(item) {
-            case .settings:
-                SettingsView()
-            }
-        })
+        /* NOTE: wrapping in background() because otherwise multiple .sheet() modifiers will not work (and safeSharingSheet and safeSheet
+         */
+        .background(
+            EmptyView().safeSheet(
+                item: $activeSheet, onDismiss: {
+                    // nothing to do on dismiss
+                }, { item in
+                    switch(item) {
+                    case .settings:
+                        SettingsView()
+                    }
+                }))
         .environment(\.turnCounter, turnCounter)
         .environment(\.debug, innerDebug || outerDebug)
     }
@@ -215,9 +229,11 @@ struct AppView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        ForEach(configurations) {
-            MockDevice(config: $0) {
-                AppView()
+        if #available(iOS 15.0, *) {
+            ForEach(configurations) {
+                MockDevice(config: $0) {
+                    AppView()
+                }
             }
         }
     }

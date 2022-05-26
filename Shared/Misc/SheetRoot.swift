@@ -104,28 +104,30 @@ extension View {
 
 struct SheetRoot_Previews: PreviewProvider {
     static var previews: some View {
-        ForEach(AppView_Previews.configurations, id: \.self.id) {
-            MockDevice(config: $0) {
-                SheetRoot(title: "Vertical test", isPresented: .constant(true)) {
-                    Text("Am I centered vertically?")
-                        .frame(maxWidth: .infinity)
-                        .debugBorder(.red)
+        if #available(iOS 15.0, *) {
+            ForEach(AppView_Previews.configurations, id: \.self.id) {
+                MockDevice(config: $0) {
+                    SheetRoot(title: "Vertical test", isPresented: .constant(true)) {
+                        Text("Am I centered vertically?")
+                            .frame(maxWidth: .infinity)
+                            .debugBorder(.red)
+                    }
                 }
-            }
-            
-            MockDevice(config: $0) {
-                SheetRoot(title: "Horizontal test", isPresented: .constant(true)) {
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text("Hello")
+                
+                MockDevice(config: $0) {
+                    SheetRoot(title: "Horizontal test", isPresented: .constant(true)) {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text("Hello")
+                                Spacer()
+                            }
+                            .frame(maxWidth: .infinity)
+                            .debugBorder(.red)
+                            
                             Spacer()
+                            
+                            Text("Bim")
                         }
-                        .frame(maxWidth: .infinity)
-                        .debugBorder(.red)
-                        
-                        Spacer()
-                        
-                        Text("Bim")
                     }
                 }
             }

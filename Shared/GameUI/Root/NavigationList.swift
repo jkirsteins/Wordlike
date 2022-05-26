@@ -11,12 +11,12 @@ extension ActiveSheet: Identifiable {
 struct FlagAssets {
     
     static func flagFromName(_ name: String) -> NativeImage? {
-//        #if os(iOS)
-//        // TODO: figure out why UIImage(named:) doesn't work
-//        return flagFromName_old(name)
-//        #else
+        //        #if os(iOS)
+        //        // TODO: figure out why UIImage(named:) doesn't work
+        //        return flagFromName_old(name)
+        //        #else
         return NativeImage(named: name)
-//        #endif
+        //        #endif
     }
     
 #if os(iOS)
@@ -115,23 +115,6 @@ struct TileFlag : View {
     }
 }
 
-struct CircleFlag : View {
-    let strokeColor: Color
-    
-    init(stroke: Color) {
-        self.strokeColor = stroke
-    }
-    
-    var body: some View {
-        Flag()
-            .clipShape(Circle())
-            .overlay(
-                Circle().stroke(
-                    strokeColor)
-                .background(.clear))
-    }
-}
-
 struct ProgressLabel: View {
     @AppStateStorage
     var dailyState: DailyState?
@@ -146,7 +129,7 @@ struct ProgressLabel: View {
     
     init(_ locale: Locale) {
         self.locale = locale
-        self._dailyState = AppStateStorage("turnState.\(locale.fileBaseName)", store: nil)
+        self._dailyState = AppStateStorage(wrappedValue: nil, "turnState.\(locale.fileBaseName)", store: nil)
     }
     
     var caption: (String, Color)? {
@@ -197,17 +180,6 @@ struct LanguageRow: View {
     @AppStateStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
     
-    var extraCaption: [String]? {
-        if locale == .lv_LV {
-            let row1 = isHardMode ? "Hard mode. " : ""
-            let row2 = "\(isSimplifiedLatvianKeyboard ? "Simplified" : "Extended") keyboard."
-            return "\(row1)\n\(row2)".split(separator: "\n").map { String($0) }
-        }
-        else {
-            return isHardMode ? ["Hard mode."] : nil
-        }
-    }
-    
     var title: String {
         locale.displayName
     }
@@ -244,14 +216,7 @@ struct LanguageRow: View {
                     Text(title)
                         .fontWeight(.bold)
                         .fixedSize()
-                    if let extraCaption = extraCaption, shouldShowCaption {
-                        ForEach(extraCaption, id: \.self) {
-                            Text($0)
-                                .fixedSize()
-                                .lineLimit(1)
-                                .font(.caption)
-                        }
-                    }
+                    
                     ProgressLabel(locale).fixedSize()
                 }
             }
@@ -290,7 +255,7 @@ struct InternalStatWidget: View {
         self._stats = AppStateStorage(
             wrappedValue: Stats(),
             "stats.\(locale.fileBaseName)")
-        self._dailyState = AppStateStorage("turnState.\(locale.fileBaseName)", store: nil)
+        self._dailyState = AppStateStorage(wrappedValue: nil, "turnState.\(locale.fileBaseName)", store: nil)
     }
     
     var body: some View {
@@ -422,7 +387,7 @@ struct NavigationList: View {
             VStack(spacing: 8) {
                 ForEach(Locale.supportedLocales, id: \.self) {
                     loc in
-
+                    
                     if let gameLoc = gameLocale(loc) {
                         NavigationLink(destination: {
                             GeometryReader { gr in
@@ -447,7 +412,7 @@ struct NavigationList: View {
                 }
             }
             .debugBorder(.red)
-
+            
             Footer(shareCallback: shareCallback)
                 .debugBorder(.green)
             
@@ -464,7 +429,6 @@ struct NavigationList: View {
                             "Settings",
                             systemImage: "gear")
                     })
-                .tint(.primary)
                 .contextMenu {
                     Button {
                         self.outerDebug.toggle()
@@ -512,7 +476,7 @@ struct Footer: View {
                 continue
             }
             
-            let ds : DailyState? = AppStateStorage(gl.turnStateKey, store: nil).wrappedValue
+            let ds : DailyState? = AppStateStorage(wrappedValue: nil, gl.turnStateKey, store: nil).wrappedValue
             
             if let ds = ds,
                ds.isFinished == true,
@@ -542,22 +506,24 @@ struct Footer: View {
                 Button(action: {
                     shareCallback()
                 }, label: {
-                    Label(
-
-                        "Share a summary",
-                        systemImage: "square.and.arrow.up")
+                    VStack {
+                        Label(
+                            "Share a summary",
+                            systemImage: "square.and.arrow.up")
+                        
+                        if !isCompactVertically {
+                            Text("Share a summary for every game you have completed today.")
+                                .multilineTextAlignment(.center)
+#if os(iOS)
+                                .fixedSize(horizontal: false, vertical: true )
+#endif
+                                .font(.caption)
+                                .foregroundColor(.primary)
+                        }
+                    }
+                    .safeTint(.primary)
                 })
                 .disabled(self.isSharingDisabled)
-                .tint(.primary)
-
-                if !isCompactVertically {
-                    Text("Share a summary for every game you have completed today.")
-                        .multilineTextAlignment(.center)
-                    #if os(iOS)
-                        .fixedSize(horizontal: false, vertical: true )
-                    #endif
-                        .font(.caption)
-                }
             }
             Spacer()
         }

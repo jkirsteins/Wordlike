@@ -46,13 +46,13 @@ struct SettingsView: View {
     var isHardMode: Bool = false
     
     @AppStateStorage("turnState.en")
-    var dailyStateEn: DailyState?
+    var dailyStateEn: DailyState? = nil
     
     @AppStateStorage("turnState.fr")
-    var dailyStateFr: DailyState?
+    var dailyStateFr: DailyState? = nil
     
     @AppStateStorage("turnState.lv")
-    var dailyStateLv: DailyState?
+    var dailyStateLv: DailyState? = nil
     
     @State var emailCopied = false
     
@@ -121,13 +121,16 @@ struct SettingsView: View {
                 Spacer()
                 HStack {
                     if emailCopied {
+                        
                         Text("Copied")
                             .font(.caption)
                             .foregroundColor(Color(NativeColor.secondaryLabel))
-                            .task {
-                                try? await Task.sleep(nanoseconds: 2_000_000_000)
-                                emailCopied = false
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                    emailCopied = false
+                                }
                             }
+                        
                     } else {
                         Button(action: {
 #if os(iOS)

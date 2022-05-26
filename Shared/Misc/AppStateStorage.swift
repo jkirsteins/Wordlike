@@ -9,7 +9,7 @@ import SwiftUI
 
 // Switch typealias when ready to migrate
 typealias AppStateStorage = AppStateStorageOld //AppStateStorageNew
-typealias AppStateStorageOld = AppStorage
+typealias AppStateStorageOld = AppStorageCompat
 
 protocol CloudConflictResolver
 {

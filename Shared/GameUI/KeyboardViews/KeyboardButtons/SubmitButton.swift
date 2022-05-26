@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate struct SubmitButtonStyle: ButtonStyle {
+fileprivate struct SubmitButtonStyle: ButtonStyle, DynamicProperty {
     @Environment(\.palette) var palette: Palette
     
     @EnvironmentObject var game: GameState

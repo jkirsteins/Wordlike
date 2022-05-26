@@ -44,8 +44,7 @@ struct LanguageLinkLabel: View {
     init(_ locale: GameLocale, extraCaption: String?) {
         self.locale = locale
         self.extraCaption = extraCaption
-        
-        self._dailyState = AppStateStorage("turnState.\(locale.fileBaseName)", store: nil)
+        self._dailyState = AppStateStorage(wrappedValue: nil, "turnState.\(locale.fileBaseName)", store: nil)
         self._stats = AppStateStorage(
             wrappedValue: Stats(), 
             "stats.\(locale.fileBaseName)")

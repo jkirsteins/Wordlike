@@ -13,9 +13,9 @@ struct HelpView: View {
             }
             
             Divider()
-
+            
             Text("Examples").fontWeight(.bold)
-
+            
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     Tile("w", .rightPlace)
@@ -27,7 +27,7 @@ struct HelpView: View {
                 .frame(maxHeight: 50)
                 Text("The letter **W** is in the word and in the correct spot.")
             }
-//
+            //
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     Tile("p")
@@ -39,7 +39,7 @@ struct HelpView: View {
                 .frame(maxHeight: 50)
                 Text("The letter **I** is in the word but in a different spot.")
             }
-
+            
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     Tile("v")
@@ -51,9 +51,9 @@ struct HelpView: View {
                 .frame(maxHeight: 50)
                 Text("The letter **U** is not in the word in any spot.")
             }
-
+            
             Divider()
-
+            
             Text("A new word is available every day.").fontWeight(.bold)
         }
         .frame(maxWidth: 300)
@@ -66,10 +66,12 @@ struct HelpView: View {
                 HelpView()
             }
             
-            ForEach(AppView_Previews.configurations) {
-                MockDevice(config: $0) {
-                    PaletteSetterView {
-                        HelpView()
+            if #available(iOS 15.0, *) {
+                ForEach(AppView_Previews.configurations) {
+                    MockDevice(config: $0) {
+                        PaletteSetterView {
+                            HelpView()
+                        }
                     }
                 }
             }
