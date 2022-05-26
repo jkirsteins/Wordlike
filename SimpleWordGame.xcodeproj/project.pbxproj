@@ -27,6 +27,10 @@
 		E736C9B1283FE64A001F2C2C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E736C9B3283FE64A001F2C2C /* Localizable.strings */; };
 		E762614828400839000A80FC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E762614B28400839000A80FC /* InfoPlist.strings */; };
 		E762614928400839000A80FC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E762614B28400839000A80FC /* InfoPlist.strings */; };
+		E7626154284022EF000A80FC /* US.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B282837DB3B005792DA /* US.pdf */; };
+		E7626155284022EF000A80FC /* LV.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B272837DB3B005792DA /* LV.pdf */; };
+		E7626156284022F4000A80FC /* FR.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2D2837DB3B005792DA /* FR.pdf */; };
+		E7626157284022F7000A80FC /* GB.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B302837DB3B005792DA /* GB.pdf */; };
 		E7F29BA12837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA22837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA32837DB3C005792DA /* ShowFocusHint_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B102837DB3A005792DA /* ShowFocusHint_Env.swift */; };
@@ -63,22 +67,14 @@
 		E7F29BC62837DB3C005792DA /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B222837DB3B005792DA /* UIApplicationExtensions.swift */; };
 		E7F29BC72837DB3C005792DA /* CalendarExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B232837DB3B005792DA /* CalendarExtensions.swift */; };
 		E7F29BC82837DB3C005792DA /* CalendarExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B232837DB3B005792DA /* CalendarExtensions.swift */; };
-		E7F29BCD2837DB3C005792DA /* LV.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B272837DB3B005792DA /* LV.pdf */; };
-		E7F29BCE2837DB3C005792DA /* LV.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B272837DB3B005792DA /* LV.pdf */; };
-		E7F29BCF2837DB3C005792DA /* US.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B282837DB3B005792DA /* US.pdf */; };
-		E7F29BD02837DB3C005792DA /* US.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B282837DB3B005792DA /* US.pdf */; };
 		E7F29BD32837DB3C005792DA /* en-GB_G.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2A2837DB3B005792DA /* en-GB_G.txt */; };
 		E7F29BD42837DB3C005792DA /* en-GB_G.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2A2837DB3B005792DA /* en-GB_G.txt */; };
 		E7F29BD72837DB3C005792DA /* en_A.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2C2837DB3B005792DA /* en_A.txt */; };
 		E7F29BD82837DB3C005792DA /* en_A.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2C2837DB3B005792DA /* en_A.txt */; };
-		E7F29BD92837DB3C005792DA /* FR.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2D2837DB3B005792DA /* FR.pdf */; };
-		E7F29BDA2837DB3C005792DA /* FR.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2D2837DB3B005792DA /* FR.pdf */; };
 		E7F29BDB2837DB3C005792DA /* en-GB_A.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2E2837DB3B005792DA /* en-GB_A.txt */; };
 		E7F29BDC2837DB3C005792DA /* en-GB_A.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2E2837DB3B005792DA /* en-GB_A.txt */; };
 		E7F29BDD2837DB3C005792DA /* en_G.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2F2837DB3B005792DA /* en_G.txt */; };
 		E7F29BDE2837DB3C005792DA /* en_G.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2F2837DB3B005792DA /* en_G.txt */; };
-		E7F29BDF2837DB3C005792DA /* GB.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B302837DB3B005792DA /* GB.pdf */; };
-		E7F29BE02837DB3C005792DA /* GB.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B302837DB3B005792DA /* GB.pdf */; };
 		E7F29BE32837DB3C005792DA /* fr_A.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B322837DB3B005792DA /* fr_A.txt */; };
 		E7F29BE42837DB3C005792DA /* fr_A.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B322837DB3B005792DA /* fr_A.txt */; };
 		E7F29BE52837DB3C005792DA /* lv_wordlist_5.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B332837DB3B005792DA /* lv_wordlist_5.txt */; };
@@ -848,22 +844,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7F29BDF2837DB3C005792DA /* GB.pdf in Resources */,
+				E7626154284022EF000A80FC /* US.pdf in Resources */,
 				E7F29BED2837DB3C005792DA /* lv_G.txt in Resources */,
 				E73463262839323700265F8F /* Media.xcassets in Resources */,
 				E7F29BE32837DB3C005792DA /* fr_A.txt in Resources */,
 				E762614828400839000A80FC /* InfoPlist.strings in Resources */,
 				E7F29BEF2837DB3C005792DA /* lv_A.txt in Resources */,
-				E7F29BCD2837DB3C005792DA /* LV.pdf in Resources */,
 				E7F29BD32837DB3C005792DA /* en-GB_G.txt in Resources */,
+				E7626157284022F7000A80FC /* GB.pdf in Resources */,
 				E7F29BDB2837DB3C005792DA /* en-GB_A.txt in Resources */,
 				E7F29BDD2837DB3C005792DA /* en_G.txt in Resources */,
-				E7F29BCF2837DB3C005792DA /* US.pdf in Resources */,
 				E736C9B0283FE64A001F2C2C /* Localizable.strings in Resources */,
+				E7626156284022F4000A80FC /* FR.pdf in Resources */,
+				E7626155284022EF000A80FC /* LV.pdf in Resources */,
 				E7F29BE72837DB3C005792DA /* fr_G.txt in Resources */,
 				E7F29BE52837DB3C005792DA /* lv_wordlist_5.txt in Resources */,
 				E7F29BD72837DB3C005792DA /* en_A.txt in Resources */,
-				E7F29BD92837DB3C005792DA /* FR.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -871,21 +867,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7F29BE02837DB3C005792DA /* GB.pdf in Resources */,
 				E7F29BEE2837DB3C005792DA /* lv_G.txt in Resources */,
 				E73463272839323700265F8F /* Media.xcassets in Resources */,
 				E736C9B1283FE64A001F2C2C /* Localizable.strings in Resources */,
 				E762614928400839000A80FC /* InfoPlist.strings in Resources */,
 				E7F29BE42837DB3C005792DA /* fr_A.txt in Resources */,
 				E7F29BF02837DB3C005792DA /* lv_A.txt in Resources */,
-				E7F29BCE2837DB3C005792DA /* LV.pdf in Resources */,
 				E7F29BD42837DB3C005792DA /* en-GB_G.txt in Resources */,
 				E7F29BDC2837DB3C005792DA /* en-GB_A.txt in Resources */,
 				E7F29BDE2837DB3C005792DA /* en_G.txt in Resources */,
-				E7F29BD02837DB3C005792DA /* US.pdf in Resources */,
 				E7F29BE82837DB3C005792DA /* fr_G.txt in Resources */,
 				E7F29BD82837DB3C005792DA /* en_A.txt in Resources */,
-				E7F29BDA2837DB3C005792DA /* FR.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
