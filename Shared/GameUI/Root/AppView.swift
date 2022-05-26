@@ -82,7 +82,9 @@ struct AppView: View {
     var body: some View {
         innerBody
             .onChange(of: scenePhase) { _ in
-                CloudStorageSync.shared.synchronize()
+                
+                // Experimental
+                // CloudStorageSync.shared.synchronize()
             }
 #if os(macOS)
             .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.landscape.width)
