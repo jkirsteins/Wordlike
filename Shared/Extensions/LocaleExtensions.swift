@@ -22,7 +22,7 @@ extension Locale {
             return ""
         }
     }
-    var displayName: String {
+    var displayName: LocalizedStringKey {
         switch(self) {
         case .en_US:
             return "American"

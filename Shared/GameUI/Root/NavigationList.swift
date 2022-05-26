@@ -68,8 +68,12 @@ struct FlagAssets {
 }
 
 struct Flag : View {
-    @Environment(\.locale)
-    var locale: Locale
+    @Environment(\.gameLocale)
+    var gameLocale: GameLocale
+    
+    var locale: Locale {
+        gameLocale.nativeLocale
+    }
     
     static let aspectRatio = 21.0/15.0
     
@@ -132,7 +136,7 @@ struct ProgressLabel: View {
         self._dailyState = AppStateStorage(wrappedValue: nil, "turnState.\(locale.fileBaseName)", store: nil)
     }
     
-    var caption: (String, Color)? {
+    var caption: (LocalizedStringKey, Color)? {
         guard
             let dailyState = dailyState,
             turnCounter.isFresh(dailyState.date, at: Date()),
@@ -171,8 +175,8 @@ struct ProgressLabel: View {
 }
 
 struct LanguageRow: View {
-    @Environment(\.locale)
-    var locale: Locale
+    @Environment(\.gameLocale)
+    var gameLocale: GameLocale
     
     @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
     var isSimplifiedLatvianKeyboard: Bool = false
@@ -180,7 +184,11 @@ struct LanguageRow: View {
     @AppStateStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
     
-    var title: String {
+    var locale: Locale {
+        gameLocale.nativeLocale
+    }
+    
+    var title: LocalizedStringKey {
         locale.displayName
     }
     
@@ -405,7 +413,8 @@ struct NavigationList: View {
                             .padding()
                         }, label: {
                             LanguageRow()
-                                .environment(\.locale, loc)
+                            /* Don't accidentally pass in the actual locale to not mess up the translation for current localization */
+                                .environment(\.gameLocale, gameLocale(loc)!)
                         })
                         .buttonStyle(LanguageRowButtonStyle())
                     }
@@ -429,6 +438,7 @@ struct NavigationList: View {
                             "Settings",
                             systemImage: "gear")
                     })
+                .safeTint(.primary)
                 .contextMenu {
                     Button {
                         self.outerDebug.toggle()

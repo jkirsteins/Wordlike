@@ -37,7 +37,7 @@ enum GameLocale
         nativeLocale.flag
     }
     
-    var localeDisplayName: String {
+    var localeDisplayName: LocalizedStringKey {
         nativeLocale.displayName
     }
     

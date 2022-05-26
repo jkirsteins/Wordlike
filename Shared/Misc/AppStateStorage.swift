@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-// Switch typealias when ready to migrate
-typealias AppStateStorage = AppStateStorageOld //AppStateStorageNew
-typealias AppStateStorageOld = AppStorageCompat
+// AppStateStorageNew supports iCloud but is experimental
+typealias AppStateStorage=AppStateStorageOld
+
+typealias AppStateStorageOld=AppStateStorage15
 
 protocol CloudConflictResolver
 {
@@ -74,6 +75,48 @@ extension DailyState : CloudConflictResolver
         }
         
         return self
+    }
+}
+
+@propertyWrapper public struct AppStateStorage15<Value: Equatable>: DynamicProperty  {
+    
+    @AppStorage
+    var localState: Value
+    
+    let key: String
+    
+    public var projectedValue: Binding<Value> {
+        Binding(get: { self.wrappedValue }, set: { _setValue($0) })
+    }
+    
+    
+    public var wrappedValue: Value {
+        get {
+            return localState
+        }
+        nonmutating set { _setValue(newValue) }
+    }
+    
+    private func _setValue(_ val: Value) -> Void
+    {
+        self.localState = val
+    }
+
+    public init(_ key: String, store: UserDefaults? = nil) where Value : RawRepresentable, Value.RawValue == String, Value : ExpressibleByNilLiteral
+    {
+        let local: AppStorage<Value> = AppStorage(wrappedValue: nil, key, store: store)
+        self._localState = local
+        self.key = key
+    }
+    
+    public init(wrappedValue: Value, _ key: String, store: UserDefaults? = nil) where Value : RawRepresentable, Value.RawValue == String {
+        self._localState = AppStorage(wrappedValue: wrappedValue, key, store: store)
+        self.key = key
+    }
+
+    public init(wrappedValue: Value, _ key: String, store: UserDefaults? = nil) where Value == Bool {
+        self._localState = AppStorage(wrappedValue: wrappedValue, key, store: store)
+        self.key = key
     }
 }
 

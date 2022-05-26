@@ -1,0 +1,80 @@
+/* 
+  Localizable.strings
+  SimpleWordGame
+
+  Created by Janis Kirsteins on 26/05/2022.
+  
+*/
+
+"Share a summary" = "Nosūtīt kopsavilkumu";
+"Share a summary for every game you have completed today." = "Apkopos dienas pabeigto spēļu rezultātus un ļaus to nosūtīt citiem.";
+
+"Completed" = "Vārds atminēts";
+"Not started" = "Nav uzsākts";
+"Unsuccessful" = "Vārds nav atminēts";
+"In progress" = "Vārds tiek minēts";
+
+"Streak" = "Secīgi";
+"Win %" = "Uzvaras %";
+
+"American" = "Amerikāņu";
+"British" = "Britu";
+"Français" = "Franču";
+"Latviski" = "Latviešu";
+
+"Settings" = "Iestatījumi";
+
+"High contrast mode" = "Pastiprināts kontrasts";
+"For improved color vision." = "Atvieglotai burtu atpazīstamībai.";
+
+"Hard mode" = "Grūtais režīms";
+"Any revealed hints must be used in subsequent guesses." = "Ja kāds burts ir atminēts, tad tas ir obligāti jāizmanto nākamajos gājienos.";
+"Simplified Latvian keyboard" = "Vienkāršotā latviešu tastatūra";
+"Do not require precise use of diacritics." = "Nav nepieciešams precīzi izmantot mīkstinājuma zīmes.";
+
+"Feedback" = "Atsauksmes";
+"Feedback (manual)" = "Atsauksmes (manuāli)";
+"Click to copy feedback e-mail address." = "Kopēt e-pasta adresi uz kuru nosūtīt atsauksmes.";
+
+"Source code" = "Izejas kods";
+"This game was created using Swift Playgrounds 4 on an iPad.
+
+The source code is freely available." = "Spēles izejas kods ir brīvi pieejams.";
+
+"Author" = "Autors";
+"Made by Jānis Kiršteins." = "Jānis Kiršteins.";
+
+"Statistics" = "Statistika";
+
+"Played" = "Spēļu skaits";
+"Current Streak" = "Uzvaras (secīgi)";
+"Max Streak" = "Uzvaru rekords (secīgi)";
+
+"Answer" = "Pareizā atbilde";
+"See definition" = "Skatīt tēzaurā";
+
+"Guess Distribution" = "Izmantotie gājieni";
+"Next word" = "Jauns vārds pēc";
+
+"Share" = "Dalīties";
+
+"How to play" = "Kā spēlēt?";
+
+"Guess the daily word in 6 tries." = "Uzmini vārdu 6 minējumos.";
+
+"Each guess must be a valid five-letter word." = "Katram minējumam jāsastāv no 5 burtiem.";
+
+"After each guess, the color of the tiles will change to show you how close your guess was to the word." = "Pēc katra mēģinājuma nomainīsies lauciņu krāsas. Krāsa norādīs, cik tuvu minējums ir pareizajam vārdam.";
+
+
+"Examples" = "Piemēri";
+
+"The letter **W** is in the word and in the correct spot." = "Burts Ī ir atminēts pareizi.";
+
+"The letter **I** is in the word but in a different spot." = "Burts L ir atminēts pareizi, taču tam jāatrodas citā vietā.";
+            
+"The letter **U** is not in the word in any spot." = "Burts E pareizajā vārdā nav sastopams.";
+            
+"A new word is available every day." = "Katru dienu būs jauns minamais vārds.";
+
+"Look up" = "Skatīt tēzaurā";

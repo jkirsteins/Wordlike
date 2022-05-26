@@ -23,6 +23,8 @@
 		E73463332839452C00265F8F /* AppStateStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73463312839452C00265F8F /* AppStateStorage.swift */; };
 		E736C9A8283FCF11001F2C2C /* AppStoreCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E736C9A7283FCF11001F2C2C /* AppStoreCompat.swift */; };
 		E736C9A9283FCF11001F2C2C /* AppStoreCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E736C9A7283FCF11001F2C2C /* AppStoreCompat.swift */; };
+		E736C9B0283FE64A001F2C2C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E736C9B3283FE64A001F2C2C /* Localizable.strings */; };
+		E736C9B1283FE64A001F2C2C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E736C9B3283FE64A001F2C2C /* Localizable.strings */; };
 		E7F29BA12837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA22837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA32837DB3C005792DA /* ShowFocusHint_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B102837DB3A005792DA /* ShowFocusHint_Env.swift */; };
@@ -250,6 +252,9 @@
 		E734632E2839442900265F8F /* CloudStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStorage.swift; sourceTree = "<group>"; };
 		E73463312839452C00265F8F /* AppStateStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateStorage.swift; sourceTree = "<group>"; };
 		E736C9A7283FCF11001F2C2C /* AppStoreCompat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreCompat.swift; sourceTree = "<group>"; };
+		E736C9B2283FE64A001F2C2C /* lv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lv; path = lv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E736C9B5283FF144001F2C2C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E736C9B6283FF149001F2C2C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E7F299612837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299672837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299692837DABB005792DA /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
@@ -519,6 +524,7 @@
 				E7F29B362837DB3B005792DA /* british_spellings.json */,
 				E7F29B372837DB3B005792DA /* lv_G.txt */,
 				E7F29B382837DB3B005792DA /* lv_A.txt */,
+				E736C9B3283FE64A001F2C2C /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -814,6 +820,8 @@
 			knownRegions = (
 				en,
 				Base,
+				lv,
+				fr,
 			);
 			mainGroup = E7F299542837DAB9005792DA;
 			packageReferences = (
@@ -844,6 +852,7 @@
 				E7F29BDB2837DB3C005792DA /* en-GB_A.txt in Resources */,
 				E7F29BDD2837DB3C005792DA /* en_G.txt in Resources */,
 				E7F29BCF2837DB3C005792DA /* US.pdf in Resources */,
+				E736C9B0283FE64A001F2C2C /* Localizable.strings in Resources */,
 				E7F29BE72837DB3C005792DA /* fr_G.txt in Resources */,
 				E7F29BE52837DB3C005792DA /* lv_wordlist_5.txt in Resources */,
 				E7F29BD72837DB3C005792DA /* en_A.txt in Resources */,
@@ -858,6 +867,7 @@
 				E7F29BE02837DB3C005792DA /* GB.pdf in Resources */,
 				E7F29BEE2837DB3C005792DA /* lv_G.txt in Resources */,
 				E73463272839323700265F8F /* Media.xcassets in Resources */,
+				E736C9B1283FE64A001F2C2C /* Localizable.strings in Resources */,
 				E7F29BE42837DB3C005792DA /* fr_A.txt in Resources */,
 				E7F29BF02837DB3C005792DA /* lv_A.txt in Resources */,
 				E7F29BCE2837DB3C005792DA /* LV.pdf in Resources */,
@@ -1090,6 +1100,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E736C9B3283FE64A001F2C2C /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E736C9B2283FE64A001F2C2C /* lv */,
+				E736C9B5283FF144001F2C2C /* fr */,
+				E736C9B6283FF149001F2C2C /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		E7F299702837DABB005792DA /* Debug */ = {

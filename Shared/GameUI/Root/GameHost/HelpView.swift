@@ -1,5 +1,86 @@
 import SwiftUI
 
+struct WrongExampleWord: View {
+    
+    @Environment(\.locale)
+    var locale: Locale
+    
+    var body: some View {
+        switch(locale.languageCode) {
+        case Locale.lv_LV.languageCode:
+            HStack {
+                AgitatedTile(model: TileModel(letter: "k", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "a", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "s", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "t", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "e", state: .wrongLetter))
+            }
+        default:
+            HStack {
+                AgitatedTile(model: TileModel(letter: "v", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "a", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "g", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "u", state: .wrongLetter))
+                AgitatedTile(model: TileModel(letter: "e", state: .maskedFilled))
+            }
+        }
+    }
+}
+
+struct GreenExampleWord: View {
+    
+    @Environment(\.locale)
+    var locale: Locale
+    
+    var body: some View {
+        switch(locale.languageCode) {
+        case Locale.lv_LV.languageCode:
+            HStack {
+                AgitatedTile(model: TileModel(letter: "s", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "p", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "ī", state: .rightPlace))
+                AgitatedTile(model: TileModel(letter: "g", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "a", state: .maskedFilled))
+            }
+        default:
+            HStack {
+                AgitatedTile(model: TileModel(letter: "w", state: .rightPlace))
+                AgitatedTile(model: TileModel(letter: "e", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "a", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "r", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "y", state: .maskedFilled))
+            }
+        }
+    }
+}
+
+struct YellowExampleWord: View {
+    
+    @Environment(\.locale)
+    var locale: Locale
+    
+    var body: some View {
+        switch(locale.languageCode) {
+        case Locale.lv_LV.languageCode:
+            HStack {
+                AgitatedTile(model: TileModel(letter: "p", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "l", state: .wrongPlace))
+                AgitatedTile(model: TileModel(letter: "ū", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "k", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "a", state: .maskedFilled))
+            }
+        default:
+            HStack {
+                AgitatedTile(model: TileModel(letter: "p", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "i", state: .wrongPlace))
+                AgitatedTile(model: TileModel(letter: "l", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "l", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "s", state: .maskedFilled))
+            }
+        }
+    }
+}
+
 struct HelpView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -17,37 +98,19 @@ struct HelpView: View {
             Text("Examples").fontWeight(.bold)
             
             VStack(alignment: .leading, spacing: 16) {
-                HStack {
-                    Tile("w", .rightPlace)
-                    Tile("e")
-                    Tile("a")
-                    Tile("r")
-                    Tile("y")
-                }
+                GreenExampleWord()
                 .frame(maxHeight: 50)
                 Text("The letter **W** is in the word and in the correct spot.")
             }
             //
             VStack(alignment: .leading, spacing: 16) {
-                HStack {
-                    Tile("p")
-                    Tile("i", .wrongPlace)
-                    Tile("l")
-                    Tile("l")
-                    Tile("s")
-                }
+                YellowExampleWord()
                 .frame(maxHeight: 50)
                 Text("The letter **I** is in the word but in a different spot.")
             }
             
             VStack(alignment: .leading, spacing: 16) {
-                HStack {
-                    Tile("v")
-                    Tile("a")
-                    Tile("g")
-                    Tile("u", .wrongLetter)
-                    Tile("e")
-                }
+                WrongExampleWord()
                 .frame(maxHeight: 50)
                 Text("The letter **U** is not in the word in any spot.")
             }
@@ -56,7 +119,7 @@ struct HelpView: View {
             
             Text("A new word is available every day.").fontWeight(.bold)
         }
-        .frame(maxWidth: 300)
+        .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.portrait.width)
         .navigationTitle("How to play")
     }
     

@@ -39,7 +39,7 @@ struct GameHost: View {
     @State fileprivate var activeSheet: ActiveSheet? = nil
     
     let locale: GameLocale
-    let title: String
+    let title: LocalizedStringKey
     
     /* Propogated via preferences from the underlying EditableRow. */
     @StateObject var toastMessageCenter = ToastMessageCenter()
