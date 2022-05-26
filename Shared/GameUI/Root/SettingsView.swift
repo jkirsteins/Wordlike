@@ -20,7 +20,7 @@ struct SettingsView: View {
     
 #if os(iOS)
     @State var mailData = ComposeMailData(
-        subject: "Feedback about \(Bundle.main.displayName)",
+        subject: NSLocalizedString("Feedback about Wordlike", comment: ""),
         recipients: [
             Self.feedbackEmail
         ],
