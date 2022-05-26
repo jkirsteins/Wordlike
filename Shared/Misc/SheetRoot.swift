@@ -5,15 +5,71 @@ fileprivate struct _OptNavTitleModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         if let title = title {
-            content
-                .navigationTitle(title)
+            if #available(iOS 14.0, *) {
+                content
+                    .navigationTitle(title)
+            } else {
+                content
+                    .navigationBarTitle(title)
+            }
         } else {
             content
         }
     }
 }
 
-struct SheetRoot<SheetContent: View>: View {
+typealias SheetRoot=SheetRoot14
+
+struct SheetRoot13<SheetContent: View>: View {
+    let title: String?
+    @Binding var isPresented: Bool
+    @ViewBuilder let content: ()->SheetContent
+    
+    var paddedContentWithNavigation: some View {
+        content()
+            .padding()
+        /* Sometimes we don't know the
+         title initially (e.g. when
+         a single sheet can house different
+         content based on the item */
+            .modifier(_OptNavTitleModifier(
+                title: title))
+        
+            .toolbar {
+                UIButtonClose {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+    }
+    
+    var innerBody: some View {
+#if os(iOS)
+        NavigationView {
+            GeometryReader { gr in
+                ScrollView {
+                    paddedContentWithNavigation
+                        .frame(width: gr.size.width)
+                        .frame(minHeight: gr.size.height)
+                }
+            }
+        }
+#else
+        ScrollView {
+            paddedContentWithNavigation
+        }
+#endif
+    }
+    
+    @Environment(\.presentationMode)
+    var presentationMode
+    
+    var body: some View {
+        innerBody
+    }
+}
+
+@available(iOS 14.0, *)
+struct SheetRoot14<SheetContent: View>: View {
     let title: String?
     @Binding var isPresented: Bool
     @ViewBuilder let content: ()->SheetContent

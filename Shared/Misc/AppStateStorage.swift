@@ -9,7 +9,16 @@ import SwiftUI
 
 // Switch typealias when ready to migrate
 typealias AppStateStorage = AppStateStorageNew //AppStateStorageNew
+
+@available(iOS 14.0, *)
 typealias AppStateStorageOld = AppStorage
+
+if #available(iOS 13.0, *) {
+
+}
+
+@available(iOS 13.0, *)
+typealias AppStateStorageOld = AppStorageCompat
 
 protocol CloudConflictResolver
 {

@@ -21,6 +21,8 @@
 		E73463302839442900265F8F /* CloudStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E734632E2839442900265F8F /* CloudStorage.swift */; };
 		E73463322839452C00265F8F /* AppStateStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73463312839452C00265F8F /* AppStateStorage.swift */; };
 		E73463332839452C00265F8F /* AppStateStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73463312839452C00265F8F /* AppStateStorage.swift */; };
+		E736C9A5283FCBFC001F2C2C /* AppStorageCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E736C9A4283FCBFC001F2C2C /* AppStorageCompat.swift */; };
+		E736C9A6283FCBFC001F2C2C /* AppStorageCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E736C9A4283FCBFC001F2C2C /* AppStorageCompat.swift */; };
 		E7CFCEBC283AD7960019AAF5 /* SafeLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CFCEBB283AD7960019AAF5 /* SafeLink.swift */; };
 		E7CFCEBD283AD7960019AAF5 /* SafeLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CFCEBB283AD7960019AAF5 /* SafeLink.swift */; };
 		E7CFCEBF283ADA440019AAF5 /* SafeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CFCEBE283ADA440019AAF5 /* SafeLabel.swift */; };
@@ -255,6 +257,7 @@
 		E734632B2839441100265F8F /* CloudStorageSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStorageSync.swift; sourceTree = "<group>"; };
 		E734632E2839442900265F8F /* CloudStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStorage.swift; sourceTree = "<group>"; };
 		E73463312839452C00265F8F /* AppStateStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateStorage.swift; sourceTree = "<group>"; };
+		E736C9A4283FCBFC001F2C2C /* AppStorageCompat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStorageCompat.swift; sourceTree = "<group>"; };
 		E7CFCEBB283AD7960019AAF5 /* SafeLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeLink.swift; sourceTree = "<group>"; };
 		E7CFCEBE283ADA440019AAF5 /* SafeLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeLabel.swift; sourceTree = "<group>"; };
 		E7CFCEC1283ADB310019AAF5 /* SafeOnChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeOnChange.swift; sourceTree = "<group>"; };
@@ -603,6 +606,7 @@
 				E7CFCEBE283ADA440019AAF5 /* SafeLabel.swift */,
 				E7CFCEC1283ADB310019AAF5 /* SafeOnChange.swift */,
 				E7CFCEC4283ADBD50019AAF5 /* SafeMisc.swift */,
+				E736C9A4283FCBFC001F2C2C /* AppStorageCompat.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -897,6 +901,7 @@
 				E7F29C7D2837DB3D005792DA /* GameState.input.swift in Sources */,
 				E7F29BBB2837DB3C005792DA /* StringExtensions.swift in Sources */,
 				E7F29BFD2837DB3C005792DA /* LightHCPalette.swift in Sources */,
+				E736C9A5283FCBFC001F2C2C /* AppStorageCompat.swift in Sources */,
 				E7CFCEC2283ADB310019AAF5 /* SafeOnChange.swift in Sources */,
 				E7F29C5F2837DB3D005792DA /* LanguageLinkLabel.swift in Sources */,
 				E734632C2839441100265F8F /* CloudStorageSync.swift in Sources */,
@@ -1048,6 +1053,7 @@
 				E70D82002837E16100D4F2FF /* NativeTypes.swift in Sources */,
 				E7F29BF82837DB3C005792DA /* Palette.swift in Sources */,
 				E7F29C6C2837DB3D005792DA /* TileBackground.swift in Sources */,
+				E736C9A6283FCBFC001F2C2C /* AppStorageCompat.swift in Sources */,
 				E7F29BB02837DB3C005792DA /* TurnCounter_Env.swift in Sources */,
 				E7F29BC22837DB3C005792DA /* LocaleExtensions.swift in Sources */,
 				E7F29BFC2837DB3C005792DA /* DarkPalette.swift in Sources */,
