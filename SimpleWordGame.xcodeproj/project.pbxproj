@@ -25,6 +25,9 @@
 		E736C9A9283FCF11001F2C2C /* AppStoreCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E736C9A7283FCF11001F2C2C /* AppStoreCompat.swift */; };
 		E736C9B0283FE64A001F2C2C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E736C9B3283FE64A001F2C2C /* Localizable.strings */; };
 		E736C9B1283FE64A001F2C2C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E736C9B3283FE64A001F2C2C /* Localizable.strings */; };
+		E736C9BD28400500001F2C2C /* iOS_Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E736C9BC28400500001F2C2C /* iOS_Info.plist */; };
+		E762614828400839000A80FC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E762614B28400839000A80FC /* InfoPlist.strings */; };
+		E762614928400839000A80FC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E762614B28400839000A80FC /* InfoPlist.strings */; };
 		E7F29BA12837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA22837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA32837DB3C005792DA /* ShowFocusHint_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B102837DB3A005792DA /* ShowFocusHint_Env.swift */; };
@@ -255,6 +258,10 @@
 		E736C9B2283FE64A001F2C2C /* lv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lv; path = lv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E736C9B5283FF144001F2C2C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E736C9B6283FF149001F2C2C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E736C9BC28400500001F2C2C /* iOS_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = iOS_Info.plist; sourceTree = "<group>"; };
+		E762614A28400839000A80FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E762614C2840083A000A80FC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E762614D2840083B000A80FC /* lv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lv; path = lv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E7F299612837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299672837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299692837DABB005792DA /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
@@ -419,6 +426,7 @@
 		E7F299542837DAB9005792DA = {
 			isa = PBXGroup;
 			children = (
+				E736C9BC28400500001F2C2C /* iOS_Info.plist */,
 				E7346324283931AB00265F8F /* SimpleWordGame (iOS).entitlements */,
 				E7F29B3A2837DB3B005792DA /* gh_screenshot.png */,
 				E7F29B392837DB3B005792DA /* README.md */,
@@ -525,6 +533,7 @@
 				E7F29B372837DB3B005792DA /* lv_G.txt */,
 				E7F29B382837DB3B005792DA /* lv_A.txt */,
 				E736C9B3283FE64A001F2C2C /* Localizable.strings */,
+				E762614B28400839000A80FC /* InfoPlist.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -842,10 +851,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E736C9BD28400500001F2C2C /* iOS_Info.plist in Resources */,
 				E7F29BDF2837DB3C005792DA /* GB.pdf in Resources */,
 				E7F29BED2837DB3C005792DA /* lv_G.txt in Resources */,
 				E73463262839323700265F8F /* Media.xcassets in Resources */,
 				E7F29BE32837DB3C005792DA /* fr_A.txt in Resources */,
+				E762614828400839000A80FC /* InfoPlist.strings in Resources */,
 				E7F29BEF2837DB3C005792DA /* lv_A.txt in Resources */,
 				E7F29BCD2837DB3C005792DA /* LV.pdf in Resources */,
 				E7F29BD32837DB3C005792DA /* en-GB_G.txt in Resources */,
@@ -868,6 +879,7 @@
 				E7F29BEE2837DB3C005792DA /* lv_G.txt in Resources */,
 				E73463272839323700265F8F /* Media.xcassets in Resources */,
 				E736C9B1283FE64A001F2C2C /* Localizable.strings in Resources */,
+				E762614928400839000A80FC /* InfoPlist.strings in Resources */,
 				E7F29BE42837DB3C005792DA /* fr_A.txt in Resources */,
 				E7F29BF02837DB3C005792DA /* lv_A.txt in Resources */,
 				E7F29BCE2837DB3C005792DA /* LV.pdf in Resources */,
@@ -1112,6 +1124,16 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
+		E762614B28400839000A80FC /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E762614A28400839000A80FC /* en */,
+				E762614C2840083A000A80FC /* fr */,
+				E762614D2840083B000A80FC /* lv */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1237,10 +1259,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "SimpleWordGame (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_TEAM = FN5YR78T7X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Wordlike;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.word-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1274,10 +1297,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "SimpleWordGame (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_TEAM = FN5YR78T7X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Wordlike;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.word-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

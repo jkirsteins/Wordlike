@@ -5,3 +5,6 @@
   Created by Janis Kirsteins on 26/05/2022.
   
 */
+
+"CFBundleDisplayName" = "Wordlike";
+"CFBundleName" = "Wordlike";
