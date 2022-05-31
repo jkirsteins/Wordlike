@@ -27,10 +27,28 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
         return view
     }
     
+    class _VC: UIViewController {
+        let coordinator: Coordinator
+        
+        init(_ coordinator: Coordinator) {
+            self.coordinator = coordinator
+            super.init(nibName: nil, bundle: nil)
+        }
+        
+        @available(*, unavailable)
+        required init?(coder: NSCoder) {
+            fatalError("This class does not support NSCoder")
+        }
+        
+        override func viewWillDisappear(_ animated: Bool) {
+            self.coordinator.dismissed()
+        }
+    }
+    
     func updateUIView(_ uiView: UIView, context: Context) {
         
         // Create the UIViewController that will be presented by the UIButton
-        let viewController = UIViewController()
+        let viewController = _VC(context.coordinator)
         
         // Create the UIHostingController that will embed the SwiftUI View
         let hostingController = UIHostingController(rootView: content)
@@ -54,10 +72,6 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
             sheetController.prefersScrollingExpandsWhenScrolledToEdge = false
             sheetController.largestUndimmedDetentIdentifier = .none
         }
-        
-        // We need transitioning delegate to detect
-        // dismiss-by-button and dismiss-by-swipe
-        viewController.transitioningDelegate = context.coordinator
         
         if !isPresented, let presentedVc = context.coordinator.presenterVc?.presentedViewController {
             presentedVc.dismiss(animated: true)
@@ -85,7 +99,6 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
         } else {
             if let presentedVc = context.coordinator.presenterVc?.presentedViewController {
                 presentedVc.dismiss(animated: true)
-                context.coordinator.presenterVc = nil
             }
         }
     }
@@ -109,16 +122,14 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
             self.onDismiss = onDismiss
         }
         
-        func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        /// This is called by the ViewController when its view is unloaded.
+        /// Alternatively, you might want to use `animationController(forDismissed dismissed: UIViewController)` but this appears to be less reliable (rarely not called on real devices)
+        func dismissed() {
             isPresented = false
             presenterVc = nil
             onDismiss?()
-            
-            return nil
         }
-        
     }
-    
 }
 
 // 2 - Create the SwiftUI modifier conforming to the ViewModifier protocol

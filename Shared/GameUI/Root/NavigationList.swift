@@ -303,6 +303,7 @@ struct NavigationList: View {
     var envDebug: Bool
     
     @Binding var outerDebug: Bool
+    @Binding var isSharing: Bool
     
     @Environment(\.palette)
     var palette: Palette
@@ -422,7 +423,7 @@ struct NavigationList: View {
             }
             .debugBorder(.red)
             
-            Footer(shareCallback: shareCallback)
+            Footer(shareCallback: shareCallback, isSharing: $isSharing)
                 .debugBorder(.green)
             
         }
@@ -467,6 +468,9 @@ struct Footer: View {
     var isSimplifiedLatvianKeyboard: Bool = false
     
     let shareCallback: ()->()
+    
+    /// Is the share sheet currently open or not (for disabling the button)
+    @Binding var isSharing: Bool
     
     func gameLocale(_ loc: Locale) -> GameLocale? {
         switch(loc.identifier) {
@@ -528,12 +532,11 @@ struct Footer: View {
                                 .fixedSize(horizontal: false, vertical: true )
 #endif
                                 .font(.caption)
-                                .foregroundColor(.primary)
                         }
                     }
                     .safeTint(.primary)
                 })
-                .disabled(self.isSharingDisabled)
+                .disabled(self.isSharingDisabled || self.isSharing)
             }
             Spacer()
         }
