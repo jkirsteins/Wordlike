@@ -87,6 +87,7 @@ extension View {
                     ActivityViewController(
                         activityItems: activityItems,
                         callback: callback)
+                    .ignoresSafeArea()
                 }))
         } else {
             return AnyView(
@@ -94,7 +95,7 @@ extension View {
                 ActivityViewController(
                     activityItems: activityItems,
                     callback: callback)
-
+                .ignoresSafeArea()
             }))
         }
     }

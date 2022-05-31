@@ -55,12 +55,12 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
             sheetController.largestUndimmedDetentIdentifier = .none
         }
         
-        // We need transitioning delegate to detect 
+        // We need transitioning delegate to detect
         // dismiss-by-button and dismiss-by-swipe
         viewController.transitioningDelegate = context.coordinator
         
         if !isPresented, let presentedVc = context.coordinator.presenterVc?.presentedViewController {
-                presentedVc.dismiss(animated: true)
+            presentedVc.dismiss(animated: true)
             return
         }
         
@@ -71,25 +71,23 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
          
          When dismissing, look for the last VC that presents something, and assume it is us.
          */
-        if isPresented && viewController.presentingViewController == nil {
-            
-            // Store a ref to the presented VC so we
-            // can dismiss
-            
-            if let alreadyPresented = uiView.window?.rootViewController?.presentedViewController {
-                context.coordinator.presenterVc = alreadyPresented
-            } else {
-                // Present the viewController
-                context.coordinator.presenterVc = uiView.window?.rootViewController
+        if isPresented {
+            if context.coordinator.presenterVc == nil {
+                if let alreadyPresentedByRoot = uiView.window?.rootViewController?.presentedViewController {
+                    context.coordinator.presenterVc = alreadyPresentedByRoot
+                } else {
+                    // Present the viewController
+                    context.coordinator.presenterVc = uiView.window?.rootViewController
+                }
+                
+                context.coordinator.presenterVc?.present(viewController, animated: true)
             }
-            
-            context.coordinator.presenterVc?.present(viewController, animated: true)
         } else {
             if let presentedVc = context.coordinator.presenterVc?.presentedViewController {
                 presentedVc.dismiss(animated: true)
+                context.coordinator.presenterVc = nil
             }
         }
-        
     }
     
     /* Creates the custom instance that you use to communicate changes
@@ -112,7 +110,8 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
         }
         
         func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-            isPresented = false 
+            isPresented = false
+            presenterVc = nil
             onDismiss?()
             
             return nil
