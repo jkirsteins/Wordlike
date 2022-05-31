@@ -88,3 +88,49 @@ The source code is freely available." = "Spēles izejas kods ir brīvi pieejams.
 "Toggle debug mode" = "Izstrādes režīms";
 
 "Rummaging in the sack for a new word..." = "Meklējam jauno vārdu...";
+
+"Not enough letters" = "Vārds ir pārāk īss";
+
+"Not in word list" = "Vārds nav atpazīts";
+
+"Wait a sec, loading words..." = "Lūdzu, uzgaidiet. Ielādējam vārdus...";
+
+"Seriously?" = "Nopietni?";
+
+"Sure, keep doing the same thing..." = "Varbūt nevajag visu laiku vienu un to pašu?";
+
+"I promise the outcome won't change" = "Iznākums nemainīsies. Apsolu.";
+
+"Persistance won't pay off this time" = "Pacietība vienmēr neatmaksājas";
+
+"Consider doing something else" = "Varbūt pamēģini ko citu...";
+
+"What do you seek?" = "Ko vēlaties panākt?";
+
+"I'll be sick from all the shaking..." = "Uzmanīgi, ka nepaliek slikti no kratīšanās...";
+
+"I promise you that is not a valid word" = "Tas nav derīgs vārds. Nemānos. Nopietni.";
+
+"You can do better than that" = "Ticu, ka vari izdomāt ko labāku!";
+
+"There is no prize for the most clicks" = "Par klikšķiem balvas nedod";
+
+"Phew!" = "Kritienā!";
+"Great" = "Nav slikti";
+"Splendid" = "Ļoti labi";
+"Impressive" = "Iespaidīgi";
+"Magnificent" = "Lieliski";
+"Genius" = "Ģeniāli";
+
+// E.g. "Minējumā jābūt burtam E"
+"Guess must contain %@" = "Minējumā jābūt burtam %@";
+
+// E.g. "2. burtam jābūt E"
+"%@ must be %@" = "%@ jābūt %@";
+
+"1st letter" = "1. burtam";
+"2nd letter" = "2. burtam";
+"3rd letter" = "3. burtam";
+"4th letter" = "4. burtam";
+"5th letter" = "5. burtam";
+
