@@ -4397,6 +4397,12 @@ bērnu
 bērnā
 bēros
 bērsi
+bērta
+bērti
+bērto
+bērts
+bērtu
+bērtā
 bērum
 bērus
 bērza
