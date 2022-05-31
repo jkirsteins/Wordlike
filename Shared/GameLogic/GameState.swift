@@ -83,13 +83,14 @@ class GameState : ObservableObject, Identifiable, Equatable
         
         /* When a row is submitted, we'll refresh
         certain properties - such as keyboard hints */
-        self._rows.projectedValue.map {
-            $0.submittedCount
-        }.removeDuplicates()
+        self._rows.projectedValue
+            .removeDuplicates(by: {
+                $0.submittedCount == $1.submittedCount
+            })
             .sink {
-            _ in
+            newRows in
               
-            self.keyboardHints = self.calculateKeyboardHints()
+                self.keyboardHints = self.calculateKeyboardHints(from: newRows)
         }.store(in: &cancellables)
     }
 }

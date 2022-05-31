@@ -1,10 +1,10 @@
 import SwiftUI
 
 extension GameState {
-    func calculateKeyboardHints() -> KeyboardHints {
+    func calculateKeyboardHints(from newRows: [RowModel]) -> KeyboardHints {
         var result: Dictionary<CharacterModel, TileBackgroundType> = [:]
         
-        let submittedRows = rows.filter({ $0.isSubmitted })
+        let submittedRows = newRows.filter({ $0.isSubmitted })
         
         for srow in submittedRows {
             for ix in 0..<srow.word.count {
