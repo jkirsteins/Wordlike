@@ -24,7 +24,7 @@ struct KeyboardContainer<Content: View> : View {
         VStack(spacing: spacing) {
             content()
         }
-        /* Padding must come before 
+        /* Padding must come before
         wrapping in ideal/max size frame */
         .frame(
             idealWidth: rootGeometry?.size.width,

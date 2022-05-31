@@ -310,37 +310,36 @@ struct GameHost: View {
     var bodyUnconstrained: some View {
         VStack {
             if let game = turnDataToDisplay {
-                    ZStack {
+                ZStack {
 #if os(iOS)
-                        /// Allow input from keyboard
-                        /// on iPad and macOS Catalyst
-                        ///
-                        /// Put behind other views to not
-                        /// obscure input (that can break
-                        /// context menus e.g.)
-                        HardwareKeyboardInput(
-                            focusRequests: globalTapCount)
-                        .debugBorder(.red)
+                    /// Allow input from keyboard
+                    /// on iPad and macOS Catalyst
+                    ///
+                    /// Put behind other views to not
+                    /// obscure input (that can break
+                    /// context menus e.g.)
+                    HardwareKeyboardInput(
+                        focusRequests: globalTapCount)
+                    .debugBorder(.red)
 #endif
-                        
-                        GameBoard(
-                            state: game,
-                            earlyCompleted: turnCompletedBeforeAnimations,
-                            completed: turnCompletedAfterAnimations
-                        )
-                        .onChange(of: game.rows, perform: turnStateChanged)
-                        .contentShape(Rectangle())
-                    }
                     
-                    if debugViz {
-                        Text(dailyState?.expected.displayValue ?? "none")
-                    }
-                    
-                    keyboardView
-                        .environment(
-                            \.keyboardSubmitEnabled,
-                             validator.ready)
+                    GameBoard(
+                        state: game,
+                        earlyCompleted: turnCompletedBeforeAnimations,
+                        completed: turnCompletedAfterAnimations
+                    )
+                    .onChange(of: game.rows, perform: turnStateChanged)
+                    .contentShape(Rectangle())
+                }
                 
+                if debugViz {
+                    Text(dailyState?.expected.displayValue ?? "none")
+                }
+                
+                keyboardView
+                    .environment(
+                        \.keyboardSubmitEnabled,
+                         validator.ready)
             }
             
             if

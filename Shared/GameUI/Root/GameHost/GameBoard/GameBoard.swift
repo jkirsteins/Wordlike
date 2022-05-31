@@ -40,8 +40,8 @@ struct GameBoard: View {
     @State var didEarlyRespond = false
     
     @ObservedObject var state: GameState
-    let earlyCompleted: ((GameState)->())? 
-    let completed: ((GameState)->())? 
+    let earlyCompleted: ((GameState)->())?
+    let completed: ((GameState)->())?
     
     func allSubmitted(until row: Int) -> Bool {
         if row == 0 {
@@ -53,8 +53,8 @@ struct GameBoard: View {
     }
     
     func canEdit(row: Int) -> Bool {
-        return allSubmitted(until: row) && !state.rows[row].isSubmitted 
-    } 
+        return allSubmitted(until: row) && !state.rows[row].isSubmitted
+    }
     
     func recalculateActive() {
         for ix in 0..<state.rows.count {
@@ -65,10 +65,10 @@ struct GameBoard: View {
         }
     }
     
-    #if os(iOS)
-    @Environment(\.verticalSizeClass) 
+#if os(iOS)
+    @Environment(\.verticalSizeClass)
     var verticalSizeClass
-    #endif
+#endif
     
     @Environment(\.debug)
     var debug: Bool
@@ -76,11 +76,11 @@ struct GameBoard: View {
     /// If we have a small view, then spacing should be reduced
     /// (e.g. horizontal compact)
     var vspacing: CGFloat {
-        #if os(iOS)
+#if os(iOS)
         if verticalSizeClass == .compact {
             return GridPadding.compact
         }
-        #endif
+#endif
         
         return GridPadding.normal
     }
@@ -88,25 +88,27 @@ struct GameBoard: View {
     var body: some View {
         VStack(spacing: vspacing) {
             ForEach(0..<state.rows.count, id: \.self) {
-                ix in 
+                ix in
                 
-                EditableRow(
-                    editable: !state.isCompleted,
-                    delayRowIx: ix,
-                    model: $state.rows[ix], 
-                    tag: ix,
-                    isActive: $isActive,
-                    keyboardHints: state.keyboardHints)
+                if state.rows.count > ix {
+                    EditableRow(
+                        editable: !state.isCompleted,
+                        delayRowIx: ix,
+                        model: $state.rows[ix],
+                        tag: ix,
+                        isActive: $isActive,
+                        keyboardHints: state.keyboardHints)
+                }
             }
         }
         .environmentObject(vm)
         .onReceive(
             self.vm.$didEarlyFinish
         ) { def in
-            guard 
+            guard
                 def,
                 let earlyCallback = earlyCompleted,
-                !didEarlyRespond, 
+                !didEarlyRespond,
                     state.isCompleted
             else {
                 return
@@ -124,10 +126,10 @@ struct GameBoard: View {
             
             /* If we lose, do callback
              without waiting */
-            guard 
+            guard
                 df,
                 let callback = completed,
-                !didRespond, 
+                !didRespond,
                     state.isCompleted
             else {
                 return
@@ -160,8 +162,8 @@ fileprivate struct InternalPreview: View
     var body: some View {
         VStack {
             GameBoard(
-                state: state, 
-                earlyCompleted: nil, 
+                state: state,
+                earlyCompleted: nil,
                 completed: nil)
             Button("Reset") {
                 self.state =     GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: .en_US, validator: WordValidator(locale: .en_US)))

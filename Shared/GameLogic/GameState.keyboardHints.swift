@@ -1,7 +1,7 @@
 import SwiftUI
 
 extension GameState {
-    var keyboardHints: KeyboardHints {
+    func calculateKeyboardHints() -> KeyboardHints {
         var result: Dictionary<CharacterModel, TileBackgroundType> = [:]
         
         let submittedRows = rows.filter({ $0.isSubmitted })

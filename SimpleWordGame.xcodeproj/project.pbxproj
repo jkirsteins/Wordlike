@@ -31,6 +31,7 @@
 		E7626155284022EF000A80FC /* LV.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B272837DB3B005792DA /* LV.pdf */; };
 		E7626156284022F4000A80FC /* FR.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2D2837DB3B005792DA /* FR.pdf */; };
 		E7626157284022F7000A80FC /* GB.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B302837DB3B005792DA /* GB.pdf */; };
+		E762615928467443000A80FC /* DoubleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E762615828467443000A80FC /* DoubleExtensions.swift */; };
 		E7F29BA12837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA22837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA32837DB3C005792DA /* ShowFocusHint_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B102837DB3A005792DA /* ShowFocusHint_Env.swift */; };
@@ -256,6 +257,7 @@
 		E762614A28400839000A80FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E762614C2840083A000A80FC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E762614D2840083B000A80FC /* lv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lv; path = lv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E762615828467443000A80FC /* DoubleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtensions.swift; sourceTree = "<group>"; };
 		E7F299612837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299672837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299692837DABB005792DA /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
@@ -498,6 +500,7 @@
 				E7F29B232837DB3B005792DA /* CalendarExtensions.swift */,
 				E70D82012837E3D500D4F2FF /* UIImageExtensions.swift */,
 				E70D82032837EDC100D4F2FF /* NSColorExtensions.swift */,
+				E762615828467443000A80FC /* DoubleExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1009,6 +1012,7 @@
 				E7F29BF62837DB3C005792DA /* DarkHCPalette.swift in Sources */,
 				E7F29C482837DB3C005792DA /* LatvianKeyboard.swift in Sources */,
 				E736C9A9283FCF11001F2C2C /* AppStoreCompat.swift in Sources */,
+				E762615928467443000A80FC /* DoubleExtensions.swift in Sources */,
 				E7F29C762837DB3D005792DA /* GameBoard.swift in Sources */,
 				E7F29C322837DB3C005792DA /* PulseModifier.swift in Sources */,
 				E7F29C962837DB3D005792DA /* WordModel.swift in Sources */,
