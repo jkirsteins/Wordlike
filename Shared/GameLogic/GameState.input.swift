@@ -63,7 +63,7 @@ extension GameState {
             return
         }
         
-        var message: String? = nil
+        var message: LocalizedStringKey? = nil
         defer {
             if let newMessage = message {
                 toastMessageCenter.set(newMessage)

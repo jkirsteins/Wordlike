@@ -119,7 +119,7 @@ struct Row: View
     var palette: Palette
     
     func tileConfig(for ix: Int) -> TileConfig {
-        var unused: String? = nil
+        var unused: LocalizedStringKey? = nil
         var colorOverride: Color? = nil
         
         if !model.isSubmitted,

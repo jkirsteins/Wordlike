@@ -47,14 +47,14 @@ The source code is freely available." = "Le code source est disponible sur GitHu
 
 "Statistics" = "Statistiques";
 
-"Played" = "Parties";
-"Current Streak" = "Victoires d'affilée";
+"Played" = "Partie(s)";
+"Current Streak" = "Victoire(s) d'affilée";
 "Max Streak" = "Max. d'affilée";
 
 "Answer" = "Bonne réponse";
 "See definition" = "Voir la définition";
 
-"Guess Distribution" = "L'histoire";
+"Guess Distribution" = "L'historique";
 "Next word" = "Mot suivant";
 
 "Share" = "Partager";
@@ -74,7 +74,7 @@ The source code is freely available." = "Le code source est disponible sur GitHu
 
 "The letter **I** is in the word but in a different spot." = "La lettre I est dans le mot mais à un endroit différent.";
 
-"The letter **U** is not in the word in any spot." = "La lettre U n'est dans le mot à aucun endroit.";
+"The letter **U** is not in the word in any spot." = "La lettre U n'est dans le mot.";
 
 "A new word is available every day." = "Un nouveau mot est disponible chaque jour.";
 
@@ -83,3 +83,49 @@ The source code is freely available." = "Le code source est disponible sur GitHu
 "Toggle debug mode" = "Mode débogage";
 
 "Rummaging in the sack for a new word..." = "À la recherche d'un nouveau mot...";
+
+"Not enough letters" = "Mot trop court";
+
+"Not in word list" = "Mot non reconnu";
+
+"Wait a sec, loading words..." = "Préparation du vocabulaire...";
+
+"Seriously?" = "Sérieusement?";
+
+"Sure, keep doing the same thing..." = "Bien sûr, continuez à faire la même chose...";
+
+"I promise the outcome won't change" = "Je promets que le résultat ne changera pas";
+
+"Persistance won't pay off this time" = "La persistance ne paiera pas";
+
+"Consider doing something else" = "Pensez à faire autre chose";
+
+"What do you seek?" = "Que cherchez-vous?";
+
+"I'll be sick from all the shaking..." = "Je vais être malade à cause de toutes ces secousses...";
+
+"I promise you that is not a valid word" = "Je ne pense vraiment pas que ce soit un mot valable";
+
+"You can do better than that" = "Tu peux faire mieux que ça";
+
+"There is no prize for the most clicks" = "Il n'y a pas de prix pour le plus de clics";
+
+"Phew!" = "Ouf!";
+"Great" = "Génial";
+"Splendid" = "Très beau";
+"Impressive" = "Impressionant";
+"Magnificent" = "Magnifique";
+"Genius" = "Génial";
+
+// E.g. "La conjecture doit contenir E"
+"Guess must contain %@" = "La conjecture doit contenir %@";
+
+// E.g. "La 5ème lettre doit etre E"
+"%@ must be %@" = "La %@ doit être %@";
+
+"1st letter" = "1ère lettre";
+"2nd letter" = "2ème lettre";
+"3rd letter" = "3ème lettre";
+"4th letter" = "4ème lettre";
+"5th letter" = "5ème lettre";
+

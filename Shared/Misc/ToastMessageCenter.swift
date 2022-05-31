@@ -5,7 +5,7 @@ import SwiftUI
 /// for the same message).
 struct ToastMessage : Equatable {
     let id = UUID() 
-    let message: String 
+    let message: LocalizedStringKey
 }
 
 /// Class to propogate messages from child views
@@ -20,9 +20,9 @@ class ToastMessageCenter : ObservableObject {
     
     /// Requested message might be overridden
     /// with an easter-egg message
-    var requestedMessage: String? = nil
+    var requestedMessage: LocalizedStringKey? = nil
     
-    let jokeMessages = [
+    let jokeMessages: [LocalizedStringKey] = [
         "Seriously?",
         "Sure, keep doing the same thing...",
         "I promise the outcome won't change",
@@ -41,7 +41,7 @@ class ToastMessageCenter : ObservableObject {
     
     /// We want to keep a joke message around for a while, to give
     /// the user the time to read it.
-    var currentJoke: String? = nil
+    var currentJoke: LocalizedStringKey? = nil
     
     /// This triggers rollover for joke index
     var countSame: Int = 0
@@ -50,7 +50,7 @@ class ToastMessageCenter : ObservableObject {
     /// a random joke to ensure every joke gets equal screentime)
     var jokeIndex: Int = 0
     
-    func set(_ message: String) {
+    func set(_ message: LocalizedStringKey) {
         defer {
             requestedMessage = message
         }

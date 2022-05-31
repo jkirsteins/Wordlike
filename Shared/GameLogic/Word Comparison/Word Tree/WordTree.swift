@@ -11,7 +11,7 @@ fileprivate class BranchNode {
 //}
 
 fileprivate struct ErrorReason {
-    let reason: String
+    let reason: LocalizedStringKey
     let depth: Int
 }
 
@@ -164,7 +164,7 @@ class WordTree {
     }
     
     func contains(_ word: String) -> WordModel? {
-        var reason: String? = nil
+        var reason: LocalizedStringKey? = nil
         return contains(
             word: WordModel(word, locale: locale),
             mustMatch: nil, 
@@ -175,7 +175,7 @@ class WordTree {
     func contains(
         word: String, 
         mustMatch model: [RowModel]?,
-        reason: inout String?
+        reason: inout LocalizedStringKey?
     ) -> WordModel?
     {
         contains(
@@ -187,7 +187,7 @@ class WordTree {
     func contains(
         word: WordModel, 
         mustMatch model: [RowModel]?,
-        reason: inout String?
+        reason: inout LocalizedStringKey?
     ) -> WordModel? {
         let constraints: Constraints?
         if let model = model {

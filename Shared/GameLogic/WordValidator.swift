@@ -1,4 +1,5 @@
 import SwiftUI
+import Foundation
 
 class WordValidator : ObservableObject
 {
@@ -7,7 +8,8 @@ class WordValidator : ObservableObject
             return "Letter \(ix+1)"
         }
         
-        return "\(ordinal) letter"
+        let result = "\(ordinal) letter"
+        return NSLocalizedString(result, comment: "")
     }
     
     static func testing(_ words: [String]) -> WordValidator {
@@ -40,7 +42,7 @@ class WordValidator : ObservableObject
         expected: WordModel,
         model: [RowModel]?,
         mustMatchKnown: Bool,    // e.g. hard mode
-        reason: inout String?) -> WordModel? {
+        reason: inout LocalizedStringKey?) -> WordModel? {
             
             if word == expected {
                 reason = nil
@@ -147,7 +149,7 @@ struct InternalLetterNumberMessageTest: View {
         ])
         let expected = WordModel("plūka", locale: .lv_LV)
         
-        var reason: String? = nil
+        var reason: LocalizedStringKey? = nil
         let result = validator.canSubmit(
             word: word, 
             expected: expected, 
@@ -159,7 +161,7 @@ struct InternalLetterNumberMessageTest: View {
             Text("Can submit ambiguous and have it match the expected")
             Text("Expected: \(expected.displayValue)")
             Text("Got: \(result?.displayValue ?? "none")").testColor(good: result?.displayValue == "plūka")
-            Text("Reason: \(reason ?? "none")").testColor(good: reason == nil)
+            Text("Reason: \(String(describing: reason))").testColor(good: reason == nil)
         })
     }
     

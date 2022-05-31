@@ -26,7 +26,7 @@ struct InternalWordTreeTestView: View {
                 
                 Test(
                     "Test that ambiguous matching prefers expected word", 
-                    { () -> (WordModel?, String?) in
+                    { () -> (WordModel?, LocalizedStringKey?) in
                         let w = WordTree(locale: .lv_LV)
                         let _ = w.add(word: "pluka") 
                         let _ = w.add(word: "plūka")
@@ -39,7 +39,7 @@ struct InternalWordTreeTestView: View {
                             MultiCharacterModel("a", locale: .lv_LV),
                         ])
                         
-                        var reason: String? = nil
+                        var reason: LocalizedStringKey? = nil
                         let result = w.contains(word: word, mustMatch: nil, reason: &reason)
                         
                         return (result, reason)
@@ -72,7 +72,7 @@ struct InternalWordTreeTestView: View {
                             MultiCharacterModel("k", locale: .lv_LV),
                             MultiCharacterModel("a", locale: .lv_LV),
                         ])
-                        var reason: String? = nil
+                        var reason: LocalizedStringKey? = nil
                         let _ = w.add(word: "svīka")
                         let _ = w.add(word: "švīka")
                         let found = w.contains(
@@ -87,7 +87,7 @@ struct InternalWordTreeTestView: View {
                 }
             }
             
-            Test("Constraints - ignore unsubmitted rows", { () -> (WordModel?, String?) in
+            Test("Constraints - ignore unsubmitted rows", { () -> (WordModel?, LocalizedStringKey?) in
                 let expected = "broth"
                 let w = WordTree(locale: .en_US)
                 
@@ -104,7 +104,7 @@ struct InternalWordTreeTestView: View {
                         isSubmitted: false)
                 ]
                 
-                var reason: String? = nil
+                var reason: LocalizedStringKey? = nil
                 let found = w.contains(word: "blobs", mustMatch: model, reason: &reason)
                 return (found, reason)
             }) { data in 
@@ -112,7 +112,7 @@ struct InternalWordTreeTestView: View {
                 Text(verbatim: "Reason: \(data.1 ?? "none")").testColor(good: data.1 == nil)
             }
             
-            Test("Constraints - mention green ahead of yellow", { () -> (WordModel?, String?) in
+            Test("Constraints - mention green ahead of yellow", { () -> (WordModel?, LocalizedStringKey?) in
                 
                 let w = WordTree(locale: .en_US)
                 
@@ -129,7 +129,7 @@ struct InternalWordTreeTestView: View {
                         isSubmitted: true)
                 ]
                 
-                var reason: String? = nil
+                var reason: LocalizedStringKey? = nil
                 let found = w.contains(word: "blobs", mustMatch: model, reason: &reason)
                 return (found, reason)
             }) { data in 
@@ -137,7 +137,7 @@ struct InternalWordTreeTestView: View {
                 Text(verbatim: "Reason: \(data.1 ?? "none")").testColor(good: data.1 == "2nd letter must be R")
             }
             
-            Test("Constraints - keep the deepest constraint message - match at index", { () -> (WordModel?, String?) in 
+            Test("Constraints - keep the deepest constraint message - match at index", { () -> (WordModel?, LocalizedStringKey?) in
                 
                 let w = WordTree(locale: .lv_LV)
                 
@@ -168,7 +168,7 @@ struct InternalWordTreeTestView: View {
                     MultiCharacterModel("U", locale: w.locale),
                 ])
                 
-                var reason: String? = nil
+                var reason: LocalizedStringKey? = nil
                 let found = w.contains(
                     word: trySubmit, 
                     mustMatch: model, 
@@ -180,7 +180,7 @@ struct InternalWordTreeTestView: View {
                     .testColor(good: data.1 == "2nd letter must be O")
             }
             
-            Test("Constraints - don't show wrong message when word doesn't exist", { () -> (WordModel?, String?) in 
+            Test("Constraints - don't show wrong message when word doesn't exist", { () -> (WordModel?, LocalizedStringKey?) in
                 
                 let w = WordTree(locale: .lv_LV)
                 
@@ -213,7 +213,7 @@ struct InternalWordTreeTestView: View {
                     MultiCharacterModel("E", locale: w.locale),
                 ])
                 
-                var reason: String? = nil
+                var reason: LocalizedStringKey? = nil
                 let found = w.contains(
                     word: trySubmit, 
                     mustMatch: model, 
@@ -225,7 +225,7 @@ struct InternalWordTreeTestView: View {
                     .testColor(good: data.1 == "Not in word list")
             }
             
-            Test("Constraints - keep the deepest constraint message - contain", { () -> (WordModel?, String?) in 
+            Test("Constraints - keep the deepest constraint message - contain", { () -> (WordModel?, LocalizedStringKey?) in
                 
                 let w = WordTree(locale: .lv_LV)
                 
@@ -256,7 +256,7 @@ struct InternalWordTreeTestView: View {
                     MultiCharacterModel("U", locale: w.locale),
                 ])
                 
-                var reason: String? = nil
+                var reason: LocalizedStringKey? = nil
                 let found = w.contains(
                     word: trySubmit, 
                     mustMatch: model, 
@@ -268,7 +268,7 @@ struct InternalWordTreeTestView: View {
                     .testColor(good: data.1 == "Guess must contain O")
             }
             
-            Test("Constraints - mention yellow", { () -> (WordModel?, String?) in
+            Test("Constraints - mention yellow", { () -> (WordModel?, LocalizedStringKey?) in
                 
                 let w = WordTree(locale: .en_US)
                 
@@ -284,7 +284,7 @@ struct InternalWordTreeTestView: View {
                         isSubmitted: true)
                 ]
                 
-                var reason: String? = nil
+                var reason: LocalizedStringKey? = nil
                 let found = w.contains(
                     word: "glade", 
                     mustMatch: model, 
@@ -308,7 +308,7 @@ struct InternalWordTreeTestView: View {
                 
                 // prepare models
                 let toFind = WordModel("žagas", locale: .lv_LV)
-                var reason: String? = nil
+                var reason: LocalizedStringKey? = nil
                 
                 let start = Date()
                 let found = wt.contains(word: toFind, mustMatch: nil, reason: &reason)

@@ -167,7 +167,7 @@ struct GameHost: View {
             if let toastMessage = toastMessageCenter.message {
                 VStack {
                     Spacer().frame(maxHeight: 24)
-                    Text(verbatim: "\(toastMessage.message)")
+                    Text(toastMessage.message)
                         .foregroundColor(palette.toastForeground)
                         .fontWeight(.bold)
                         .padding(16)
@@ -241,10 +241,10 @@ struct GameHost: View {
                 
                 if !newState.isWon {
                     // When losing, show the word
-                    toastMessageCenter.set(dailyState.expected.displayValue)
+                    toastMessageCenter.set(LocalizedStringKey(dailyState.expected.displayValue))
                 } else {
                     // When winning, show a flavor message
-                    let message: String?
+                    let message: LocalizedStringKey?
                     
                     switch (newState.submittedRows) {
                     case 6: message = "Phew!"
