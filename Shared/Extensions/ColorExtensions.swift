@@ -3,14 +3,14 @@ import SwiftUI
 /// Helpers for Color to get the right colors for
 /// tiles or keyboard button colors.
 extension Color {
-    static var random: Color {
-        Color(
-           red:   .random(),
-           green: .random(),
-           blue:  .random()
+    static var random: Color {        
+        return Color(
+            red:    Double.random,
+            green:  Double.random,
+            blue:   Double.random
         )
     }
-
+    
     static func keyboardFill(for type: TileBackgroundType?, from palette: Palette) -> Color {
         
         guard let type = type else {

@@ -32,6 +32,7 @@
 		E7626156284022F4000A80FC /* FR.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B2D2837DB3B005792DA /* FR.pdf */; };
 		E7626157284022F7000A80FC /* GB.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B302837DB3B005792DA /* GB.pdf */; };
 		E762615928467443000A80FC /* DoubleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E762615828467443000A80FC /* DoubleExtensions.swift */; };
+		E762615A28467630000A80FC /* DoubleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E762615828467443000A80FC /* DoubleExtensions.swift */; };
 		E7F29BA12837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA22837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA32837DB3C005792DA /* ShowFocusHint_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B102837DB3A005792DA /* ShowFocusHint_Env.swift */; };
@@ -968,6 +969,7 @@
 				E7F29C412837DB3C005792DA /* EstonianKeyboard.swift in Sources */,
 				E7F29C712837DB3D005792DA /* Row.swift in Sources */,
 				E7F29C932837DB3D005792DA /* WordValidator.swift in Sources */,
+				E762615A28467630000A80FC /* DoubleExtensions.swift in Sources */,
 				E7F29C552837DB3D005792DA /* SettingsView.swift in Sources */,
 				E7F29C912837DB3D005792DA /* Stats.swift in Sources */,
 				E7F29C052837DB3C005792DA /* LightPalette.swift in Sources */,
