@@ -6,75 +6,80 @@
   
 */
 
-//"Share a summary" = "Partager un résumé";
-//"Share a summary for every game you have completed today." = "Partagez un résumé pour chaque jeu que vous avez terminé aujourd'hui.";
-//
-//"Completed" = "Atteint";
-//"Not started" = "Pas commencé";
-//"Unsuccessful" = "Échouée";
-//"In progress" = "En cours";
-//
-//"Streak" = "Continu";
-//"Win %" = "Victoires (%)";
-//
-//"American" = "Américain";
-//"British" = "Britanique";
-//"Français" = "Français";
-//"Latviski" = "Letton";
-//
-//"Settings" = "Réglages";
-//
-//"High contrast mode" = "Pastiprināts kontrasts";
-//"For improved color vision." = "Atvieglotai burtu atpazīstamībai.";
-//
-//"Hard mode" = "Grūtais režīms";
-//"Any revealed hints must be used in subsequent guesses." = "Ja kāds burts ir atminēts, tad tas ir obligāti jāizmanto nākamajos gājienos.";
-//"Simplified Latvian keyboard" = "Vienkāršotā latviešu tastatūra";
-//"Do not require precise use of diacritics." = "Nav nepieciešams precīzi izmantot mīkstinājuma zīmes.";
-//
-//"Feedback" = "Atsauksmes";
-//"Feedback (manual)" = "Atsauksmes (manuāli)";
-//"Click to copy feedback e-mail address." = "Kopēt e-pasta adresi uz kuru nosūtīt atsauksmes.";
-//
-//"Source code" = "Izejas kods";
-//"This game was created using Swift Playgrounds 4 on an iPad.
-//
-//The source code is freely available." = "Spēles izejas kods ir brīvi pieejams.";
-//
-//"Author" = "Autors";
-//"Made by Jānis Kiršteins." = "Jānis Kiršteins.";
-//
-//"Statistics" = "Statistika";
-//
-//"Played" = "Spēļu skaits";
-//"Current Streak" = "Uzvaras (secīgi)";
-//"Max Streak" = "Uzvaru rekords (secīgi)";
-//
-//"Answer" = "Pareizā atbilde";
-//"See definition" = "Skatīt tēzaurā";
-//
-//"Guess Distribution" = "Izmantotie gājieni";
-//"Next word" = "Jauns vārds pēc";
-//
-//"Share" = "Dalīties";
-//
-//"How to play" = "Kā spēlēt?";
-//
-//"Guess the daily word in 6 tries." = "Uzmini vārdu 6 minējumos.";
-//
-//"Each guess must be a valid five-letter word." = "Katram minējumam jāsastāv no 5 burtiem.";
-//
-//"After each guess, the color of the tiles will change to show you how close your guess was to the word." = "Pēc katra mēģinājuma nomainīsies lauciņu krāsas. Krāsa norādīs, cik tuvu minējums ir pareizajam vārdam.";
-//
-//
-//"Examples" = "Piemēri";
-//
-//"The letter **W** is in the word and in the correct spot." = "Burts Ī ir atminēts pareizi.";
-//
-//"The letter **I** is in the word but in a different spot." = "Burts L ir atminēts pareizi, taču tam jāatrodas citā vietā.";
-//
-//"The letter **U** is not in the word in any spot." = "Burts E pareizajā vārdā nav sastopams.";
-//
-//"A new word is available every day." = "Katru dienu būs jauns minamais vārds.";
-//
-//"Look up" = "Skatīt tēzaurā";
+"Share a summary" = "Partager un résumé";
+"Share a summary for every game you have completed today." = "Partagez un résumé pour chaque jeu que vous avez terminé aujourd'hui.";
+
+"Completed" = "Atteint";
+"Not started" = "Pas commencé";
+"Unsuccessful" = "Échouée";
+"In progress" = "En cours";
+
+"Streak" = "Continu";
+"Win %" = "Victoires (%)";
+
+"American" = "Américain";
+"British" = "Britanique";
+"Français" = "Français";
+"Latviski" = "Letton";
+
+"Settings" = "Réglages";
+
+"High contrast mode" = "Contraste élevé";
+"For improved color vision." = "Pour une meilleure vision des couleurs.";
+
+"Hard mode" = "Mode difficile";
+"Any revealed hints must be used in subsequent guesses." = "Tous les indices révélés doivent être utilisés dans les suppositions ultérieures.";
+
+"Simplified Latvian keyboard" = "Clavier letton simplifié";
+"Do not require precise use of diacritics." = "N'exige pas l'utilisation précise des signes diacritiques.";
+
+"Feedback" = "Donner un avis";
+"Feedback (manual)" = "Donner un avis (manuel)";
+"Click to copy feedback e-mail address." = "Cliquez pour copier l'adresse e-mail de commentaires.";
+
+"Source code" = "Code source";
+"This game was created using Swift Playgrounds 4 on an iPad.
+
+The source code is freely available." = "Le code source est disponible sur GitHub.";
+
+"Author" = "Auteur";
+"Made by Jānis Kiršteins." = "Créé par Jānis Kiršteins.";
+
+"Statistics" = "Statistiques";
+
+"Played" = "Parties";
+"Current Streak" = "Victoires d'affilée";
+"Max Streak" = "Max. d'affilée";
+
+"Answer" = "Bonne réponse";
+"See definition" = "Voir la définition";
+
+"Guess Distribution" = "L'histoire";
+"Next word" = "Mot suivant";
+
+"Share" = "Partager";
+
+"How to play" = "Comment jouer";
+
+"Guess the daily word in 6 tries." = "Devinez le mot du jour en 6 essais.";
+
+"Each guess must be a valid five-letter word." = "Chaque supposition doit être un mot valide de cinq lettres.";
+
+"After each guess, the color of the tiles will change to show you how close your guess was to the word." = "Après chaque supposition, la couleur des tuiles changera pour vous montrer à quel point votre supposition était proche du mot.";
+
+
+"Examples" = "Exemples";
+
+"The letter **W** is in the word and in the correct spot." = "La lettre R est dans le mot et au bon endroit.";
+
+"The letter **I** is in the word but in a different spot." = "La lettre I est dans le mot mais à un endroit différent.";
+
+"The letter **U** is not in the word in any spot." = "La lettre U n'est dans le mot à aucun endroit.";
+
+"A new word is available every day." = "Un nouveau mot est disponible chaque jour.";
+
+"Look up" = "Voir la définition";
+
+"Toggle debug mode" = "Mode débogage";
+
+"Rummaging in the sack for a new word..." = "À la recherche d'un nouveau mot...";

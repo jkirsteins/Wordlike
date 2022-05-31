@@ -59,7 +59,7 @@ The source code is freely available." = "Spēles izejas kods ir brīvi pieejams.
 "Answer" = "Pareizā atbilde";
 "See definition" = "Skatīt tēzaurā";
 
-"Guess Distribution" = "Izmantotie gājieni";
+"Guess Distribution" = "Gājienu sadalījums";
 "Next word" = "Jauns vārds pēc";
 
 "Share" = "Dalīties";
@@ -84,3 +84,7 @@ The source code is freely available." = "Spēles izejas kods ir brīvi pieejams.
 "A new word is available every day." = "Katru dienu būs jauns minamais vārds.";
 
 "Look up" = "Skatīt tēzaurā";
+
+"Toggle debug mode" = "Izstrādes režīms";
+
+"Rummaging in the sack for a new word..." = "Meklējam jauno vārdu...";

@@ -166,6 +166,7 @@ struct StatsView: View {
                                 Text("Share")
                                     .font(Font.system(.body).smallCaps())
                                     .fontWeight(.bold)
+                                    .fixedSize()
                                 
                                 Image(systemName: "square.and.arrow.up")
                             }

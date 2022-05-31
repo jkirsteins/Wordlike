@@ -15,6 +15,14 @@ struct WrongExampleWord: View {
                 AgitatedTile(model: TileModel(letter: "t", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "e", state: .wrongLetter))
             }
+        case Locale.fr_FR.languageCode:
+            HStack {
+                AgitatedTile(model: TileModel(letter: "p", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "l", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "e", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "u", state: .wrongLetter))
+                AgitatedTile(model: TileModel(letter: "r", state: .maskedFilled))
+            }
         default:
             HStack {
                 AgitatedTile(model: TileModel(letter: "v", state: .maskedFilled))
@@ -42,6 +50,14 @@ struct GreenExampleWord: View {
                 AgitatedTile(model: TileModel(letter: "g", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "a", state: .maskedFilled))
             }
+        case Locale.fr_FR.languageCode:
+            HStack {
+                AgitatedTile(model: TileModel(letter: "m", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "e", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "r", state: .rightPlace))
+                AgitatedTile(model: TileModel(letter: "c", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "i", state: .maskedFilled))
+            }
         default:
             HStack {
                 AgitatedTile(model: TileModel(letter: "w", state: .rightPlace))
@@ -68,6 +84,14 @@ struct YellowExampleWord: View {
                 AgitatedTile(model: TileModel(letter: "ū", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "k", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "a", state: .maskedFilled))
+            }
+        case Locale.fr_FR.languageCode:
+            HStack {
+                AgitatedTile(model: TileModel(letter: "f", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "i", state: .wrongPlace))
+                AgitatedTile(model: TileModel(letter: "g", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "u", state: .maskedFilled))
+                AgitatedTile(model: TileModel(letter: "e", state: .maskedFilled))
             }
         default:
             HStack {
