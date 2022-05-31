@@ -5297,10 +5297,13 @@ dugām
 dugās
 dugāt
 dugšu
+dukas
 duksi
 duksī
 dukte
 dukur
+dukām
+dukās
 dukāt
 dukša
 dukši
@@ -16148,6 +16151,7 @@ teļos
 teļus
 ticam
 ticat
+ticis
 ticot
 ticēs
 ticēt
@@ -19536,6 +19540,10 @@ zūdās
 Šauļu
 Špoģi
 Špoģu
+Šreki
+Šreks
+Šreku
+Šrekā
 Šveik
 Šīmus
 Šķibe
