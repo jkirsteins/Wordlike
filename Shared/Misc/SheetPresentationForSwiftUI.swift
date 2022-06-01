@@ -27,12 +27,12 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
         return view
     }
     
-    class _VC: UIViewController {
+    class _VC<Content: View>: UIHostingController<Content> {
         let coordinator: Coordinator
         
-        init(_ coordinator: Coordinator) {
+        init(_ coordinator: Coordinator, rootView: Content) {
             self.coordinator = coordinator
-            super.init(nibName: nil, bundle: nil)
+            super.init(rootView: rootView)
         }
         
         @available(*, unavailable)
@@ -47,23 +47,7 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
     
     func updateUIView(_ uiView: UIView, context: Context) {
         
-        // Create the UIViewController that will be presented by the UIButton
-        let viewController = _VC(context.coordinator)
-        
-        // Create the UIHostingController that will embed the SwiftUI View
-        let hostingController = UIHostingController(rootView: content)
-        
-        // Add the UIHostingController to the UIViewController
-        viewController.addChild(hostingController)
-        viewController.view.addSubview(hostingController.view)
-        
-        // Set constraints
-        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-        hostingController.view.leftAnchor.constraint(equalTo: viewController.view.leftAnchor).isActive = true
-        hostingController.view.topAnchor.constraint(equalTo: viewController.view.topAnchor).isActive = true
-        hostingController.view.rightAnchor.constraint(equalTo: viewController.view.rightAnchor).isActive = true
-        hostingController.view.bottomAnchor.constraint(equalTo: viewController.view.bottomAnchor).isActive = true
-        hostingController.didMove(toParent: viewController)
+        let viewController = _VC(context.coordinator, rootView: content)
         
         // Set the presentationController as a UISheetPresentationController
         if let sheetController = viewController.presentationController as? UISheetPresentationController {
@@ -149,11 +133,8 @@ struct sheetWithDetentsViewModifier<SwiftUIContent>: ViewModifier where SwiftUIC
     }
     
     func body(content: Content) -> some View {
-        ZStack {
-            SheetPresentationForSwiftUI($isPresented,onDismiss: onDismiss, detents: detents) {
-                swiftUIContent
-            }.fixedSize()
-            content
+        SheetPresentationForSwiftUI($isPresented,onDismiss: onDismiss, detents: detents) {
+            swiftUIContent
         }
     }
 }
