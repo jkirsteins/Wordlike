@@ -1,4 +1,5 @@
 import SwiftUI
+import Datadog
 
 struct WrongExampleWord: View {
     
@@ -145,6 +146,12 @@ struct HelpView: View {
         }
         .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.portrait.width)
         .navigationTitle("How to play")
+        .onAppear {
+            Global.rum.startView(key: "HelpView")
+        }
+        .onDisappear {
+            Global.rum.stopView(key: "HelpView")
+        }
     }
     
     struct HelpView_Previews: PreviewProvider {

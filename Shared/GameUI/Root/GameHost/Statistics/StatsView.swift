@@ -1,5 +1,6 @@
 import SwiftUI
 import ConfettiView
+import Datadog
 
 struct ShareButtonStyle: ButtonStyle {
     
@@ -202,6 +203,12 @@ struct StatsView: View {
             self.recalculateNextWord()
         }
         .navigationTitle("Statistics")
+        .onAppear {
+            Global.rum.startView(key: "Statistics")
+        }
+        .onDisappear {
+            Global.rum.stopView(key: "Statistics")
+        }
     }
 }
 

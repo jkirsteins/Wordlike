@@ -1,4 +1,5 @@
 import SwiftUI
+import Datadog
 
 fileprivate enum ActiveSheet {
     case stats
@@ -181,6 +182,12 @@ struct GameHost: View {
             }
         }
         .environment(\.gameLocale, locale)
+        .onAppear {
+            Global.rum.startView(key: "GameHost-\(locale.nativeLocale.identifier)")
+        }
+        .onDisappear {
+            Global.rum.stopView(key: "GameHost-\(locale.nativeLocale.identifier)")
+        }
     }
     
     /// This is called when a row was edited/submitted

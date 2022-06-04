@@ -1,5 +1,6 @@
 import SwiftUI
 import UniformTypeIdentifiers
+import Datadog
 
 fileprivate enum ActiveSheet {
     case mail
@@ -282,6 +283,12 @@ struct SettingsView: View {
             }
         })
 #endif
+        .onAppear {
+            Global.rum.startView(key: "Settings")
+        }
+        .onDisappear {
+            Global.rum.startView(key: "Settings")
+        }
     }
 }
 

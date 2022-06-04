@@ -1,0 +1,13 @@
+//
+//  Config.xcconfig
+//  SimpleWordGame (iOS)
+//
+//  Created by Janis Kirsteins on 04/06/2022.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// This file is excluded from .git.
+// See secrets.xcconfig.template
+#include "secrets.xcconfig"

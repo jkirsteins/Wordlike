@@ -8,6 +8,24 @@
         "revision" : "03ea870a943d9a3426abc52e1731041b6b9f5faf",
         "version" : "1.1.2"
       }
+    },
+    {
+      "identity" : "dd-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Datadog/dd-sdk-ios.git",
+      "state" : {
+        "revision" : "14630ca5ff6997aa82190f68d349f57f0e2a7222",
+        "version" : "1.10.0"
+      }
+    },
+    {
+      "identity" : "plcrashreporter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/microsoft/plcrashreporter.git",
+      "state" : {
+        "revision" : "6b27393cad517c067dceea85fadf050e70c4ceaa",
+        "version" : "1.10.1"
+      }
     }
   ],
   "version" : 2

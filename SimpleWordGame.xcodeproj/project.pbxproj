@@ -33,6 +33,8 @@
 		E7626157284022F7000A80FC /* GB.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B302837DB3B005792DA /* GB.pdf */; };
 		E762615928467443000A80FC /* DoubleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E762615828467443000A80FC /* DoubleExtensions.swift */; };
 		E762615A28467630000A80FC /* DoubleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E762615828467443000A80FC /* DoubleExtensions.swift */; };
+		E798CF70284B915A0003A5C3 /* Datadog in Frameworks */ = {isa = PBXBuildFile; productRef = E798CF6F284B915A0003A5C3 /* Datadog */; };
+		E798CF72284B96D70003A5C3 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E798CF71284B96D70003A5C3 /* Config.xcconfig */; };
 		E7F29BA12837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA22837DB3C005792DA /* RootGeometry_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B0F2837DB3A005792DA /* RootGeometry_Env.swift */; };
 		E7F29BA32837DB3C005792DA /* ShowFocusHint_Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B102837DB3A005792DA /* ShowFocusHint_Env.swift */; };
@@ -259,6 +261,8 @@
 		E762614C2840083A000A80FC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E762614D2840083B000A80FC /* lv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lv; path = lv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E762615828467443000A80FC /* DoubleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtensions.swift; sourceTree = "<group>"; };
+		E798CF71284B96D70003A5C3 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		E798CF73284B97EF0003A5C3 /* SimpleWordGame--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "SimpleWordGame--iOS--Info.plist"; sourceTree = "<group>"; };
 		E7F299612837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299672837DABB005792DA /* Wordlike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordlike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F299692837DABB005792DA /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
@@ -399,6 +403,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E70D82072837F57B00D4F2FF /* ConfettiView in Frameworks */,
+				E798CF70284B915A0003A5C3 /* Datadog in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,6 +428,8 @@
 		E7F299542837DAB9005792DA = {
 			isa = PBXGroup;
 			children = (
+				E798CF73284B97EF0003A5C3 /* SimpleWordGame--iOS--Info.plist */,
+				E798CF71284B96D70003A5C3 /* Config.xcconfig */,
 				E7346324283931AB00265F8F /* SimpleWordGame (iOS).entitlements */,
 				E7F29B3A2837DB3B005792DA /* gh_screenshot.png */,
 				E7F29B392837DB3B005792DA /* README.md */,
@@ -774,6 +781,7 @@
 			name = "SimpleWordGame (iOS)";
 			packageProductDependencies = (
 				E70D82062837F57B00D4F2FF /* ConfettiView */,
+				E798CF6F284B915A0003A5C3 /* Datadog */,
 			);
 			productName = "SimpleWordGame (iOS)";
 			productReference = E7F299612837DABB005792DA /* Wordlike.app */;
@@ -832,6 +840,7 @@
 			mainGroup = E7F299542837DAB9005792DA;
 			packageReferences = (
 				E7F8F8CB2837DF8C001435E0 /* XCRemoteSwiftPackageReference "confetti-view" */,
+				E798CF6E284B915A0003A5C3 /* XCRemoteSwiftPackageReference "dd-sdk-ios" */,
 			);
 			productRefGroup = E7F299622837DABB005792DA /* Products */;
 			projectDirPath = "";
@@ -853,6 +862,7 @@
 				E73463262839323700265F8F /* Media.xcassets in Resources */,
 				E7F29BE32837DB3C005792DA /* fr_A.txt in Resources */,
 				E762614828400839000A80FC /* InfoPlist.strings in Resources */,
+				E798CF72284B96D70003A5C3 /* Config.xcconfig in Resources */,
 				E7F29BEF2837DB3C005792DA /* lv_A.txt in Resources */,
 				E7F29BD32837DB3C005792DA /* en-GB_G.txt in Resources */,
 				E7626157284022F7000A80FC /* GB.pdf in Resources */,
@@ -1246,6 +1256,7 @@
 		};
 		E7F299732837DABB005792DA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E798CF71284B96D70003A5C3 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1259,6 +1270,7 @@
 				DEVELOPMENT_TEAM = FN5YR78T7X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "SimpleWordGame--iOS--Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Wordlike;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.word-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1288,6 +1300,7 @@
 		};
 		E7F299742837DABB005792DA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E798CF71284B96D70003A5C3 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1301,6 +1314,7 @@
 				DEVELOPMENT_TEAM = FN5YR78T7X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "SimpleWordGame--iOS--Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Wordlike;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.word-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1428,6 +1442,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E798CF6E284B915A0003A5C3 /* XCRemoteSwiftPackageReference "dd-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Datadog/dd-sdk-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		E7F8F8CB2837DF8C001435E0 /* XCRemoteSwiftPackageReference "confetti-view" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jkirsteins/confetti-view";
@@ -1443,6 +1465,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E7F8F8CB2837DF8C001435E0 /* XCRemoteSwiftPackageReference "confetti-view" */;
 			productName = ConfettiView;
+		};
+		E798CF6F284B915A0003A5C3 /* Datadog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E798CF6E284B915A0003A5C3 /* XCRemoteSwiftPackageReference "dd-sdk-ios" */;
+			productName = Datadog;
 		};
 		E7F8F8CC2837DF8C001435E0 /* ConfettiView */ = {
 			isa = XCSwiftPackageProductDependency;
