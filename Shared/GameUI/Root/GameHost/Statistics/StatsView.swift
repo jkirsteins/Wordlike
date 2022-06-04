@@ -100,7 +100,7 @@ struct StatsView: View {
                 }
             }
             
-            VStack(spacing: 8) { 
+            VStack(spacing: 8) {
                 Text("Guess Distribution")
                     .font(Font.system(.title).smallCaps())
                     .fontWeight(.bold)
@@ -170,7 +170,8 @@ struct StatsView: View {
                                 
                                 Image(systemName: "square.and.arrow.up")
                             }
-                        }) .buttonStyle(ShareButtonStyle(backgroundColor: palette.rightPlaceFill))
+                        })
+                        .buttonStyle(ShareButtonStyle(backgroundColor: palette.rightPlaceFill))
                     }
                 }
             }

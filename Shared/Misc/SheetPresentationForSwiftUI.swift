@@ -47,7 +47,12 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
     
     func updateUIView(_ uiView: UIView, context: Context) {
         
-        let viewController = _VC(context.coordinator, rootView: content)
+        /* NOTE: careful to not keep creating _VC() instances, as updateUIView can be invoked
+         frequently by SwiftUI. */
+        let viewController = (context.coordinator.vc as? _VC) ?? _VC(
+            context.coordinator, rootView: content)
+        context.coordinator.vc = viewController
+        // --------
         
         // Set the presentationController as a UISheetPresentationController
         if let sheetController = viewController.presentationController as? UISheetPresentationController {
@@ -70,7 +75,7 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
          When dismissing, look for the last VC that presents something, and assume it is us.
          */
         if isPresented {
-            if context.coordinator.presenterVc == nil {
+            if context.coordinator.presenterVc == nil && !viewController.isBeingDismissed {
                 if let alreadyPresentedByRoot = uiView.window?.rootViewController?.presentedViewController {
                     context.coordinator.presenterVc = alreadyPresentedByRoot
                 } else {
@@ -100,6 +105,8 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
         
         /// Which VC is presenting the sheet
         var presenterVc: UIViewController? = nil
+        
+        weak var vc: AnyObject? = nil
         
         init(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil) {
             self._isPresented = isPresented
@@ -133,8 +140,11 @@ struct sheetWithDetentsViewModifier<SwiftUIContent>: ViewModifier where SwiftUIC
     }
     
     func body(content: Content) -> some View {
-        SheetPresentationForSwiftUI($isPresented,onDismiss: onDismiss, detents: detents) {
-            swiftUIContent
+        ZStack {
+            content
+            SheetPresentationForSwiftUI($isPresented, onDismiss: onDismiss, detents: detents) {
+                swiftUIContent
+            }.allowsHitTesting(false)
         }
     }
 }
