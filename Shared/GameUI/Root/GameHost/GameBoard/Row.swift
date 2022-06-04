@@ -86,7 +86,8 @@ struct Row: View
         delayRowIx * 5   
     }
     
-    func canFlip(at ix: Int) -> Bool {
+    func canFlip(at ix: Int, in row: RowModel) -> Bool {
+        guard row.isSubmitted else { return false }
         guard ix > 0 else {
             return delayRowIx <= boardReveal.rowStartIx 
         } 
@@ -94,19 +95,21 @@ struct Row: View
         return ix <= vm.localFlipStartIx  
     }
     
-    func flippedModel(at ix: Int) -> TileModel? {
-        guard 
-            canFlip(at: ix)
-        else { 
-            return nil 
+    @State var flippedModels: [TileModel?] = [nil, nil, nil, nil, nil]
+    
+    func calcFlippedModel(at ix: Int, in row: RowModel) -> TileModel? {
+        guard
+            canFlip(at: ix, in: row)
+        else {
+            return nil
         }
         
-        let rs = self.model.revealState(ix)
+        let rs = row.revealState(ix)
         guard 
             !rs.isMasked,
-            let fm = model.char(guessAt: ix)
-        else { 
-            return nil 
+            let fm = row.char(guessAt: ix)
+        else {
+            return nil
         } 
         
         return TileModel(
@@ -171,7 +174,7 @@ struct Row: View
                     duration: Self.FLIP_DURATION + drand48() * 0.2,
                     jumpDuration: Self.JUMP_DURATION, 
                     revealedObject: { ()->AgitatedTile? in
-                        if let f = flippedModel(at: ix) {
+                        if let f = flippedModels[ix] {
                             return AgitatedTile(model: f)
                         } else {
                             return nil
@@ -180,6 +183,7 @@ struct Row: View
                     .environment(
                         \.tileConfig,
                          tileConfig(for: ix))
+                    .id("\(ix)-\(model.isSubmitted)")
             }
         }
         .contextMenu {
@@ -191,6 +195,61 @@ struct Row: View
             } 
         }
         .modifier(Shake(animatableData: count))
+        
+        // MARK: Handling flipping state updates
+        
+        /* Tile state calculations should not be computed on-the-fly, as it can easily lead
+         to accidentally looping for hundreds of times over the word, and regenerating the
+         same result.
+         
+         Instead we want to update the stored state property only when we know state info can/should change.
+        */
+        
+        /* Flipped models can only be generated when its the time for a tile to flip.
+         So first entry point is when the local flipped tile index changes.
+         
+         This still requires the first tile to be flipped at the right time, but subsequently
+         it will handle the rest of the row.*/
+        .onChange(of: vm.localFlipStartIx) {
+            newIx in
+            
+            guard newIx < 5 else { return }
+            
+            let result = calcFlippedModel(at: newIx, in: model)
+            
+            flippedModels[newIx] = result
+        }
+        
+        /* When submitting a row, we need to kickstart the row flipping
+         using the updated model. */
+        .onChange(of: self.model) {
+            newModel in
+            
+            guard newModel.isSubmitted, !model.isSubmitted else { return }
+            flippedModels[0] = calcFlippedModel(at: 0, in: newModel)
+        }
+        
+        /* When appearing, we should kickstart the flipping on
+         first row's first tile (subsequent rows have a delay) */
+        .onAppear {
+            guard model.isSubmitted, delayRowIx == 0 else { return }
+            
+            // This kickstarts the flip chain
+            flippedModels[0] = calcFlippedModel(at: 0, in: model)
+        }
+        
+        /* Each row has a delay, so we can't start flipping every row as it appears.
+         However, when the board reveal state indicates its our turn, kickstart
+         flipping the first tile (`localFlipStartIx` will take over afterwards) */
+        .onChange(of: boardReveal.rowStartIx) { newRow in
+            if newRow == self.delayRowIx {
+                // This kickstarts the flip chain
+                flippedModels[0] = calcFlippedModel(at: 0, in: model)
+            }
+        }
+        
+        // MARK: Handling shaking
+        
         .onChange(of: model.attemptCount) {
             nc in 
             if nc > 0 {

@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Represents a 1-tile:n-characters mapping (e.g. if we 
 /// want to allow a tile to match either S or Š etc.)
-struct MultiCharacterModel : Codable, Equatable, CustomDebugStringConvertible {
+struct MultiCharacterModel : Hashable, Codable, Equatable, CustomDebugStringConvertible {
     /// There is no OrderedSet natively, so
     /// store the values in an array.
     ///

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct WordModel : Codable, Equatable, CustomDebugStringConvertible {
+struct WordModel : Hashable, Codable, Equatable, CustomDebugStringConvertible {
     static func == (lhs: WordModel, rhs: WordModel) -> Bool {
         lhs.word == rhs.word
     }

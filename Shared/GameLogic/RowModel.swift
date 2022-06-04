@@ -64,6 +64,14 @@ extension Array where Element == RowModel {
 
 struct RowModel : Equatable, Codable, Identifiable
 {
+    enum CodingKeys: String, CodingKey {
+        case id
+        case word
+        case isSubmitted
+        case attemptCount
+        case expected
+    }
+    
     let id: String
     let word: WordModel 
     let isSubmitted: Bool
@@ -164,10 +172,43 @@ struct RowModel : Equatable, Codable, Identifiable
         return expected[pos]
     }
     
+    /// Class for holding cached values that we know haven't/can't change
+    /// but that might be asked for repeatedly.
+    class BudgetCacheHolder: Equatable {
+        static func == (lhs: RowModel.BudgetCacheHolder, rhs: RowModel.BudgetCacheHolder) -> Bool {
+            lhs.yellowCache == rhs.yellowCache && lhs.revealCache == rhs.revealCache
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(yellowCache)
+            hasher.combine(revealCache)
+        }
+        
+        var yellowCache = Dictionary<WordModel, Dictionary<Int, Int>>()
+        var revealCache = Dictionary<Int, TileBackgroundType>()
+    }
+    
+    let budgetCache = BudgetCacheHolder()
+    
     /* Yellow budget is:
      total_occurences - known_occurences - yellow_occurences_at_lower_ix
      */
     func yellowBudget(for attempt: WordModel, at atIx: Int) -> Int {
+        if let wordCache = budgetCache.yellowCache[attempt],
+           let budget = wordCache[atIx] {
+            return budget
+        }
+
+        let val = calcYellowBudget(for: attempt, at: atIx)
+        var wordCache = budgetCache.yellowCache[attempt] ?? [:]
+        wordCache[atIx] = val
+        budgetCache.yellowCache[attempt] = wordCache
+        return val
+    }
+    
+    /* Do not invoke this in a view body (only u se it to set state at
+     points where you know the model has changed. */
+    func calcYellowBudget(for attempt: WordModel, at atIx: Int) -> Int {
         var total: Int = 0
         var known: Int = 0
         var knownUntil: Int = 0
@@ -193,6 +234,18 @@ struct RowModel : Equatable, Codable, Identifiable
     
     func revealState(_ ix: Int) -> TileBackgroundType
     {
+        guard !isSubmitted else {
+            let result = self.budgetCache.revealCache[ix] ?? calcRevealState(ix)
+            self.budgetCache.revealCache[ix] = result
+            return result
+        }
+        
+        return calcRevealState(ix)
+    }
+    
+    /// Do not call this from a view body. Only use this to update state when you know the model has changed.
+    func calcRevealState(_ ix: Int) -> TileBackgroundType {
+        
         guard canReveal else {
             if nil != self.char(guessAt: ix) {
                 return .maskedFilled
