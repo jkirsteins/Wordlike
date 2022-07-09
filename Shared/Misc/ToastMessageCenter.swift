@@ -26,7 +26,7 @@ class ToastMessageCenter : ObservableObject {
         "Seriously?",
         "Sure, keep doing the same thing...",
         "I promise the outcome won't change",
-        "Persistance won't pay off this time",
+        "Persistence won't pay off this time",
         "Consider doing something else",
         "What do you seek?",
         "I'll be sick from all the shaking...",
