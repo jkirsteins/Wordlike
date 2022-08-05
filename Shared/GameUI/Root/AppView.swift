@@ -134,18 +134,19 @@ struct AppView: View {
                         }
                         
                         let day = turnCounter.turnIndex(at: Date())
+                        let title = Bundle.main.displayName
 #if os(iOS)
                         self.shareItems = [
                             ShareableString(
                                 (
-                                    ["Wordlike Day \(day)", ""] + lines
+                                    ["\(title) \(day)", ""] + lines
                                 ).joined(separator: "\n") + "\n"
                             )
                         ]
 #else
                         self.shareItems = [
                             (
-                                ["Wordlike Day \(day)", ""] + lines
+                                ["\(title) \(day)", ""] + lines
                             ).joined(separator: "\n") + "\n"
                         ]
 #endif
