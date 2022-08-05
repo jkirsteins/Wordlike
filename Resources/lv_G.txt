@@ -2748,6 +2748,8 @@ alkāt
 alkīd
 alkšu
 allaž
+allim
+allis
 allēn
 alnii
 alnim
@@ -3871,6 +3873,7 @@ bisei
 bises
 biste
 bisti
+bists
 bistu
 bistē
 bisu.
@@ -3920,6 +3923,10 @@ bleķu
 bleķī
 bliez
 bliež
+blogi
+blogs
+blogu
+blogā
 bloka
 bloki
 bloks
@@ -4036,6 +4043,8 @@ bortu
 bortā
 borus
 borāt
+borēs
+borēt
 borīd
 boršč
 bosam
@@ -5284,6 +5293,8 @@ dubļu
 ducii
 ducim
 ducis
+ducēs
+ducēt
 ducīt
 dueli
 duelī
@@ -5352,6 +5363,10 @@ durat
 duros
 durot
 dursi
+durta
+durto
+durts
+durtā
 durās
 duršu
 dusai
@@ -6120,6 +6135,11 @@ frizē
 friča
 friči
 friču
+friši
+frišo
+frišs
+frišu
+frišā
 frotē
 frāze
 frāzi
@@ -6334,6 +6354,9 @@ gidus
 gidēi
 gidēm
 gidēs
+gifti
+gifts
+giftē
 ginka
 ginki
 ginks
@@ -7603,6 +7626,9 @@ jeņķi
 jeņķu
 jeņķī
 jidiš
+jifti
+jifts
+jiftī
 jociņ
 jodam
 jodiņ
@@ -8519,8 +8545,12 @@ krevē
 krešu
 kriev
 krika
+kriks
 kriku
 krikā
+krims
+krimt
+krimu
 kriss
 krist
 krita
@@ -9127,6 +9157,7 @@ kūrāt
 kūrēj
 kūrēm
 kūrēs
+kūrēt
 kūsti
 kūstu
 kūsās
@@ -11349,6 +11380,7 @@ niere
 nieri
 nieru
 nierē
+nieva
 nievu
 nievā
 nieze
@@ -12325,6 +12357,7 @@ paēno
 paēnu
 paēnā
 paēst
+paģēr
 paīdi
 paīdu
 paīra
@@ -12482,6 +12515,10 @@ pikai
 pikap
 pikas
 piket
+piksi
+pikss
+piksu
+piksā
 pikta
 pikti
 pikto
@@ -12530,6 +12567,7 @@ pinas
 pinat
 pinci
 pincī
+pinis
 pinka
 pinku
 pinkā
@@ -12540,7 +12578,9 @@ pinos
 pinot
 pinte
 pinti
+pints
 pintē
+pintī
 pinum
 pinām
 pinās
@@ -12822,6 +12862,11 @@ pozēt
 poēma
 poēmu
 poēmā
+poģim
+poģis
+poģos
+poģus
+poģīt
 poķii
 poķim
 poķis
@@ -13087,6 +13132,8 @@ pāļus
 pāžam
 pāžos
 pāžus
+pēcim
+pēcis
 pēcāk
 pēdai
 pēdas
@@ -13128,6 +13175,7 @@ pētās
 pētāt
 pētīs
 pētīt
+pēčos
 pēļos
 pēļus
 pīcis
@@ -13201,12 +13249,17 @@ pļeka
 pļeks
 pļeku
 pļekā
+pļuka
+pļuks
+pļuku
+pļukā
 pļāpa
 pļāpu
 pļāpā
 pļāva
 pļāvi
 pļāvu
+pūbot
 pūcei
 pūces
 pūciņ
@@ -13220,6 +13273,8 @@ pūjos
 pūjās
 pūkai
 pūkas
+pūkos
+pūkot
 pūkām
 pūkās
 pūlam
@@ -13261,6 +13316,7 @@ pūsos
 pūsās
 pūtei
 pūtes
+pūtis
 pūtos
 pūtām
 pūtās
@@ -13268,7 +13324,9 @@ pūtāt
 pūtēj
 pūtēm
 pūtēs
+pūtīm
 pūtīs
+pūtīt
 pūzni
 pūznī
 pūķii
@@ -13278,6 +13336,7 @@ pūķos
 pūķus
 pūķīt
 pūļos
+pūļot
 pūļus
 pūšam
 pūšas
@@ -14822,6 +14881,10 @@ skečā
 skice
 skici
 skicē
+skifi
+skifs
+skifu
+skifā
 skita
 skiti
 skits
@@ -16430,6 +16493,8 @@ troņa
 troņi
 troņu
 trošu
+truba
+trubā
 trula
 truli
 trulo
@@ -17389,6 +17454,7 @@ vecīt
 vedam
 vedas
 vedat
+vedis
 vedni
 vednī
 vedos
@@ -17398,6 +17464,7 @@ vedām
 vedās
 vedāt
 vedēj
+vedīs
 vedņa
 vedņi
 vedņu
@@ -17636,6 +17703,9 @@ vindu
 vindā
 vinil
 vinnē
+vints
+vintu
+vintā
 vinča
 vinču
 vinčā
@@ -17875,6 +17945,8 @@ vāģus
 vāģīt
 vāķēs
 vāķēt
+vāķīs
+vāķīt
 vāļās
 vāļāt
 vāžam
@@ -18269,6 +18341,11 @@ zinii
 zinis
 zinos
 zinot
+zinte
+zinti
+zints
+zintē
+zintī
 zinām
 zinās
 zināt
@@ -19000,6 +19077,9 @@ zūdās
 ģieda
 ģiedi
 ģiedu
+ģifti
+ģifts
+ģiftē
 ģikti
 ģikts
 ģiktī
@@ -19305,6 +19385,9 @@ zūdās
 ķitēm
 ķitēs
 ķitēt
+ķobis
+ķobja
+ķobju
 ķocii
 ķocim
 ķocis
@@ -19490,6 +19573,11 @@ zūdās
 ņemos
 ņemot
 ņemsi
+ņemta
+ņemto
+ņemts
+ņemtu
+ņemtā
 ņemās
 ņemšu
 ņenca
