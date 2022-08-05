@@ -16,6 +16,9 @@ extension GameState {
                 return 
             }
         
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+        
         self.rows[ix] = RowModel(
             word: row.word.dropLast(),
             expected: row.expected,
@@ -35,6 +38,9 @@ extension GameState {
             // no editable rows
             return 
         }
+        
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
         
         self.rows[ix] = RowModel(
             word:  row.word.tryAdd(letter),
@@ -86,7 +92,10 @@ extension GameState {
                 
                 self.rows[currentIx] = updatedRow
                 return
-            } 
+            }
+        
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
         
         let submitted = RowModel(
             word: submittedWord,
