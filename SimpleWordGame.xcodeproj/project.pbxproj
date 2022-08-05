@@ -255,6 +255,7 @@
 		E736C9B2283FE64A001F2C2C /* lv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lv; path = lv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E736C9B5283FF144001F2C2C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E736C9B6283FF149001F2C2C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E75D4298289D15080036E7EC /* SimpleWordGame--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "SimpleWordGame--iOS--Info.plist"; sourceTree = "<group>"; };
 		E762614A28400839000A80FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E762614C2840083A000A80FC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E762614D2840083B000A80FC /* lv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lv; path = lv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -423,6 +424,7 @@
 		E7F299542837DAB9005792DA = {
 			isa = PBXGroup;
 			children = (
+				E75D4298289D15080036E7EC /* SimpleWordGame--iOS--Info.plist */,
 				E7346324283931AB00265F8F /* SimpleWordGame (iOS).entitlements */,
 				E7F29B3A2837DB3B005792DA /* gh_screenshot.png */,
 				E7F29B392837DB3B005792DA /* README.md */,
@@ -1263,6 +1265,7 @@
 				DEVELOPMENT_TEAM = FN5YR78T7X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "SimpleWordGame--iOS--Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Wordlike;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.word-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1305,6 +1308,7 @@
 				DEVELOPMENT_TEAM = FN5YR78T7X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "SimpleWordGame--iOS--Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Wordlike;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.word-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
