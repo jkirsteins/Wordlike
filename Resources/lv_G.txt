@@ -8850,7 +8850,10 @@ kurtu
 kurtā
 kurtē
 kurus
+kurva
 kurvi
+kurvu
+kurvā
 kurvī
 kurām
 kurās
@@ -19225,6 +19228,7 @@ zūdās
 īgnas
 īgnie
 īgnos
+īgnot
 īgnum
 īgnus
 īgnāk
@@ -20319,5 +20323,3 @@ zūdās
 žūžot
 žūžām
 žūžās
-īgnot
-īgnos
