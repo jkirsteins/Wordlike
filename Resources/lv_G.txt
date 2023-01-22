@@ -5006,6 +5006,12 @@ dienu
 dienā
 dienē
 diesi
+dieta
+dieti
+dieto
+diets
+dietu
+dietā
 dieva
 dieve
 dievi
@@ -9519,6 +9525,7 @@ liesē
 lieta
 lieti
 lieto
+liets
 lietu
 lietā
 lietū
@@ -20310,9 +20317,3 @@ zūdās
 žūžot
 žūžām
 žūžās
-diets
-dietu
-dietā
-dieta
-dieti
-dieto
