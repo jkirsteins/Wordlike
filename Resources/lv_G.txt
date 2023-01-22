@@ -17633,6 +17633,9 @@ vižņu
 vobla
 voblu
 voblā
+volga
+volgu
+volgā
 volta
 volti
 volts
