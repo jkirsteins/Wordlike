@@ -3914,6 +3914,7 @@ blēžu
 blīda
 blīdi
 blīdu
+blīkt
 blīst
 blīva
 blīve
