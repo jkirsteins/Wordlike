@@ -3844,6 +3844,9 @@ bilst
 bilžu
 bimbo
 bimbā
+binde
+bindi
+bindē
 bingo
 binom
 biol.
