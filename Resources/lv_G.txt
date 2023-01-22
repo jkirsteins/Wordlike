@@ -16817,6 +16817,12 @@ tērču
 tērēs
 tērēt
 tēsos
+tēsta
+tēsti
+tēsto
+tēsts
+tēstu
+tēstā
 tēsām
 tēsās
 tēsāt
