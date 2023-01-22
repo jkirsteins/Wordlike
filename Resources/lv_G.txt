@@ -5835,6 +5835,12 @@ elsas
 elsis
 elsos
 elsot
+elsta
+elsti
+elsto
+elsts
+elstu
+elstā
 elsām
 elsās
 elsāt
