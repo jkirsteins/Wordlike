@@ -179,8 +179,8 @@ struct SettingsView: View {
                 
                 Spacer()
                 
-                Link(destination: URL(string: "https://twitter.com/jkirsteins")!, label: {
-                    Text("Twitter")
+                Link(destination: URL(string: "https://mastodon.gamedev.place/@jki")!, label: {
+                    Text("Mastodon")
                 })
                 .frame(minWidth: Self.minRightWidth)
             }
