@@ -29,7 +29,6 @@ Agitu
 Agitā
 Agnei
 Agnes
-Agnii
 Agnim
 Agnis
 Agnēm
@@ -37,7 +36,6 @@ Agnēs
 Agnīt
 Agrai
 Agras
-Agrii
 Agrim
 Agris
 Agriņ
@@ -58,7 +56,6 @@ Aijas
 Aijiņ
 Aijām
 Aijās
-Ainii
 Ainim
 Ainis
 Ainār
@@ -75,7 +72,6 @@ Aismā
 Aivai
 Aivar
 Aivas
-Aivii
 Aivim
 Aivis
 Aiviņ
@@ -91,7 +87,6 @@ Aksel
 Albīn
 Aldai
 Aldas
-Aldii
 Aldim
 Aldis
 Aldiņ
@@ -131,7 +126,6 @@ Almiņ
 Almām
 Almār
 Almās
-Alnii
 Alnim
 Alnis
 Alnīt
@@ -146,7 +140,6 @@ Altas
 Altiņ
 Altām
 Altās
-Alvii
 Alvil
 Alvim
 Alvis
@@ -182,7 +175,6 @@ Ancēs
 Ancīt
 Andai
 Andas
-Andii
 Andim
 Andis
 Andiņ
@@ -217,13 +209,11 @@ Anniņ
 Annām
 Annās
 Anrij
-Ansii
 Ansim
 Ansis
 Ansīt
 Antai
 Antas
-Antii
 Antim
 Antis
 Antiņ
@@ -240,7 +230,6 @@ Anšus
 Anžos
 Anžus
 Apīšu
-Ardii
 Ardim
 Ardis
 Ardīt
@@ -249,14 +238,11 @@ Arita
 Aritu
 Aritā
 Armīn
-Arnii
 Arnim
 Arnis
-Arno.
 Arnīt
 Artai
 Artas
-Artii
 Artim
 Artis
 Artiņ
@@ -269,7 +255,6 @@ Aruba
 Arubu
 Arubā
 Arved
-Arvii
 Arvil
 Arvim
 Arvis
@@ -337,7 +322,6 @@ Aīdas
 Aīdiņ
 Aīdām
 Aīdās
-Aļģii
 Aļģim
 Aļģis
 Aļģos
@@ -450,7 +434,6 @@ Bērze
 Bērzi
 Bērzē
 Bītij
-CSDD.
 Cafam
 Cempi
 Cempu
@@ -484,7 +467,6 @@ Codei
 Codes
 Cērei
 Cēres
-Cēsii
 Cēsis
 Cēsīm
 Cēsīs
@@ -539,7 +521,6 @@ Danos
 Danus
 Danām
 Danās
-Darii
 Darim
 Daris
 Daros
@@ -587,7 +568,6 @@ Dobij
 Dolei
 Doles
 Donat
-Donii
 Donim
 Donis
 Donāt
@@ -637,7 +617,6 @@ Dārta
 Dārtu
 Dārtā
 Dāvid
-Dāvii
 Dāvim
 Dāvis
 Dāvja
@@ -667,7 +646,6 @@ Džoni
 Džons
 Džonu
 Džonā
-EPUB.
 Edgar
 Edija
 Ediji
@@ -785,7 +763,6 @@ Elsti
 Elstē
 Elvai
 Elvas
-Elvii
 Elvij
 Elvim
 Elvis
@@ -909,7 +886,6 @@ Ganas
 Ganga
 Gangu
 Gangā
-Gatii
 Gatim
 Gatis
 Gatos
@@ -966,7 +942,6 @@ Gunas
 Gunda
 Gundu
 Gundā
-Gunii
 Gunim
 Gunis
 Guniņ
@@ -992,7 +967,6 @@ Gustē
 Guņos
 Guņus
 Gvido
-HTML.
 Hanna
 Hannu
 Hannā
@@ -1021,7 +995,6 @@ Hildu
 Hildā
 Homēr
 Houms
-Hugo.
 Hāgai
 Hāgas
 Hūron
@@ -1245,7 +1218,6 @@ Joānā
 Jugla
 Juglu
 Juglā
-Jurii
 Jurij
 Jurim
 Juris
@@ -1266,7 +1238,6 @@ Jutas
 Jutiņ
 Jutām
 Jutās
-Jānii
 Jānim
 Jānis
 Jānīt
@@ -1448,7 +1419,6 @@ Lanās
 Laosa
 Laosu
 Laosā
-Larii
 Larim
 Laris
 Laros
@@ -1578,7 +1548,6 @@ Lūkas
 Madar
 Madei
 Mades
-Madii
 Madim
 Madis
 Madēm
@@ -1640,9 +1609,7 @@ Mažos
 Mažus
 Mbias
 Mbios
-Mbit.
 Mbpos
-Mbps.
 Mbpus
 Medze
 Medzi
@@ -1701,7 +1668,6 @@ Moric
 Mozui
 Mozum
 Mozus
-Mtoe.
 Munti
 Muntī
 Munša
@@ -1713,7 +1679,6 @@ Mārai
 Māras
 Mārci
 Mārcī
-Mārii
 Mārim
 Māris
 Māriņ
@@ -1781,7 +1746,6 @@ Noasā
 Nobel
 Nukši
 Nukšu
-Nuķii
 Nuķis
 Nīcai
 Nīcas
@@ -1856,7 +1820,6 @@ Oļegā
 Ošupe
 Ošupi
 Ošupē
-PSRS.
 Parma
 Parmu
 Parmā
@@ -2032,7 +1995,6 @@ Rīgai
 Rīgas
 Rīvai
 Rīvas
-Rūdii
 Rūdim
 Rūdis
 Rūdīt
@@ -2169,7 +2131,6 @@ Telmā
 Temza
 Temzu
 Temzā
-Tenii
 Tenim
 Tenis
 Tenīt
@@ -2227,7 +2188,6 @@ Tvila
 Tvilu
 Tvilā
 Tālav
-Tālii
 Tālim
 Tālis
 Tālīt
@@ -2259,7 +2219,6 @@ Ulliņ
 Ullām
 Ullās
 Ulrik
-Ulvii
 Ulvim
 Ulvis
 Ulvja
@@ -2338,7 +2297,6 @@ Vandā
 Vanga
 Vangu
 Vangā
-Varii
 Varim
 Varis
 Varos
@@ -2380,10 +2338,8 @@ Vidas
 Vidiņ
 Vidām
 Vidās
-Vigo.
 Vilgi
 Vilgu
-Vilii
 Vilim
 Vilis
 Vilma
@@ -2433,7 +2389,6 @@ Vārve
 Vārvi
 Vārvē
 Vēber
-Vīgo.
 Vīlip
 Vīnei
 Vīnes
@@ -2530,7 +2485,6 @@ Zuzēs
 Zuzīt
 Zūrai
 Zūras
-a.k..
 abaka
 abaki
 abaks
@@ -2627,7 +2581,6 @@ ahāti
 ahāts
 ahātu
 ahātā
-aidā.
 aijās
 aijāt
 ailai
@@ -2645,7 +2598,6 @@ ainas
 ainiņ
 ainām
 ainās
-airii
 airim
 airis
 airos
@@ -2751,7 +2703,6 @@ allaž
 allim
 allis
 allēn
-alnii
 alnim
 alnis
 alnīt
@@ -2812,7 +2763,6 @@ amīni
 amīns
 amīnu
 amīnā
-angl.
 angli
 anglī
 angār
@@ -2939,7 +2889,6 @@ apkūp
 aplam
 aplec
 aplej
-aplii
 aplim
 aplis
 aplob
@@ -2952,7 +2901,6 @@ aplīs
 aplīt
 aplūp
 aplūr
-apm..
 apmal
 apmaļ
 apmet
@@ -3093,7 +3041,6 @@ arfas
 arfiņ
 arfām
 arfās
-argo.
 argon
 arhīv
 aries
@@ -3135,6 +3082,10 @@ arājā
 arēna
 arēnu
 arēnā
+arķim
+arķis
+arķos
+arķus
 aršos
 aršot
 asais
@@ -3326,7 +3277,6 @@ atsēž
 atsīc
 atsūc
 atsūt
-att..
 attek
 attin
 attop
@@ -3479,7 +3429,6 @@ ausīm
 ausīs
 autam
 autiņ
-auto.
 autor
 autos
 autus
@@ -3509,7 +3458,6 @@ avenē
 avers
 aveņu
 aviem
-avio.
 avizo
 avizē
 aviņi
@@ -3563,7 +3511,6 @@ ašāko
 ašāks
 ašāku
 ašākā
-ažio.
 ažūra
 ažūri
 ažūro
@@ -3592,7 +3539,6 @@ baigo
 baigs
 baigu
 baigā
-bail.
 baile
 baisa
 baisi
@@ -3713,7 +3659,6 @@ baumu
 baumā
 bauro
 bazār
-baķii
 baķim
 baķis
 baķos
@@ -3791,7 +3736,6 @@ beņķa
 beņķi
 beņķu
 beņķī
-bešā.
 bieda
 biedi
 biedr
@@ -3840,9 +3784,11 @@ bilst
 bilžu
 bimbo
 bimbā
+binde
+bindi
+bindē
 bingo
 binom
-biol.
 biras
 birka
 birko
@@ -3876,7 +3822,6 @@ bisti
 bists
 bistu
 bistē
-bisu.
 bisēi
 bisēm
 bisēs
@@ -3969,6 +3914,7 @@ blēžu
 blīda
 blīdi
 blīdu
+blīkt
 blīst
 blīva
 blīve
@@ -4019,7 +3965,6 @@ bolēs
 bolīd
 bolīs
 bolīt
-bomii
 bomim
 bomis
 bomja
@@ -4053,7 +3998,6 @@ bosos
 bosus
 botei
 botes
-botu.
 botēi
 botēm
 botēs
@@ -4241,7 +4185,6 @@ bultu
 bultā
 bultē
 bulus
-bulv.
 bumam
 bumba
 bumbu
@@ -4334,7 +4277,6 @@ bāras
 bārda
 bārdu
 bārdā
-bārii
 bārij
 bārim
 bāris
@@ -4350,7 +4292,6 @@ bāzas
 bāzei
 bāzes
 bāzos
-bāzu.
 bāzām
 bāzās
 bāzāt
@@ -4396,7 +4337,6 @@ bēras
 bērei
 bēres
 bērie
-bērii
 bērim
 bēris
 bērna
@@ -4469,7 +4409,6 @@ būdām
 būdās
 būkšķ
 būram
-būrii
 būrim
 būris
 būros
@@ -4491,7 +4430,11 @@ būvēm
 būvēs
 būvēt
 būvīt
+būzim
+būzis
 būšot
+būžos
+būžus
 cacai
 cacas
 cacām
@@ -4504,8 +4447,11 @@ cariņ
 caros
 carus
 cauna
+caune
+cauni
 caunu
 caunā
+caunē
 caura
 cauri
 cauro
@@ -4524,7 +4470,6 @@ cehos
 cehus
 cekul
 celas
-celii
 celim
 celis
 celiņ
@@ -4538,7 +4483,6 @@ celmu
 celmā
 celos
 celsi
-celu.
 celās
 celīt
 celšu
@@ -4612,7 +4556,9 @@ ciemi
 ciems
 ciemu
 ciemā
+cieni
 ciens
+cienu
 cienā
 cienī
 ciere
@@ -4681,7 +4627,6 @@ cimdā
 cinga
 cingu
 cingā
-cinii
 cinim
 cinis
 cinka
@@ -4758,7 +4703,6 @@ colla
 collu
 collā
 cukur
-cālii
 cālim
 cālis
 cālēn
@@ -4809,6 +4753,7 @@ cūkai
 cūkas
 cūkām
 cūkās
+cūkāt
 dabai
 dabas
 dabūs
@@ -4950,7 +4895,6 @@ delnā
 delta
 deltu
 deltā
-depo.
 deram
 deras
 derat
@@ -4977,12 +4921,10 @@ devām
 devās
 devāt
 devēj
-deģii
 deģim
 deģis
 deģos
 deģus
-deķii
 deķim
 deķis
 deķos
@@ -5002,6 +4944,12 @@ dienu
 dienā
 dienē
 diesi
+dieta
+dieti
+dieto
+diets
+dietu
+dietā
 dieva
 dieve
 dievi
@@ -5009,7 +4957,6 @@ dievs
 dievu
 dievā
 dievē
-diez.
 diešu
 dikti
 dikts
@@ -5269,7 +5216,6 @@ drēģī
 drīve
 drīvi
 drīvē
-drīz.
 drīza
 drīzi
 drīzo
@@ -5290,7 +5236,6 @@ dublī
 dubļa
 dubļi
 dubļu
-ducii
 ducim
 ducis
 ducēs
@@ -5525,7 +5470,6 @@ dāmas
 dāmiņ
 dāmām
 dāmās
-dānii
 dānim
 dānis
 dārda
@@ -5586,7 +5530,6 @@ dēkās
 dēlam
 dēlei
 dēles
-dēlii
 dēlim
 dēlis
 dēliņ
@@ -5654,7 +5597,6 @@ dīvas
 dīvām
 dīvān
 dīvās
-dīķii
 dīķim
 dīķis
 dīķos
@@ -5663,7 +5605,6 @@ dīķīt
 dūcam
 dūcas
 dūcat
-dūcii
 dūcim
 dūcis
 dūcos
@@ -5692,7 +5633,6 @@ dūkum
 dūkām
 dūkās
 dūkšu
-dūlii
 dūlim
 dūlis
 dūmam
@@ -5716,7 +5656,6 @@ dūrēj
 dūrēm
 dūrēs
 dūrīt
-dūzii
 dūzim
 dūzis
 dūzīt
@@ -5735,6 +5674,10 @@ dūšās
 dūžos
 dūžus
 džaiv
+džeki
+džeks
+džeku
+džekā
 džema
 džemi
 džems
@@ -5782,7 +5725,6 @@ eglēm
 eglēs
 eglīt
 einuh
-eiro.
 eiņos
 eiņus
 ejies
@@ -5802,7 +5744,6 @@ ekiju
 ekijā
 ekipē
 ekrān
-ekv..
 elfam
 elfos
 elfus
@@ -5831,6 +5772,12 @@ elsas
 elsis
 elsos
 elsot
+elsta
+elsti
+elsto
+elsts
+elstu
+elstā
 elsām
 elsās
 elsāt
@@ -6049,8 +5996,10 @@ fiski
 fisks
 fisku
 fiskā
-fito.
 fitīn
+fiška
+fišku
+fiškā
 fjord
 flang
 flirt
@@ -6081,6 +6030,9 @@ fogtu
 fogtā
 fokus
 folio
+folks
+folku
+folkā
 folāt
 fonam
 fonda
@@ -6120,7 +6072,6 @@ foršo
 foršs
 foršu
 foršā
-foto.
 foton
 fraka
 frakt
@@ -6182,7 +6133,6 @@ fūgai
 fūgas
 fūgām
 fūgās
-gab..
 gabal
 gabro
 gadam
@@ -6340,7 +6290,6 @@ gelam
 gelos
 gelus
 genom
-geto.
 getra
 getru
 getrā
@@ -6349,7 +6298,6 @@ gidam
 gidei
 gides
 gidos
-gidu.
 gidus
 gidēi
 gidēm
@@ -6715,6 +6663,8 @@ gurdo
 gurds
 gurdu
 gurdā
+gurgs
+gurgt
 gurna
 gurni
 gurns
@@ -6803,7 +6753,6 @@ gāzma
 gāzmu
 gāzmā
 gāzos
-gāzu.
 gāzum
 gāzām
 gāzās
@@ -6857,7 +6806,6 @@ haika
 haiks
 haiku
 haikā
-haki.
 hakos
 hakus
 halle
@@ -7057,7 +7005,6 @@ iekuļ
 iekāp
 iekās
 iekāš
-iekš.
 iekša
 iekšu
 iekšā
@@ -7181,7 +7128,6 @@ iezas
 iezel
 iezeļ
 iezib
-iezii
 iezim
 iezis
 iezog
@@ -7274,7 +7220,6 @@ imūno
 imūns
 imūnu
 imūnā
-incii
 incim
 incis
 incīt
@@ -7309,10 +7254,14 @@ irdnē
 irdza
 irdzi
 irdzu
+irgai
 irgas
 irgos
+irgot
 irgsi
+irgām
 irgās
+irgāt
 irgšu
 iries
 irkli
@@ -7320,7 +7269,6 @@ irklī
 irkļa
 irkļi
 irkļu
-irsii
 irsim
 irsis
 irsit
@@ -7336,7 +7284,6 @@ iršot
 iršus
 islām
 ities
-itin.
 itrij
 itāli
 itālī
@@ -7654,7 +7601,6 @@ jomus
 jomām
 jomās
 jonam
-jonii
 jonim
 jonis
 joniņ
@@ -7696,7 +7642,6 @@ jukāt
 jukšu
 jumam
 jumas
-jumii
 jumim
 jumis
 jumja
@@ -7724,7 +7669,6 @@ jundī
 junga
 jungu
 jungā
-jupii
 jupim
 jupis
 jupja
@@ -7753,7 +7697,6 @@ jādāt
 jādīs
 jādīt
 jāiet
-jāir.
 jājam
 jājas
 jājat
@@ -7846,7 +7789,6 @@ jūtai
 jūtam
 jūtas
 jūtat
-jūtii
 jūtis
 jūtos
 jūtot
@@ -7968,6 +7910,9 @@ kannu
 kannā
 kanoe
 kanon
+kante
+kanti
+kantē
 kanva
 kanvu
 kanvā
@@ -8085,7 +8030,6 @@ kauss
 kausu
 kausā
 kausē
-kaut.
 kauās
 kaušu
 kavai
@@ -8103,7 +8047,6 @@ kazām
 kazās
 kaķei
 kaķes
-kaķii
 kaķim
 kaķis
 kaķos
@@ -8133,14 +8076,12 @@ kašņā
 kažok
 kbias
 kbios
-kbit.
 kedai
 kedas
 kediņ
 kedām
 kedās
 kefīr
-keno.
 keson
 kečup
 khmer
@@ -8148,11 +8089,8 @@ kijai
 kijas
 kijām
 kijās
-kilo.
-kino.
 kiosk
 kirij
-kivi.
 kivos
 kivus
 kizil
@@ -8185,7 +8123,6 @@ klapē
 klase
 klasi
 klasē
-klau.
 klaun
 klača
 klaču
@@ -8212,6 +8149,10 @@ klibā
 klija
 kliju
 klijā
+klimi
+klims
+klimt
+klimu
 klipa
 klipi
 klips
@@ -8436,7 +8377,6 @@ kopāt
 kopēs
 kopēt
 kopņu
-kopš.
 kopšu
 korda
 kordi
@@ -8445,7 +8385,6 @@ kordu
 kordā
 korei
 kores
-korii
 korim
 koris
 koros
@@ -8681,7 +8620,6 @@ krūze
 krūzi
 krūzē
 krūžu
-ktoe.
 kubam
 kubiņ
 kubla
@@ -8703,7 +8641,6 @@ kuilī
 kuiļa
 kuiļi
 kuiļu
-kukū.
 kulak
 kulam
 kulas
@@ -8802,7 +8739,6 @@ kurni
 kurnu
 kuros
 kurot
-kurp.
 kurpe
 kurpi
 kurpē
@@ -8820,7 +8756,10 @@ kurtu
 kurtā
 kurtē
 kurus
+kurva
 kurvi
+kurvu
+kurvā
 kurvī
 kurām
 kurās
@@ -8849,7 +8788,6 @@ kutot
 kutēs
 kutēt
 kuvēr
-kuģii
 kuģim
 kuģis
 kuģos
@@ -8924,14 +8862,12 @@ kājām
 kājās
 kālab
 kālam
-kālii
 kālij
 kālim
 kālis
 kālos
 kālus
 kālīt
-kāmii
 kāmim
 kāmis
 kāmja
@@ -9005,7 +8941,6 @@ kārša
 kāršu
 kāsam
 kāsas
-kāsii
 kāsim
 kāsis
 kāsos
@@ -9034,7 +8969,6 @@ kāzas
 kāzus
 kāzām
 kāzās
-kāķii
 kāķim
 kāķis
 kāķos
@@ -9121,7 +9055,6 @@ kūkām
 kūkās
 kūlai
 kūlas
-kūlii
 kūlim
 kūlis
 kūlos
@@ -9162,7 +9095,6 @@ kūsti
 kūstu
 kūsās
 kūsāt
-kūtii
 kūtij
 kūtis
 kūtos
@@ -9172,9 +9104,7 @@ kūtro
 kūtrs
 kūtru
 kūtrā
-kūtu.
 kūtus
-kūtīi
 kūtīm
 kūtīs
 kūļos
@@ -9253,6 +9183,9 @@ lampā
 lamām
 lamās
 lamāt
+lanka
+lanku
+lankā
 lapai
 lapas
 lapiņ
@@ -9263,10 +9196,11 @@ lapsu
 lapsā
 lapām
 lapās
-lasii
+larva
+larvu
+larvā
 lasim
 lasis
-laso.
 lasos
 lasot
 lasām
@@ -9489,6 +9423,7 @@ liesē
 lieta
 lieti
 lieto
+liets
 lietu
 lietā
 lietū
@@ -9591,7 +9526,6 @@ lobēt
 lobīs
 lobīt
 lobšu
-locii
 locim
 locis
 lociņ
@@ -9648,9 +9582,7 @@ losām
 losās
 lotei
 lotes
-loto.
 lotos
-lotu.
 lotēi
 lotēm
 lotēs
@@ -9674,7 +9606,6 @@ lubas
 lubiņ
 lubām
 lubās
-lucii
 lucim
 lucis
 lucīt
@@ -9707,7 +9638,6 @@ lučus
 luņķa
 luņķi
 luņķī
-lācii
 lācim
 lācis
 lācēn
@@ -9812,7 +9742,6 @@ lēkšo
 lēkšu
 lēlei
 lēles
-lēlii
 lēlim
 lēlis
 lēlēm
@@ -9825,7 +9754,6 @@ lēnai
 lēnam
 lēnas
 lēnie
-lēnii
 lēnim
 lēnis
 lēnos
@@ -9836,7 +9764,6 @@ lēnām
 lēnās
 lēpei
 lēpes
-lēpii
 lēpim
 lēpis
 lēpja
@@ -9870,13 +9797,11 @@ lēšas
 lēšat
 lēšos
 lēšot
-līcii
 līcim
 līcis
 līcēj
 līcīt
 līdum
-līdz.
 līdza
 līdzi
 līdzs
@@ -9925,7 +9850,6 @@ līmēm
 līmēs
 līmēt
 līmīt
-līnii
 līnim
 līnis
 līnīt
@@ -9948,7 +9872,6 @@ līvus
 līčos
 līčot
 līčus
-līķii
 līķim
 līķis
 līķos
@@ -9997,7 +9920,6 @@ lūrat
 lūrot
 lūrēs
 lūrēt
-lūsii
 lūsim
 lūsis
 lūsīt
@@ -10037,6 +9959,9 @@ maiji
 maijs
 maiju
 maijā
+maile
+maili
+mailē
 maina
 maini
 mainu
@@ -10206,7 +10131,6 @@ mazāk
 mazām
 mazās
 mačam
-mačo.
 mačos
 mačus
 maģār
@@ -10231,7 +10155,6 @@ mašās
 mažor
 mbias
 mbios
-mbit.
 medij
 medni
 mednī
@@ -10259,7 +10182,6 @@ mejas
 mejos
 meklē
 meldr
-melii
 melim
 melis
 melna
@@ -10393,8 +10315,6 @@ migām
 migās
 migāt
 migšu
-miiem
-miiņi
 mijai
 mijam
 mijas
@@ -10413,7 +10333,6 @@ mikls
 miklu
 miklā
 mikro
-milj.
 milna
 milnu
 milnā
@@ -10516,7 +10435,6 @@ mičos
 mičot
 miņai
 miņas
-mlrd.
 mocīs
 mocīt
 modam
@@ -10551,7 +10469,6 @@ mollu
 mollā
 molos
 molus
-mono.
 montē
 mopsi
 mopsī
@@ -10564,7 +10481,6 @@ morgi
 morgs
 morgu
 morgā
-morii
 morim
 moris
 moros
@@ -10578,9 +10494,7 @@ morāv
 morīt
 mosas
 mosos
-most.
 mosās
-moto.
 motor
 motīv
 mošos
@@ -10607,6 +10521,8 @@ muciņ
 mucām
 mucās
 mucēj
+mudīs
+mudīt
 mudži
 mudžu
 mufei
@@ -10669,7 +10585,6 @@ murrā
 muson
 mutei
 mutes
-mutu.
 mutēi
 mutēm
 mutēs
@@ -10819,7 +10734,6 @@ mērci
 mērcu
 mērcē
 mērdē
-mērii
 mērim
 mēris
 mēriņ
@@ -10949,13 +10863,11 @@ mūkat
 mūkos
 mūkot
 mūkus
-mūlii
 mūlim
 mūlis
 mūlāp
 mūlīt
 mūmij
-mūrii
 mūrim
 mūris
 mūros
@@ -11029,7 +10941,6 @@ nastā
 nauda
 naudu
 naudā
-nazii
 nazim
 nazis
 nazīt
@@ -11095,7 +11006,6 @@ nedot
 nedun
 nedur
 nedus
-nedz.
 nedēd
 nedēj
 nedēs
@@ -11300,7 +11210,6 @@ nevel
 nevem
 never
 neveļ
-nevii
 nevij
 nevil
 nevis
@@ -11412,7 +11321,6 @@ nirāt
 nirēj
 niršu
 nitrē
-niķii
 niķim
 niķis
 niķos
@@ -11588,7 +11496,6 @@ nosas
 noser
 nosit
 nosos
-nost.
 nosta
 nostā
 nosus
@@ -11671,7 +11578,6 @@ nošūs
 nošūt
 nožūs
 nožūt
-nule.
 nulle
 nulli
 nullē
@@ -11734,7 +11640,6 @@ nērsu
 nēršu
 nēsās
 nēsāt
-nēģii
 nēģim
 nēģis
 nēģos
@@ -11782,7 +11687,6 @@ nūjiņ
 nūjot
 nūjām
 nūjās
-nūģii
 nūģim
 nūģis
 nūģos
@@ -11830,6 +11734,8 @@ ogoju
 ogoos
 ogosi
 ogošu
+ogļos
+ogļot
 okera
 okeri
 okers
@@ -12265,7 +12171,6 @@ pasti
 pasts
 pastu
 pastā
-pasu.
 pasāc
 pasāk
 pasāp
@@ -12313,6 +12218,10 @@ pauru
 paurī
 pausa
 paust
+pauti
+pauts
+pautu
+pautā
 pauze
 pauzi
 pauzē
@@ -12428,7 +12337,6 @@ pelņu
 pelņā
 pelšu
 pelžu
-penii
 penij
 penim
 penis
@@ -12455,7 +12363,6 @@ pervi
 pervē
 perēs
 perēt
-peso.
 pestī
 petit
 peļam
@@ -12623,7 +12530,6 @@ pirāt
 pirēn
 pirīt
 piton
-piķii
 piķim
 piķis
 piķos
@@ -12800,14 +12706,12 @@ pogāt
 poker
 pokāl
 polam
-polii
 polim
 polip
 polis
 polka
 polku
 polkā
-polo.
 polos
 polus
 polīt
@@ -12867,7 +12771,6 @@ poģis
 poģos
 poģus
 poģīt
-poķii
 poķim
 poķis
 poķos
@@ -12894,12 +12797,10 @@ precē
 prese
 presi
 presē
-pret.
 pretī
 preču
 prešu
 priek
-prom.
 prosa
 prosu
 prosā
@@ -12955,7 +12856,6 @@ puika
 puiku
 puikā
 puios
-puis.
 puisi
 puisī
 puius
@@ -13084,11 +12984,13 @@ pušķi
 pušķo
 pušķu
 pušķī
+pādei
+pādes
+pādēs
 pālai
 pālam
 pālas
 pālie
-pālii
 pālim
 pālis
 pālos
@@ -13097,9 +12999,9 @@ pālāk
 pālām
 pālās
 pālīt
+pānos
 pārar
 pārej
-pārii
 pārij
 pārim
 pāris
@@ -13122,7 +13024,6 @@ pātās
 pāvam
 pāvos
 pāvus
-pāķii
 pāķim
 pāķis
 pāķos
@@ -13141,7 +13042,6 @@ pēdiņ
 pēdām
 pēdās
 pēkšķ
-pēlii
 pēlim
 pēlis
 pēlām
@@ -13153,7 +13053,6 @@ pērku
 pērle
 pērli
 pērlē
-pērn.
 pērna
 pērni
 pērno
@@ -13161,7 +13060,10 @@ pērns
 pērnu
 pērnā
 pēros
+pērsa
 pērsi
+pērsu
+pērsā
 pērām
 pērās
 pērāt
@@ -13208,7 +13110,6 @@ pīnēs
 pīnīt
 pīpei
 pīpes
-pīpii
 pīpim
 pīpis
 pīpja
@@ -13228,7 +13129,6 @@ pītes
 pītos
 pītēm
 pītēs
-pīķii
 pīķim
 pīķis
 pīķos
@@ -13281,55 +13181,6 @@ pūlam
 pūlas
 pūlei
 pūles
-pūlii
-pūlim
-pūlis
-pūliņ
-pūlos
-pūlus
-pūlēm
-pūlēs
-pūlīt
-pūnei
-pūnes
-pūnēm
-pūnēs
-pūnīt
-pūpei
-pūpes
-pūpju
-pūpol
-pūpēm
-pūpēs
-pūram
-pūriņ
-pūros
-pūrus
-pūsim
-pūsit
-pūsli
-pūslī
-pūsma
-pūsmu
-pūsmā
-pūsos
-pūsās
-pūtei
-pūtes
-pūtis
-pūtos
-pūtām
-pūtās
-pūtāt
-pūtēj
-pūtēm
-pūtēs
-pūtīm
-pūtīs
-pūtīt
-pūzni
-pūznī
-pūķii
 pūķim
 pūķis
 pūķos
@@ -13378,7 +13229,6 @@ radžā
 ragam
 ragos
 ragus
-ragū.
 rahīt
 raiba
 raibi
@@ -13446,7 +13296,6 @@ rasol
 rasos
 rasot
 rastr
-rasu.
 rasām
 rasās
 rasēi
@@ -13528,7 +13377,6 @@ reisi
 reiss
 reisu
 reisā
-reiz.
 reize
 reizi
 reizē
@@ -13562,7 +13410,6 @@ renģē
 renīt
 renšu
 repam
-repii
 repim
 repis
 repja
@@ -13795,7 +13642,6 @@ rombu
 rombā
 romān
 rondo
-ronii
 ronim
 ronis
 ronēn
@@ -13818,7 +13664,6 @@ rotēs
 rotēt
 rotīs
 rotīt
-rovii
 rovim
 rovis
 rovja
@@ -13827,7 +13672,6 @@ rovju
 rovīt
 rozei
 rozes
-rozā.
 rozēm
 rozēs
 rozīt
@@ -13930,7 +13774,6 @@ rāmai
 rāmam
 rāmas
 rāmie
-rāmii
 rāmim
 rāmis
 rāmja
@@ -14159,7 +14002,6 @@ rūtīm
 rūtīs
 rūķei
 rūķes
-rūķii
 rūķim
 rūķis
 rūķos
@@ -14182,7 +14024,6 @@ saauž
 sabar
 sabat
 saber
-sabo.
 saboz
 sabož
 sabur
@@ -14288,7 +14129,6 @@ sakāp
 sakās
 sakāt
 sakāš
-sakē.
 sakņo
 sakņu
 sakša
@@ -14390,7 +14230,6 @@ sanam
 sanat
 sanes
 sanot
-sant.
 sanāc
 sanāk
 sanēs
@@ -14609,7 +14448,6 @@ sejiņ
 sejos
 sejām
 sejās
-sek..
 sekai
 sekas
 sekla
@@ -14688,7 +14526,6 @@ setam
 seter
 setos
 setus
-sevii
 sevis
 sezam
 sešas
@@ -15030,6 +14867,12 @@ slāpt
 slāpu
 slāpē
 slāsi
+slāta
+slāti
+slāto
+slāts
+slātu
+slātā
 slāva
 slāvi
 slāvs
@@ -15202,11 +15045,9 @@ sokos
 sokās
 solam
 soldo
-solii
 solim
 solis
 soliņ
-solo.
 solos
 solot
 solus
@@ -15231,7 +15072,6 @@ sopkā
 sorgo
 soģei
 soģes
-soģii
 soģim
 soģis
 soģos
@@ -15277,7 +15117,13 @@ spini
 spins
 spinu
 spinā
+spira
+spire
+spiri
 spirt
+spiru
+spirā
+spirē
 spiču
 spoka
 spoki
@@ -15562,7 +15408,6 @@ sutāt
 sutīs
 suķei
 suķes
-suķii
 suķim
 suķis
 suķos
@@ -15570,11 +15415,9 @@ suķus
 suķēm
 suķēs
 suķīt
-suņa.
 suņos
 suņuk
 suņus
-suši.
 sušos
 sušus
 sušķa
@@ -15655,7 +15498,6 @@ sādžu
 sādžā
 sāgai
 sāgas
-sāgo.
 sāgām
 sāgās
 sājai
@@ -15696,7 +15538,6 @@ sāmam
 sāmos
 sāmus
 sānam
-sānii
 sānis
 sāniņ
 sānos
@@ -15800,7 +15641,6 @@ sēkļa
 sēkļi
 sēkļu
 sēkšu
-sēlii
 sēlim
 sēlis
 sēnei
@@ -15882,7 +15722,6 @@ sīkām
 sīkās
 sīkāt
 sīkšu
-sīlii
 sīlim
 sīlis
 sīlīt
@@ -15977,11 +15816,7 @@ sūtīt
 sūtņa
 sūtņi
 sūtņu
-t.i..
-t.sk.
 tablo
-tabu.
-tacii
 tacim
 tacis
 taciņ
@@ -16003,7 +15838,6 @@ taiga
 taigu
 taigā
 taios
-tais.
 taisa
 taisi
 taisu
@@ -16072,6 +15906,9 @@ tarba
 tarbu
 tarbā
 tarif
+tarte
+tarti
+tartē
 tarām
 tarān
 tarās
@@ -16135,7 +15972,6 @@ teikt
 teiku
 teikā
 teist
-teju.
 tekam
 tekat
 tekne
@@ -16209,7 +16045,6 @@ testu
 testā
 testē
 tevis
-teķii
 teķim
 teķis
 teķos
@@ -16341,7 +16176,6 @@ tiārā
 tiņām
 tiņās
 tjurk
-tml..
 togad
 togai
 togas
@@ -16352,7 +16186,6 @@ tolos
 tolus
 tomāt
 tomēr
-tonii
 tonik
 tonim
 tonis
@@ -16469,12 +16302,10 @@ triko
 triks
 triku
 trikā
-trim.
 trimo
 trina
 trini
 trinu
-trio.
 triču
 triļi
 triļu
@@ -16632,7 +16463,6 @@ turam
 turas
 turat
 turbo
-turii
 turim
 turis
 turka
@@ -16642,7 +16472,6 @@ turku
 turkā
 turos
 turot
-turp.
 turpu
 turus
 turza
@@ -16716,7 +16545,6 @@ tāler
 tāles
 tālie
 tālos
-tālr.
 tālum
 tālus
 tālāk
@@ -16778,28 +16606,27 @@ tērču
 tērēs
 tērēt
 tēsos
+tēsta
+tēsti
+tēsto
+tēsts
+tēstu
+tēstā
 tēsām
 tēsās
 tēsāt
 tēsēj
 tēsīs
-tēta.
-tēte.
 tētei
 tētem
 tētes
-tēti.
-tētii
 tētim
 tētis
 tētiņ
 tētoi
 tētos
-tētu.
 tētui
 tētus
-tētē.
-tētī.
 tētīt
 tēvam
 tēviņ
@@ -16833,7 +16660,6 @@ tīkos
 tīkot
 tīnei
 tīnes
-tīnii
 tīnim
 tīnis
 tīnēm
@@ -16937,7 +16763,6 @@ tūļas
 tūļiņ
 tūļām
 tūļās
-u.c..
 ubaga
 ubagi
 ubago
@@ -16952,7 +16777,6 @@ uguns
 ugunī
 uguņo
 uguņu
-ukrii
 ukrim
 ukris
 ukros
@@ -16988,7 +16812,6 @@ upīte
 upīti
 upītē
 upīšu
-urbii
 urbim
 urbis
 urbja
@@ -17043,7 +16866,6 @@ urīni
 urīns
 urīnu
 urīnā
-urķii
 urķim
 urķis
 urķos
@@ -17063,7 +16885,6 @@ uteņi
 uteņu
 utiem
 utiņi
-utml.
 utoas
 utoja
 utoji
@@ -17071,7 +16892,6 @@ utoju
 utoos
 utosi
 utošu
-utt..
 uzaci
 uzacs
 uzacu
@@ -17340,7 +17160,6 @@ valgo
 valgs
 valgu
 valgā
-valii
 valim
 valis
 valka
@@ -17374,8 +17193,10 @@ vanna
 vanno
 vannu
 vannā
+vante
 vanti
 vants
+vantē
 vantī
 vanšu
 varai
@@ -17440,7 +17261,6 @@ vecaj
 vecam
 vecas
 vecie
-vecii
 vecim
 vecis
 vecos
@@ -17495,7 +17315,6 @@ velce
 velci
 velcē
 velgt
-velii
 velim
 velis
 velka
@@ -17569,7 +17388,6 @@ vesti
 vestu
 vestē
 vesās
-veto.
 vezum
 vezīr
 večai
@@ -17580,7 +17398,6 @@ večuk
 večus
 večām
 večās
-veģii
 veģim
 veģis
 veģos
@@ -17652,8 +17469,6 @@ vigos
 vigus
 vigām
 vigās
-viiem
-viiņi
 vijai
 vijam
 vijas
@@ -17729,7 +17544,6 @@ virpa
 virpo
 virpu
 virpā
-virs.
 virsa
 virsi
 virst
@@ -17774,7 +17588,6 @@ visus
 visām
 visās
 vitro
-vivo.
 vizam
 vizat
 vizla
@@ -17820,6 +17633,9 @@ vižņu
 vobla
 voblu
 voblā
+volga
+volgu
+volgā
 volta
 volti
 volts
@@ -17937,7 +17753,6 @@ vāzēm
 vāzēs
 vāzīs
 vāzīt
-vāģii
 vāģim
 vāģis
 vāģos
@@ -17999,7 +17814,6 @@ vērag
 vēras
 vērei
 vēres
-vērii
 vērim
 vēris
 vēros
@@ -18025,7 +17839,6 @@ vērtu
 vērtē
 vērum
 vērus
-vērā.
 vērām
 vērās
 vērāt
@@ -18064,7 +17877,6 @@ vētrā
 vētīs
 vētīt
 vēzas
-vēzii
 vēzim
 vēzis
 vēzos
@@ -18147,7 +17959,6 @@ vīģēm
 vīģēs
 vīķei
 vīķes
-vīķii
 vīķim
 vīķis
 vīķos
@@ -18220,7 +18031,6 @@ zauri
 zaurs
 zauru
 zaurā
-zaķii
 zaķim
 zaķis
 zaķos
@@ -18337,7 +18147,6 @@ zilām
 zilās
 zilēs
 zilēt
-zinii
 zinis
 zinos
 zinot
@@ -18458,7 +18267,6 @@ zupām
 zupās
 zusos
 zusās
-zutii
 zutim
 zutis
 zutni
@@ -18527,7 +18335,6 @@ zārki
 zārks
 zārku
 zārkā
-zāģii
 zāģim
 zāģis
 zāģos
@@ -18645,7 +18452,6 @@ zūdās
 ālava
 ālavu
 ālavā
-āmen.
 āmios
 āmius
 āmjos
@@ -18662,7 +18468,6 @@ zūdās
 āmuļu
 āmīši
 āmīšu
-āpsii
 āpsim
 āpsis
 āpsīt
@@ -18797,7 +18602,6 @@ zūdās
 čakšu
 čalai
 čalas
-čalii
 čalim
 čalis
 čalos
@@ -18820,6 +18624,7 @@ zūdās
 čekam
 čekas
 čekos
+čekot
 čekus
 čella
 čelli
@@ -19066,7 +18871,6 @@ zūdās
 ģelža
 ģelži
 ģelžu
-ģeķii
 ģeķim
 ģeķis
 ģeķos
@@ -19119,7 +18923,6 @@ zūdās
 ģībāt
 ģībēj
 ģībšu
-ģīmii
 ģīmim
 ģīmis
 ģīmja
@@ -19155,6 +18958,7 @@ zūdās
 īgnas
 īgnie
 īgnos
+īgnot
 īgnum
 īgnus
 īgnāk
@@ -19335,7 +19139,6 @@ zūdās
 ķezas
 ķezām
 ķezās
-ķeģii
 ķeģim
 ķeģis
 ķeģos
@@ -19361,7 +19164,6 @@ zūdās
 ķiltu
 ķiltā
 ķipar
-ķipii
 ķipim
 ķipis
 ķipja
@@ -19388,7 +19190,6 @@ zūdās
 ķobis
 ķobja
 ķobju
-ķocii
 ķocim
 ķocis
 ķoniņ
@@ -19451,14 +19252,12 @@ zūdās
 ķēvīt
 ķēzīs
 ķēzīt
-ķēķii
 ķēķim
 ķēķis
 ķēķos
 ķēķus
 ķīlai
 ķīlas
-ķīlii
 ķīlim
 ķīlis
 ķīlām
@@ -19472,12 +19271,10 @@ zūdās
 ķīpiņ
 ķīpām
 ķīpās
-ķīrii
 ķīrim
 ķīris
 ķīros
 ķīrus
-ķīsii
 ķīsim
 ķīsis
 ķīsīt
@@ -19488,7 +19285,6 @@ zūdās
 ķītru
 ķītrā
 ķīviņ
-ķīķii
 ķīķim
 ķīķis
 ķīķos
@@ -19497,9 +19293,10 @@ zūdās
 ķīļus
 ķīšos
 ķīšus
-ķūlii
 ķūlim
 ķūlis
+ķūlēs
+ķūlēt
 ķūļos
 ķūļus
 Ļeņin
@@ -19538,7 +19335,6 @@ zūdās
 ļogām
 ļogās
 ļogāt
-ļoti.
 ļotos
 ļotus
 ļumam
@@ -19646,7 +19442,6 @@ zūdās
 Šķēde
 Šķēdi
 Šķēdē
-š.g..
 šaham
 šahos
 šahta
@@ -19656,7 +19451,6 @@ zūdās
 šahīd
 šaios
 šaipi
-šais.
 šaius
 šajos
 šajās
@@ -19720,7 +19514,6 @@ zūdās
 šeihu
 šeihā
 šeios
-šeit.
 šekel
 šelfa
 šelfi
@@ -19746,8 +19539,6 @@ zūdās
 šihta
 šihtu
 šihtā
-šiiem
-šiiņi
 šikam
 šikos
 šikus
@@ -19845,7 +19636,6 @@ zūdās
 šuntu
 šuntā
 šuntē
-šurp.
 šurpu
 šuvei
 šuves
@@ -19865,7 +19655,9 @@ zūdās
 švaks
 švaku
 švakā
+šviks
 švīka
+švīks
 švīku
 švīkā
 švīta
@@ -20111,7 +19903,6 @@ zūdās
 ūķīši
 ūķīšu
 Žanam
-Žanii
 Žanim
 Žanis
 Žanna
@@ -20120,7 +19911,6 @@ zūdās
 Žanīt
 Žaņos
 Žaņus
-žabo.
 žagai
 žagar
 žagas
@@ -20161,7 +19951,6 @@ zūdās
 žirgs
 žirgt
 žirgu
-žiro.
 žirēs
 žirēt
 žogam
@@ -20199,6 +19988,10 @@ zūdās
 žuvām
 žuvāt
 žvadz
+žviks
+žvikt
+žvāks
+žvīks
 žākle
 žākli
 žāklē
@@ -20229,6 +20022,7 @@ zūdās
 žīdiņ
 žīdos
 žīdus
+žņakt
 žņaug
 žūjos
 žūjās
@@ -20249,3 +20043,13 @@ zūdās
 žūžot
 žūžām
 žūžās
+glups
+glupu
+glupa
+glupi
+glupā
+tējot
+tējos
+dimba
+dimbā
+dimbu
