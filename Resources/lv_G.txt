@@ -13142,6 +13142,9 @@ pušķi
 pušķo
 pušķu
 pušķī
+pādei
+pādes
+pādēs
 pālai
 pālam
 pālas
