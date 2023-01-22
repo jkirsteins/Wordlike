@@ -19978,6 +19978,10 @@ zūdās
 žuvām
 žuvāt
 žvadz
+žviks
+žvikt
+žvāks
+žvīks
 žākle
 žākli
 žāklē
@@ -20008,6 +20012,7 @@ zūdās
 žīdiņ
 žīdos
 žīdus
+žņakt
 žņaug
 žūjos
 žūjās
