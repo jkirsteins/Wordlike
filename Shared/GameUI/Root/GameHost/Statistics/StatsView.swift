@@ -30,6 +30,9 @@ struct StatsView: View {
     let stats: Stats 
     let state: GameState
     
+    @AppStateStorage(SettingsView.HIDE_FIRST_ROW_KEY)
+    var shouldHideFirstRow: Bool = false
+    
     // For sizing the horizontal stats bars
     @State var maxBarWidth: CGFloat = 0
     
@@ -188,7 +191,7 @@ struct StatsView: View {
             recalculateNextWord()
 #if os(iOS)
             self.shareItems = [
-                ShareableString(self.state.shareSnippet())
+                ShareableString(self.state.shareSnippet(hideFirstRow: shouldHideFirstRow))
             ]
 #else
             self.shareItems = [

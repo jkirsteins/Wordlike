@@ -153,7 +153,7 @@ lineWidth: CGFloat,
                     
                 }
                 
-                if !tileConfig.showCursor, let letter = letter {
+                if !tileConfig.showCursor, let letter = model?.letter {
                     Text(letter) 
                         .font( 
                             .system(size: fontSize(gr), weight: .bold))

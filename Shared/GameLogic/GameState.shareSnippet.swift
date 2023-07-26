@@ -31,10 +31,11 @@ extension GameState
         return revealState.shareSymbol
     }
     
-    public func shareSnippet() -> String {
+    public func shareSnippet(hideFirstRow: Bool) -> String {
         
         var rowValues: [String] = []
         
+        var isFirst = true
         for row in self.rows {
             var result = ""
             guard row.isSubmitted else {
@@ -47,6 +48,11 @@ extension GameState
                 result += shareSymbol(for: rs) 
             }
             
+            if self.submittedRows > 1 && isFirst && hideFirstRow {
+                result = String(repeating: "⬜️", count: 5)
+            }
+            
+            isFirst = false
             rowValues.append(result) 
         }
         
@@ -80,6 +86,7 @@ struct Internal_ShareSnippet_Test: View {
     let guesses: [String] 
     let day: Int
     let validator = WordValidator(locale: .en_US)
+    var hideFirstRow = false
     
     var body: some View {
         let state = GameState(
@@ -102,7 +109,7 @@ struct Internal_ShareSnippet_Test: View {
         )
         return VStack {
             Text(comment)
-            Text(state.shareSnippet())
+            Text(state.shareSnippet(hideFirstRow: hideFirstRow))
         }
     }
 }
@@ -110,6 +117,32 @@ struct Internal_ShareSnippet_Test: View {
 struct Internal_ShareSnippet_Test_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
+            Internal_ShareSnippet_Test(
+                comment: "Should not hide first row",
+                expected: "comma",
+                guesses: ["plain",
+                          "comma"],
+                day: 5,
+                hideFirstRow: false)
+                .border(.red)
+            
+            Internal_ShareSnippet_Test(
+                comment: "Should hide first row",
+                expected: "comma",
+                guesses: ["plain",
+                          "comma"],
+                day: 5,
+                hideFirstRow: true)
+                .border(.red)
+            
+            Internal_ShareSnippet_Test(
+                comment: "Should not hide first row when only one row available",
+                expected: "comma",
+                guesses: ["comma"],
+                day: 5,
+                hideFirstRow: true)
+                .border(.red)
+            
             Internal_ShareSnippet_Test(
                 comment: "Should have asterisk (hard mode)",
                 expected: "comma", 

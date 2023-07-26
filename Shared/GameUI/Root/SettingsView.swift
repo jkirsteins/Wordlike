@@ -31,6 +31,7 @@ struct SettingsView: View {
     static let HIGH_CONTRAST_KEY = "cfg.isHighContrast"
     static let SIMPLIFIED_LATVIAN_KEYBOARD_KEY = "cfg.isSimplifiedLatvianKeyboard"
     static let HARD_MODE_KEY = "cfg.isHardMode"
+    static let HIDE_FIRST_ROW_KEY = "cfg.hideFirstRow"
     
     @Environment(\.debug) var debug: Bool
     
@@ -41,6 +42,9 @@ struct SettingsView: View {
     
     @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
     var isSimplifiedLatvianKeyboard: Bool = false
+    
+    @AppStateStorage(SettingsView.HIDE_FIRST_ROW_KEY)
+    var shouldHideFirstRow: Bool = false
     
     @AppStateStorage(SettingsView.HARD_MODE_KEY)
     var isHardMode: Bool = false
@@ -82,6 +86,18 @@ struct SettingsView: View {
                 VStack(alignment: .leading) {
                     Text("Simplified Latvian keyboard")
                     Text("Do not require precise use of diacritics.")
+                        .font(.caption)
+                }
+            }
+        }
+    }
+    
+    var sharingSettings: some View {
+        Group {
+            Toggle(isOn: $shouldHideFirstRow) {
+                VStack(alignment: .leading) {
+                    Text("Don't share the first guess")
+                    Text("When sharing your successful guesses, keep the first attempt hidden. Useful if you always use the same word for the first guess.")
                         .font(.caption)
                 }
             }
@@ -254,6 +270,10 @@ struct SettingsView: View {
             Divider()
             
             hardModeSettings
+            
+            Divider()
+            
+            sharingSettings
             
             Divider()
             
