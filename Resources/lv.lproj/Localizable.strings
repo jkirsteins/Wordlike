@@ -134,3 +134,5 @@ The source code is freely available." = "Spēles izejas kods ir brīvi pieejams.
 "4th letter" = "4. burtam";
 "5th letter" = "5. burtam";
 
+"Don't share the first guess" = "Slēpt pirmo minējumu";
+"When sharing your successful guesses, keep the first attempt hidden. Useful if you always use the same word for the first guess." = "Nerādīt pirmajā mēģinājumā atminētos burtus, kad dalāties ar dienas rezultātu. Noderīgi, ja vienmēr izmantojat vienu vārdu pirmajā mēģinājumā.";

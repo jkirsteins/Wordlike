@@ -129,3 +129,5 @@ The source code is freely available." = "Le code source est disponible sur GitHu
 "4th letter" = "4ème lettre";
 "5th letter" = "5ème lettre";
 
+"Don't share the first guess" = "Première tentative cachée";
+"When sharing your successful guesses, keep the first attempt hidden. Useful if you always use the same word for the first guess." = "Lorsque vous partagez vos suppositions réussies, gardez la première tentative cachée. Cela est utile si vous utilisez toujours le même mot pour la première tentative.";
