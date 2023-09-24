@@ -92,3 +92,4 @@ iOSInjectionProject/
 .swiftpm
 
 *secrets.xcconfig*
+.DS_Store
