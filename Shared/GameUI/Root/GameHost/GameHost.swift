@@ -10,6 +10,9 @@ extension ActiveSheet: Identifiable {
     var id: Self { self }
 }
 
+// hacky rate limiting
+var lastUpdate: TimeInterval = 0
+
 /// Represents a game of a given languages, with its
 /// own stats separate from other games.
 struct GameHost: View {
@@ -79,17 +82,20 @@ struct GameHost: View {
         self.turnCounter.turnIndex(at: Date())
     }
     
-    func updateFromLoadedState(_ newState: DailyState) {
-        game.expected = TurnAnswer(
-            word: newState.expected,
-            day: turnIndex,
-            locale: self.locale,
-            validator: self.validator)
-        game.rows = newState.rows
-        game.isTallied = newState.state.isTallied
-        game.id = UUID()
-        game.initialized = true
-        game.date = newState.date
+    func updateFromLoadedState(_ newState: DailyState, justUpdateKeyboard: Bool = false) {
+        if !justUpdateKeyboard {
+            game.expected = TurnAnswer(
+                word: newState.expected,
+                day: turnIndex,
+                locale: self.locale,
+                validator: self.validator)
+            
+            game.rows = newState.rows
+            game.isTallied = newState.state.isTallied
+            game.id = UUID()
+            game.initialized = true
+            game.date = newState.date
+        }
         
         self.keyboardHints = safeComputeKeyboardHints()
     }
@@ -400,11 +406,29 @@ struct GameHost: View {
             
             self.clearToastAt = Date() + 2.0
         }
+        // TODO: bug with keyboards
         .onChange(of: self.dailyState) {
+            /* This callback affects:
+             - keyboard color update after submitting a row
+             - main view update after initializing the daily state with
+               the expected answer (e.g. search "self.dailyState = DailyState(expected: answer)")
+             */
             newState in
             
+            let now = NSDate().timeIntervalSince1970
+            let delta = now - lastUpdate
+            if delta < 0.5 {    // hacky rate limiting
+                return
+            }
+            
+            lastUpdate = now
+            
             if let newState = newState {
-                updateFromLoadedState(newState)
+                if game.initialized {
+                    updateFromLoadedState(newState, justUpdateKeyboard: true)
+                } else {
+                    updateFromLoadedState(newState)
+                }
             }
         }
         .onReceive(timer) { newTime in
