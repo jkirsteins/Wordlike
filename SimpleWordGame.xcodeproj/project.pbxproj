@@ -1278,7 +1278,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.60;
+				MARKETING_VERSION = 1.0.61;
 				PRODUCT_BUNDLE_IDENTIFIER = org.janiskirsteins.SimpleWordGame;
 				PRODUCT_NAME = Wordlike;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1321,7 +1321,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.60;
+				MARKETING_VERSION = 1.0.61;
 				PRODUCT_BUNDLE_IDENTIFIER = org.janiskirsteins.SimpleWordGame;
 				PRODUCT_NAME = Wordlike;
 				PROVISIONING_PROFILE_SPECIFIER = "";
