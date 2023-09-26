@@ -16,6 +16,7 @@ extension ActiveSheet: Identifiable {
 struct AppView: View {
     let turnCounter = CalendarDailyTurnCounter.current(
         start: WordValidator.MAR_22_2022)
+//    let turnCounter = BucketTurnCounter(start: Date(), bucket: 10)
     
     /// This is propogated through the environment
     /// and can trigger debug borders or messages.

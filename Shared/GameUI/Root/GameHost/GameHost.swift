@@ -194,7 +194,11 @@ struct GameHost: View {
         let newState: DailyState.State
         switch (dailyState!.state) {
         case .unknown, .notStarted:
-            newState = .inProgress
+            if let firstRow = newRows.first, firstRow.word.displayValue == "" {
+                newState = .notStarted
+            } else {
+                newState = .inProgress
+            }
         default:
             newState = dailyState?.state ?? .inProgress
         }
@@ -315,6 +319,15 @@ struct GameHost: View {
     @ViewBuilder
     var bodyUnconstrained: some View {
         VStack {
+            
+            if debugViz {
+                if let game = turnDataToDisplay {
+                    Text("Have game")
+                } else {
+                    Text("No game")
+                }
+            }
+            
             if let game = turnDataToDisplay {
                 ZStack {
 #if os(iOS)
@@ -340,6 +353,18 @@ struct GameHost: View {
                 
                 if debugViz {
                     Text(dailyState?.expected.displayValue ?? "none")
+                    
+                    if let s = dailyState?.state {
+                        if s == .inProgress {
+                            Text("In progress")
+                        } else if s == .notStarted {
+                            Text("Not started")
+                        } else {
+                            Text("Finished")
+                        }
+                    } else {
+                        Text("No state")
+                    }
                 }
                 
                 keyboardView
@@ -411,23 +436,38 @@ struct GameHost: View {
             /* This callback affects:
              - keyboard color update after submitting a row
              - main view update after initializing the daily state with
-               the expected answer (e.g. search "self.dailyState = DailyState(expected: answer)")
+             the expected answer (e.g. search "self.dailyState = DailyState(expected: answer)")
              */
             newState in
+                
+            // hacky way to break the dailyState update loops (it
+            // gets triggered again when we initialize game)
+            DispatchQueue.main.async {
             
-            let now = NSDate().timeIntervalSince1970
-            let delta = now - lastUpdate
-            if delta < 0.5 {    // hacky rate limiting
-                return
-            }
-            
-            lastUpdate = now
-            
-            if let newState = newState {
-                if game.initialized {
-                    updateFromLoadedState(newState, justUpdateKeyboard: true)
-                } else {
-                    updateFromLoadedState(newState)
+                let now = NSDate().timeIntervalSince1970
+                let delta = now - lastUpdate
+                if delta < 1 {    // hacky rate limiting
+                    return
+                }
+                
+                lastUpdate = now
+                
+                if let newState = newState {
+                    
+                    // This is for the initial display of the game (we need to force
+                    // full state update when turnDataToDisplay can return non-nil)
+                    let isFresh = turnCounter.isFresh(
+                        game.date, at: Date())
+                    let newIsFresh = turnCounter.isFresh(
+                        newState.date, at: Date())
+                    let needGameRefresh = !isFresh && newIsFresh
+                    // ---
+                    
+                    if !game.initialized || needGameRefresh {
+                        updateFromLoadedState(newState)
+                    } else {
+                        updateFromLoadedState(newState, justUpdateKeyboard: true)
+                    }
                 }
             }
         }
