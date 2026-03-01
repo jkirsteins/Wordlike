@@ -321,7 +321,7 @@ struct GameHost: View {
         VStack {
             
             if debugViz {
-                if let game = turnDataToDisplay {
+                if turnDataToDisplay != nil {
                     Text("Have game")
                 } else {
                     Text("No game")

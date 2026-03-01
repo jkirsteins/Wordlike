@@ -127,10 +127,10 @@ struct Logo: View {
                  language support (so Locale.current
                  might not match the language preference
                  defined in device Settings) */
-                switch(locale.languageCode) {
-                case (Locale.lv_LV.languageCode):
+                switch(locale.language.languageCode?.identifier) {
+                case (Locale.lv_LV.language.languageCode?.identifier):
                     LatvianLogo()
-                case (Locale.fr_FR.languageCode):
+                case (Locale.fr_FR.language.languageCode?.identifier):
                     FrenchLogo()
                 default:
                     EnglishLogo()

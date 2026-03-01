@@ -13,6 +13,7 @@ struct StatsExportDocument: Codable {
     let version: Int
     let exportDate: String
     let stats: [String: ExportableStats]
+    let turnStates: [String: DailyState]?
 }
 
 enum StatsTransfer {
@@ -46,10 +47,20 @@ enum StatsTransfer {
             )
         }
 
+        var turnStates: [String: DailyState] = [:]
+        for locale in Locale.supportedLocales {
+            let key = "turnState.\(locale.fileBaseName)"
+            if let raw = UserDefaults.standard.string(forKey: key),
+               let state = DailyState(rawValue: raw) {
+                turnStates[locale.fileBaseName] = state
+            }
+        }
+
         return StatsExportDocument(
             version: 1,
             exportDate: dateFormatter.string(from: Date()),
-            stats: exportStats
+            stats: exportStats,
+            turnStates: turnStates.isEmpty ? nil : turnStates
         )
     }
 
@@ -76,6 +87,13 @@ enum StatsTransfer {
             )
 
             UserDefaults.standard.set(stats.rawValue, forKey: "stats.\(localeKey)")
+        }
+
+        if let turnStates = document.turnStates {
+            for (localeKey, dailyState) in turnStates {
+                guard Calendar.current.isDateInToday(dailyState.date) else { continue }
+                UserDefaults.standard.set(dailyState.rawValue, forKey: "turnState.\(localeKey)")
+            }
         }
     }
 

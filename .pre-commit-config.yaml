@@ -15,3 +15,10 @@ repos:
         language: script
         pass_filenames: false
         always_run: true
+
+      - id: check-warnings
+        name: Check for compiler warnings
+        entry: Scripts/check-warnings.sh
+        language: script
+        pass_filenames: false
+        always_run: true

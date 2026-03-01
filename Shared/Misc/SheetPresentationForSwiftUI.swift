@@ -27,10 +27,10 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
         return view
     }
     
-    class _VC<Content: View>: UIHostingController<Content> {
+    class _VC<C: View>: UIHostingController<C> {
         let coordinator: Coordinator
-        
-        init(_ coordinator: Coordinator, rootView: Content) {
+
+        init(_ coordinator: Coordinator, rootView: C) {
             self.coordinator = coordinator
             super.init(rootView: rootView)
         }

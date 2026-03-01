@@ -6,8 +6,8 @@ struct WrongExampleWord: View {
     var locale: Locale
     
     var body: some View {
-        switch(locale.languageCode) {
-        case Locale.lv_LV.languageCode:
+        switch(locale.language.languageCode?.identifier) {
+        case Locale.lv_LV.language.languageCode?.identifier:
             HStack {
                 AgitatedTile(model: TileModel(letter: "k", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "a", state: .maskedFilled))
@@ -15,7 +15,7 @@ struct WrongExampleWord: View {
                 AgitatedTile(model: TileModel(letter: "t", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "e", state: .wrongLetter))
             }
-        case Locale.fr_FR.languageCode:
+        case Locale.fr_FR.language.languageCode?.identifier:
             HStack {
                 AgitatedTile(model: TileModel(letter: "p", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "l", state: .maskedFilled))
@@ -41,8 +41,8 @@ struct GreenExampleWord: View {
     var locale: Locale
     
     var body: some View {
-        switch(locale.languageCode) {
-        case Locale.lv_LV.languageCode:
+        switch(locale.language.languageCode?.identifier) {
+        case Locale.lv_LV.language.languageCode?.identifier:
             HStack {
                 AgitatedTile(model: TileModel(letter: "s", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "p", state: .maskedFilled))
@@ -50,7 +50,7 @@ struct GreenExampleWord: View {
                 AgitatedTile(model: TileModel(letter: "g", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "a", state: .maskedFilled))
             }
-        case Locale.fr_FR.languageCode:
+        case Locale.fr_FR.language.languageCode?.identifier:
             HStack {
                 AgitatedTile(model: TileModel(letter: "m", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "e", state: .maskedFilled))
@@ -76,8 +76,8 @@ struct YellowExampleWord: View {
     var locale: Locale
     
     var body: some View {
-        switch(locale.languageCode) {
-        case Locale.lv_LV.languageCode:
+        switch(locale.language.languageCode?.identifier) {
+        case Locale.lv_LV.language.languageCode?.identifier:
             HStack {
                 AgitatedTile(model: TileModel(letter: "p", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "l", state: .wrongPlace))
@@ -85,7 +85,7 @@ struct YellowExampleWord: View {
                 AgitatedTile(model: TileModel(letter: "k", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "a", state: .maskedFilled))
             }
-        case Locale.fr_FR.languageCode:
+        case Locale.fr_FR.language.languageCode?.identifier:
             HStack {
                 AgitatedTile(model: TileModel(letter: "f", state: .maskedFilled))
                 AgitatedTile(model: TileModel(letter: "i", state: .wrongPlace))
