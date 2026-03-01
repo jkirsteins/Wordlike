@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03D30B87D0FD66F0A0EFD682 /* WordListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3965C6264DE72A75AACC4F40 /* WordListTests.swift */; };
 		E70D81FF2837E16100D4F2FF /* NativeTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70D81FE2837E16100D4F2FF /* NativeTypes.swift */; };
 		E70D82002837E16100D4F2FF /* NativeTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70D81FE2837E16100D4F2FF /* NativeTypes.swift */; };
 		E70D82022837E3D500D4F2FF /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70D82012837E3D500D4F2FF /* UIImageExtensions.swift */; };
@@ -241,7 +242,20 @@
 		E7F8F8CD2837DF8C001435E0 /* ConfettiView in Frameworks */ = {isa = PBXBuildFile; productRef = E7F8F8CC2837DF8C001435E0 /* ConfettiView */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		6EDD12E52617B14EDF5B3D2D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E7F299552837DAB9005792DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E7F299602837DABB005792DA;
+			remoteInfo = "SimpleWordGame (iOS)";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		3965C6264DE72A75AACC4F40 /* WordListTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WordListTests.swift; sourceTree = "<group>"; };
+		6C7DB0EE7A0D0D44128E683F /* WordlikeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WordlikeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		759FE14E10EFCA4A01595D09 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		E70D81FE2837E16100D4F2FF /* NativeTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeTypes.swift; sourceTree = "<group>"; };
 		E70D82012837E3D500D4F2FF /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		E70D82032837EDC100D4F2FF /* NSColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSColorExtensions.swift; sourceTree = "<group>"; };
@@ -395,6 +409,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		DE3813A16781F1AC336D3421 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E7F2995E2837DABB005792DA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -414,9 +435,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		54F19358FBE91FD053D2394F /* WordlikeTests */ = {
+			isa = PBXGroup;
+			children = (
+				3965C6264DE72A75AACC4F40 /* WordListTests.swift */,
+			);
+			name = WordlikeTests;
+			path = WordlikeTests;
+			sourceTree = SOURCE_ROOT;
+		};
+		ACE5216951710E274ED316AA /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				759FE14E10EFCA4A01595D09 /* Cocoa.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
 		E70D82052837F57B00D4F2FF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ACE5216951710E274ED316AA /* OS X */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -435,6 +474,7 @@
 				E7F299682837DABB005792DA /* macOS */,
 				E7F299622837DABB005792DA /* Products */,
 				E70D82052837F57B00D4F2FF /* Frameworks */,
+				54F19358FBE91FD053D2394F /* WordlikeTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -462,6 +502,7 @@
 			children = (
 				E7F299612837DABB005792DA /* Wordlike.app */,
 				E7F299672837DABB005792DA /* Wordlike.app */,
+				6C7DB0EE7A0D0D44128E683F /* WordlikeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -761,6 +802,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		AD04296729206EE35CE89038 /* WordlikeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA784BDDC2CC22AA4B501171 /* Build configuration list for PBXNativeTarget "WordlikeTests" */;
+			buildPhases = (
+				A2D3EEFC70C4B8008864F411 /* Sources */,
+				DE3813A16781F1AC336D3421 /* Frameworks */,
+				E20EE9DD2FC7FECC70D52AF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C90A73808C0824BFB0EF20FC /* PBXTargetDependency */,
+			);
+			name = WordlikeTests;
+			productName = WordlikeTests;
+			productReference = 6C7DB0EE7A0D0D44128E683F /* WordlikeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		E7F299602837DABB005792DA /* SimpleWordGame (iOS) */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E7F299722837DABB005792DA /* Build configuration list for PBXNativeTarget "SimpleWordGame (iOS)" */;
@@ -841,11 +900,19 @@
 			targets = (
 				E7F299602837DABB005792DA /* SimpleWordGame (iOS) */,
 				E7F299662837DABB005792DA /* SimpleWordGame (macOS) */,
+				AD04296729206EE35CE89038 /* WordlikeTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		E20EE9DD2FC7FECC70D52AF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E7F2995F2837DABB005792DA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -890,6 +957,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A2D3EEFC70C4B8008864F411 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03D30B87D0FD66F0A0EFD682 /* WordListTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E7F2995D2837DABB005792DA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1109,6 +1184,15 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		C90A73808C0824BFB0EF20FC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "SimpleWordGame (iOS)";
+			target = E7F299602837DABB005792DA /* SimpleWordGame (iOS) */;
+			targetProxy = 6EDD12E52617B14EDF5B3D2D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		E736C9B3283FE64A001F2C2C /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
@@ -1133,6 +1217,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		750A29268FAF1896941D3BB9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = FN5YR78T7X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_NAME = WordlikeTests;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wordlike.app/Wordlike";
+			};
+			name = Debug;
+		};
+		A5B5917E990C39D742844B23 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = FN5YR78T7X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_NAME = WordlikeTests;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wordlike.app/Wordlike";
+			};
+			name = Release;
+		};
 		E7F299702837DABB005792DA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1408,6 +1530,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		BA784BDDC2CC22AA4B501171 /* Build configuration list for PBXNativeTarget "WordlikeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5B5917E990C39D742844B23 /* Release */,
+				750A29268FAF1896941D3BB9 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E7F299582837DAB9005792DA /* Build configuration list for PBXProject "SimpleWordGame" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

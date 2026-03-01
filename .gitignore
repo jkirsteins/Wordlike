@@ -93,3 +93,5 @@ iOSInjectionProject/
 
 *secrets.xcconfig*
 .DS_Store
+.claude/worktrees
+.claude
