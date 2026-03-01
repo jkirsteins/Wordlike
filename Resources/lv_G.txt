@@ -20053,3 +20053,5 @@ tējos
 dimba
 dimbā
 dimbu
+pūlis
+pūsma

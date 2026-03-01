@@ -47,6 +47,16 @@ final class WordListTests: XCTestCase {
         XCTAssertEqual(word, "KOPNE")
     }
     
+    func testLvStartOfGen1() {
+        let counter = DailyTurnCounter(start: WordValidator.MAR_22_2022)
+        let date = Calendar.current.date(from: DateComponents(year: 2028, month: 10, day: 16))!
+        let ti = counter.turnIndex(at: date, in: .current)
+
+        let answers = WordValidator.loadAnswers(seed: 14384982345, locale: .lv_LV(simplified: false))
+        let word = answers[ti % answers.count]
+        XCTAssertEqual(word, "MANGA")
+    }
+    
     func testFrWordOnMar1_2026() {
         let counter = DailyTurnCounter(start: WordValidator.MAR_22_2022)
         let date = Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 1))!
@@ -55,6 +65,27 @@ final class WordListTests: XCTestCase {
         let answers = WordValidator.loadAnswers(seed: 14384982345, locale: .fr_FR)
         let word = answers[ti % answers.count]
         XCTAssertEqual(word, "PLOMB")
+    }
+
+    // MARK: - Answer words must be guessable
+
+    func testAllAnswerWordsAreInGuessDictionary() {
+        let locales: [(GameLocale, String)] = [
+            (.en_US, "en"),
+            (.en_GB, "en-GB"),
+            (.fr_FR, "fr"),
+            (.lv_LV(simplified: false), "lv"),
+        ]
+
+        for (locale, baseName) in locales {
+            let guesses = Set(WordValidator.load("\(baseName)_G"))
+            let answers = WordValidator.loadAnswers(seed: 14384982345, locale: locale)
+
+            for answer in answers {
+                XCTAssertTrue(guesses.contains(answer),
+                              "\(baseName): answer '\(answer)' is not in the guess dictionary")
+            }
+        }
     }
 
     // MARK: - Generational word list tests
