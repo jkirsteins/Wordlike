@@ -62,4 +62,15 @@ if [ "$dirty" -eq 1 ]; then
     echo "pre-commit: word list files were cleaned. Changes have been staged."
 fi
 
-exit 0
+# Run unit tests
+echo "pre-commit: running WordlikeTests..."
+if ! xcodebuild test \
+    -scheme "SimpleWordGame (iOS)" \
+    -destination 'platform=macOS,variant=Mac Catalyst' \
+    -configuration Debug \
+    -only-testing:WordlikeTests \
+    -quiet 2>&1 | tail -5; then
+    echo "pre-commit: tests FAILED — commit aborted."
+    exit 1
+fi
+echo "pre-commit: tests passed."
