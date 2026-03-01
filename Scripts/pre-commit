@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+#
+# Pre-commit hook: strip leading/trailing blank lines from staged
+# word list resource files.
+#
+# Gen 0 answer files (*_A.txt) are EXEMPT because loadRaw() depends
+# on their exact byte layout for shuffle compatibility.
+# See docs/word-lists.md for details.
+
+set -euo pipefail
+
+# Match staged .txt files under Resources/, excluding gen 0 answer files.
+# Gen 0 pattern: {locale}_A.txt (no underscore+digit before .txt)
+staged_files=$(git diff --cached --name-only --diff-filter=ACM -- 'Resources/*.txt' || true)
+
+if [ -z "$staged_files" ]; then
+    exit 0
+fi
+
+dirty=0
+
+for f in $staged_files; do
+    basename=$(basename "$f")
+
+    # Skip gen 0 answer files: match *_A.txt but NOT *_A_*.txt
+    if [[ "$basename" =~ ^[a-zA-Z-]+_A\.txt$ ]]; then
+        continue
+    fi
+
+    # Check for leading or trailing blank lines
+    if [ ! -s "$f" ]; then
+        continue
+    fi
+
+    head_byte=$(head -c1 "$f" | xxd -p)
+    tail_byte=$(tail -c1 "$f" | xxd -p)
+
+    needs_fix=0
+    if [ "$head_byte" = "0a" ]; then
+        needs_fix=1
+    fi
+    # Trailing newline after last word means the file ends with \n\n
+    # (one \n terminates the last word, a second is a blank trailing line).
+    # We check if the last two bytes are \n\n.
+    tail_two=$(tail -c2 "$f" | xxd -p)
+    if [ "$tail_two" = "0a0a" ]; then
+        needs_fix=1
+    fi
+
+    if [ "$needs_fix" -eq 1 ]; then
+        # Strip leading blank lines
+        sed -i '' '/./,$!d' "$f"
+        # Strip trailing blank lines
+        sed -i '' -e :a -e '/^\n*$/{$d;N;ba' -e '}' "$f"
+        git add "$f"
+        echo "pre-commit: stripped blank lines from $f"
+        dirty=1
+    fi
+done
+
+if [ "$dirty" -eq 1 ]; then
+    echo "pre-commit: word list files were cleaned. Changes have been staged."
+fi
+
+exit 0
