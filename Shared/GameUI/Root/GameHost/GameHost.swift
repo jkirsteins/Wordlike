@@ -381,36 +381,22 @@ struct GameHost: View {
                     .border(debugViz ? .red : .clear)
             }
             
-            if
-                dailyState == nil,
-                // Answer can be nil if validator is not
-                // ready yet
-                    let answer = validator.answer(
-                        at: turnIndex)
-            {
-                Text("Initializing state...").onAppear {
-                    guard let _ = dailyState else {
-                        self.dailyState = DailyState(expected: answer)
-                        return
-                    }
-                }
+            if dailyState == nil, validator.ready {
+                Text("Initializing state...")
             }
         }
         .border(debugViz ? .yellow : .clear)
-        .onAppear {
+        .task(id: validator.locale.nativeLocale.identifier) {
+            guard !validator.ready else { return }
             let seed = validator.seed
             let locale = validator.locale
-            
-            DispatchQueue.global(qos: .userInitiated).async {
-                let a = WordValidator.loadAnswers(
-                    seed: seed,
-                    locale: locale)
+            let (answers, guessTree) = await Task.detached(priority: .userInitiated) {
+                let a = WordValidator.loadAnswers(seed: seed, locale: locale)
                 let gt = WordValidator.loadGuessTree(locale: locale)
-                
-                DispatchQueue.main.async {
-                    validator.initialize(answers: a, guessTree: gt)
-                }
-            }
+                return (a, gt)
+            }.value
+            guard !Task.isCancelled else { return }
+            validator.initialize(answers: answers, guessTree: guessTree)
         }
         .environmentObject(game)
         .environmentObject(toastMessageCenter)
@@ -421,10 +407,18 @@ struct GameHost: View {
             if shouldShowHelp {
                 activeSheet = .help
             }
-            
+
             if let newState = self.dailyState {
                 updateFromLoadedState(newState)
+            } else if validator.ready, let answer = validator.answer(at: turnIndex) {
+                self.dailyState = DailyState(expected: answer)
             }
+        }
+        .onChange(of: validator.ready) { isReady in
+            guard isReady, dailyState == nil,
+                  let answer = validator.answer(at: turnIndex)
+            else { return }
+            self.dailyState = DailyState(expected: answer)
         }
         .onChange(of: self.toastMessageCenter.message ) {
             newMessage in
