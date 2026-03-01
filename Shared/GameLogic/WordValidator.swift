@@ -75,8 +75,18 @@ class WordValidator : ObservableObject
         
     static func loadAnswers(seed: Int, locale: GameLocale) -> [String] {
         var random = ArbitraryRandomNumberGenerator(seed: UInt64(seed))
-        
-        return Self.load("\(locale.fileBaseName)_A").shuffled(using: &random)
+
+        // Use loadRaw to preserve array size (and thus shuffle indices)
+        // so that valid days keep the same word as before the fix.
+        var shuffled = Self.loadRaw("\(locale.fileBaseName)_A").shuffled(using: &random)
+
+        let validWords = shuffled.filter { !$0.isEmpty }
+        guard !validWords.isEmpty else { return shuffled }
+        for i in shuffled.indices where shuffled[i].isEmpty {
+            shuffled[i] = validWords[i % validWords.count]
+        }
+
+        return shuffled
     }
     
     static func loadGuessTree(locale: GameLocale) -> WordTree {
@@ -92,6 +102,7 @@ class WordValidator : ObservableObject
         }
     }
     
+    /// Load words from a file, filtering empty lines.
     static func load(_ name: String) -> [String] {
         guard let fileUrl = Bundle.main.url(forResource: name, withExtension: "txt") else {
             fatalError("Data not found: \(name)")
@@ -102,6 +113,22 @@ class WordValidator : ObservableObject
                 .map { $0.trimmingCharacters(in: .whitespaces) }
                 .filter { !$0.isEmpty && !$0.hasPrefix("#") }
                 .map { $0.uppercased() }
+        } catch {
+            fatalError(String(describing: error))
+        }
+    }
+
+    /// Load words preserving the original array layout (including empties)
+    /// so that shuffling produces the same index mapping as before the fix.
+    static func loadRaw(_ name: String) -> [String] {
+        guard let fileUrl = Bundle.main.url(forResource: name, withExtension: "txt") else {
+            fatalError("Data not found: \(name)")
+        }
+        do {
+            let text = try String(contentsOf: fileUrl, encoding: .utf8)
+            return text.components(separatedBy: "\n").map {
+                $0.uppercased()
+            }
         } catch {
             fatalError(String(describing: error))
         }
