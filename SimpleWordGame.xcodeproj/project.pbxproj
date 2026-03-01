@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		03D30B87D0FD66F0A0EFD682 /* WordListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3965C6264DE72A75AACC4F40 /* WordListTests.swift */; };
+		5D3E88A649C9A6AD553AE2D2 /* lv_A_1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 696502C42459128E8BD9E688 /* lv_A_1.txt */; };
+		9CD550C7BAA20896C42D047A /* lv_A_1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 696502C42459128E8BD9E688 /* lv_A_1.txt */; };
 		E70D81FF2837E16100D4F2FF /* NativeTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70D81FE2837E16100D4F2FF /* NativeTypes.swift */; };
 		E70D82002837E16100D4F2FF /* NativeTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70D81FE2837E16100D4F2FF /* NativeTypes.swift */; };
 		E70D82022837E3D500D4F2FF /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70D82012837E3D500D4F2FF /* UIImageExtensions.swift */; };
@@ -254,6 +256,7 @@
 
 /* Begin PBXFileReference section */
 		3965C6264DE72A75AACC4F40 /* WordListTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WordListTests.swift; sourceTree = "<group>"; };
+		696502C42459128E8BD9E688 /* lv_A_1.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = lv_A_1.txt; sourceTree = "<group>"; };
 		6C7DB0EE7A0D0D44128E683F /* WordlikeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WordlikeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		759FE14E10EFCA4A01595D09 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		E70D81FE2837E16100D4F2FF /* NativeTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeTypes.swift; sourceTree = "<group>"; };
@@ -574,6 +577,7 @@
 				E7F29B382837DB3B005792DA /* lv_A.txt */,
 				E736C9B3283FE64A001F2C2C /* Localizable.strings */,
 				E762614B28400839000A80FC /* InfoPlist.strings */,
+				696502C42459128E8BD9E688 /* lv_A_1.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -933,6 +937,7 @@
 				E7F29BE72837DB3C005792DA /* fr_G.txt in Resources */,
 				E7F29BE52837DB3C005792DA /* lv_wordlist_5.txt in Resources */,
 				E7F29BD72837DB3C005792DA /* en_A.txt in Resources */,
+				9CD550C7BAA20896C42D047A /* lv_A_1.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -951,6 +956,7 @@
 				E7F29BDE2837DB3C005792DA /* en_G.txt in Resources */,
 				E7F29BE82837DB3C005792DA /* fr_G.txt in Resources */,
 				E7F29BD82837DB3C005792DA /* en_A.txt in Resources */,
+				5D3E88A649C9A6AD553AE2D2 /* lv_A_1.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

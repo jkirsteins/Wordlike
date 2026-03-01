@@ -61,26 +61,33 @@ final class WordListTests: XCTestCase {
 
     func testGen1WordsAppearAfterGen0() {
         let answers = WordValidator.loadAnswers(seed: 14384982345, locale: .lv_LV(simplified: false))
-        let gen0 = WordValidator.load("lv_A")
+        let gen0Raw = WordValidator.loadRaw("lv_A")
 
-        // Gen 1 words should appear after all gen 0 words
-        XCTAssertTrue(answers.count > gen0.count,
-                       "With gen 1 file present, total answers (\(answers.count)) must exceed gen 0 count (\(gen0.count))")
+        // Gen 1 words should appear after all gen 0 (raw) entries
+        XCTAssertTrue(answers.count > gen0Raw.count,
+                       "With gen 1 file present, total answers (\(answers.count)) must exceed gen 0 count (\(gen0Raw.count))")
 
-        // The first gen0.count entries should be exactly the gen 0 words (shuffled)
-        let gen0Set = Set(gen0)
-        let headSet = Set(answers.prefix(gen0.count))
-        XCTAssertEqual(gen0Set, headSet, "First \(gen0.count) answers should be gen 0 words")
+        // Gen 1 words should be in the tail
+        let gen1 = WordValidator.load("lv_A_1")
+        let tail = Set(answers.suffix(gen1.count))
+        let gen1Set = Set(gen1)
+        XCTAssertEqual(gen1Set, tail, "Last \(gen1.count) answers should be gen 1 words")
     }
 
     func testGen0OrderUnchangedWithGen1Present() {
-        // Loading with only gen 0 should produce the same prefix as loading with gen 0 + gen 1
-        let gen0Only = WordValidator.load("lv_A")
+        // loadAnswers uses loadRaw for gen 0, so we must match that
+        let gen0Raw = WordValidator.loadRaw("lv_A")
         var rng = ArbitraryRandomNumberGenerator(seed: UInt64(14384982345))
-        let gen0Shuffled = gen0Only.shuffled(using: &rng)
+        var gen0Shuffled = gen0Raw.shuffled(using: &rng)
+
+        // Replicate the empty-replacement logic
+        let validWords = gen0Shuffled.filter { !$0.isEmpty }
+        for i in gen0Shuffled.indices where gen0Shuffled[i].isEmpty {
+            gen0Shuffled[i] = validWords[i % validWords.count]
+        }
 
         let allAnswers = WordValidator.loadAnswers(seed: 14384982345, locale: .lv_LV(simplified: false))
-        let prefix = Array(allAnswers.prefix(gen0Only.count))
+        let prefix = Array(allAnswers.prefix(gen0Raw.count))
 
         XCTAssertEqual(prefix, gen0Shuffled, "Gen 0 order must be identical whether or not gen 1 is present")
     }

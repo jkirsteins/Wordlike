@@ -74,19 +74,35 @@ class WordValidator : ObservableObject
     var guessTree: WordTree? = nil
         
     static func loadAnswers(seed: Int, locale: GameLocale) -> [String] {
-        var random = ArbitraryRandomNumberGenerator(seed: UInt64(seed))
+        let baseName = "\(locale.fileBaseName)_A"
 
-        // Use loadRaw to preserve array size (and thus shuffle indices)
-        // so that valid days keep the same word as before the fix.
-        var shuffled = Self.loadRaw("\(locale.fileBaseName)_A").shuffled(using: &random)
+        // Gen 0: use loadRaw to preserve original array layout (including
+        // empties) so that shuffling produces the same index mapping as
+        // before the empty-string fix.
+        var rng0 = ArbitraryRandomNumberGenerator(seed: UInt64(seed))
+        var gen0Shuffled = Self.loadRaw(baseName).shuffled(using: &rng0)
 
-        let validWords = shuffled.filter { !$0.isEmpty }
-        guard !validWords.isEmpty else { return shuffled }
-        for i in shuffled.indices where shuffled[i].isEmpty {
-            shuffled[i] = validWords[i % validWords.count]
+        // Replace empty entries with valid words
+        let validWords = gen0Shuffled.filter { !$0.isEmpty }
+        if !validWords.isEmpty {
+            for i in gen0Shuffled.indices where gen0Shuffled[i].isEmpty {
+                gen0Shuffled[i] = validWords[i % validWords.count]
+            }
         }
 
-        return shuffled
+        var result = gen0Shuffled
+
+        // Append additional generations (gen 1, 2, ...) if files exist.
+        // Each generation uses a different seed offset so its shuffle is
+        // independent of gen 0.
+        var gen = 1
+        while Bundle.main.url(forResource: "\(baseName)_\(gen)", withExtension: "txt") != nil {
+            var rng = ArbitraryRandomNumberGenerator(seed: UInt64(seed) &+ UInt64(gen))
+            result.append(contentsOf: Self.load("\(baseName)_\(gen)").shuffled(using: &rng))
+            gen += 1
+        }
+
+        return result
     }
     
     static func loadGuessTree(locale: GameLocale) -> WordTree {
