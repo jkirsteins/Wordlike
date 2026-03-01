@@ -35,7 +35,7 @@ final class WordListTests: XCTestCase {
         XCTAssertEqual(word.count, 5, "Dec 3, 2025 en_GB word must be 5 letters, got '\(word)'")
     }
 
-    // MARK: - Snapshot test (should PASS before fix)
+    // MARK: - Snapshot tests
 
     func testLvWordOnMar1_2026() {
         let counter = DailyTurnCounter(start: WordValidator.MAR_22_2022)
@@ -44,7 +44,7 @@ final class WordListTests: XCTestCase {
 
         let answers = WordValidator.loadAnswers(seed: 14384982345, locale: .lv_LV(simplified: false))
         let word = answers[ti % answers.count]
-        XCTAssertEqual(word, "KOPNE")
+        XCTAssertEqual(word, "ANĪSS")
     }
     
     func testFrWordOnMar1_2026() {
@@ -54,6 +54,6 @@ final class WordListTests: XCTestCase {
 
         let answers = WordValidator.loadAnswers(seed: 14384982345, locale: .fr_FR)
         let word = answers[ti % answers.count]
-        XCTAssertEqual(word, "PLOMB")
+        XCTAssertEqual(word, "STORE")
     }
 }

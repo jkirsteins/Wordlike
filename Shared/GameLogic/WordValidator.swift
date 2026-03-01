@@ -93,15 +93,15 @@ class WordValidator : ObservableObject
     }
     
     static func load(_ name: String) -> [String] {
+        guard let fileUrl = Bundle.main.url(forResource: name, withExtension: "txt") else {
+            fatalError("Data not found: \(name)")
+        }
         do {
-            guard let fileUrl = Bundle.main.url(forResource: name, withExtension: "txt") else { 
-                fatalError("Data not found: \(name)") 
-            }
-            
-            let text = try String(contentsOf: fileUrl, encoding: String.Encoding.utf8)
-            return text.components(separatedBy: "\n").map {
-                $0.uppercased()
-            }
+            let text = try String(contentsOf: fileUrl, encoding: .utf8)
+            return text.components(separatedBy: "\n")
+                .map { $0.trimmingCharacters(in: .whitespaces) }
+                .filter { !$0.isEmpty && !$0.hasPrefix("#") }
+                .map { $0.uppercased() }
         } catch {
             fatalError(String(describing: error))
         }
