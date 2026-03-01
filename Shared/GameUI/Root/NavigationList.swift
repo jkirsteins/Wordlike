@@ -61,50 +61,83 @@ struct FlagAssets {
         return result
     }
     
-    static let gbFlag = reqFlagFromName("GB")
-    static let usFlag = reqFlagFromName("US")
-    static let lvFlag = reqFlagFromName("LV")
-    static let frFlag = reqFlagFromName("FR")
 }
+
+#if os(iOS)
+class FlagImageLoader: ObservableObject {
+    @Published var images: [String: NativeImage] = [:]
+
+    static let shared = FlagImageLoader()
+
+    private static let flagNames = ["GB", "US", "LV", "FR"]
+
+    func loadIfNeeded() {
+        guard images.isEmpty else { return }
+        DispatchQueue.global(qos: .userInitiated).async {
+            var loaded: [String: NativeImage] = [:]
+            for name in Self.flagNames {
+                if let img = FlagAssets.flagFromName_old(name) {
+                    loaded[name] = img
+                }
+            }
+            DispatchQueue.main.async { [weak self] in
+                self?.images = loaded
+            }
+        }
+    }
+}
+#endif
 
 struct Flag : View {
     @Environment(\.gameLocale)
     var gameLocale: GameLocale
-    
+
     var locale: Locale {
         gameLocale.nativeLocale
     }
-    
+
     static let aspectRatio = 21.0/15.0
-    
-    static let defaultImage = NativeImage()
-    
-    var image: NativeImage {
-        switch(locale.identifier) {
-        case Locale.en_GB.identifier:
-            return FlagAssets.gbFlag
-        case Locale.en_US.identifier:
-            return FlagAssets.usFlag
-        case Locale.fr_FR.identifier:
-            return FlagAssets.frFlag
-        case Locale.lv_LV.identifier:
-            return FlagAssets.lvFlag
-        default:
-            return Self.defaultImage
+
+#if os(iOS)
+    @ObservedObject private var loader = FlagImageLoader.shared
+
+    var flagName: String? {
+        switch locale.identifier {
+        case Locale.en_GB.identifier: return "GB"
+        case Locale.en_US.identifier: return "US"
+        case Locale.fr_FR.identifier: return "FR"
+        case Locale.lv_LV.identifier: return "LV"
+        default: return nil
         }
     }
-    
+
     var body: some View {
-#if os(iOS)
-        Image(uiImage: image)
-            .resizable()
-            .aspectRatio(21.0/15.0, contentMode: .fit)
+        if let name = flagName, let img = loader.images[name] {
+            Image(uiImage: img)
+                .resizable()
+                .aspectRatio(21.0/15.0, contentMode: .fit)
+        } else {
+            Color.clear
+                .aspectRatio(21.0/15.0, contentMode: .fit)
+                .onAppear { loader.loadIfNeeded() }
+        }
+    }
 #elseif os(macOS)
+    var body: some View {
+        let image: NativeImage = {
+            switch locale.identifier {
+            case Locale.en_GB.identifier: return NativeImage(named: "GB") ?? NativeImage()
+            case Locale.en_US.identifier: return NativeImage(named: "US") ?? NativeImage()
+            case Locale.fr_FR.identifier: return NativeImage(named: "FR") ?? NativeImage()
+            case Locale.lv_LV.identifier: return NativeImage(named: "LV") ?? NativeImage()
+            default: return NativeImage()
+            }
+        }()
         Image(nsImage: image)
             .resizable()
             .aspectRatio(21.0/15.0, contentMode: .fit)
-#endif
     }
+#endif
 }
 
 struct TileFlag : View {
@@ -428,6 +461,9 @@ struct NavigationList: View {
             
         }
         .debugBorder(.red)
+#if os(iOS)
+        .onAppear { FlagImageLoader.shared.loadIfNeeded() }
+#endif
         .toolbar {
             ToolbarItem(placement: navigationBarTrailing) {
                 Button(
