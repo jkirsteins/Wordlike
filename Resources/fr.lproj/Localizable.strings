@@ -38,9 +38,7 @@
 "Click to copy feedback e-mail address." = "Cliquez pour copier l'adresse e-mail de commentaires.";
 
 "Source code" = "Code source";
-"This game was created using Swift Playgrounds 4 on an iPad.
-
-The source code is freely available." = "Le code source est disponible sur GitHub.";
+"The source code is freely available." = "Le code source est disponible sur GitHub.";
 
 "Author" = "Auteur";
 "Made by Jānis Kiršteins." = "Créé par Jānis Kiršteins.";
@@ -131,3 +129,14 @@ The source code is freely available." = "Le code source est disponible sur GitHu
 
 "Don't share the first guess" = "Première tentative cachée";
 "When sharing your successful guesses, keep the first attempt hidden. Useful if you always use the same word for the first guess." = "Lorsque vous partagez vos suppositions réussies, gardez la première tentative cachée. Cela est utile si vous utilisez toujours le même mot pour la première tentative.";
+
+"Export stats" = "Exporter les statistiques";
+"Save your stats to a file for backup or transfer to another device." = "Sauvegardez vos statistiques dans un fichier pour les transférer vers un autre appareil.";
+"Import stats" = "Importer les statistiques";
+"Load stats from a previously exported file." = "Charger les statistiques depuis un fichier exporté.";
+"Export" = "Exporter";
+"Import" = "Importer";
+"Stats imported successfully." = "Statistiques importées avec succès.";
+"Could not import stats. The file may be invalid." = "Impossible d'importer. Le fichier est peut-être invalide.";
+"This will overwrite your current stats. Continue?" = "Cela écrasera vos statistiques actuelles. Continuer ?";
+"Continue" = "Continuer";

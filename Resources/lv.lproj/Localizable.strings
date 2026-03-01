@@ -43,9 +43,7 @@
 "Send" = "Nosūtīt";
 
 "Source code" = "Izejas kods";
-"This game was created using Swift Playgrounds 4 on an iPad.
-
-The source code is freely available." = "Spēles izejas kods ir brīvi pieejams.";
+"The source code is freely available." = "Spēles izejas kods ir brīvi pieejams.";
 
 "Author" = "Autors";
 "Made by Jānis Kiršteins." = "Jānis Kiršteins.";
@@ -136,3 +134,14 @@ The source code is freely available." = "Spēles izejas kods ir brīvi pieejams.
 
 "Don't share the first guess" = "Slēpt pirmo minējumu";
 "When sharing your successful guesses, keep the first attempt hidden. Useful if you always use the same word for the first guess." = "Nerādīt pirmajā mēģinājumā atminētos burtus, kad dalāties ar dienas rezultātu. Noderīgi, ja vienmēr izmantojat vienu vārdu pirmajā mēģinājumā.";
+
+"Export stats" = "Eksportēt statistiku";
+"Save your stats to a file for backup or transfer to another device." = "Saglabāt statistiku failā, lai pārnestu uz citu ierīci.";
+"Import stats" = "Importēt statistiku";
+"Load stats from a previously exported file." = "Ielādēt statistiku no iepriekš eksportēta faila.";
+"Export" = "Eksportēt";
+"Import" = "Importēt";
+"Stats imported successfully." = "Statistika veiksmīgi importēta.";
+"Could not import stats. The file may be invalid." = "Neizdevās importēt. Fails var būt nederīgs.";
+"This will overwrite your current stats. Continue?" = "Tas pārrakstīs jūsu pašreizējo statistiku. Turpināt?";
+"Continue" = "Turpināt";

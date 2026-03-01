@@ -44,6 +44,7 @@ struct SheetRoot<SheetContent: View>: View {
                     UIButtonClose {
                         presentationMode.wrappedValue.dismiss()
                     }
+                    .fixedSize()
                 }
             }
     }

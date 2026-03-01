@@ -59,6 +59,12 @@ struct SettingsView: View {
     var dailyStateLv: DailyState? = nil
     
     @State var emailCopied = false
+
+    @State var showImporter = false
+    @State var showImportConfirm = false
+    @State var importMessage: String? = nil
+    @State var showImportAlert = false
+    @State var importSuccess = false
     
     var contrastSettings: some View {
         HStack {
@@ -92,6 +98,36 @@ struct SettingsView: View {
         }
     }
     
+    var dataTransferSettings: some View {
+        Group {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Export stats")
+                    Text("Save your stats to a file for backup or transfer to another device.")
+                        .font(.caption)
+                }
+                Spacer()
+                ShareLink(
+                    item: StatsFileDocument(document: StatsTransfer.buildExport()),
+                    preview: SharePreview("wordlike-stats.json")
+                ) {
+                    Text("Export")
+                }
+                .frame(minWidth: Self.minRightWidth)
+            }
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Import stats")
+                    Text("Load stats from a previously exported file.")
+                        .font(.caption)
+                }
+                Spacer()
+                Button("Import") { showImportConfirm = true }
+                    .frame(minWidth: Self.minRightWidth)
+            }
+        }
+    }
+
     var sharingSettings: some View {
         Group {
             Toggle(isOn: $shouldHideFirstRow) {
@@ -174,13 +210,13 @@ struct SettingsView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Source code")
-                    Text("This game was created using Swift Playgrounds 4 on an iPad.\n\nThe source code is freely available.")
+                    Text("The source code is freely available.")
                         .font(.caption)
                 }
                 
                 Spacer()
                 
-                Link(destination: URL(string: "https://github.com/jkirsteins/SimpleWordGame")!, label: {
+                Link(destination: URL(string: "https://github.com/jkirsteins/Wordlike")!, label: {
                     Text("GitHub")
                 })
                 .frame(minWidth: Self.minRightWidth)
@@ -274,9 +310,13 @@ struct SettingsView: View {
             Divider()
             
             sharingSettings
-            
+
             Divider()
-            
+
+            dataTransferSettings
+
+            Divider()
+
             feedbackSettings
             
             Divider()
@@ -288,16 +328,48 @@ struct SettingsView: View {
             optDebugSettings
         }
         .navigationTitle("Settings")
-        
+        .fileImporter(
+            isPresented: $showImporter,
+            allowedContentTypes: [.json]
+        ) { result in
+            switch result {
+            case .success(let url):
+                do {
+                    let accessed = url.startAccessingSecurityScopedResource()
+                    defer { if accessed { url.stopAccessingSecurityScopedResource() } }
+                    let data = try Data(contentsOf: url)
+                    let doc = try JSONDecoder().decode(StatsExportDocument.self, from: data)
+                    try StatsTransfer.performImport(from: doc)
+                    importSuccess = true
+                    importMessage = NSLocalizedString("Stats imported successfully.", comment: "")
+                } catch {
+                    importSuccess = false
+                    importMessage = NSLocalizedString("Could not import stats. The file may be invalid.", comment: "")
+                }
+                showImportAlert = true
+            case .failure:
+                importSuccess = false
+                importMessage = NSLocalizedString("Could not import stats. The file may be invalid.", comment: "")
+                showImportAlert = true
+            }
+        }
+        .alert("This will overwrite your current stats. Continue?", isPresented: $showImportConfirm) {
+            Button("Continue", role: .destructive) { showImporter = true }
+            Button("Cancel", role: .cancel) {}
+        }
+        .alert(importMessage ?? "", isPresented: $showImportAlert) {
+            Button("OK", role: .cancel) {}
+        }
+
         // Feedback e-mail sheet is only available in iOS
 #if os(iOS)
         .sheet(item: $activeSheet, onDismiss: {
-            
+
         }, content: { item in
             switch(item) {
             case .mail:
                 MailView(data: $mailData) { _ in
-                    
+
                 }
             }
         })

@@ -13,6 +13,8 @@ struct UIButtonClose: UIViewRepresentable {
                     _ in action()
                 }))
         
+        button.setContentHuggingPriority(.required, for: .horizontal)
+        button.setContentHuggingPriority(.required, for: .vertical)
         return button
     }
     

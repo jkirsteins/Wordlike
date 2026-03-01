@@ -229,6 +229,10 @@
 		E7F29C902837DB3D005792DA /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B972837DB3C005792DA /* GameState.swift */; };
 		E7F29C912837DB3D005792DA /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B982837DB3C005792DA /* Stats.swift */; };
 		E7F29C922837DB3D005792DA /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B982837DB3C005792DA /* Stats.swift */; };
+		AA1B3C4D5E6F7A8B9C0D1E4A /* StatsTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1B3C4D5E6F7A8B9C0D1E2A /* StatsTransfer.swift */; };
+		AA1B3C4D5E6F7A8B9C0D1E5A /* StatsTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1B3C4D5E6F7A8B9C0D1E2A /* StatsTransfer.swift */; };
+		AA1B3C4D5E6F7A8B9C0D1E6A /* StatsFileDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1B3C4D5E6F7A8B9C0D1E3A /* StatsFileDocument.swift */; };
+		AA1B3C4D5E6F7A8B9C0D1E7A /* StatsFileDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1B3C4D5E6F7A8B9C0D1E3A /* StatsFileDocument.swift */; };
 		E7F29C932837DB3D005792DA /* WordValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B992837DB3C005792DA /* WordValidator.swift */; };
 		E7F29C942837DB3D005792DA /* WordValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B992837DB3C005792DA /* WordValidator.swift */; };
 		E7F29C952837DB3D005792DA /* WordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B9B2837DB3C005792DA /* WordModel.swift */; };
@@ -403,6 +407,8 @@
 		E7F29B962837DB3C005792DA /* GameState.keyboardHints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameState.keyboardHints.swift; sourceTree = "<group>"; };
 		E7F29B972837DB3C005792DA /* GameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		E7F29B982837DB3C005792DA /* Stats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
+		AA1B3C4D5E6F7A8B9C0D1E2A /* StatsTransfer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsTransfer.swift; sourceTree = "<group>"; };
+		AA1B3C4D5E6F7A8B9C0D1E3A /* StatsFileDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsFileDocument.swift; sourceTree = "<group>"; };
 		E7F29B992837DB3C005792DA /* WordValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WordValidator.swift; sourceTree = "<group>"; };
 		E7F29B9B2837DB3C005792DA /* WordModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WordModel.swift; sourceTree = "<group>"; };
 		E7F29B9C2837DB3C005792DA /* MultiCharacterModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiCharacterModel.swift; sourceTree = "<group>"; };
@@ -765,6 +771,8 @@
 				E7F29B962837DB3C005792DA /* GameState.keyboardHints.swift */,
 				E7F29B972837DB3C005792DA /* GameState.swift */,
 				E7F29B982837DB3C005792DA /* Stats.swift */,
+				AA1B3C4D5E6F7A8B9C0D1E2A /* StatsTransfer.swift */,
+				AA1B3C4D5E6F7A8B9C0D1E3A /* StatsFileDocument.swift */,
 				E7F29B992837DB3C005792DA /* WordValidator.swift */,
 				E7F29B9A2837DB3C005792DA /* Word Comparison */,
 			);
@@ -1054,6 +1062,8 @@
 				E762615A28467630000A80FC /* DoubleExtensions.swift in Sources */,
 				E7F29C552837DB3D005792DA /* SettingsView.swift in Sources */,
 				E7F29C912837DB3D005792DA /* Stats.swift in Sources */,
+				AA1B3C4D5E6F7A8B9C0D1E4A /* StatsTransfer.swift in Sources */,
+				AA1B3C4D5E6F7A8B9C0D1E6A /* StatsFileDocument.swift in Sources */,
 				E7F29C052837DB3C005792DA /* LightPalette.swift in Sources */,
 				E7F29C6F2837DB3D005792DA /* EditableRow.swift in Sources */,
 				E70D82022837E3D500D4F2FF /* UIImageExtensions.swift in Sources */,
@@ -1164,6 +1174,8 @@
 				E7F29C942837DB3D005792DA /* WordValidator.swift in Sources */,
 				E7F29C562837DB3D005792DA /* SettingsView.swift in Sources */,
 				E7F29C922837DB3D005792DA /* Stats.swift in Sources */,
+				AA1B3C4D5E6F7A8B9C0D1E5A /* StatsTransfer.swift in Sources */,
+				AA1B3C4D5E6F7A8B9C0D1E7A /* StatsFileDocument.swift in Sources */,
 				E7F29C062837DB3C005792DA /* LightPalette.swift in Sources */,
 				E7F29C702837DB3D005792DA /* EditableRow.swift in Sources */,
 				E7F29C362837DB3C005792DA /* Shake.swift in Sources */,
@@ -1231,7 +1243,7 @@
 				DEVELOPMENT_TEAM = FN5YR78T7X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				PRODUCT_NAME = WordlikeTests;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = YES;
@@ -1250,7 +1262,7 @@
 				DEVELOPMENT_TEAM = FN5YR78T7X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				PRODUCT_NAME = WordlikeTests;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = YES;
@@ -1312,7 +1324,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1368,7 +1380,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -1400,7 +1412,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1443,7 +1455,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
