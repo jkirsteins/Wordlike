@@ -443,7 +443,6 @@
 			children = (
 				3965C6264DE72A75AACC4F40 /* WordListTests.swift */,
 			);
-			name = WordlikeTests;
 			path = WordlikeTests;
 			sourceTree = SOURCE_ROOT;
 		};
@@ -1406,7 +1405,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				PRODUCT_BUNDLE_IDENTIFIER = org.janiskirsteins.SimpleWordGame;
 				PRODUCT_NAME = Wordlike;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1449,7 +1448,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				PRODUCT_BUNDLE_IDENTIFIER = org.janiskirsteins.SimpleWordGame;
 				PRODUCT_NAME = Wordlike;
 				PROVISIONING_PROFILE_SPECIFIER = "";
