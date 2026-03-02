@@ -42,7 +42,7 @@ struct SheetRoot<SheetContent: View>: View {
             .toolbar {
                 ToolbarItem(placement: closePlacement) {
                     UIButtonClose {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                     .fixedSize()
                 }
@@ -51,7 +51,7 @@ struct SheetRoot<SheetContent: View>: View {
     
     var innerBody: some View {
 #if os(iOS)
-        NavigationView {
+        NavigationStack {
             GeometryReader { gr in
                 ScrollView {
                     paddedContentWithNavigation
@@ -67,9 +67,9 @@ struct SheetRoot<SheetContent: View>: View {
 #endif
     }
     
-    @Environment(\.presentationMode)
-    var presentationMode
-    
+    @Environment(\.dismiss)
+    var dismiss
+
     var body: some View {
         innerBody
     }
@@ -105,30 +105,28 @@ extension View {
 
 struct SheetRoot_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 15.0, *) {
-            ForEach(AppView_Previews.configurations, id: \.self.id) {
-                MockDevice(config: $0) {
-                    SheetRoot(title: "Vertical test", isPresented: .constant(true)) {
-                        Text("Am I centered vertically?")
-                            .frame(maxWidth: .infinity)
-                            .debugBorder(.red)
-                    }
+        ForEach(AppView_Previews.configurations, id: \.self.id) {
+            MockDevice(config: $0) {
+                SheetRoot(title: "Vertical test", isPresented: .constant(true)) {
+                    Text("Am I centered vertically?")
+                        .frame(maxWidth: .infinity)
+                        .debugBorder(.red)
                 }
-                
-                MockDevice(config: $0) {
-                    SheetRoot(title: "Horizontal test", isPresented: .constant(true)) {
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Text("Hello")
-                                Spacer()
-                            }
-                            .frame(maxWidth: .infinity)
-                            .debugBorder(.red)
-                            
+            }
+
+            MockDevice(config: $0) {
+                SheetRoot(title: "Horizontal test", isPresented: .constant(true)) {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("Hello")
                             Spacer()
-                            
-                            Text("Bim")
                         }
+                        .frame(maxWidth: .infinity)
+                        .debugBorder(.red)
+
+                        Spacer()
+
+                        Text("Bim")
                     }
                 }
             }

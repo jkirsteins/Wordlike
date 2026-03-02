@@ -153,12 +153,10 @@ struct HelpView: View {
                 HelpView()
             }
             
-            if #available(iOS 15.0, *) {
-                ForEach(AppView_Previews.configurations) {
-                    MockDevice(config: $0) {
-                        PaletteSetterView {
-                            HelpView()
-                        }
+            ForEach(AppView_Previews.configurations) {
+                MockDevice(config: $0) {
+                    PaletteSetterView {
+                        HelpView()
                     }
                 }
             }

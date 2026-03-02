@@ -28,7 +28,6 @@ struct MockSizeClassModifier: ViewModifier {
 
 /// View for simulating constraints of different
 /// device sizes.
-@available(iOS 15.0, *)
 struct MockDevice<Content: View>: View {
     let config: MockDeviceConfig
     @ViewBuilder var content: ()->Content
@@ -337,13 +336,11 @@ struct MockDeviceConfig: Equatable, Hashable, Identifiable {
 
 struct MockDevice_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 15.0, *) {
-            MockDevice(config: .inch65_iPhone12ProMax) {
-                Rectangle().fill(.red)
-            }
-            MockDevice(config: .inch4_iPhoneSE) {
-                Rectangle().fill(.yellow)
-            }
+        MockDevice(config: .inch65_iPhone12ProMax) {
+            Rectangle().fill(.red)
+        }
+        MockDevice(config: .inch4_iPhoneSE) {
+            Rectangle().fill(.yellow)
         }
         AppView_Previews.previews
     }

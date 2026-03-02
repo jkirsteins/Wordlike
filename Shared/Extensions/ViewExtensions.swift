@@ -55,11 +55,7 @@ extension View {
     }
     
     func safeTint(_ tint: Color) -> some View {
-        if #available(iOS 15.0, *) {
-            return AnyView(self.tint(tint))
-        } else {
-            return AnyView(self)
-        }
+        self.tint(tint)
     }
 }
 
@@ -77,26 +73,16 @@ extension View {
         activityItems: Binding<[UIActivityItemSource]>,
         callback: @escaping ()->()) -> some View
     {
-        if #available(iOS 15.0, *) {
-            return AnyView(self.sheetWithDetents(
-                isPresented: isSharing,
-                detents: [.medium(),.large()],
-                onDismiss: {
-                },
-                content: {
-                    ActivityViewController(
-                        activityItems: activityItems,
-                        callback: callback)
-                    .ignoresSafeArea()
-                }))
-        } else {
-            return AnyView(
-                self.sheet(isPresented: isSharing, onDismiss: {}, content: {
+        self.sheetWithDetents(
+            isPresented: isSharing,
+            detents: [.medium(),.large()],
+            onDismiss: {
+            },
+            content: {
                 ActivityViewController(
                     activityItems: activityItems,
                     callback: callback)
                 .ignoresSafeArea()
-            }))
-        }
+            })
     }
 }

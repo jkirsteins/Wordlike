@@ -1,7 +1,6 @@
 import SwiftUI
 
 // 1 - Create a UISheetPresentationController that can be used in a SwiftUI interface
-@available(iOS 15.0, *)
 struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: View {
     
     @Binding var isPresented: Bool
@@ -124,7 +123,6 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
 }
 
 // 2 - Create the SwiftUI modifier conforming to the ViewModifier protocol
-@available(iOS 15.0, *)
 struct sheetWithDetentsViewModifier<SwiftUIContent>: ViewModifier where SwiftUIContent: View {
     
     @Binding var isPresented: Bool
@@ -151,8 +149,7 @@ struct sheetWithDetentsViewModifier<SwiftUIContent>: ViewModifier where SwiftUIC
 
 // 3 - Create extension on View that makes it easier to use the custom modifier
 extension View {
-    
-    @available(iOS 15.0, *)
+
     func sheetWithDetents<Content>(
         isPresented: Binding<Bool>,
         detents: [UISheetPresentationController.Detent],

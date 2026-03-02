@@ -21,23 +21,23 @@ struct AttachmentData {
 typealias MailViewCallback = ((Result<MFMailComposeResult, Error>) -> Void)?
 
 struct MailView: UIViewControllerRepresentable {
-    @Environment(\.presentationMode) var presentation
+    @Environment(\.dismiss) var dismiss
     @Binding var data: ComposeMailData
     let callback: MailViewCallback
-    
+
     class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
-        @Binding var presentation: PresentationMode
+        let dismiss: DismissAction
         @Binding var data: ComposeMailData
         let callback: MailViewCallback
-        
-        init(presentation: Binding<PresentationMode>,
+
+        init(dismiss: DismissAction,
              data: Binding<ComposeMailData>,
              callback: MailViewCallback) {
-            _presentation = presentation
+            self.dismiss = dismiss
             _data = data
             self.callback = callback
         }
-        
+
         func mailComposeController(_ controller: MFMailComposeViewController,
                                    didFinishWith result: MFMailComposeResult,
                                    error: Error?) {
@@ -46,12 +46,12 @@ struct MailView: UIViewControllerRepresentable {
             } else {
                 callback?(.success(result))
             }
-            $presentation.wrappedValue.dismiss()
+            dismiss()
         }
     }
-    
+
     func makeCoordinator() -> Coordinator {
-        Coordinator(presentation: presentation, data: $data, callback: callback)
+        Coordinator(dismiss: dismiss, data: $data, callback: callback)
     }
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<MailView>) -> MFMailComposeViewController {

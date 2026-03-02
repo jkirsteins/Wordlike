@@ -98,7 +98,7 @@ struct AppView: View {
 #endif
     
     var innerBody: some View {
-        NavigationView {
+        NavigationStack {
             PaletteSetterView {
                 NavigationList(
                     shareCallback: {
@@ -234,11 +234,9 @@ struct AppView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        if #available(iOS 15.0, *) {
-            ForEach(configurations) {
-                MockDevice(config: $0) {
-                    AppView()
-                }
+        ForEach(configurations) {
+            MockDevice(config: $0) {
+                AppView()
             }
         }
     }

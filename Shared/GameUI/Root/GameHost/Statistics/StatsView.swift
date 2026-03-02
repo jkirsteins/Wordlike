@@ -230,27 +230,25 @@ struct StatsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        if #available(iOS 15.0, *) {
-            ForEach(AppView_Previews.configurations) {
-                MockDevice(config: $0) {
-                    SheetRoot(title: nil, isPresented: .constant(true)) {
-                        PaletteSetterView {
-                            StatsView(stats: Stats(
-                                played: 63, 
-                                won: 61,
-                                maxStreak: 27,
-                                streak: 4,
-                                guessDistribution: [
-                                    1, 
-                                    3,
-                                    16,
-                                    24,
-                                    11,
-                                    6
-                                ],
-                                lastWinAt: nil), state: state)
-                        }.navigationTitle("Test 1")
-                    }
+        ForEach(AppView_Previews.configurations) {
+            MockDevice(config: $0) {
+                SheetRoot(title: nil, isPresented: .constant(true)) {
+                    PaletteSetterView {
+                        StatsView(stats: Stats(
+                            played: 63,
+                            won: 61,
+                            maxStreak: 27,
+                            streak: 4,
+                            guessDistribution: [
+                                1,
+                                3,
+                                16,
+                                24,
+                                11,
+                                6
+                            ],
+                            lastWinAt: nil), state: state)
+                    }.navigationTitle("Test 1")
                 }
             }
         }

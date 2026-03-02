@@ -34,6 +34,7 @@ struct UIButtonClose: View {
 }
 #endif
 
+#if os(iOS) || os(macOS)
 struct UIButtonClose_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
@@ -43,13 +44,14 @@ struct UIButtonClose_Previews: PreviewProvider {
             .frame(maxWidth: 32, maxHeight: 32)
         }
         .preferredColorScheme(.dark)
-        
+
         VStack {
             UIButtonClose(action: {
                 print("Test")
             })
             .frame(maxWidth: 32, maxHeight: 32)
-            
+
         }.preferredColorScheme(.light)
     }
 }
+#endif
