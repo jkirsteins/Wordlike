@@ -121,27 +121,23 @@ struct Row: View
     @Environment(\.palette) 
     var palette: Palette
     
-    func tileConfig(for ix: Int) -> TileConfig {
+    var isUnknownWord: Bool {
+        guard !model.isSubmitted, model.word.count == 5 else { return false }
         var unused: LocalizedStringKey? = nil
-        var colorOverride: Color? = nil
-        
-        if !model.isSubmitted,
-           self.model.word.count == 5,
-           nil == validator.guessTree?.contains(
-            word: self.model.word, 
-            mustMatch: nil, 
-            reason: &unused) 
-        {
-            colorOverride = palette.unknownWordTextColor
-        }
-        
+        return nil == validator.guessTree?.contains(
+            word: model.word, mustMatch: nil, reason: &unused)
+    }
+
+    func tileConfig(for ix: Int, isUnknownWord: Bool) -> TileConfig {
+        let colorOverride: Color? = isUnknownWord ? palette.unknownWordTextColor : nil
         return TileConfig(
             colorOverride: colorOverride,
-            showCursor: showFocusHint && model.focusHintIx == ix 
+            showCursor: showFocusHint && model.focusHintIx == ix
         )
     }
     
     var body: some View {
+        let unknownWord = isUnknownWord
         HStack(spacing: hspacing) {
             ForEach(0..<5, id: \.self) { ix in
                 FlippableTile(
@@ -182,7 +178,7 @@ struct Row: View
                     })
                     .environment(
                         \.tileConfig,
-                         tileConfig(for: ix))
+                         tileConfig(for: ix, isUnknownWord: unknownWord))
                     .id("\(ix)-\(model.isSubmitted)")
             }
         }

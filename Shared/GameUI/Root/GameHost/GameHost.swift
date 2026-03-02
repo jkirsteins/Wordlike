@@ -189,23 +189,21 @@ struct GameHost: View {
         .environment(\.gameLocale, locale)
     }
     
-    /// This is called when a row was edited/submitted
+    /// This is called when a row was edited/submitted.
+    /// We only persist when the submitted-row count changes,
+    /// avoiding JSON serialization + UserDefaults write on every keystroke.
     func turnStateChanged(_ newRows: [RowModel]) {
-        let newState: DailyState.State
-        switch (dailyState!.state) {
-        case .unknown, .notStarted:
-            if let firstRow = newRows.first, firstRow.word.displayValue == "" {
-                newState = .notStarted
-            } else {
-                newState = .inProgress
-            }
-        default:
-            newState = dailyState?.state ?? .inProgress
-        }
-        
+        guard let dailyState = dailyState else { return }
+
+        let oldSubmitted = dailyState.rows.submittedCount
+        let newSubmitted = newRows.submittedCount
+        guard newSubmitted != oldSubmitted else { return }
+
+        let newState: DailyState.State = newSubmitted > 0 ? .inProgress : .notStarted
+
         self.dailyState = DailyState(
-            expected: dailyState!.expected,
-            date: dailyState!.date,
+            expected: dailyState.expected,
+            date: dailyState.date,
             rows: newRows,
             state: newState)
     }
