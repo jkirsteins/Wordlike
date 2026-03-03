@@ -493,6 +493,16 @@ struct GameHost: View {
                 stats = stats.update(from: game, with: turnCounter)
                 self.dailyState = DailyState(expected: answer)
             }
+
+            // If dailyState is fresh but game still shows stale date, sync the game state.
+            // This covers the case where the DispatchQueue.main.async update in
+            // onChange(of: dailyState) fails to trigger a re-render.
+            if let ds = self.dailyState,
+               validator.ready,
+               turnCounter.isFresh(ds.date, at: newTime),
+               !turnCounter.isFresh(game.date, at: newTime) {
+                updateFromLoadedState(ds)
+            }
         }
         .safeSheet(item: $activeSheet,
                    onDismiss: {
