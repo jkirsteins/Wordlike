@@ -379,8 +379,13 @@ struct GameHost: View {
                     .border(debugViz ? .red : .clear)
             }
             
-            if dailyState == nil, validator.ready {
+            if dailyState == nil, validator.ready,
+               let answer = validator.answer(at: turnIndex) {
                 Text("Initializing state...")
+                    .onAppear {
+                        guard dailyState == nil else { return }
+                        self.dailyState = DailyState(expected: answer)
+                    }
             }
         }
         .border(debugViz ? .yellow : .clear)

@@ -98,16 +98,16 @@ struct AppView: View {
 #endif
     
     var innerBody: some View {
-        NavigationStack {
+        NavigationSplitView {
             PaletteSetterView {
                 NavigationList(
                     shareCallback: {
                         let lines = self.listedLocales.map {
                             (loc: Locale) -> String? in
                             guard let gl = gameLocale(loc) else { return nil }
-                            
+
                             let ds : DailyState? = AppStateStorage(wrappedValue: nil, gl.turnStateKey, store: nil).wrappedValue
-                            
+
                             guard
                                 let ds = ds,
                                 ds.isFinished == true,
@@ -115,25 +115,25 @@ struct AppView: View {
                                 let rowSnippet = lastRow.shareSnippet,
                                 turnCounter.isFresh(ds.date, at: Date())
                             else { return nil }
-                            
+
                             let flag = gl.flag
-                            
+
                             let tries: String
                             if ds.isWon {
                                 tries = "\(ds.rows.submittedCount)/6"
                             } else {
                                 tries = "X/6"
                             }
-                            
+
                             let isHardMode = ds.rows.checkHardMode(expected: WordModel(characters: ds.expected.word))
-                            
+
                             return "\(flag) \(tries)\(isHardMode ? "*" : " ")\t\(rowSnippet)"
                         }.filter { $0 != nil }.map { $0! }
-                        
+
                         guard lines.count > 0 else {
                             return
                         }
-                        
+
                         let day = turnCounter.turnIndex(at: Date())
                         let title = Bundle.main.displayName
 #if os(iOS)
@@ -151,7 +151,7 @@ struct AppView: View {
                             ).joined(separator: "\n") + "\n"
                         ]
 #endif
-                        
+
                         self.isSharing.toggle()
                     },
                     gearCallback: {
@@ -160,7 +160,9 @@ struct AppView: View {
                     outerDebug: $innerDebug,
                     isSharing: $isSharing
                 )
-                
+            }
+        } detail: {
+            PaletteSetterView {
                 EmptyNavWelcomeView()
             }
         }
