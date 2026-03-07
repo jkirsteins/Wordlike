@@ -432,19 +432,21 @@ struct NavigationList: View {
                     
                     if let gameLoc = gameLocale(loc) {
                         NavigationLink(destination: {
-                            GeometryReader { gr in
-                                GameHost(
-                                    gameLoc,
-                                    seed: seedFor(loc))
-                                /* We set the environment explicitly, because
-                                 it will not be handled by the palette wrapper
-                                 (it is instantiated, not nested) */
-                                .environment(\.rootGeometry, gr)
-                                .environment(\.globalTapCount, globalTapCount)
-                                .environment(\.debug, outerDebug || envDebug)
-                                .environment(\.palette, palette)
-                            }
-                            .padding()
+                            LazyView(
+                                GeometryReader { gr in
+                                    GameHost(
+                                        gameLoc,
+                                        seed: seedFor(loc))
+                                    /* We set the environment explicitly, because
+                                     it will not be handled by the palette wrapper
+                                     (it is instantiated, not nested) */
+                                    .environment(\.rootGeometry, gr)
+                                    .environment(\.globalTapCount, globalTapCount)
+                                    .environment(\.debug, outerDebug || envDebug)
+                                    .environment(\.palette, palette)
+                                }
+                                .padding()
+                            )
                         }, label: {
                             LanguageRow()
                             /* Don't accidentally pass in the actual locale to not mess up the translation for current localization */

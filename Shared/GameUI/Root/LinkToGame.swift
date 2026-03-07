@@ -1,5 +1,15 @@
 import SwiftUI
 
+/// Defers view construction until body is first evaluated,
+/// preventing eager instantiation by NavigationLink.
+struct LazyView<Content: View>: View {
+    let build: () -> Content
+    init(_ build: @autoclosure @escaping () -> Content) {
+        self.build = build
+    }
+    var body: some View { build() }
+}
+
 /// Creates a standardized NavigationLink
 /// to a GameHost instance.
 struct LinkToGame: View {
@@ -24,23 +34,25 @@ struct LinkToGame: View {
     
     var body: some View {
         NavigationLink(destination: {
-            GeometryReader { gr in
-                GameHost(locale, seed: seed)
-                /* We set the environment explicitly, because
-                 it will not be handled by the palette wrapper
-                 (it is instantiated, not nested) */
-                    .environment(\.rootGeometry, gr)
-                    .environment(\.globalTapCount, globalTapCount)
-                    .environment(\.debug, debug)
-                    .environment(\.palette, palette)
-            }
-            /* Padding must not be inside the GeometryReader
-             because the geometry reader width is used
-             downstream (through .rootGeometry) to set maxWidth.
-             
-             So if padding is set inside on GameHostView,
-             child views will overflow bounds. */
-            .padding()
+            LazyView(
+                GeometryReader { gr in
+                    GameHost(locale, seed: seed)
+                    /* We set the environment explicitly, because
+                     it will not be handled by the palette wrapper
+                     (it is instantiated, not nested) */
+                        .environment(\.rootGeometry, gr)
+                        .environment(\.globalTapCount, globalTapCount)
+                        .environment(\.debug, debug)
+                        .environment(\.palette, palette)
+                }
+                /* Padding must not be inside the GeometryReader
+                 because the geometry reader width is used
+                 downstream (through .rootGeometry) to set maxWidth.
+
+                 So if padding is set inside on GameHostView,
+                 child views will overflow bounds. */
+                .padding()
+            )
         }, label: {
             LanguageLinkLabel(
                 locale, 

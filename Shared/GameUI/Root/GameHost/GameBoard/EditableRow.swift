@@ -32,7 +32,8 @@ struct KeyboardHints {
 struct EditableRow : View
 {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    
+    @Environment(\.hasHardwareKeyboard) var hasHardwareKeyboard: Bool
+
     var delayRowIx: Int
     @Binding var model: RowModel
     
@@ -75,7 +76,7 @@ struct EditableRow : View
     @State var background: Color = Color(NativeColor.systemFill)
     
     var body: some View {
-        let showFocusHint =  editable && (isActive == self.tag) 
+        let showFocusHint = hasHardwareKeyboard && editable && (isActive == self.tag)
         
         return Row(
             delayRowIx: delayRowIx, 

@@ -64,6 +64,14 @@ extension Array where Element == RowModel {
 
 struct RowModel : Equatable, Codable, Identifiable
 {
+    static func == (lhs: RowModel, rhs: RowModel) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.word == rhs.word &&
+        lhs.isSubmitted == rhs.isSubmitted &&
+        lhs.attemptCount == rhs.attemptCount &&
+        lhs.expected == rhs.expected
+    }
+
     enum CodingKeys: String, CodingKey {
         case id
         case word

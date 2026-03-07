@@ -1,5 +1,4 @@
 import SwiftUI
-import Combine
 
 // TODO: rename to TurnState
 class GameState : ObservableObject, Identifiable, Equatable
@@ -18,9 +17,7 @@ class GameState : ObservableObject, Identifiable, Equatable
     @Published var expected: TurnAnswer
     @Published var rows: [RowModel]
     @Published var date: Date
-    @Published var keyboardHints = KeyboardHints()
-    
-    var cancellables = Set<AnyCancellable>()
+    var keyboardHints = KeyboardHints()
     
     /// Index of the editable row
     var activeIx: Int? {
@@ -80,18 +77,7 @@ class GameState : ObservableObject, Identifiable, Equatable
         self.isTallied = isTallied
         self.date = date
         self._rows = Published(wrappedValue: rows)
-        
-        /* When a row is submitted, we'll refresh
-        certain properties - such as keyboard hints */
-        self._rows.projectedValue
-            .removeDuplicates(by: {
-                $0.submittedCount == $1.submittedCount
-            })
-            .sink {
-            newRows in
-              
-                self.keyboardHints = self.calculateKeyboardHints(from: newRows)
-        }.store(in: &cancellables)
+        self.keyboardHints = calculateKeyboardHints(from: rows)
     }
 }
 

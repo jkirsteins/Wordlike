@@ -49,7 +49,12 @@ struct MultiCharacterModel : Hashable, Codable, Equatable, CustomDebugStringConv
     }
     
     static func == (lhs: MultiCharacterModel, rhs: MultiCharacterModel) -> Bool {
-        false == Set(lhs.values).intersection(Set(rhs.values)).isEmpty
+        // Fast path: single-value characters (99% of cases)
+        if lhs.values.count == 1 && rhs.values.count == 1 {
+            return lhs.values[0] == rhs.values[0]
+        }
+        // General case: check if any values overlap
+        return !Set(lhs.values).isDisjoint(with: rhs.values)
     }
     
     var locale: Locale {

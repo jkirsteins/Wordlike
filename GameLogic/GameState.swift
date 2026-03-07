@@ -17,7 +17,8 @@ class GameState : ObservableObject, Identifiable, Equatable
     @Published var expected: TurnAnswer
     @Published var rows: [RowModel]
     @Published var date: Date
-    
+    var keyboardHints = KeyboardHints()
+
     /// Index of the editable row
     var activeIx: Int? {
         for i in 0..<rows.count {
@@ -76,6 +77,7 @@ class GameState : ObservableObject, Identifiable, Equatable
         self.isTallied = isTallied
         self.date = date
         self._rows = Published(wrappedValue: rows)
+        self.keyboardHints = calculateKeyboardHints(from: rows)
     }
 }
 

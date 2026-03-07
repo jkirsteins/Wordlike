@@ -6,7 +6,7 @@ struct TileConfig {
     
     init(colorOverride: Color? = nil, showCursor: Bool = false) {
         self.colorOverride = colorOverride 
-        self.showCursor = false 
+        self.showCursor = showCursor
     }
 }
 

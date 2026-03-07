@@ -1,4 +1,5 @@
 import SwiftUI
+import GameController
 
 fileprivate enum ActiveSheet {
     case stats
@@ -9,9 +10,6 @@ fileprivate enum ActiveSheet {
 extension ActiveSheet: Identifiable {
     var id: Self { self }
 }
-
-// hacky rate limiting
-var lastUpdate: TimeInterval = 0
 
 /// Represents a game of a given languages, with its
 /// own stats separate from other games.
@@ -97,6 +95,7 @@ struct GameHost: View {
             game.date = newState.date
         }
         
+        game.keyboardHints = game.calculateKeyboardHints(from: game.rows)
         self.keyboardHints = safeComputeKeyboardHints()
     }
     
@@ -190,15 +189,12 @@ struct GameHost: View {
     }
     
     /// This is called when a row was edited/submitted.
-    /// We only persist when the submitted-row count changes,
-    /// avoiding JSON serialization + UserDefaults write on every keystroke.
+    /// Persists every change so state survives navigation.
     func turnStateChanged(_ newRows: [RowModel]) {
         guard let dailyState = dailyState else { return }
+        guard dailyState.rows != newRows else { return }
 
-        let oldSubmitted = dailyState.rows.submittedCount
         let newSubmitted = newRows.submittedCount
-        guard newSubmitted != oldSubmitted else { return }
-
         let newState: DailyState.State = newSubmitted > 0 ? .inProgress : .notStarted
 
         self.dailyState = DailyState(
@@ -300,18 +296,19 @@ struct GameHost: View {
     }
     
     @State var keyboardHints = KeyboardHints()
+    @State var hasHardwareKeyboard: Bool = false
     
     /// If we haven't set the right validator in GameState,
     /// we should not attempt to calculate KeyboardHints yet
     func safeComputeKeyboardHints() -> KeyboardHints {
-        guard let safeGame = turnDataToDisplay else {
+        guard turnDataToDisplay != nil else {
             return KeyboardHints(
                 hints:
                     Dictionary<CharacterModel, TileBackgroundType>(),
                 locale: game.expected.locale)
         }
-        
-        return safeGame.keyboardHints
+
+        return game.keyboardHints
     }
     
     @ViewBuilder
@@ -379,13 +376,8 @@ struct GameHost: View {
                     .border(debugViz ? .red : .clear)
             }
             
-            if dailyState == nil, validator.ready,
-               let answer = validator.answer(at: turnIndex) {
+            if dailyState == nil, validator.ready {
                 Text("Initializing state...")
-                    .onAppear {
-                        guard dailyState == nil else { return }
-                        self.dailyState = DailyState(expected: answer)
-                    }
             }
         }
         .border(debugViz ? .yellow : .clear)
@@ -405,17 +397,31 @@ struct GameHost: View {
         .environmentObject(toastMessageCenter)
         .environment(
             \.keyboardHints, keyboardHints)
+        .environment(
+            \.hasHardwareKeyboard, hasHardwareKeyboard)
         .environmentObject(validator)
         .onAppear {
             if shouldShowHelp {
                 activeSheet = .help
             }
 
+            #if os(iOS)
+            hasHardwareKeyboard = GCKeyboard.coalesced != nil
+            #else
+            hasHardwareKeyboard = true
+            #endif
+
             if let newState = self.dailyState {
                 updateFromLoadedState(newState)
             } else if validator.ready, let answer = validator.answer(at: turnIndex) {
                 self.dailyState = DailyState(expected: answer)
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .GCKeyboardDidConnect)) { _ in
+            hasHardwareKeyboard = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .GCKeyboardDidDisconnect)) { _ in
+            hasHardwareKeyboard = GCKeyboard.coalesced != nil
         }
         .onChange(of: validator.ready) { isReady in
             guard isReady, dailyState == nil,
@@ -428,44 +434,19 @@ struct GameHost: View {
             
             self.clearToastAt = Date() + 2.0
         }
-        // TODO: bug with keyboards
         .onChange(of: self.dailyState) {
-            /* This callback affects:
-             - keyboard color update after submitting a row
-             - main view update after initializing the daily state with
-             the expected answer (e.g. search "self.dailyState = DailyState(expected: answer)")
-             */
             newState in
-                
-            // hacky way to break the dailyState update loops (it
-            // gets triggered again when we initialize game)
-            DispatchQueue.main.async {
-            
-                let now = NSDate().timeIntervalSince1970
-                let delta = now - lastUpdate
-                if delta < 1 {    // hacky rate limiting
-                    return
-                }
-                
-                lastUpdate = now
-                
-                if let newState = newState {
-                    
-                    // This is for the initial display of the game (we need to force
-                    // full state update when turnDataToDisplay can return non-nil)
-                    let isFresh = turnCounter.isFresh(
-                        game.date, at: Date())
-                    let newIsFresh = turnCounter.isFresh(
-                        newState.date, at: Date())
-                    let needGameRefresh = !isFresh && newIsFresh
-                    // ---
-                    
-                    if !game.initialized || needGameRefresh {
-                        updateFromLoadedState(newState)
-                    } else {
-                        updateFromLoadedState(newState, justUpdateKeyboard: true)
-                    }
-                }
+            guard let newState = newState else { return }
+
+            let isFresh = turnCounter.isFresh(
+                game.date, at: Date())
+            let newIsFresh = turnCounter.isFresh(
+                newState.date, at: Date())
+
+            if !game.initialized || (!isFresh && newIsFresh) {
+                updateFromLoadedState(newState)
+            } else {
+                updateFromLoadedState(newState, justUpdateKeyboard: true)
             }
         }
         .onReceive(timer) { newTime in
@@ -494,15 +475,6 @@ struct GameHost: View {
                 self.dailyState = DailyState(expected: answer)
             }
 
-            // If dailyState is fresh but game still shows stale date, sync the game state.
-            // This covers the case where the DispatchQueue.main.async update in
-            // onChange(of: dailyState) fails to trigger a re-render.
-            if let ds = self.dailyState,
-               validator.ready,
-               turnCounter.isFresh(ds.date, at: newTime),
-               !turnCounter.isFresh(game.date, at: newTime) {
-                updateFromLoadedState(ds)
-            }
         }
         .safeSheet(item: $activeSheet,
                    onDismiss: {
