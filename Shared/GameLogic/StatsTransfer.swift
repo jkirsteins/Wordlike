@@ -51,7 +51,8 @@ enum StatsTransfer {
         for locale in Locale.supportedLocales {
             let key = "turnState.\(locale.fileBaseName)"
             if let raw = UserDefaults.standard.string(forKey: key),
-               let state = DailyState(rawValue: raw) {
+               let state = DailyState(rawValue: raw),
+               case .finished = state.state {
                 turnStates[locale.fileBaseName] = state
             }
         }
