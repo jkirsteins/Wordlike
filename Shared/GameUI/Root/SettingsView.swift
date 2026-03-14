@@ -228,11 +228,26 @@ struct SettingsView: View {
                     Text("Made by Jānis Kiršteins.")
                         .font(.caption)
                 }
-                
+
                 Spacer()
-                
+
                 Link(destination: URL(string: "https://mastodon.gamedev.place/@jki")!, label: {
                     Text("Mastodon")
+                })
+                .frame(minWidth: Self.minRightWidth)
+            }
+
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Web version")
+                    Text("Play in your browser.")
+                        .font(.caption)
+                }
+
+                Spacer()
+
+                Link(destination: URL(string: "https://vardulis.kirsteins.me")!, label: {
+                    Text("vardulis.kirsteins.me")
                 })
                 .frame(minWidth: Self.minRightWidth)
             }
