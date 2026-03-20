@@ -1,12 +1,10 @@
 import SwiftUI
 
 struct WrongExampleWord: View {
-    
-    @Environment(\.locale)
-    var locale: Locale
-    
+    @Environment(\.locale) var locale: Locale
+
     var body: some View {
-        switch(locale.language.languageCode?.identifier) {
+        switch locale.language.languageCode?.identifier {
         case Locale.lv_LV.language.languageCode?.identifier:
             HStack {
                 AgitatedTile(model: TileModel(letter: "k", state: .maskedFilled))
@@ -36,12 +34,10 @@ struct WrongExampleWord: View {
 }
 
 struct GreenExampleWord: View {
-    
-    @Environment(\.locale)
-    var locale: Locale
-    
+    @Environment(\.locale) var locale: Locale
+
     var body: some View {
-        switch(locale.language.languageCode?.identifier) {
+        switch locale.language.languageCode?.identifier {
         case Locale.lv_LV.language.languageCode?.identifier:
             HStack {
                 AgitatedTile(model: TileModel(letter: "s", state: .maskedFilled))
@@ -71,12 +67,10 @@ struct GreenExampleWord: View {
 }
 
 struct YellowExampleWord: View {
-    
-    @Environment(\.locale)
-    var locale: Locale
-    
+    @Environment(\.locale) var locale: Locale
+
     var body: some View {
-        switch(locale.language.languageCode?.identifier) {
+        switch locale.language.languageCode?.identifier {
         case Locale.lv_LV.language.languageCode?.identifier:
             HStack {
                 AgitatedTile(model: TileModel(letter: "p", state: .maskedFilled))
@@ -113,46 +107,48 @@ struct HelpView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Text("Each guess must be a valid five-letter word.")
                     .fixedSize(horizontal: false, vertical: true)
-                Text("After each guess, the color of the tiles will change to show you how close your guess was to the word.")
-                    .fixedSize(horizontal: false, vertical: true)
+                Text(
+                    "After each guess, the color of the tiles will change to show you how close your guess was to the word."
+                )
+                .fixedSize(horizontal: false, vertical: true)
             }
-            
+
             Divider()
-            
+
             Text("Examples").fontWeight(.bold)
-            
+
             VStack(alignment: .leading, spacing: 16) {
                 GreenExampleWord()
-                .frame(maxHeight: 50)
+                    .frame(maxHeight: 50)
                 Text("The letter **W** is in the word and in the correct spot.")
             }
             //
             VStack(alignment: .leading, spacing: 16) {
                 YellowExampleWord()
-                .frame(maxHeight: 50)
+                    .frame(maxHeight: 50)
                 Text("The letter **I** is in the word but in a different spot.")
             }
-            
+
             VStack(alignment: .leading, spacing: 16) {
                 WrongExampleWord()
-                .frame(maxHeight: 50)
+                    .frame(maxHeight: 50)
                 Text("The letter **U** is not in the word in any spot.")
             }
-            
+
             Divider()
-            
+
             Text("A new word is available every day.").fontWeight(.bold)
         }
         .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.portrait.width)
         .navigationTitle("How to play")
     }
-    
+
     struct HelpView_Previews: PreviewProvider {
         static var previews: some View {
             PaletteSetterView {
                 HelpView()
             }
-            
+
             ForEach(AppView_Previews.configurations) {
                 MockDevice(config: $0) {
                     PaletteSetterView {
@@ -160,7 +156,7 @@ struct HelpView: View {
                     }
                 }
             }
-            
+
             VStack {
                 Text("Testing help is scrollable (and doesn't compress text)").frame(minHeight: 200)
                 HelpView()

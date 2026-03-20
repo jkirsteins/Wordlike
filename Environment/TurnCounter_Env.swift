@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate struct TurnCounterKey: EnvironmentKey {
+private struct TurnCounterKey: EnvironmentKey {
     static let defaultValue: TurnCounter = CalendarDailyTurnCounter.current(start: WordValidator.MAR_22_2022)
 }
 

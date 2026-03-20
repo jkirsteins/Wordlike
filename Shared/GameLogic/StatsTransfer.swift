@@ -30,10 +30,9 @@ enum StatsTransfer {
 
         for locale in Locale.supportedLocales {
             let key = "stats.\(locale.fileBaseName)"
-            guard
-                let raw = UserDefaults.standard.string(forKey: key),
-                let stats = Stats(rawValue: raw),
-                stats.played > 0
+            guard let raw = UserDefaults.standard.string(forKey: key),
+                  let stats = Stats(rawValue: raw),
+                  stats.played > 0
             else { continue }
 
             let lastWinDate = stats.lastWinAt.map { dateFormatter.string(from: $0) }
@@ -52,7 +51,8 @@ enum StatsTransfer {
             let key = "turnState.\(locale.fileBaseName)"
             if let raw = UserDefaults.standard.string(forKey: key),
                let state = DailyState(rawValue: raw),
-               case .finished = state.state {
+               case .finished = state.state
+            {
                 turnStates[locale.fileBaseName] = state
             }
         }

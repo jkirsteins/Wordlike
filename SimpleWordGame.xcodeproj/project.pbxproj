@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB2C4D5E6F7A8B9C0D2E1A02 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2C4D5E6F7A8B9C0D2E1A01 /* BuildInfo.swift */; };
+		BB2C4D5E6F7A8B9C0D2E1A03 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2C4D5E6F7A8B9C0D2E1A01 /* BuildInfo.swift */; };
 		03D30B87D0FD66F0A0EFD682 /* WordListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3965C6264DE72A75AACC4F40 /* WordListTests.swift */; };
 		5D3E88A649C9A6AD553AE2D2 /* lv_A_1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 696502C42459128E8BD9E688 /* lv_A_1.txt */; };
 		9CD550C7BAA20896C42D047A /* lv_A_1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 696502C42459128E8BD9E688 /* lv_A_1.txt */; };
@@ -265,6 +267,7 @@
 		759FE14E10EFCA4A01595D09 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		AA1B3C4D5E6F7A8B9C0D1E2A /* StatsTransfer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsTransfer.swift; sourceTree = "<group>"; };
 		AA1B3C4D5E6F7A8B9C0D1E3A /* StatsFileDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsFileDocument.swift; sourceTree = "<group>"; };
+		BB2C4D5E6F7A8B9C0D2E1A01 /* BuildInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildInfo.swift; sourceTree = "<group>"; };
 		E70D81FE2837E16100D4F2FF /* NativeTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeTypes.swift; sourceTree = "<group>"; };
 		E70D82012837E3D500D4F2FF /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		E70D82032837EDC100D4F2FF /* NSColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSColorExtensions.swift; sourceTree = "<group>"; };
@@ -499,6 +502,7 @@
 				E7F29B3B2837DB3B005792DA /* Palettes */,
 				E7F29B0C2837DB3A005792DA /* SimpleWordGame (iOS)-Bridging-Header.h */,
 				E7F29B0D2837DB3A005792DA /* SimpleWordGame (macOS)-Bridging-Header.h */,
+				BB2C4D5E6F7A8B9C0D2E1A01 /* BuildInfo.swift */,
 				E70D81FE2837E16100D4F2FF /* NativeTypes.swift */,
 				E73463252839323700265F8F /* Media.xcassets */,
 			);
@@ -838,6 +842,7 @@
 				E7F2995D2837DABB005792DA /* Sources */,
 				E7F2995E2837DABB005792DA /* Frameworks */,
 				E7F2995F2837DABB005792DA /* Resources */,
+				CC3D5E6F7A8B9C0D1E2F3A04 /* Stamp Git SHA */,
 			);
 			buildRules = (
 			);
@@ -969,6 +974,28 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		CC3D5E6F7A8B9C0D1E2F3A04 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Stamp Git SHA";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SHA=$(git -C \"${SRCROOT}\" rev-parse --short HEAD 2>/dev/null || echo \"unknown\")\nif ! git -C \"${SRCROOT}\" diff --quiet HEAD 2>/dev/null; then\n  SHA=\"${SHA}-dirty\"\nfi\n/usr/libexec/PlistBuddy -c \"Add :GITCommitSHA string ${SHA}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\" 2>/dev/null || \\\n/usr/libexec/PlistBuddy -c \"Set :GITCommitSHA ${SHA}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A2D3EEFC70C4B8008864F411 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1026,6 +1053,7 @@
 				E736C9A8283FCF11001F2C2C /* AppStoreCompat.swift in Sources */,
 				E7F29C9D2837DB3D005792DA /* WordTreeTests.swift in Sources */,
 				E70D81FF2837E16100D4F2FF /* NativeTypes.swift in Sources */,
+				BB2C4D5E6F7A8B9C0D2E1A02 /* BuildInfo.swift in Sources */,
 				E7F29BF72837DB3C005792DA /* Palette.swift in Sources */,
 				E7F29C6B2837DB3D005792DA /* TileBackground.swift in Sources */,
 				E7F29BAF2837DB3C005792DA /* TurnCounter_Env.swift in Sources */,
@@ -1139,6 +1167,7 @@
 				E7F29C282837DB3C005792DA /* ParticlesModifier.swift in Sources */,
 				E7F29C9E2837DB3D005792DA /* WordTreeTests.swift in Sources */,
 				E70D82002837E16100D4F2FF /* NativeTypes.swift in Sources */,
+				BB2C4D5E6F7A8B9C0D2E1A03 /* BuildInfo.swift in Sources */,
 				E7F29BF82837DB3C005792DA /* Palette.swift in Sources */,
 				E7F29C6C2837DB3D005792DA /* TileBackground.swift in Sources */,
 				E7F29BB02837DB3C005792DA /* TurnCounter_Env.swift in Sources */,

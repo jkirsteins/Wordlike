@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate struct RootGeometryKey: EnvironmentKey {
+private struct RootGeometryKey: EnvironmentKey {
     static let defaultValue: GeometryProxy? = nil
 }
 

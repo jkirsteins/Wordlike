@@ -5,16 +5,15 @@ import SwiftUI
 /// have the same shared constraints (e.g. maxHeight).
 ///
 /// It can also be helpful to add borders for debugging etc.
-struct RowContainer<Content: View> : View {
-    
+struct RowContainer<Content: View>: View {
     let spacing: CGFloat
-    
+
     let MAX_HEIGHT = CGFloat(75)
-    
-    @ViewBuilder var content: ()->Content
-    
+
+    @ViewBuilder var content: () -> Content
+
     @Environment(\.debug) var debug: Bool
-    
+
     var body: some View {
         HStack(spacing: spacing) {
             content()

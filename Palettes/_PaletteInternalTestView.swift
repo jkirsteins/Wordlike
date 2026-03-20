@@ -1,26 +1,25 @@
 import SwiftUI
 
 struct _PaletteInternalTestView: View {
-    @Environment(\.palette)
-    var palette: Palette 
-    
+    @Environment(\.palette) var palette: Palette
+
     static let validator = WordValidator.testing([
         "CRAZY",
         "SLEDS",
-        "FLINT"
+        "FLINT",
     ])
-    
+
     var body: some View {
-        GeometryReader { gr in 
+        GeometryReader { gr in
             VStack {
                 ToastBanner(message: "Message in \(palette.name) palette")
-                
+
                 Row(model: RowModel(word: "CRAZY", expected: "FUELS", isSubmitted: true, locale: .en_US))
                 Row(model: RowModel(word: "SLEDS", expected: "FUELS", isSubmitted: true, locale: .en_US))
                 Row(model: RowModel(word: "FLINT", expected: "FUELS", isSubmitted: true, locale: .en_US))
                 Row(model: RowModel(word: "FILMS", expected: "FUELS", isSubmitted: false, locale: .en_US))
                 Row(model: RowModel(word: "FIL", expected: "FUELS", isSubmitted: false, locale: .en_US))
-                
+
                 EnglishKeyboard()
             }
             .environment(\.rootGeometry, gr)
@@ -28,8 +27,8 @@ struct _PaletteInternalTestView: View {
             .environmentObject(GameState())
             .environmentObject(Self.validator)
             .environment(
-                \.keyboardHints, 
-                 KeyboardHints(
+                \.keyboardHints,
+                KeyboardHints(
                     hints: [
                         "Q": .wrongPlace,
                         "J": .rightPlace,
@@ -37,8 +36,9 @@ struct _PaletteInternalTestView: View {
                         "A": .wrongLetter,
                         "S": .wrongLetter,
                         "D": .wrongLetter,
-                    ], 
-                    locale: .en_US)
+                    ],
+                    locale: .en_US
+                )
             )
         }
     }
@@ -47,18 +47,18 @@ struct _PaletteInternalTestView: View {
 struct PaletteInternalTestView_Previews: PreviewProvider {
     static let palettes: [Palette] = [
         LightPalette2(),
-        LightPalette(), 
-        LightHCPalette(), 
-        DarkPalette(), 
-        DarkHCPalette()
+        LightPalette(),
+        LightHCPalette(),
+        DarkPalette(),
+        DarkHCPalette(),
     ]
-    
+
     static var previews: some View {
         ForEach(
-            palettes.map({ ($0, UUID()) }), 
-            id: \.self.1) 
-        {
-            t in 
+            palettes.map { ($0, UUID()) },
+            id: \.1
+        ) {
+            t in
             VStack {
                 Text(t.0.name)
                 _PaletteInternalTestView()

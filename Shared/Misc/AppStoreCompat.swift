@@ -1,16 +1,22 @@
 /// https://github.com/xavierLowmiller/AppStorage/blob/main/Sources/AppStorage/AppStorage.swift
-/// 
+///
 import SwiftUI
 
 /// A property wrapper type that reflects a value from `UserDefaults` and
 /// invalidates a view on a change in value in that user default.
-@frozen @propertyWrapper public struct AppStorageCompat<Value> : DynamicProperty {
-
+@frozen @propertyWrapper
+public struct AppStorageCompat<Value>: DynamicProperty {
     @ObservedObject private var _value: Storage<Value>
     private let saveValue: (Value) -> Void
 
-    private init(value: Value, store: UserDefaults, key: String, transform: @escaping (Any?) -> Value?, saveValue: @escaping (Value) -> Void) {
-        _value = Storage(value: value, store: store, key: key, transform: transform)
+    private init(
+        value: Value,
+        store: UserDefaults,
+        key: String,
+        transform: @escaping (Any?) -> Value?,
+        saveValue: @escaping (Value) -> Void
+    ) {
+        self._value = Storage(value: value, store: store, key: key, transform: transform)
         self.saveValue = saveValue
     }
 
@@ -55,17 +61,17 @@ final class Storage<Value>: NSObject, ObservableObject {
         store.removeObserver(self, forKeyPath: keyPath)
     }
 
-    override func observeValue(forKeyPath keyPath: String?,
-                               of object: Any?,
-                               change: [NSKeyValueChangeKey : Any]?,
-                               context: UnsafeMutableRawPointer?) {
-
+    override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey: Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
         value = change?[.newKey].flatMap(transform) ?? defaultValue
     }
 }
 
 extension AppStorageCompat where Value == Bool {
-
     /// Creates a property that can read and write to a boolean user default.
     ///
     /// - Parameters:
@@ -108,7 +114,6 @@ extension AppStorageCompat where Value == Int {
 }
 
 extension AppStorageCompat where Value == Double {
-
     /// Creates a property that can read and write to a double user default.
     ///
     /// - Parameters:
@@ -130,7 +135,6 @@ extension AppStorageCompat where Value == Double {
 }
 
 extension AppStorageCompat where Value == String {
-
     /// Creates a property that can read and write to a string user default.
     ///
     /// - Parameters:
@@ -152,7 +156,6 @@ extension AppStorageCompat where Value == String {
 }
 
 extension AppStorageCompat where Value == URL {
-
     /// Creates a property that can read and write to a url user default.
     ///
     /// - Parameters:
@@ -174,7 +177,6 @@ extension AppStorageCompat where Value == URL {
 }
 
 extension AppStorageCompat where Value == Data {
-
     /// Creates a property that can read and write to a user default as data.
     ///
     /// Avoid storing large data blobs in user defaults, such as image data,
@@ -200,8 +202,7 @@ extension AppStorageCompat where Value == Data {
     }
 }
 
-extension AppStorageCompat where Value : RawRepresentable, Value.RawValue == Int {
-
+extension AppStorageCompat where Value: RawRepresentable, Value.RawValue == Int {
     /// Creates a property that can read and write to an integer user default,
     /// transforming that to `RawRepresentable` data type.
     ///
@@ -236,8 +237,7 @@ extension AppStorageCompat where Value : RawRepresentable, Value.RawValue == Int
     }
 }
 
-extension AppStorageCompat where Value : RawRepresentable, Value.RawValue == String {
-
+extension AppStorageCompat where Value: RawRepresentable, Value.RawValue == String {
     /// Creates a property that can read and write to a string user default,
     /// transforming that to `RawRepresentable` data type.
     ///

@@ -1,10 +1,10 @@
 import SwiftUI
 
-fileprivate let SPACING = GridPadding.normal
+private let SPACING = GridPadding.normal
 
-fileprivate struct FrenchLogo: View {
+private struct FrenchLogo: View {
     @State var wtype: TileBackgroundType = .rightPlace
-    
+
     var body: some View {
         VStack(spacing: SPACING) {
             HStack(spacing: SPACING) {
@@ -27,9 +27,9 @@ fileprivate struct FrenchLogo: View {
     }
 }
 
-fileprivate struct EnglishLogo: View {
+private struct EnglishLogo: View {
     @State var wtype: TileBackgroundType = .rightPlace
-    
+
     var body: some View {
         VStack(spacing: SPACING) {
             HStack(spacing: SPACING) {
@@ -40,7 +40,7 @@ fileprivate struct EnglishLogo: View {
                 Tile("_").opacity(0)
             }
             .frame(maxWidth: .infinity)
-            
+
             HStack(spacing: SPACING) {
                 Tile("_").opacity(0)
                 AgitatedTile("l")
@@ -55,25 +55,23 @@ fileprivate struct EnglishLogo: View {
     }
 }
 
-fileprivate struct ShortLatvianLogo: View {
-    
+private struct ShortLatvianLogo: View {
     let maxd = Double(12.0)
-    
+
     var randRotate: Double {
         let x = maxd * drand48()
-        let r = (maxd/2.0) - x
+        let r = (maxd / 2.0) - x
         return r
     }
-    
-    @Environment(\.palette)
-    var palette: Palette
-    
+
+    @Environment(\.palette) var palette: Palette
+
     var body: some View {
         /* smaller SPACING because the "-" at the end
-         makes everything smaller already
-        */
-        VStack(alignment: .leading, spacing: SPACING/2) {
-            HStack(spacing: SPACING/2) {
+          makes everything smaller already
+         */
+        VStack(alignment: .leading, spacing: SPACING / 2) {
+            HStack(spacing: SPACING / 2) {
                 AgitatedTile("V")
                 AgitatedTile("ā")
                 AgitatedTile("r")
@@ -92,8 +90,8 @@ fileprivate struct ShortLatvianLogo: View {
                 Tile("_").opacity(0).frame(maxWidth: 8)
             }
             .frame(maxWidth: .infinity)
-            
-            HStack(spacing: SPACING/2) {
+
+            HStack(spacing: SPACING / 2) {
                 Tile("_").opacity(0).frame(maxWidth: 8)
                 AgitatedTile("l")
                 AgitatedTile("i")
@@ -107,7 +105,7 @@ fileprivate struct ShortLatvianLogo: View {
     }
 }
 
-fileprivate struct LatvianLogo: View {
+private struct LatvianLogo: View {
     var body: some View {
         ShortLatvianLogo()
             .frame(maxWidth: .infinity)
@@ -115,22 +113,21 @@ fileprivate struct LatvianLogo: View {
 }
 
 struct Logo: View {
-    @Environment(\.locale)
-    var locale: Locale 
-    
+    @Environment(\.locale) var locale: Locale
+
     var body: some View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 /* Go by region code,
                  because in playgrounds we can't
-                 properly define the app's 
+                 properly define the app's
                  language support (so Locale.current
                  might not match the language preference
                  defined in device Settings) */
-                switch(locale.language.languageCode?.identifier) {
-                case (Locale.lv_LV.language.languageCode?.identifier):
+                switch locale.language.languageCode?.identifier {
+                case Locale.lv_LV.language.languageCode?.identifier:
                     LatvianLogo()
-                case (Locale.fr_FR.language.languageCode?.identifier):
+                case Locale.fr_FR.language.languageCode?.identifier:
                     FrenchLogo()
                 default:
                     EnglishLogo()
@@ -148,12 +145,12 @@ struct Logo_Previews: PreviewProvider {
         .en_US,
         .en_GB,
         .fr_FR,
-        .lv_LV
+        .lv_LV,
     ]
     static var previews: some View {
         VStack(alignment: .leading) {
             Text("Multiple together")
-            
+
             HStack {
                 VStack {
                     Logo()
@@ -162,25 +159,25 @@ struct Logo_Previews: PreviewProvider {
             }
             .padding(2)
             .border(.red)
-            
+
             HStack {
                 Logo()
                     .environment(\.locale, .fr_FR)
             }
             .padding(2)
             .border(.red)
-            
+
             HStack {
                 Logo()
                     .environment(\.locale, .en_US)
             }
             .padding(2)
             .border(.red)
-            
+
             Divider()
-            
+
             Text("The inner logo should have the same width/no extra padding")
-            
+
             HStack {
                 EnglishLogo()
                     .frame(maxWidth: .infinity)
@@ -191,8 +188,8 @@ struct Logo_Previews: PreviewProvider {
         .padding(24)
         .frame(maxWidth: .infinity)
         .border(.green)
-        
-        ForEach(Self.locales, id: \.self) { loc in 
+
+        ForEach(locales, id: \.self) { loc in
             PaletteSetterView {
                 VStack {
                     Text("Logo in \(loc.identifier)")

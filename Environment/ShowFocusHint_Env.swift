@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate struct HasHardwareKeyboardKey: EnvironmentKey {
+private struct HasHardwareKeyboardKey: EnvironmentKey {
     static let defaultValue: Bool = false
 }
 

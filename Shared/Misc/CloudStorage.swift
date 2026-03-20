@@ -8,7 +8,8 @@ import SwiftUI
 
 private let sync = CloudStorageSync.shared
 
-@propertyWrapper public struct CloudStorage<Value>: DynamicProperty {
+@propertyWrapper
+public struct CloudStorage<Value>: DynamicProperty {
     private let _setValue: (Value) -> Void
 
     @ObservedObject private var backingObject: CloudStorageBackingObject<Value>
@@ -31,7 +32,8 @@ private let sync = CloudStorageSync.shared
                 backing.value = newValue
                 syncSet(newValue)
                 sync.synchronize()
-            })
+            }
+        )
         self._setValue = { (newValue: Value) in
             backing.value = newValue
             syncSet(newValue)
@@ -44,7 +46,7 @@ private let sync = CloudStorageSync.shared
     }
 }
 
-internal class CloudStorageBackingObject<Value>: ObservableObject {
+class CloudStorageBackingObject<Value>: ObservableObject {
     @Published var value: Value
 
     init(value: Value) {
@@ -57,7 +59,8 @@ extension CloudStorage where Value == Bool {
         self.init(
             keyName: key,
             syncGet: { sync.bool(for: key) ?? wrappedValue },
-            syncSet: { newValue in sync.set(newValue, for: key) })
+            syncSet: { newValue in sync.set(newValue, for: key) }
+        )
     }
 }
 
@@ -66,7 +69,8 @@ extension CloudStorage where Value == Int {
         self.init(
             keyName: key,
             syncGet: { sync.int(for: key) ?? wrappedValue },
-            syncSet: { newValue in sync.set(newValue, for: key) })
+            syncSet: { newValue in sync.set(newValue, for: key) }
+        )
     }
 }
 
@@ -75,7 +79,8 @@ extension CloudStorage where Value == Double {
         self.init(
             keyName: key,
             syncGet: { sync.double(for: key) ?? wrappedValue },
-            syncSet: { newValue in sync.set(newValue, for: key) })
+            syncSet: { newValue in sync.set(newValue, for: key) }
+        )
     }
 }
 
@@ -84,7 +89,8 @@ extension CloudStorage where Value == String {
         self.init(
             keyName: key,
             syncGet: { sync.string(for: key) ?? wrappedValue },
-            syncSet: { newValue in sync.set(newValue, for: key) })
+            syncSet: { newValue in sync.set(newValue, for: key) }
+        )
     }
 }
 
@@ -93,7 +99,8 @@ extension CloudStorage where Value == URL {
         self.init(
             keyName: key,
             syncGet: { sync.string(for: key).flatMap(URL.init(string:)) ?? wrappedValue },
-            syncSet: { newValue in sync.set(newValue.absoluteString, for: key) })
+            syncSet: { newValue in sync.set(newValue.absoluteString, for: key) }
+        )
     }
 }
 
@@ -102,7 +109,8 @@ extension CloudStorage where Value == Data {
         self.init(
             keyName: key,
             syncGet: { sync.data(for: key) ?? wrappedValue },
-            syncSet: { newValue in sync.set(newValue, for: key) })
+            syncSet: { newValue in sync.set(newValue, for: key) }
+        )
     }
 }
 
@@ -111,7 +119,8 @@ extension CloudStorage where Value: RawRepresentable, Value.RawValue == Int {
         self.init(
             keyName: key,
             syncGet: { sync.int(for: key).flatMap(Value.init) ?? wrappedValue },
-            syncSet: { newValue in sync.set(newValue.rawValue, for: key) })
+            syncSet: { newValue in sync.set(newValue.rawValue, for: key) }
+        )
     }
 }
 
@@ -120,26 +129,27 @@ extension CloudStorage where Value: RawRepresentable, Value.RawValue == String {
         self.init(
             keyName: key,
             syncGet: { sync.string(for: key).flatMap(Value.init) ?? wrappedValue },
-            syncSet: { newValue in sync.set(newValue.rawValue, for: key) })
+            syncSet: { newValue in sync.set(newValue.rawValue, for: key) }
+        )
     }
 }
 
 extension CloudStorage {
-    public init<R>(_ key: String) where Value == R?, R : RawRepresentable, R.RawValue == String {
+    public init<R>(_ key: String) where Value == R?, R: RawRepresentable, R.RawValue == String {
         self.init(
             keyName: key,
             syncGet: {
-                sync.string(for: key).flatMap({
+                sync.string(for: key).flatMap {
                     (optRaw: String?) in
-                    
                     guard let raw = optRaw else {
                         return nil
                     }
-            
-                    return R.init(rawValue: raw)
-                })
+
+                    return R(rawValue: raw)
+                }
             },
-            syncSet: { newValue in sync.set(newValue?.rawValue, for: key) })
+            syncSet: { newValue in sync.set(newValue?.rawValue, for: key) }
+        )
     }
 }
 
@@ -148,7 +158,8 @@ extension CloudStorage where Value == Bool? {
         self.init(
             keyName: key,
             syncGet: { sync.bool(for: key) },
-            syncSet: { newValue in sync.set(newValue, for: key) })
+            syncSet: { newValue in sync.set(newValue, for: key) }
+        )
     }
 }
 
@@ -157,7 +168,8 @@ extension CloudStorage where Value == Int? {
         self.init(
             keyName: key,
             syncGet: { sync.int(for: key) },
-            syncSet: { newValue in sync.set(newValue, for: key) })
+            syncSet: { newValue in sync.set(newValue, for: key) }
+        )
     }
 }
 
@@ -166,7 +178,8 @@ extension CloudStorage where Value == Double? {
         self.init(
             keyName: key,
             syncGet: { sync.double(for: key) },
-            syncSet: { newValue in sync.set(newValue, for: key) })
+            syncSet: { newValue in sync.set(newValue, for: key) }
+        )
     }
 }
 
@@ -175,7 +188,8 @@ extension CloudStorage where Value == String? {
         self.init(
             keyName: key,
             syncGet: { sync.string(for: key) },
-            syncSet: { newValue in sync.set(newValue, for: key) })
+            syncSet: { newValue in sync.set(newValue, for: key) }
+        )
     }
 }
 
@@ -184,7 +198,8 @@ extension CloudStorage where Value == URL? {
         self.init(
             keyName: key,
             syncGet: { sync.string(for: key).flatMap(URL.init(string:)) },
-            syncSet: { newValue in sync.set(newValue?.absoluteString, for: key) })
+            syncSet: { newValue in sync.set(newValue?.absoluteString, for: key) }
+        )
     }
 }
 
@@ -193,6 +208,7 @@ extension CloudStorage where Value == Data? {
         self.init(
             keyName: key,
             syncGet: { sync.data(for: key) },
-            syncSet: { newValue in sync.set(newValue, for: key) })
+            syncSet: { newValue in sync.set(newValue, for: key) }
+        )
     }
 }

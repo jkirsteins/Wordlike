@@ -1,23 +1,23 @@
 import SwiftUI
 
 struct UIButtonClose: UIViewRepresentable {
-    let action: ()->() 
-    
+    let action: () -> Void
+
     func makeUIView(context: Context) -> UIButton {
         let button = UIButton(
-            type: .close, 
+            type: .close,
             primaryAction: UIAction(
-                title: "Close", 
-                handler: { 
+                title: "Close",
+                handler: {
                     _ in action()
-                }))
-        
+                }
+            )
+        )
+
         return button
     }
-    
-    func updateUIView(_ button: UIButton, context: Context) {
-        
-    }
+
+    func updateUIView(_ button: UIButton, context: Context) {}
 }
 
 struct UIButtonClose_Previews: PreviewProvider {
@@ -26,16 +26,16 @@ struct UIButtonClose_Previews: PreviewProvider {
             UIButtonClose(action: {
                 print("Test")
             })
-                .frame(maxWidth: 32, maxHeight: 32)
+            .frame(maxWidth: 32, maxHeight: 32)
         }
         .preferredColorScheme(.dark)
-        
+
         VStack {
             UIButtonClose(action: {
                 print("Test")
             })
-                .frame(maxWidth: 32, maxHeight: 32)
-            
+            .frame(maxWidth: 32, maxHeight: 32)
+
         }.preferredColorScheme(.light)
     }
 }

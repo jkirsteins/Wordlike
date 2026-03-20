@@ -1,7 +1,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-fileprivate enum ActiveSheet {
+private enum ActiveSheet {
     case mail
 }
 
@@ -9,55 +9,47 @@ extension ActiveSheet: Identifiable {
     var id: Self { self }
 }
 
-
 struct SettingsView: View {
-    
     // iCloud "Hide my e-mail" address
     static let feedbackEmail = "adorables.ambassade_0z@icloud.com"
-    
+
     // Min width for right-hand widgets
     static let minRightWidth = CGFloat(0)
-    
-#if os(iOS)
+
+    #if os(iOS)
     @State var mailData = ComposeMailData(
         subject: NSLocalizedString("Feedback about Wordlike", comment: ""),
         recipients: [
-            Self.feedbackEmail
+            Self.feedbackEmail,
         ],
         message: "",
-        attachments: [])
-#endif
-    
+        attachments: []
+    )
+    #endif
+
     static let HIGH_CONTRAST_KEY = "cfg.isHighContrast"
     static let SIMPLIFIED_LATVIAN_KEYBOARD_KEY = "cfg.isSimplifiedLatvianKeyboard"
     static let HARD_MODE_KEY = "cfg.isHardMode"
     static let HIDE_FIRST_ROW_KEY = "cfg.hideFirstRow"
-    
+
     @Environment(\.debug) var debug: Bool
-    
+
     @State fileprivate var activeSheet: ActiveSheet? = nil
-    
-    @AppStateStorage(SettingsView.HIGH_CONTRAST_KEY)
-    var isHighContrast: Bool = false
-    
-    @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY)
-    var isSimplifiedLatvianKeyboard: Bool = false
-    
-    @AppStateStorage(SettingsView.HIDE_FIRST_ROW_KEY)
-    var shouldHideFirstRow: Bool = false
-    
-    @AppStateStorage(SettingsView.HARD_MODE_KEY)
-    var isHardMode: Bool = false
-    
-    @AppStateStorage("turnState.en")
-    var dailyStateEn: DailyState? = nil
-    
-    @AppStateStorage("turnState.fr")
-    var dailyStateFr: DailyState? = nil
-    
-    @AppStateStorage("turnState.lv")
-    var dailyStateLv: DailyState? = nil
-    
+
+    @AppStateStorage(SettingsView.HIGH_CONTRAST_KEY) var isHighContrast: Bool = false
+
+    @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY) var isSimplifiedLatvianKeyboard: Bool = false
+
+    @AppStateStorage(SettingsView.HIDE_FIRST_ROW_KEY) var shouldHideFirstRow: Bool = false
+
+    @AppStateStorage(SettingsView.HARD_MODE_KEY) var isHardMode: Bool = false
+
+    @AppStateStorage("turnState.en") var dailyStateEn: DailyState? = nil
+
+    @AppStateStorage("turnState.fr") var dailyStateFr: DailyState? = nil
+
+    @AppStateStorage("turnState.lv") var dailyStateLv: DailyState? = nil
+
     @State var emailCopied = false
 
     @State var showImporter = false
@@ -65,7 +57,7 @@ struct SettingsView: View {
     @State var importMessage: String? = nil
     @State var showImportAlert = false
     @State var importSuccess = false
-    
+
     var contrastSettings: some View {
         HStack {
             Toggle(isOn: $isHighContrast) {
@@ -77,7 +69,7 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     var hardModeSettings: some View {
         Group {
             Toggle(isOn: $isHardMode) {
@@ -87,7 +79,7 @@ struct SettingsView: View {
                         .font(.caption)
                 }
             }
-            
+
             Toggle(isOn: $isSimplifiedLatvianKeyboard) {
                 VStack(alignment: .leading) {
                     Text("Simplified Latvian keyboard")
@@ -97,7 +89,7 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     var dataTransferSettings: some View {
         Group {
             HStack {
@@ -133,16 +125,18 @@ struct SettingsView: View {
             Toggle(isOn: $shouldHideFirstRow) {
                 VStack(alignment: .leading) {
                     Text("Don't share the first guess")
-                    Text("When sharing your successful guesses, keep the first attempt hidden. Useful if you always use the same word for the first guess.")
-                        .font(.caption)
+                    Text(
+                        "When sharing your successful guesses, keep the first attempt hidden. Useful if you always use the same word for the first guess."
+                    )
+                    .font(.caption)
                 }
             }
         }
     }
-    
+
     var feedbackSettings: some View {
         Group {
-#if os(iOS)
+            #if os(iOS)
             if MailView.canSendMail {
                 HStack {
                     VStack(alignment: .leading) {
@@ -155,25 +149,24 @@ struct SettingsView: View {
                     }.frame(minWidth: Self.minRightWidth)
                 }
             }
-#endif
-            
+            #endif
+
             HStack {
                 VStack(alignment: .leading) {
-#if os(iOS)
+                    #if os(iOS)
                     if MailView.canSendMail {
                         Text("Feedback (manual)")
                     } else {
                         Text("Feedback")
                     }
-#else
+                    #else
                     Text("Feedback")
-#endif
+                    #endif
                     Text("Click to copy feedback e-mail address.").font(.caption)
                 }
                 Spacer()
                 HStack {
                     if emailCopied {
-                        
                         Text("Copied")
                             .font(.caption)
                             .foregroundColor(Color(NativeColor.secondaryLabel))
@@ -182,29 +175,30 @@ struct SettingsView: View {
                                     emailCopied = false
                                 }
                             }
-                        
+
                     } else {
                         Button(action: {
-#if os(iOS)
+                            #if os(iOS)
                             NativePasteboard.general.setValue(
                                 Self.feedbackEmail,
-                                forPasteboardType: UTType.plainText.identifier)
-#else
+                                forPasteboardType: UTType.plainText.identifier
+                            )
+                            #else
                             NativePasteboard.general.setString(
-                                Self.feedbackEmail, forType: .string)
-#endif
-                            
+                                Self.feedbackEmail, forType: .string
+                            )
+                            #endif
+
                             emailCopied = true
                         }, label: {
                             Image(systemName: "doc.on.clipboard")
                         })
                     }
                 }.frame(minWidth: Self.minRightWidth)
-                
             }
         }
     }
-    
+
     var socialSettings: some View {
         Group {
             HStack {
@@ -213,15 +207,15 @@ struct SettingsView: View {
                     Text("The source code is freely available.")
                         .font(.caption)
                 }
-                
+
                 Spacer()
-                
+
                 Link(destination: URL(string: "https://github.com/jkirsteins/Wordlike")!, label: {
                     Text("GitHub")
                 })
                 .frame(minWidth: Self.minRightWidth)
             }
-            
+
             HStack {
                 VStack(alignment: .leading) {
                     Text("Author")
@@ -253,14 +247,12 @@ struct SettingsView: View {
             }
         }
     }
-    
-    @ViewBuilder
-    var optDebugSettings: some View {
+
+    @ViewBuilder var optDebugSettings: some View {
         if debug {
             Group {
-                
                 Divider()
-                
+
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Reset all state").font(.body)
@@ -273,9 +265,9 @@ struct SettingsView: View {
                         }
                     }
                 }
-                
+
                 Divider()
-                
+
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Reset turn (EN)").font(.body)
@@ -286,7 +278,7 @@ struct SettingsView: View {
                         dailyStateEn = nil
                     }
                 }
-                
+
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Reset turn (FR)").font(.body)
@@ -297,7 +289,7 @@ struct SettingsView: View {
                         dailyStateFr = nil
                     }
                 }
-                
+
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Reset turn (LV)").font(.body)
@@ -308,22 +300,61 @@ struct SettingsView: View {
                         dailyStateLv = nil
                     }
                 }
-                
+
                 Divider()
             }
         }
     }
-    
+
+    var versionInfoSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Version")
+                    .font(.caption)
+                Spacer()
+                Text(BuildInfo.version)
+                    .font(.caption)
+                    .foregroundColor(Color(NativeColor.secondaryLabel))
+            }
+            HStack {
+                Text("Build")
+                    .font(.caption)
+                Spacer()
+                Text(BuildInfo.build)
+                    .font(.caption)
+                    .foregroundColor(Color(NativeColor.secondaryLabel))
+            }
+            HStack {
+                Text("Git")
+                    .font(.caption)
+                Spacer()
+                Text(BuildInfo.gitSHA)
+                    .font(.caption)
+                    .foregroundColor(Color(NativeColor.secondaryLabel))
+            }
+            if BuildInfo.dirty {
+                HStack {
+                    Text("Modified")
+                        .font(.caption)
+                    Spacer()
+                    Text("Yes")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+                }
+            }
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             contrastSettings
-            
+
             Divider()
-            
+
             hardModeSettings
-            
+
             Divider()
-            
+
             sharingSettings
 
             Divider()
@@ -333,14 +364,18 @@ struct SettingsView: View {
             Divider()
 
             feedbackSettings
-            
+
             Divider()
-            
+
             // Social
             socialSettings
-            
+
             // Since optional, the divider is included inside
             optDebugSettings
+
+            Divider()
+
+            versionInfoSection
         }
         .navigationTitle("Settings")
         .fileImporter(
@@ -348,7 +383,7 @@ struct SettingsView: View {
             allowedContentTypes: [.json]
         ) { result in
             switch result {
-            case .success(let url):
+            case let .success(url):
                 do {
                     let accessed = url.startAccessingSecurityScopedResource()
                     defer { if accessed { url.stopAccessingSecurityScopedResource() } }
@@ -377,18 +412,15 @@ struct SettingsView: View {
         }
 
         // Feedback e-mail sheet is only available in iOS
-#if os(iOS)
-        .sheet(item: $activeSheet, onDismiss: {
-
-        }, content: { item in
-            switch(item) {
+        #if os(iOS)
+        .sheet(item: $activeSheet, onDismiss: {}, content: { item in
+            switch item {
             case .mail:
                 MailView(data: $mailData) { _ in
-
                 }
             }
         })
-#endif
+        #endif
     }
 }
 

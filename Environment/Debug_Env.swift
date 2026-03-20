@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate struct DebugKey: EnvironmentKey {
+private struct DebugKey: EnvironmentKey {
     static let defaultValue = false
 }
 
@@ -12,5 +12,3 @@ extension EnvironmentValues {
         set { self[DebugKey.self] = newValue }
     }
 }
-
-

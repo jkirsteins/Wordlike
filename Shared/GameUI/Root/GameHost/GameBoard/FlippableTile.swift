@@ -1,22 +1,26 @@
 import SwiftUI
 
 extension FlippableTile where Revealed == Tile<InternalFillColor> {
-    init(letter: TileModel?, flipped: TileModel?,
-         tag: Int, jumpIx: Int?,
-         midCallback: @escaping ()->(),
-         flipCallback: @escaping ()->(), 
-         jumpCallback: @escaping (Int)->(),
-         duration: CGFloat,
-         jumpDuration: CGFloat) {
-        self.letter = letter 
-        self.tag = tag 
+    init(
+        letter: TileModel?,
+        flipped: TileModel?,
+        tag: Int,
+        jumpIx: Int?,
+        midCallback: @escaping () -> Void,
+        flipCallback: @escaping () -> Void,
+        jumpCallback: @escaping (Int) -> Void,
+        duration: CGFloat,
+        jumpDuration: CGFloat
+    ) {
+        self.letter = letter
+        self.tag = tag
         self.jumpIx = jumpIx
         self.midCallback = midCallback
         self.flipCallback = flipCallback
         self.jumpCallback = jumpCallback
         self.duration = duration
         self.jumpDuration = jumpDuration
-        
+
         if let flipped = flipped {
             revealedObject = Tile(model: flipped)
         } else {
@@ -28,40 +32,43 @@ extension FlippableTile where Revealed == Tile<InternalFillColor> {
 struct FlippableTile<Revealed: View>: View {
     let letter: TileModel?
 
-    let tag: Int 
+    let tag: Int
     let jumpIx: Int?
-    
-    let midCallback: ()->()
-    let flipCallback: ()->()
-    let jumpCallback: (Int)->()
-    
+
+    let midCallback: () -> Void
+    let flipCallback: () -> Void
+    let jumpCallback: (Int) -> Void
+
     let duration: CGFloat
-    let jumpDuration: CGFloat 
-    
+    let jumpDuration: CGFloat
+
     @State var jumping: Bool = false
-    
+
     let revealedObject: Revealed?
-    
+
     var revealConfig: RevealConfig {
         RevealConfig(
             totalDuration: duration,
-            maxSteps: 2, 
-            callbackStep: 1, 
+            maxSteps: 2,
+            callbackStep: 1,
             callback: midCallback,
-            finalCallback: flipCallback)
+            finalCallback: flipCallback
+        )
     }
-    
-    init(letter: TileModel?, 
-         tag: Int, jumpIx: Int?,
-         midCallback: @escaping ()->(),
-         flipCallback: @escaping ()->(), 
-         jumpCallback: @escaping (Int)->(),
-         duration: CGFloat,
-         jumpDuration: CGFloat,
-         revealedObject: ()->Revealed?) 
-    {
-        self.letter = letter 
-        self.tag = tag 
+
+    init(
+        letter: TileModel?,
+        tag: Int,
+        jumpIx: Int?,
+        midCallback: @escaping () -> Void,
+        flipCallback: @escaping () -> Void,
+        jumpCallback: @escaping (Int) -> Void,
+        duration: CGFloat,
+        jumpDuration: CGFloat,
+        revealedObject: () -> Revealed?
+    ) {
+        self.letter = letter
+        self.tag = tag
         self.jumpIx = jumpIx
         self.midCallback = midCallback
         self.flipCallback = flipCallback
@@ -70,34 +77,34 @@ struct FlippableTile<Revealed: View>: View {
         self.jumpDuration = jumpDuration
         self.revealedObject = revealedObject()
     }
-    
+
     var body: some View {
         nonJumpingBody
             .jumping(jumping: $jumping, duration: jumpDuration)
             .onChange(of: jumpIx) { nx in
                 jumping = (tag == nx)
             }
-            .onChange(of: jumping) { nj in 
+            .onChange(of: jumping) { nj in
                 if !nj {
                     jumpCallback(tag)
                 }
             }
     }
-    
-    @ViewBuilder
-    var nonJumpingBody: some View {
+
+    @ViewBuilder var nonJumpingBody: some View {
         VStack {
             if revealedObject == nil {
                 Tile(model: letter)
-            } 
-            
+            }
+
             if let revealedObject = revealedObject {
                 Tile(model: letter)
                     .modifier(RevealModifier(
-                        config: revealConfig, 
+                        config: revealConfig,
                         revealed: {
                             revealedObject
-                        }))
+                        }
+                    ))
             }
         }
     }

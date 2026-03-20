@@ -1,9 +1,9 @@
-/* 
+/*
   Localizable.strings
   SimpleWordGame
 
   Created by Janis Kirsteins on 26/05/2022.
-  
+
 */
 
 "Share a summary" = "Partager un résumé";
@@ -140,3 +140,9 @@
 "Could not import stats. The file may be invalid." = "Impossible d'importer. Le fichier est peut-être invalide.";
 "This will overwrite your current stats. Continue?" = "Cela écrasera vos statistiques actuelles. Continuer ?";
 "Continue" = "Continuer";
+
+"Version" = "Version";
+"Build" = "Build";
+"Git" = "Git";
+"Modified" = "Modifié";
+"Yes" = "Oui";

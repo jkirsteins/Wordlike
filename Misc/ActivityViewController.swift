@@ -3,36 +3,42 @@ import SwiftUI
 struct ActivityViewController: UIViewControllerRepresentable {
     @Binding var activityItems: [Any]
     var excludedActivityTypes: [UIActivity.ActivityType]? = nil
-    
-    var callback: (()->())
-    
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>) -> UIActivityViewController {
+
+    var callback: () -> Void
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>)
+        -> UIActivityViewController
+    {
         let controller = UIActivityViewController(
             activityItems: activityItems,
-            applicationActivities: nil)
-        
+            applicationActivities: nil
+        )
+
         controller.excludedActivityTypes = excludedActivityTypes
-        
+
         updateCallback(controller, callback)
-        
+
         return controller
     }
-    
+
     func updateCallback(
-        _ uiViewController: UIActivityViewController, 
-        _ callback: @escaping ()->()) {
+        _ uiViewController: UIActivityViewController,
+        _ callback: @escaping () -> Void
+    ) {
         uiViewController.completionWithItemsHandler = {
-            type, completed, items, error in 
-            
+            _, completed, _, _ in
             guard completed else {
                 return
             }
-            
+
             callback()
         }
     }
-    
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityViewController>) {
-        updateCallback(uiViewController, self.callback)
+
+    func updateUIViewController(
+        _ uiViewController: UIActivityViewController,
+        context: UIViewControllerRepresentableContext<ActivityViewController>
+    ) {
+        updateCallback(uiViewController, callback)
     }
 }

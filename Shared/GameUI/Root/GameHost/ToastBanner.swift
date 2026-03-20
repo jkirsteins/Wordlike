@@ -2,13 +2,11 @@ import SwiftUI
 
 struct ToastBanner: View {
     let message: String
-    
-    @Environment(\.debug)
-    var debugViz: Bool
-    
-    @Environment(\.palette)
-    var palette: Palette
-    
+
+    @Environment(\.debug) var debugViz: Bool
+
+    @Environment(\.palette) var palette: Palette
+
     var body: some View {
         VStack {
             Spacer().frame(maxHeight: 24)
@@ -18,7 +16,8 @@ struct ToastBanner: View {
                 .padding(16)
                 .background(
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(palette.toastBackground))
+                        .fill(palette.toastBackground)
+                )
         }
         .transition(.opacity)
         .padding()

@@ -1,10 +1,3 @@
-//
-//  CloudStorageSync.swift
-//  CloudStorage
-//
-//  Created by Tom Lokhorst on 2020-07-05.
-//
-
 import Foundation
 
 #if canImport(UIKit)
@@ -17,17 +10,18 @@ public class CloudStorageSync: ObservableObject {
     private let ubiquitousKvs: NSUbiquitousKeyValueStore
     private var observers: [String: () -> Void] = [:]
 
-    @Published private(set) public var status: Status
+    @Published public private(set) var status: Status
 
     private init() {
-        ubiquitousKvs = NSUbiquitousKeyValueStore.default
-        status = Status(date: Date(), source: .initial, keys: [])
+        self.ubiquitousKvs = NSUbiquitousKeyValueStore.default
+        self.status = Status(date: Date(), source: .initial, keys: [])
 
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(didChangeExternally(notification:)),
             name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
-            object: nil)
+            object: nil
+        )
         ubiquitousKvs.synchronize()
 
         #if canImport(UIKit)
@@ -35,11 +29,13 @@ public class CloudStorageSync: ObservableObject {
             ubiquitousKvs,
             selector: #selector(NSUbiquitousKeyValueStore.synchronize),
             name: UIApplication.willEnterForegroundNotification,
-            object: nil)
+            object: nil
+        )
         #endif
     }
 
-    @objc private func didChangeExternally(notification: Notification) {
+    @objc
+    private func didChangeExternally(notification: Notification) {
         let reasonRaw = notification.userInfo?[NSUbiquitousKeyValueStoreChangeReasonKey] as? Int ?? -1
         let keys = notification.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] ?? []
         let reason = ChangeReason(rawValue: reasonRaw)
@@ -71,7 +67,7 @@ public class CloudStorageSync: ObservableObject {
     //
     // By excessively calling .synchronize() all the time, changes are persisted to disk.
     // This way, when working with Xcode, changes aren't constantly being reverted.
-    internal func synchronize() {
+    func synchronize() {
         ubiquitousKvs.synchronize()
     }
 }
@@ -90,7 +86,6 @@ extension CloudStorageSync {
         ubiquitousKvs.removeObject(forKey: key)
     }
 
-
     public func string(for key: String) -> String? {
         ubiquitousKvs.string(forKey: key)
     }
@@ -99,7 +94,7 @@ extension CloudStorageSync {
         ubiquitousKvs.array(forKey: key)
     }
 
-    public func dictionary(for key: String) -> [String : Any]? {
+    public func dictionary(for key: String) -> [String: Any]? {
         ubiquitousKvs.dictionary(forKey: key)
     }
 
@@ -127,7 +122,6 @@ extension CloudStorageSync {
         return ubiquitousKvs.bool(forKey: key)
     }
 
-
     public func set(_ value: String?, for key: String) {
         ubiquitousKvs.set(value, forKey: key)
         status = Status(date: Date(), source: .localChange, keys: [key])
@@ -143,7 +137,7 @@ extension CloudStorageSync {
         status = Status(date: Date(), source: .localChange, keys: [key])
     }
 
-    public func set(_ value: [String : Any]?, for key: String) {
+    public func set(_ value: [String: Any]?, for key: String) {
         ubiquitousKvs.set(value, forKey: key)
         status = Status(date: Date(), source: .localChange, keys: [key])
     }
@@ -215,11 +209,11 @@ extension CloudStorageSync {
             case .localChange:
                 return "[\(timeString)] Local change: \(keysString)"
 
-            case .externalChange(let reason?):
+            case let .externalChange(reason?):
                 return "[\(timeString)] External change (\(reason)): \(keysString)"
 
             case .externalChange(nil):
-               return "[\(timeString)] External change (unknown): \(keysString)"
+                return "[\(timeString)] External change (unknown): \(keysString)"
             }
         }
     }

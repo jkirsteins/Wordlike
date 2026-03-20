@@ -7,6 +7,7 @@ struct LazyView<Content: View>: View {
     init(_ build: @autoclosure @escaping () -> Content) {
         self.build = build
     }
+
     var body: some View { build() }
 }
 
@@ -14,32 +15,29 @@ struct LazyView<Content: View>: View {
 /// to a GameHost instance.
 struct LinkToGame: View {
     let locale: GameLocale
-    let caption: String? 
+    let caption: String?
     let seed: Int?
-    
-    @Environment(\.palette) 
-    var palette: Palette
-    
-    @Environment(\.globalTapCount)
-    var globalTapCount: Binding<Int>
-    
-    @Environment(\.debug) 
-    var debug: Bool
-    
+
+    @Environment(\.palette) var palette: Palette
+
+    @Environment(\.globalTapCount) var globalTapCount: Binding<Int>
+
+    @Environment(\.debug) var debug: Bool
+
     init(locale: GameLocale, caption: String? = nil, seed: Int? = nil) {
-        self.locale = locale 
+        self.locale = locale
         self.seed = seed
         self.caption = caption
     }
-    
+
     var body: some View {
         NavigationLink(destination: {
             LazyView(
                 GeometryReader { gr in
                     GameHost(locale, seed: seed)
-                    /* We set the environment explicitly, because
-                     it will not be handled by the palette wrapper
-                     (it is instantiated, not nested) */
+                        /* We set the environment explicitly, because
+                         it will not be handled by the palette wrapper
+                         (it is instantiated, not nested) */
                         .environment(\.rootGeometry, gr)
                         .environment(\.globalTapCount, globalTapCount)
                         .environment(\.debug, debug)
@@ -55,9 +53,9 @@ struct LinkToGame: View {
             )
         }, label: {
             LanguageLinkLabel(
-                locale, 
-                extraCaption: caption)
+                locale,
+                extraCaption: caption
+            )
         })
     }
 }
-

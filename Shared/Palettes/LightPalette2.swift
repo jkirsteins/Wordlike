@@ -2,63 +2,62 @@ import SwiftUI
 
 import SwiftUI
 
-struct LightPalette2 : Palette
-{
+struct LightPalette2: Palette {
     let name = "Light"
-    
+
     var unknownWordTextColor: Color {
         .red.darker
     }
-    
+
     let maskedFilledStroke: Color = .black
     let maskedEmptyStroke: Color = .gray
     let wrongLetterStroke: Color = .black
-    
-    var wrongPlaceStroke: Color { 
+
+    var wrongPlaceStroke: Color {
         wrongPlaceFill.darker
     }
-    
+
     var rightPlaceStroke: Color {
         rightPlaceFill.darker
     }
-    
+
     let maskedFilledFill: Color = .white
     let maskedEmptyFill: Color = .white
     let wrongLetterFill: Color = .white.darker
     let wrongPlaceFill: Color = .yellow
     let rightPlaceFill: Color = .green
-    
+
     let maskedTextColor: Color = .black
     let revealedTextColor: Color = .white
-    
+
     let toastBackground = Color(hex: 0x121213)
     let toastForeground = Color.white
-    
+
     var normalKeyboardFill: Color {
         keyboardFill(for: nil)
     }
+
     var submitKeyboardFill = Color.blue
-    
+
     var revealedWrongLetterColor: Color {
         revealedTextColor
     }
-    
+
     var inProgressUiLabel: Color {
         wrongPlaceFill.darker
     }
-    
+
     var completedUiLabel: Color {
         rightPlaceFill.darker
     }
-    
+
     func keyboardFill(for type: TileBackgroundType?) -> Color {
-        guard let type = type else { 
-            return Color(hex: 0xefefef) 
+        guard let type = type else {
+            return Color(hex: 0xEFEFEF)
         }
-        
-        switch(type)
-        {
-        case .darker(let innerType):
+
+        switch type {
+        case let .darker(innerType):
             return keyboardFill(for: innerType)
         case .maskedEmpty, .maskedFilled:
             return .red
@@ -70,11 +69,11 @@ struct LightPalette2 : Palette
             return .white
         }
     }
-    
+
     func keyboardText(for type: TileBackgroundType?) -> Color {
         guard let type = type else { return .black }
-        switch(type) {
-        case .darker(let innerType):
+        switch type {
+        case let .darker(innerType):
             return keyboardText(for: innerType)
         case .maskedEmpty, .maskedFilled:
             return .black
@@ -92,7 +91,7 @@ struct LightPalette2_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Text("Light palette v2")
-            
+
             _PaletteInternalTestView()
                 .environment(\.palette, LightPalette2())
         }.padding()

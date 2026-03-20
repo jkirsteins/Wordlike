@@ -1,6 +1,6 @@
+import CoreTransferable
 import SwiftUI
 import UniformTypeIdentifiers
-import CoreTransferable
 
 struct StatsFileDocument: FileDocument {
     static var readableContentTypes: [UTType] { [.json] }
@@ -15,7 +15,7 @@ struct StatsFileDocument: FileDocument {
         guard let data = configuration.file.regularFileContents else {
             throw CocoaError(.fileReadCorruptFile)
         }
-        document = try JSONDecoder().decode(StatsExportDocument.self, from: data)
+        self.document = try JSONDecoder().decode(StatsExportDocument.self, from: data)
     }
 
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {

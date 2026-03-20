@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate struct KeyboardSubmitEnabledKey: EnvironmentKey {
+private struct KeyboardSubmitEnabledKey: EnvironmentKey {
     static let defaultValue = true
 }
 

@@ -1,9 +1,9 @@
-/* 
+/*
   Localizable.strings
   SimpleWordGame
 
   Created by Janis Kirsteins on 26/05/2022.
-  
+
 */
 
 "Share a summary" = "Nosūtīt kopsavilkumu";
@@ -76,9 +76,9 @@
 "The letter **W** is in the word and in the correct spot." = "Burts Ī ir atminēts pareizi.";
 
 "The letter **I** is in the word but in a different spot." = "Burts L ir atminēts pareizi, taču tam jāatrodas citā vietā.";
-            
+
 "The letter **U** is not in the word in any spot." = "Burts E pareizajā vārdā nav sastopams.";
-            
+
 "A new word is available every day." = "Katru dienu būs jauns minamais vārds.";
 
 "Look up" = "Skatīt tēzaurā";
@@ -145,3 +145,9 @@
 "Could not import stats. The file may be invalid." = "Neizdevās importēt. Fails var būt nederīgs.";
 "This will overwrite your current stats. Continue?" = "Tas pārrakstīs jūsu pašreizējo statistiku. Turpināt?";
 "Continue" = "Turpināt";
+
+"Version" = "Versija";
+"Build" = "Būvējums";
+"Git" = "Git";
+"Modified" = "Modificēts";
+"Yes" = "Jā";

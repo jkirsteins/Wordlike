@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate struct GlobalTapCountKey: EnvironmentKey {
+private struct GlobalTapCountKey: EnvironmentKey {
     static let defaultValue: Binding<Int> = .constant(0)
 }
 

@@ -1,9 +1,10 @@
 import SwiftUI
 
 private struct KeyboardHintEnvironmentKey: EnvironmentKey {
-    static let defaultValue: KeyboardHints = KeyboardHints(
-        hints: Dictionary<CharacterModel, TileBackgroundType>(), 
-        locale: .en_US)
+    static let defaultValue: KeyboardHints = .init(
+        hints: [CharacterModel: TileBackgroundType](),
+        locale: .en_US
+    )
 }
 
 extension EnvironmentValues {
@@ -16,63 +17,72 @@ extension EnvironmentValues {
 /// Latvian qwerty keyboard
 struct LatvianKeyboard: View {
     @State var maxSize: CGSize = .zero
-    
-    @EnvironmentObject 
-    var toastMessageCenter: ToastMessageCenter
-    
-    let hspacing = CGFloat(1) 
-    let vspacing = CGFloat(1) 
-    
+
+    @EnvironmentObject var toastMessageCenter: ToastMessageCenter
+
+    let hspacing = CGFloat(1)
+    let vspacing = CGFloat(1)
+
     var wideSize: CGSize {
         CGSize(
-            width: maxSize.width*1.5 + hspacing, 
-            height: maxSize.height)
+            width: maxSize.width * 1.5 + hspacing,
+            height: maxSize.height
+        )
     }
-    
+
     let locale = Locale.lv_LV
-    
-    
+
     var body: some View {
         KeyboardContainer(spacing: vspacing) {
             RowContainer(spacing: hspacing) {
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "E", locale: locale)
+                        maxSize: maxSize, letter: "E", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
                         maxSize: maxSize, letter: "Ē",
-                        locale: locale)
+                        locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
                         maxSize: maxSize, letter: "R",
-                        locale: locale)
+                        locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
                         maxSize: maxSize, letter: "T",
-                        locale: locale)
+                        locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
                         maxSize: maxSize, letter: "U",
-                        locale: locale)
+                        locale: locale
+                    )
                 }
-                
+
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Ū", locale: locale)
+                        maxSize: maxSize, letter: "Ū", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "I", locale: locale)
+                        maxSize: maxSize, letter: "I", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Ī", locale: locale)
+                        maxSize: maxSize, letter: "Ī", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "O", locale: locale)
+                        maxSize: maxSize, letter: "O", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "P", locale: locale)
+                        maxSize: maxSize, letter: "P", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Ķ", locale: locale)
+                        maxSize: maxSize, letter: "Ķ", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Ļ", locale: locale)
+                        maxSize: maxSize, letter: "Ļ", locale: locale
+                    )
                 }
-                
-                
             }
-            
-            RowContainer(spacing: hspacing ) {
+
+            RowContainer(spacing: hspacing) {
                 Group {
                     SizeSettingKeyboardButton(maxSize: $maxSize, letter: "A", locale: locale)
                     KeyboardButton(letter: "Ā", locale: locale)
@@ -92,10 +102,10 @@ struct LatvianKeyboard: View {
                     KeyboardButton(letter: "L", locale: locale)
                 }
             }
-            
+
             RowContainer(spacing: hspacing) {
                 BackspaceButton(maxSize: wideSize)
-                
+
                 Group {
                     SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Z", locale: locale)
                     SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Ž", locale: locale)
@@ -109,7 +119,7 @@ struct LatvianKeyboard: View {
                     SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Ņ", locale: locale)
                     SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "M", locale: locale)
                 }
-                
+
                 SubmitButton(maxSize: wideSize)
             }
         }
@@ -117,12 +127,17 @@ struct LatvianKeyboard: View {
 }
 
 struct LatvianKeyboardView_Previews: PreviewProvider {
-    static let state = GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: .lv_LV(simplified: false), validator: WordValidator(locale: .lv_LV(simplified: false))))
-    
+    static let state = GameState(expected: TurnAnswer(
+        word: "fuels",
+        day: 1,
+        locale: .lv_LV(simplified: false),
+        validator: WordValidator(locale: .lv_LV(simplified: false))
+    ))
+
     static var previews: some View {
         VStack {
             Text("Latvian keyboard (light)")
-            
+
             LatvianKeyboard()
                 .environment(\.keyboardHints, KeyboardHints(hints: [
                     "Ļ": .wrongPlace,
@@ -131,10 +146,10 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
                 ], locale: .lv_LV(simplified: false)))
                 .environment(\.palette, LightPalette())
         }.environmentObject(state)
-        
+
         VStack {
             Text("Latvian keyboard (light hc)")
-            
+
             LatvianKeyboard()
                 .environment(\.keyboardHints, KeyboardHints(hints: [
                     "Ļ": .wrongPlace,
@@ -143,10 +158,10 @@ struct LatvianKeyboardView_Previews: PreviewProvider {
                 ], locale: .lv_LV(simplified: false)))
                 .environment(\.palette, LightHCPalette())
         }.environmentObject(state)
-        
+
         VStack {
             Text("Latvian keyboard (dark)")
-            
+
             LatvianKeyboard()
                 .environment(\.keyboardHints, KeyboardHints(hints: [
                     "Ļ": .wrongPlace,

@@ -3,56 +3,66 @@ import SwiftUI
 /// Estonian keyboard
 struct EstonianKeyboard: View {
     @State var maxSize: CGSize = .zero
-    
-    @EnvironmentObject 
-    var toastMessageCenter: ToastMessageCenter
-    
-    let hspacing = CGFloat(1) 
-    let vspacing = CGFloat(1) 
-    
+
+    @EnvironmentObject var toastMessageCenter: ToastMessageCenter
+
+    let hspacing = CGFloat(1)
+    let vspacing = CGFloat(1)
+
     var wideSize: CGSize {
         CGSize(
-            width: maxSize.width*2 + hspacing, 
-            height: maxSize.height)
+            width: maxSize.width * 2 + hspacing,
+            height: maxSize.height
+        )
     }
-    
+
     let locale = Locale.ee_EE
-    
+
     var body: some View {
         KeyboardContainer(spacing: vspacing) {
             RowContainer(spacing: hspacing) {
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Q", locale: locale)
+                        maxSize: maxSize, letter: "Q", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
                         maxSize: maxSize, letter: "W",
-                        locale: locale)
+                        locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
                         maxSize: maxSize, letter: "E",
-                        locale: locale)
+                        locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
                         maxSize: maxSize, letter: "R",
-                        locale: locale)
+                        locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
                         maxSize: maxSize, letter: "T",
-                        locale: locale)
+                        locale: locale
+                    )
                 }
-                
+
                 Group {
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "Y", locale: locale)
+                        maxSize: maxSize, letter: "Y", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "U", locale: locale)
+                        maxSize: maxSize, letter: "U", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "I", locale: locale)
+                        maxSize: maxSize, letter: "I", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "O", locale: locale)
+                        maxSize: maxSize, letter: "O", locale: locale
+                    )
                     SizeConstrainedKeyboardButton(
-                        maxSize: maxSize, letter: "P", locale: locale)
+                        maxSize: maxSize, letter: "P", locale: locale
+                    )
                 }
             }
-            
-            RowContainer(spacing: hspacing ) {
+
+            RowContainer(spacing: hspacing) {
                 Spacer()
                 Group {
                     SizeSettingKeyboardButton(maxSize: $maxSize, letter: "A", locale: locale)
@@ -73,7 +83,7 @@ struct EstonianKeyboard: View {
                 }
                 Spacer()
             }
-            
+
             RowContainer(spacing: hspacing) {
                 BackspaceButton(maxSize: wideSize)
                 Group {
@@ -89,7 +99,7 @@ struct EstonianKeyboard: View {
                     SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Ü", locale: locale)
                     SizeConstrainedKeyboardButton(maxSize: maxSize, letter: "Õ", locale: locale)
                 }
-                
+
                 SubmitButton(maxSize: wideSize)
             }
         }
@@ -97,14 +107,19 @@ struct EstonianKeyboard: View {
 }
 
 struct EstonianKeyboardView_Previews: PreviewProvider {
-    static let state = GameState(expected: TurnAnswer(word: "fuels", day: 1, locale: .ee_EE, validator: WordValidator(locale: .ee_EE)))
-    
+    static let state = GameState(expected: TurnAnswer(
+        word: "fuels",
+        day: 1,
+        locale: .ee_EE,
+        validator: WordValidator(locale: .ee_EE)
+    ))
+
     static var previews: some View {
-        GeometryReader { pr in 
+        GeometryReader { pr in
             VStack {
                 VStack {
                     Text("Estonian keyboard (light)")
-                    
+
                     EstonianKeyboard()
                         .environment(\.keyboardHints, KeyboardHints(hints: [
                             "Q": .wrongPlace,
@@ -113,10 +128,10 @@ struct EstonianKeyboardView_Previews: PreviewProvider {
                         ], locale: .ee_EE))
                         .environment(\.palette, LightPalette())
                 }
-                
+
                 VStack {
                     Text("Estonian keyboard (light hc)")
-                    
+
                     EstonianKeyboard()
                         .environment(\.keyboardHints, KeyboardHints(hints: [
                             "Q": .wrongPlace,
@@ -125,10 +140,10 @@ struct EstonianKeyboardView_Previews: PreviewProvider {
                         ], locale: .ee_EE))
                         .environment(\.palette, LightHCPalette())
                 }
-                
+
                 VStack {
                     Text("Estonian keyboard (dark)")
-                    
+
                     EstonianKeyboard()
                         .environment(\.keyboardHints, KeyboardHints(hints: [
                             "Q": .wrongPlace,

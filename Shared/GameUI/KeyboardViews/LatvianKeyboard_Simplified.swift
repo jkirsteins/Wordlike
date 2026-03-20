@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LatvianKeyboard_Simplified: View {
-    static let specialMap: Dictionary<String, String> = [
+    static let specialMap: [String: String] = [
         "Ē": "E",
         "Ū": "U",
         "Ī": "I",
@@ -12,29 +12,29 @@ struct LatvianKeyboard_Simplified: View {
         "Ļ": "L",
         "Ž": "Z",
         "Č": "C",
-        "Ņ": "N"]
-    
+        "Ņ": "N",
+    ]
+
     @State var maxSize: CGSize = .zero
-    
-    @EnvironmentObject 
-    var toastMessage: ToastMessageCenter
-    
-    @Environment(\.keyboardHints) 
-    var hints: KeyboardHints
-    
-    @Environment(\.debug) 
-    var debug: Bool
-    
-    let hspacing = CGFloat(1) 
+
+    @EnvironmentObject var toastMessage: ToastMessageCenter
+
+    @Environment(\.keyboardHints) var hints: KeyboardHints
+
+    @Environment(\.debug) var debug: Bool
+
+    let hspacing = CGFloat(1)
     let vspacing = CGFloat(1)
-    
+
     let locale = Locale.lv_LV
-    
+
     var wideSize: CGSize {
-        CGSize(width: maxSize.width*1.5 + hspacing, 
-               height: maxSize.height)
+        CGSize(
+            width: maxSize.width * 1.5 + hspacing,
+            height: maxSize.height
+        )
     }
-    
+
     var debug_wrongHints: String {
         hints.hints.filter {
             $0.value == .wrongLetter
@@ -42,134 +42,159 @@ struct LatvianKeyboard_Simplified: View {
             $0.key.value
         }.joined(separator: ",")
     }
-    
+
     /// Determines which letters a button should input (can be multiple)
     func keyboardLetter(_ letter: String) -> MultiCharacterModel {
         guard let complement = Self.specialMap.first(where: {
-            $0.value == letter 
-        })?.key else {
+            $0.value == letter
+        })?.key
+        else {
             // If there is no complement, then
             // there is no way we need to do any
             // visual changes.
             return MultiCharacterModel.single(letter, locale: locale)
         }
-        
+
         var chars = [CharacterModel]()
-        
+
         let regularChar = CharacterModel(
-            value: letter, locale: locale)
+            value: letter, locale: locale
+        )
         let complementChar = CharacterModel(
-            value: complement, locale: locale)
-        
+            value: complement, locale: locale
+        )
+
         // check regular char first
         if hints.hints[regularChar] != .wrongLetter {
             chars.append(regularChar)
         }
-        
+
         // the complement is optional, however
         if hints.hints[complementChar] != .wrongLetter {
             chars.append(complementChar)
         }
-        
-        // something should always be added, so 
+
+        // something should always be added, so
         // we don't get an empty button
         if chars.isEmpty {
             chars.insert(regularChar, at: 0)
         }
-        
+
         return MultiCharacterModel(values: chars)
     }
-    
+
     var body: some View {
         VStack {
             KeyboardContainer(spacing: vspacing) {
                 RowContainer(spacing: hspacing) {
                     Group {
                         SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("E"))
-                        SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("R"))
+                            maxSize: maxSize,
+                            letter: keyboardLetter("E")
+                        )
                         SizeConstrainedKeyboardButton(
                             maxSize: maxSize,
-                            letter: keyboardLetter("T"))
+                            letter: keyboardLetter("R")
+                        )
+                        SizeConstrainedKeyboardButton(
+                            maxSize: maxSize,
+                            letter: keyboardLetter("T")
+                        )
                     }
-                    
+
                     Group {
                         SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("U"))
+                            maxSize: maxSize,
+                            letter: keyboardLetter("U")
+                        )
                         SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("I"))
+                            maxSize: maxSize,
+                            letter: keyboardLetter("I")
+                        )
                         SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("O"))
+                            maxSize: maxSize,
+                            letter: keyboardLetter("O")
+                        )
                         SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("P"))
+                            maxSize: maxSize,
+                            letter: keyboardLetter("P")
+                        )
                     }
                 }
-                
-                RowContainer(spacing: hspacing ) {
+
+                RowContainer(spacing: hspacing) {
                     Group {
                         SizeSettingKeyboardButton(
-                            maxSize: $maxSize, 
-                            letter: keyboardLetter("A"))
+                            maxSize: $maxSize,
+                            letter: keyboardLetter("A")
+                        )
                         KeyboardButton(
-                            letter: keyboardLetter("S"))
+                            letter: keyboardLetter("S")
+                        )
                         KeyboardButton(
-                            letter: keyboardLetter("D"))
+                            letter: keyboardLetter("D")
+                        )
                         KeyboardButton(
-                            letter: keyboardLetter("F"))
+                            letter: keyboardLetter("F")
+                        )
                         KeyboardButton(
-                            letter: keyboardLetter("G"))
+                            letter: keyboardLetter("G")
+                        )
                     }
                     Group {
                         KeyboardButton(
-                            letter: keyboardLetter("H"))
+                            letter: keyboardLetter("H")
+                        )
                         KeyboardButton(
-                            letter: keyboardLetter("J"))
+                            letter: keyboardLetter("J")
+                        )
                         KeyboardButton(
-                            letter: keyboardLetter("K"))
+                            letter: keyboardLetter("K")
+                        )
                         KeyboardButton(
-                            letter: keyboardLetter("L"))
+                            letter: keyboardLetter("L")
+                        )
                     }
                 }
-                
+
                 RowContainer(spacing: hspacing) {
                     BackspaceButton(maxSize: wideSize)
                     Group {
                         SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("Z"))
+                            maxSize: maxSize,
+                            letter: keyboardLetter("Z")
+                        )
                         SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("C"))
+                            maxSize: maxSize,
+                            letter: keyboardLetter("C")
+                        )
                         SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("V"))
+                            maxSize: maxSize,
+                            letter: keyboardLetter("V")
+                        )
                         SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("B"))
+                            maxSize: maxSize,
+                            letter: keyboardLetter("B")
+                        )
                     }
                     Group {
                         SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("N"))
-                            
+                            maxSize: maxSize,
+                            letter: keyboardLetter("N")
+                        )
+
                         SizeConstrainedKeyboardButton(
-                            maxSize: maxSize, 
-                            letter: keyboardLetter("M"))
+                            maxSize: maxSize,
+                            letter: keyboardLetter("M")
+                        )
                     }
                     SubmitButton(maxSize: wideSize)
                 }
             }
             .id(hints.hints)
-            
-            if (debug) {
-                Text(verbatim:  "Wrong: \(debug_wrongHints)")
+
+            if debug {
+                Text(verbatim: "Wrong: \(debug_wrongHints)")
             }
         }
     }
@@ -181,28 +206,31 @@ struct LatvianKeyboard_Simplified: View {
 /// E.g. if S is eliminated but Š is unknown, we should
 /// display Š on the same button (and not have it marked
 /// as wrong)
-struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementUnknown: View
-{
+struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementUnknown: View {
     static let expected = WordModel("kaite", locale: .lv_LV)
-    
+
     let state = GameState(
-        initialized: true, 
+        initialized: true,
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: WordValidator(locale: .lv_LV(simplified: true))),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: true),
+            validator: WordValidator(locale: .lv_LV(simplified: true))
+        ),
         rows: [
             RowModel(
-                word: WordModel("marts", locale: .lv_LV), 
-                expected: Self.expected, 
-                isSubmitted: true, 
-                attemptCount: 0),
-        ], isTallied: true, date: Date())
-    
+                word: WordModel("marts", locale: .lv_LV),
+                expected: Self.expected,
+                isSubmitted: true,
+                attemptCount: 0
+            ),
+        ], isTallied: true, date: Date()
+    )
+
     var body: some View {
         GeometryReader { gr in
             VStack(alignment: .leading) {
                 Text("Test collapsing keyboard hints for entire pairs in simplified Latvian").font(.title)
                 Divider()
-                
+
                 HStack {
                     Text("S key should display Š.")
                     Spacer()
@@ -212,7 +240,7 @@ struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementUnknown: View
                     Text("It is a regression if the button displays S or is marked in an 'unknown' color.")
                     Spacer()
                 }
-                
+
                 ForEach(state.rows) {
                     Row(model: $0)
                 }
@@ -227,28 +255,31 @@ struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementUnknown: View
 
 /// If the complement (Š) is known good, then we should
 /// display that as the display letter (instead of S).
-struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementGood: View
-{
+struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementGood: View {
     static let expected = WordModel("marši", locale: .lv_LV)
-    
+
     let state = GameState(
-        initialized: true, 
+        initialized: true,
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: .lv_LV(simplified: false), validator: WordValidator(locale: .lv_LV(simplified: true))),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: false),
+            validator: WordValidator(locale: .lv_LV(simplified: true))
+        ),
         rows: [
             RowModel(
-                word: WordModel("kurši", locale: .lv_LV), 
-                expected: Self.expected, 
-                isSubmitted: true, 
-                attemptCount: 0),
-        ], isTallied: true, date: Date())
-    
-    var body: some View  {
+                word: WordModel("kurši", locale: .lv_LV),
+                expected: Self.expected,
+                isSubmitted: true,
+                attemptCount: 0
+            ),
+        ], isTallied: true, date: Date()
+    )
+
+    var body: some View {
         GeometryReader { gr in
             VStack(alignment: .leading) {
                 Text("Test adapting keyboard for known good complements").font(.title)
                 Divider()
-                
+
                 HStack {
                     Text("S key should display Š.")
                     Spacer()
@@ -258,7 +289,7 @@ struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementGood: View
                     Text("It is a regression if the button displays S.")
                     Spacer()
                 }
-                
+
                 ForEach(state.rows) {
                     Row(model: $0)
                 }
@@ -274,28 +305,31 @@ struct LatvianKeyboard_SimplifiedTest_adaptLetterWhenComplementGood: View
 /// Test behaviour if two complements of a pair are present
 /// in a word (e.g. Š and S) - green should take precedence
 /// (both color and letter)
-struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_different: View
-{
+struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_different: View {
     static let expected = WordModel("maršs", locale: .lv_LV)
-    
+
     let state = GameState(
-        initialized: true, 
+        initialized: true,
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: WordValidator(locale: .lv_LV(simplified: true))),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: true),
+            validator: WordValidator(locale: .lv_LV(simplified: true))
+        ),
         rows: [
             RowModel(
-                word: WordModel("saišu", locale: .lv_LV), 
-                expected: Self.expected, 
-                isSubmitted: true, 
-                attemptCount: 0),
-        ], isTallied: true, date: Date())
-    
-    var body: some View  {
+                word: WordModel("saišu", locale: .lv_LV),
+                expected: Self.expected,
+                isSubmitted: true,
+                attemptCount: 0
+            ),
+        ], isTallied: true, date: Date()
+    )
+
+    var body: some View {
         GeometryReader { gr in
             VStack(alignment: .leading) {
                 Text("Test adapting keyboard when both complements present in a word").font(.title)
                 Divider()
-                
+
                 HStack {
                     Text("S key should display Š.")
                     Spacer()
@@ -305,7 +339,7 @@ struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_different: View
                     Text("It is a regression if the button displays S.")
                     Spacer()
                 }
-                
+
                 ForEach(state.rows) {
                     Row(model: $0)
                 }
@@ -318,32 +352,34 @@ struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_different: View
     }
 }
 
-
 /// Test behaviour if two complements of a pair are present
-/// in a word (e.g. Š and S) and both are valid - 
+/// in a word (e.g. Š and S) and both are valid -
 /// the letter without diacritics should take precedence.
-struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_valid: View
-{
+struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_valid: View {
     static let expected = WordModel("knašs", locale: .lv_LV)
-    
+
     let state = GameState(
-        initialized: true, 
+        initialized: true,
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: WordValidator(locale: .lv_LV(simplified: true))),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: true),
+            validator: WordValidator(locale: .lv_LV(simplified: true))
+        ),
         rows: [
             RowModel(
-                word: WordModel("knašs", locale: .lv_LV), 
-                expected: Self.expected, 
-                isSubmitted: true, 
-                attemptCount: 0),
-        ], isTallied: true, date: Date())
-    
-    var body: some View  {
+                word: WordModel("knašs", locale: .lv_LV),
+                expected: Self.expected,
+                isSubmitted: true,
+                attemptCount: 0
+            ),
+        ], isTallied: true, date: Date()
+    )
+
+    var body: some View {
         GeometryReader { gr in
             VStack(alignment: .leading) {
                 Text("Test that non-diacritics letter takes precedence when valid").font(.title)
                 Divider()
-                
+
                 HStack {
                     Text("S key should display S.")
                     Spacer()
@@ -353,7 +389,7 @@ struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_valid: View
                     Text("It is a regression if the button displays Š.")
                     Spacer()
                 }
-                
+
                 ForEach(state.rows) {
                     Row(model: $0)
                 }
@@ -366,37 +402,41 @@ struct LatvianKeyboard_SimplifiedTest_bothComplementsPresent_valid: View
     }
 }
 
-struct LatvianKeyboard_SimplifiedTest_testCollapsing_onlyComplementKnown: View
-{
+struct LatvianKeyboard_SimplifiedTest_testCollapsing_onlyComplementKnown: View {
     static let expected = WordModel("gārgs", locale: .lv_LV)
-    
+
     let state = GameState(
-        initialized: true, 
+        initialized: true,
         expected: TurnAnswer(
-            word: Self.expected, day: 1, locale: .lv_LV(simplified: true), validator: WordValidator(locale: .lv_LV(simplified: true))),
+            word: Self.expected, day: 1, locale: .lv_LV(simplified: true),
+            validator: WordValidator(locale: .lv_LV(simplified: true))
+        ),
         rows: [
             RowModel(
-                word: WordModel("trūka", locale: .lv_LV), 
-                expected: Self.expected, 
-                isSubmitted: true, 
-                attemptCount: 0),
+                word: WordModel("trūka", locale: .lv_LV),
+                expected: Self.expected,
+                isSubmitted: true,
+                attemptCount: 0
+            ),
             RowModel(
-                word: WordModel("vērās", locale: .lv_LV), 
-                expected: Self.expected, 
-                isSubmitted: true, 
-                attemptCount: 0),
-        ], isTallied: true, date: Date())
-    
+                word: WordModel("vērās", locale: .lv_LV),
+                expected: Self.expected,
+                isSubmitted: true,
+                attemptCount: 0
+            ),
+        ], isTallied: true, date: Date()
+    )
+
     var body: some View {
         GeometryReader { gr in
             VStack {
                 Text("Regression test").font(.title)
                 Divider()
-                
+
                 Text("A should be yellow.")
                 Text("A should display letter Ā.")
                 Divider()
-                
+
                 ForEach(state.rows) {
                     Row(model: $0)
                 }

@@ -6,27 +6,25 @@ import SwiftUI
 /// It must be placed on a row with other buttons
 /// that all should have no size constraints.
 struct SizeSettingKeyboardButton: View {
-    @Binding var maxSize: CGSize 
-    
-    let letter: MultiCharacterModel 
-    
-    @Environment(\.keyboardHints) 
-    var keyboardHints: KeyboardHints
-    
+    @Binding var maxSize: CGSize
+
+    let letter: MultiCharacterModel
+
+    @Environment(\.keyboardHints) var keyboardHints: KeyboardHints
+
     init(maxSize: Binding<CGSize>, letter: String, locale: Locale) {
         self._maxSize = maxSize
-        self.letter = .single(letter, locale: locale) 
+        self.letter = .single(letter, locale: locale)
     }
-    
+
     init(maxSize: Binding<CGSize>, letter: MultiCharacterModel) {
         self._maxSize = maxSize
-        self.letter = letter 
+        self.letter = letter
     }
-    
+
     var body: some View {
         KeyboardButton(letter: letter).background(GeometryReader {
-            proxy in 
-            
+            proxy in
             Color.clear
                 .onAppear {
                     maxSize = proxy.size

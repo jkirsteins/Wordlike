@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct TileConfig {
-    let colorOverride: Color? 
-    let showCursor: Bool 
-    
+    let colorOverride: Color?
+    let showCursor: Bool
+
     init(colorOverride: Color? = nil, showCursor: Bool = false) {
-        self.colorOverride = colorOverride 
+        self.colorOverride = colorOverride
         self.showCursor = showCursor
     }
 }
@@ -19,6 +19,6 @@ extension EnvironmentValues {
     }
 }
 
-fileprivate struct TileConfigKey: EnvironmentKey {
-    static let defaultValue: TileConfig = TileConfig() 
+private struct TileConfigKey: EnvironmentKey {
+    static let defaultValue: TileConfig = .init()
 }

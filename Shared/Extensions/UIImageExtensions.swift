@@ -1,10 +1,3 @@
-//
-//  UIImageExtensions.swift
-//  SimpleWordGame (iOS)
-//
-//  Created by Janis Kirsteins on 20/05/2022.
-//
-
 import UIKit
 
 extension UIImage {

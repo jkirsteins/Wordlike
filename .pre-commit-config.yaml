@@ -1,6 +1,29 @@
 repos:
   - repo: local
     hooks:
+      - id: snapshot-worktree
+        name: Snapshot worktree
+        language: system
+        entry: bash -c 'git diff > /tmp/wordlike-pre-commit-snapshot.diff'
+        pass_filenames: false
+        always_run: true
+
+      - id: swiftformat
+        name: SwiftFormat
+        language: system
+        entry: swiftformat --lint
+        types: [swift]
+        pass_filenames: true
+        exclude: '^Scripts/'
+
+      - id: swiftlint
+        name: SwiftLint
+        language: system
+        entry: swiftlint lint --strict --quiet
+        types: [swift]
+        pass_filenames: true
+        exclude: '^Scripts/'
+
       - id: check-wordlist-blanks
         name: Check word list files for blank lines
         entry: Scripts/check-wordlist-blanks.sh
@@ -20,5 +43,33 @@ repos:
         name: Check for compiler warnings
         entry: Scripts/check-warnings.sh
         language: script
+        pass_filenames: false
+        always_run: true
+
+      - id: no-untracked
+        name: No untracked files
+        language: system
+        entry: bash -c 'u=$(git ls-files --others --exclude-standard); if [ -n "$u" ]; then echo "Untracked files found. Stage or gitignore them before committing"; echo "$u"; exit 1; fi'
+        pass_filenames: false
+        always_run: true
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude_types: [swift]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  - repo: local
+    hooks:
+      - id: no-worktree-changes
+        name: No worktree changes from hooks
+        language: script
+        entry: Scripts/check-worktree-clean.sh
         pass_filenames: false
         always_run: true

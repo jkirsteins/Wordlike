@@ -1,10 +1,3 @@
-//
-//  DoubleExtensions.swift
-//  SimpleWordGame (macOS)
-//
-//  Created by Janis Kirsteins on 31/05/2022.
-//
-
 import Foundation
 
 extension Double {

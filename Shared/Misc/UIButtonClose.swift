@@ -2,8 +2,8 @@ import SwiftUI
 
 #if os(iOS)
 struct UIButtonClose: UIViewRepresentable {
-    let action: ()->()
-    
+    let action: () -> Void
+
     func makeUIView(context: Context) -> UIButton {
         let button = UIButton(
             type: .close,
@@ -11,21 +11,22 @@ struct UIButtonClose: UIViewRepresentable {
                 title: "Close",
                 handler: {
                     _ in action()
-                }))
-        
+                }
+            )
+        )
+
         button.setContentHuggingPriority(.required, for: .horizontal)
         button.setContentHuggingPriority(.required, for: .vertical)
         return button
     }
-    
-    func updateUIView(_ button: UIButton, context: Context) {
-        
-    }
+
+    func updateUIView(_ button: UIButton, context: Context) {}
 }
+
 #elseif os(macOS)
 struct UIButtonClose: View {
-    let action: ()->()
-    
+    let action: () -> Void
+
     var body: some View {
         Button("Close") {
             action()

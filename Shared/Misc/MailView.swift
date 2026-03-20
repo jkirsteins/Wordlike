@@ -1,7 +1,7 @@
 #if os(iOS)
+import MessageUI
 import SwiftUI
 import UIKit
-import MessageUI
 
 // https://swiftuirecipes.com/blog/send-mail-in-swiftui
 
@@ -30,17 +30,21 @@ struct MailView: UIViewControllerRepresentable {
         @Binding var data: ComposeMailData
         let callback: MailViewCallback
 
-        init(dismiss: DismissAction,
-             data: Binding<ComposeMailData>,
-             callback: MailViewCallback) {
+        init(
+            dismiss: DismissAction,
+            data: Binding<ComposeMailData>,
+            callback: MailViewCallback
+        ) {
             self.dismiss = dismiss
             _data = data
             self.callback = callback
         }
 
-        func mailComposeController(_ controller: MFMailComposeViewController,
-                                   didFinishWith result: MFMailComposeResult,
-                                   error: Error?) {
+        func mailComposeController(
+            _ controller: MFMailComposeViewController,
+            didFinishWith result: MFMailComposeResult,
+            error: Error?
+        ) {
             if let error = error {
                 callback?(.failure(error))
             } else {
@@ -53,7 +57,7 @@ struct MailView: UIViewControllerRepresentable {
     func makeCoordinator() -> Coordinator {
         Coordinator(dismiss: dismiss, data: $data, callback: callback)
     }
-    
+
     func makeUIViewController(context: UIViewControllerRepresentableContext<MailView>) -> MFMailComposeViewController {
         let vc = MFMailComposeViewController()
         vc.mailComposeDelegate = context.coordinator
@@ -66,11 +70,12 @@ struct MailView: UIViewControllerRepresentable {
         vc.accessibilityElementDidLoseFocus()
         return vc
     }
-    
-    func updateUIViewController(_ uiViewController: MFMailComposeViewController,
-                                context: UIViewControllerRepresentableContext<MailView>) {
-    }
-    
+
+    func updateUIViewController(
+        _ uiViewController: MFMailComposeViewController,
+        context: UIViewControllerRepresentableContext<MailView>
+    ) {}
+
     static var canSendMail: Bool {
         MFMailComposeViewController.canSendMail()
     }

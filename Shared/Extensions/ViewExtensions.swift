@@ -1,12 +1,11 @@
 import SwiftUI
 
-fileprivate struct _DebugView<Wrapped: View, WrappedDebug: View>: View {
-    @Environment(\.debug)
-    var debug: Bool
-    
-    @ViewBuilder let wrapped: ()->Wrapped
-    @ViewBuilder let wrappedDebug: ()->WrappedDebug
-    
+private struct _DebugView<Wrapped: View, WrappedDebug: View>: View {
+    @Environment(\.debug) var debug: Bool
+
+    @ViewBuilder let wrapped: () -> Wrapped
+    @ViewBuilder let wrappedDebug: () -> WrappedDebug
+
     var body: some View {
         if debug {
             VStack {
@@ -20,40 +19,39 @@ fileprivate struct _DebugView<Wrapped: View, WrappedDebug: View>: View {
 }
 
 extension View {
-    func debugBelow<T: View>(@ViewBuilder _ content: @escaping ()->T) -> some View {
+    func debugBelow<T: View>(@ViewBuilder _ content: @escaping () -> T) -> some View {
         return _DebugView(
-            wrapped: { self }, 
+            wrapped: { self },
             wrappedDebug: content
         )
     }
 }
 
-fileprivate struct DebugBorder<Content: View>: View {
+private struct DebugBorder<Content: View>: View {
     let color: Color
-    @ViewBuilder let content: ()->Content 
-    
-    @Environment(\.debug)
-    var debug: Bool
-    
+    @ViewBuilder let content: () -> Content
+
+    @Environment(\.debug) var debug: Bool
+
     var body: some View {
         content().border(debug ? color : .clear)
     }
 }
 
 extension View {
-#if os(iOS)
+    #if os(iOS)
     func screenshotView(_ closure: @escaping ScreenshotMakerClosure) -> some View {
         let screenshotView = ScreenshotMakerView(closure)
         return overlay(screenshotView.allowsHitTesting(false))
     }
-#endif
-    
+    #endif
+
     func debugBorder(_ color: Color) -> some View {
         DebugBorder(color: color) {
             self
         }
     }
-    
+
     func safeTint(_ tint: Color) -> some View {
         self.tint(tint)
     }
@@ -62,27 +60,28 @@ extension View {
 extension View {
     /* NOTE: BE CAREFUL ON iOS14
      The fallback on iOS14 is to use .sheet() modifier.
-     
+
      This will break, if safeSharingSheet() is invoked on the same
      level as another .sheet() modifier.
-     
+
      The call site should wrap this call in .background(EmptyView().safeSharingSheet...)
      */
     func safeSharingSheet(
         isSharing: Binding<Bool>,
         activityItems: Binding<[UIActivityItemSource]>,
-        callback: @escaping ()->()) -> some View
-    {
-        self.sheetWithDetents(
+        callback: @escaping () -> Void
+    ) -> some View {
+        sheetWithDetents(
             isPresented: isSharing,
-            detents: [.medium(),.large()],
-            onDismiss: {
-            },
+            detents: [.medium(), .large()],
+            onDismiss: {},
             content: {
                 ActivityViewController(
                     activityItems: activityItems,
-                    callback: callback)
+                    callback: callback
+                )
                 .ignoresSafeArea()
-            })
+            }
+        )
     }
 }

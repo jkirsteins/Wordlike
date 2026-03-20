@@ -1,17 +1,16 @@
-import SwiftUI
 import Foundation
+import SwiftUI
 
-class WordValidator : ObservableObject
-{
+class WordValidator: ObservableObject {
     static func letterNumberMsg(_ ix: Int) -> String {
-        guard let ordinal = (ix+1).ordinal else {
-            return "Letter \(ix+1)"
+        guard let ordinal = (ix + 1).ordinal else {
+            return "Letter \(ix + 1)"
         }
-        
+
         let result = "\(ordinal) letter"
         return NSLocalizedString(result, comment: "")
     }
-    
+
     static func testing(_ words: [String]) -> WordValidator {
         let v = WordValidator(locale: .en_US)
         let wt = WordTree(locale: .en_US)
@@ -19,60 +18,62 @@ class WordValidator : ObservableObject
         v.initialize(answers: words, guessTree: wt)
         return v
     }
-    
-    /// Validator protocol 
+
+    /// Validator protocol
     func initialize(answers: [String], guessTree: WordTree) {
         self.answers = answers
         self.guessTree = guessTree
         ready = true
     }
-    
+
     @Published var ready: Bool = false
-    
+
     func answer(at turnIndex: Int) -> WordModel? {
         guard let answers = answers else { return nil }
-        
+
         return WordModel(
             answers[turnIndex % answers.count],
-            locale: locale.nativeLocale)
+            locale: locale.nativeLocale
+        )
     }
-    
+
     func canSubmit(
-        word: WordModel, 
+        word: WordModel,
         expected: WordModel,
         model: [RowModel]?,
-        mustMatchKnown: Bool,    // e.g. hard mode
-        reason: inout LocalizedStringKey?) -> WordModel? {
-            
-            if word == expected {
-                reason = nil
-                return expected
-            }
-            
-            guard let guessTree = self.guessTree else {
-                reason = "Wait a sec, loading words..."
-                return nil
-            } 
-            
-            /* To avoid accidentally breaking input files,
-             do some checks centrally (e.g. we can check length
-             just here, instead of ensuring every input
-             file doesn't contain an invalid short/empty line) */
-            guard word.count == 5 else {
-                reason = "Not enough letters"
-                return nil
-            }
-            
-            return guessTree.contains(
-                word: word, 
-                mustMatch: mustMatchKnown ? model : nil,
-                reason: &reason)
+        mustMatchKnown: Bool, // e.g. hard mode
+        reason: inout LocalizedStringKey?
+    ) -> WordModel? {
+        if word == expected {
+            reason = nil
+            return expected
         }
-    
+
+        guard let guessTree = guessTree else {
+            reason = "Wait a sec, loading words..."
+            return nil
+        }
+
+        /* To avoid accidentally breaking input files,
+         do some checks centrally (e.g. we can check length
+         just here, instead of ensuring every input
+         file doesn't contain an invalid short/empty line) */
+        guard word.count == 5 else {
+            reason = "Not enough letters"
+            return nil
+        }
+
+        return guessTree.contains(
+            word: word,
+            mustMatch: mustMatchKnown ? model : nil,
+            reason: &reason
+        )
+    }
+
     /// Other stuff
-    var answers: [String]? = nil
-    var guessTree: WordTree? = nil
-        
+    var answers: [String]?
+    var guessTree: WordTree?
+
     static func loadAnswers(seed: Int, locale: GameLocale) -> [String] {
         let baseName = "\(locale.fileBaseName)_A"
 
@@ -104,20 +105,20 @@ class WordValidator : ObservableObject
 
         return result
     }
-    
+
     static func loadGuessTree(locale: GameLocale) -> WordTree {
         return WordTree(
-            words: Self.loadGuesses(locale: locale),
+            words: loadGuesses(locale: locale),
             locale: locale.nativeLocale
         )
     }
-    
+
     static func loadGuesses(locale: GameLocale) -> [WordModel] {
-        Self.load("\(locale.fileBaseName)_G").map {
+        load("\(locale.fileBaseName)_G").map {
             WordModel($0, locale: locale.nativeLocale)
         }
     }
-    
+
     /// Load words from a file, filtering empty lines.
     static func load(_ name: String) -> [String] {
         guard let fileUrl = Bundle.main.url(forResource: name, withExtension: "txt") else {
@@ -149,39 +150,41 @@ class WordValidator : ObservableObject
             fatalError(String(describing: error))
         }
     }
-    
+
     let locale: GameLocale
-    let seed: Int 
-    
-    /// Constant used as the start date of counting 
+    let seed: Int
+
+    /// Constant used as the start date of counting
     /// the turns.
     /// TODO: move somewhere else
-    static let MAR_22_2022 = Date(timeIntervalSince1970: 1647966002) 
-    
+    static let MAR_22_2022 = Date(timeIntervalSince1970: 1_647_966_002)
+
     init(
-        locale: GameLocale, 
-        seed: Int? = nil 
-    )
-    {
+        locale: GameLocale,
+        seed: Int? = nil
+    ) {
         self.locale = locale
-        self.seed = seed ?? 14384982345
+        self.seed = seed ?? 14_384_982_345
     }
 }
 
 struct InternalLetterNumberMessageTest: View {
     let validator: WordValidator = {
         let r = WordValidator(
-            locale: .lv_LV(simplified: true))
+            locale: .lv_LV(simplified: true)
+        )
         let a = WordValidator.loadAnswers(
-            seed: r.seed, 
-            locale: r.locale)
+            seed: r.seed,
+            locale: r.locale
+        )
         let gt = WordValidator.loadGuessTree(
-            locale: r.locale)
-        
+            locale: r.locale
+        )
+
         r.initialize(answers: a, guessTree: gt)
         return r
     }()
-    
+
     var testAmbiguousSubmit: AnyView {
         let word = WordModel(characters: [
             MultiCharacterModel("p", locale: .lv_LV),
@@ -191,15 +194,16 @@ struct InternalLetterNumberMessageTest: View {
             MultiCharacterModel("a", locale: .lv_LV),
         ])
         let expected = WordModel("plūka", locale: .lv_LV)
-        
+
         var reason: LocalizedStringKey? = nil
         let result = validator.canSubmit(
-            word: word, 
-            expected: expected, 
-            model: nil, 
-            mustMatchKnown: false, 
-            reason: &reason)
-        
+            word: word,
+            expected: expected,
+            model: nil,
+            mustMatchKnown: false,
+            reason: &reason
+        )
+
         return AnyView(VStack {
             Text("Can submit ambiguous and have it match the expected")
             Text("Expected: \(expected.displayValue)")
@@ -207,14 +211,14 @@ struct InternalLetterNumberMessageTest: View {
             Text("Reason: \(String(describing: reason))").testColor(good: reason == nil)
         })
     }
-    
+
     var body: some View {
         VStack {
-        Text(verbatim: "0 == \(WordValidator.letterNumberMsg(0)) ==> 1st")
+            Text(verbatim: "0 == \(WordValidator.letterNumberMsg(0)) ==> 1st")
             Text(verbatim: "2 == \(WordValidator.letterNumberMsg(2)) ==> 3rd")
             Text(verbatim: "21 == \(WordValidator.letterNumberMsg(21)) ==> 22nd")
         }
-        
+
         testAmbiguousSubmit
     }
 }
@@ -224,4 +228,3 @@ struct InternalLetterNumberMessageTest_Previews: PreviewProvider {
         InternalLetterNumberMessageTest()
     }
 }
-

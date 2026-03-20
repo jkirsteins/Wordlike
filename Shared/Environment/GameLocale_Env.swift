@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate struct GameLocaleKey: EnvironmentKey {
+private struct GameLocaleKey: EnvironmentKey {
     static let defaultValue: GameLocale = .unknown
 }
 
