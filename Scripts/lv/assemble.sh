@@ -1,4 +1,4 @@
-set -e 
+set -e
 
 function urlencode() {
 	python3 -c "import urllib.parse, sys; print(urllib.parse.quote(

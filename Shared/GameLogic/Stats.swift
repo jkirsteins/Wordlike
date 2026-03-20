@@ -87,7 +87,7 @@ struct Stats: RawRepresentable {
         // Only count games as played if any rows submitted
         let didPlay = game.rows.filter {
             $0.isSubmitted
-        }.count > 0
+        }.isEmpty == false
 
         return Stats(
             played: didPlay ? played + 1 : played,

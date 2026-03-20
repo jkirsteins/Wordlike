@@ -3,7 +3,7 @@
 > **Goal**: Add BuildInfo.swift, git SHA build phase, version display in settings, Makefile version targets, SwiftLint, SwiftFormat, and useful pre-commit hooks to Wordlike-iOS — matching existing app style and localization conventions.
 > **Created**: 2026-03-20
 > **Repository**: /Volumes/X10/Projects/wordlike-base/Wordlike-iOS
-> **Status**: in-progress
+> **Status**: completed
 
 ## Success Criteria
 

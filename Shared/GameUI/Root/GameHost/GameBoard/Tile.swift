@@ -17,7 +17,7 @@ extension Tile where Background == InternalFillColor {
     }
 
     init(_ letter: String) {
-        let t: TileBackgroundType = letter.count == 0 ? .maskedEmpty : .maskedFilled
+        let t: TileBackgroundType = letter.isEmpty ? .maskedEmpty : .maskedFilled
         self.model = TileModel(
             letter: letter,
             state: t
@@ -54,7 +54,7 @@ struct Tile<Background: View>: View {
     }
 
     var isEmpty: Bool {
-        letter == ""
+        letter.isEmpty
     }
 
     init(

@@ -39,63 +39,59 @@ opt_in_rules:
   - unowned_variable_capture
 
 disabled_rules:
+  # Formatting/whitespace rules — handled by SwiftFormat
   - trailing_whitespace
-  - todo
   - opening_brace
   - colon
   - return_arrow_whitespace
-  - redundant_type_annotation
   - operator_usage_whitespace
+  - closure_parameter_position
+  - redundant_discardable_let
+  - vertical_whitespace
+  - trailing_newline
+  - void_return
+  - comma
+  - vertical_parameter_alignment_on_call
+  - switch_case_alignment
+  - closure_spacing
+  - statement_position
+  - comment_spacing
+  - vertical_parameter_alignment
+  - unneeded_parentheses_in_closure_argument
+  - closure_end_indentation
+  - redundant_void_return
+  - no_space_in_method_call
+  - empty_parentheses_with_trailing_closure
+  - empty_enum_arguments
+  - modifier_order
+  # Style preferences — enforced by SwiftFormat or intentional choices
+  - todo
+  - redundant_type_annotation
   - implicit_optional_initialization
   - control_statement
   - private_over_fileprivate
   - implicit_return
-  - closure_parameter_position
   - trailing_comma
-  - redundant_discardable_let
-  - vertical_whitespace
-  - trailing_newline
   - extension_access_modifier
-  - void_return
   - multiple_closures_with_trailing_closure
-  - comma
   - syntactic_sugar
-  - vertical_parameter_alignment_on_call
-  - switch_case_alignment
   - unused_closure_parameter
   - legacy_random
-  - closure_spacing
   - for_where
-  - statement_position
-  - comment_spacing
-  - vertical_parameter_alignment
   - large_tuple
-  - force_try
-  - unneeded_parentheses_in_closure_argument
-  - closure_end_indentation
   - yoda_condition
-  - redundant_void_return
-  - no_space_in_method_call
   - legacy_multiple
   - joined_default_parameter
   - first_where
-  - empty_parentheses_with_trailing_closure
-  - empty_enum_arguments
-  - duplicate_imports
   - contains_over_first_not_nil
   - contains_over_filter_count
   - overridden_super_call
-  - nesting
-  - modifier_order
   - explicit_init
-  - empty_string
-  - cyclomatic_complexity
   - block_based_kvo
-  - empty_count
   - prefer_self_in_static_references
 
 line_length:
-  warning: 350
+  warning: 320
   error: 400
 
 type_body_length:
@@ -103,12 +99,20 @@ type_body_length:
   error: 500
 
 file_length:
-  warning: 700
-  error: 1000
+  warning: 650
+  error: 900
 
 function_body_length:
   warning: 50
-  error: 100
+  error: 80
+
+cyclomatic_complexity:
+  warning: 15
+  error: 20
+
+nesting:
+  type_level: 2
+  function_level: 2
 
 type_name:
   min_length: 2

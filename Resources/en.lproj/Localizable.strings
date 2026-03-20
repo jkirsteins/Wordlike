@@ -9,6 +9,147 @@
 "CFBundleDisplayName" = "Wordlike";
 "CFBundleName" = "Wordlike";
 
+"Share a summary" = "Share a summary";
+"Share a summary for every game you have completed today." = "Share a summary for every game you have completed today.";
+
+"Completed" = "Completed";
+"Not started" = "Not started";
+"Unsuccessful" = "Unsuccessful";
+"In progress" = "In progress";
+
+"Streak" = "Streak";
+"Win %" = "Win %";
+
+"American" = "American";
+"British" = "British";
+"Français" = "Français";
+"Latviski" = "Latviski";
+
+"Settings" = "Settings";
+
+"High contrast mode" = "High contrast mode";
+"For improved color vision." = "For improved color vision.";
+
+"Hard mode" = "Hard mode";
+"Any revealed hints must be used in subsequent guesses." = "Any revealed hints must be used in subsequent guesses.";
+
+"Simplified Latvian keyboard" = "Simplified Latvian keyboard";
+"Do not require precise use of diacritics." = "Do not require precise use of diacritics.";
+
+"Feedback" = "Feedback";
+"Feedback (manual)" = "Feedback (manual)";
+"Click to copy feedback e-mail address." = "Click to copy feedback e-mail address.";
+
+"Feedback about Wordlike" = "Feedback about Wordlike";
+
+"You can send feedback via e-mail." = "You can send feedback via e-mail.";
+
+"Send" = "Send";
+
+"Source code" = "Source code";
+"The source code is freely available." = "The source code is freely available.";
+
+"Author" = "Author";
+"Made by Jānis Kiršteins." = "Made by Jānis Kiršteins.";
+
+"Statistics" = "Statistics";
+
+"Played" = "Played";
+"Current Streak" = "Current Streak";
+"Max Streak" = "Max Streak";
+
+"Answer" = "Answer";
+"See definition" = "See definition";
+
+"Guess Distribution" = "Guess Distribution";
+"Next word" = "Next word";
+
+"Share" = "Share";
+
+"How to play" = "How to play";
+
+"Guess the daily word in 6 tries." = "Guess the daily word in 6 tries.";
+
+"Each guess must be a valid five-letter word." = "Each guess must be a valid five-letter word.";
+
+"After each guess, the color of the tiles will change to show you how close your guess was to the word." = "After each guess, the color of the tiles will change to show you how close your guess was to the word.";
+
+
+"Examples" = "Examples";
+
+"The letter **W** is in the word and in the correct spot." = "The letter **W** is in the word and in the correct spot.";
+
+"The letter **I** is in the word but in a different spot." = "The letter **I** is in the word but in a different spot.";
+
+"The letter **U** is not in the word in any spot." = "The letter **U** is not in the word in any spot.";
+
+"A new word is available every day." = "A new word is available every day.";
+
+"Look up" = "Look up";
+
+"Toggle debug mode" = "Toggle debug mode";
+
+"Rummaging in the sack for a new word..." = "Rummaging in the sack for a new word...";
+
+"Not enough letters" = "Not enough letters";
+
+"Not in word list" = "Not in word list";
+
+"Wait a sec, loading words..." = "Wait a sec, loading words...";
+
+"Seriously?" = "Seriously?";
+
+"Sure, keep doing the same thing..." = "Sure, keep doing the same thing...";
+
+"I promise the outcome won't change" = "I promise the outcome won't change";
+
+"Persistence won't pay off this time" = "Persistence won't pay off this time";
+
+"Consider doing something else" = "Consider doing something else";
+
+"What do you seek?" = "What do you seek?";
+
+"I'll be sick from all the shaking..." = "I'll be sick from all the shaking...";
+
+"I promise you that is not a valid word" = "I promise you that is not a valid word";
+
+"You can do better than that" = "You can do better than that";
+
+"There is no prize for the most clicks" = "There is no prize for the most clicks";
+
+"Phew!" = "Phew!";
+"Great" = "Great";
+"Splendid" = "Splendid";
+"Impressive" = "Impressive";
+"Magnificent" = "Magnificent";
+"Genius" = "Genius";
+
+// E.g. "Guess must contain E"
+"Guess must contain %@" = "Guess must contain %@";
+
+// E.g. "The 5th letter must be E"
+"%@ must be %@" = "%@ must be %@";
+
+"1st letter" = "1st letter";
+"2nd letter" = "2nd letter";
+"3rd letter" = "3rd letter";
+"4th letter" = "4th letter";
+"5th letter" = "5th letter";
+
+"Don't share the first guess" = "Don't share the first guess";
+"When sharing your successful guesses, keep the first attempt hidden. Useful if you always use the same word for the first guess." = "When sharing your successful guesses, keep the first attempt hidden. Useful if you always use the same word for the first guess.";
+
+"Export stats" = "Export stats";
+"Save your stats to a file for backup or transfer to another device." = "Save your stats to a file for backup or transfer to another device.";
+"Import stats" = "Import stats";
+"Load stats from a previously exported file." = "Load stats from a previously exported file.";
+"Export" = "Export";
+"Import" = "Import";
+"Stats imported successfully." = "Stats imported successfully.";
+"Could not import stats. The file may be invalid." = "Could not import stats. The file may be invalid.";
+"This will overwrite your current stats. Continue?" = "This will overwrite your current stats. Continue?";
+"Continue" = "Continue";
+
 "Version" = "Version";
 "Build" = "Build";
 "Git" = "Git";

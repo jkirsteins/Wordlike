@@ -2,8 +2,9 @@
 # Compares current git diff against a snapshot taken before hooks ran.
 # Fails if any hook modified files in the working tree.
 
-SNAPSHOT="/tmp/wordlike-pre-commit-snapshot.diff"
-AFTER="/tmp/wordlike-pre-commit-after.diff"
+REPO_HASH=$(git rev-parse --show-toplevel | shasum | cut -c1-8)
+SNAPSHOT="/tmp/wordlike-pre-commit-${REPO_HASH}.diff"
+AFTER="/tmp/wordlike-pre-commit-${REPO_HASH}-after.diff"
 
 git diff > "$AFTER"
 

@@ -6,6 +6,9 @@
 
 */
 
+"CFBundleDisplayName" = "Wordlike";
+"CFBundleName" = "Wordlike";
+
 "Share a summary" = "Partager un résumé";
 "Share a summary for every game you have completed today." = "Partagez un résumé pour chaque jeu que vous avez terminé aujourd'hui.";
 
@@ -36,6 +39,12 @@
 "Feedback" = "Donner un avis";
 "Feedback (manual)" = "Donner un avis (manuel)";
 "Click to copy feedback e-mail address." = "Cliquez pour copier l'adresse e-mail de commentaires.";
+
+"Feedback about Wordlike" = "Commentaires sur Wordlike";
+
+"You can send feedback via e-mail." = "Vous pouvez envoyer vos commentaires par e-mail.";
+
+"Send" = "Envoyer";
 
 "Source code" = "Code source";
 "The source code is freely available." = "Le code source est disponible sur GitHub.";

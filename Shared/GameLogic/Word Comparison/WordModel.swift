@@ -133,11 +133,11 @@ struct InternalWordModelTests: View {
         let decoder = JSONDecoder()
         let codeTest = WordModel("coder", locale: lvLV)
 
-        let encoded = try! encoder.encode(codeTest)
-        let decoded = try? decoder.decode(WordModel.self, from: encoded)
+        let encoded = try? encoder.encode(codeTest)
+        let decoded = encoded.flatMap { try? decoder.decode(WordModel.self, from: $0) }
 
-        let encodedString = try! encoder.encode("coder")
-        let decodedFromString = try? decoder.decode(WordModel.self, from: encodedString)
+        let encodedString = try? encoder.encode("coder")
+        let decodedFromString = encodedString.flatMap { try? decoder.decode(WordModel.self, from: $0) }
 
         return VStack(alignment: .leading, spacing: 8) {
             Text("Regular character tests").font(.largeTitle)

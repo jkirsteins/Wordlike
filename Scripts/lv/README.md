@@ -8,7 +8,7 @@ Order of operations:
 - unmunch Latvian hunspell dictionary, and filter for 5 letter words
 - split entire 5 word list (incl. all possible forms) into chunks of 10k lines
 - apply `process_raw_list.sh` on these chunks
-- apply `assemble.sh` to recombine the chunks into a single file (and validate 
+- apply `assemble.sh` to recombine the chunks into a single file (and validate
   words against <https://tezaurs.lv>. Some of the output words were invalid, so
   they were dropped at this step.
 - perform some simple deduplication (so e.g. both plural/singular of the same word

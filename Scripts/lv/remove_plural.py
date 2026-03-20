@@ -30,4 +30,3 @@ for w in final_lines:
 new = [w for w in final_lines if w not in skipped]
 with open("validated2.txt", "w") as f:
     f.write("\n".join(new))
-

@@ -7,10 +7,10 @@ function testmot() {
     word="$1"
     echo "==> Testing $word"
     result="$(curl --compressed -s "https://1mot.net/$word" | grep "est valide au")"
-	if [ -z "$result" ]; then 
+	if [ -z "$result" ]; then
             echo "    invalid :("
             return 1
-        else   
+        else
             echo "    valid"
             return 0
         fi
@@ -24,7 +24,7 @@ cat fr_A.txt | while read word
 do
 	enc="$(urlencode "$word")"
         testmot "$word"
-	if [ $? == 0 ]; then 
+	if [ $? == 0 ]; then
         echo "$word" >> fr_A.validated.txt
     fi
 done
@@ -34,7 +34,7 @@ cat fr_G.txt | while read word
 do
 	enc="$(urlencode "$word")"
         testmot "$word"
-	if [ $? == 0 ]; then 
+	if [ $? == 0 ]; then
         echo "$word" >> fr_G.validated.txt
     fi
 done

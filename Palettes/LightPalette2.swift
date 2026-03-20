@@ -1,7 +1,5 @@
 import SwiftUI
 
-import SwiftUI
-
 struct LightPalette2: Palette {
     let name = "Light"
 

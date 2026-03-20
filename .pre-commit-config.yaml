@@ -4,7 +4,7 @@ repos:
       - id: snapshot-worktree
         name: Snapshot worktree
         language: system
-        entry: bash -c 'git diff > /tmp/wordlike-pre-commit-snapshot.diff'
+        entry: bash -c 'git diff > "/tmp/wordlike-pre-commit-$(git rev-parse --show-toplevel | shasum | cut -c1-8).diff"'
         pass_filenames: false
         always_run: true
 
@@ -23,6 +23,13 @@ repos:
         types: [swift]
         pass_filenames: true
         exclude: '^Scripts/'
+
+      - id: check-localization-keys
+        name: Check localization key consistency
+        language: script
+        entry: Scripts/check-localization-keys.sh
+        files: '\.strings$'
+        pass_filenames: false
 
       - id: check-wordlist-blanks
         name: Check word list files for blank lines

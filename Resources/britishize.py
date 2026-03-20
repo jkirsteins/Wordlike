@@ -42,7 +42,7 @@ for ix in range(len(guesses)):
 
 with open("en-GB_A.txt", "w") as f:
     f.writelines([f"{word}\n" for word in answers if word.strip()])
-    
+
 with open("en-GB_G.txt", "w") as f:
     f.writelines([f"{word}\n" for word in guesses + british_guesses if word.strip()])
 

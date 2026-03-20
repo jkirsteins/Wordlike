@@ -6,6 +6,9 @@
 
 */
 
+"CFBundleDisplayName" = "Wordlike";
+"CFBundleName" = "Wordlike";
+
 "Share a summary" = "Nosūtīt kopsavilkumu";
 "Share a summary for every game you have completed today." = "Apkopos dienas pabeigto spēļu rezultātus un ļaus to nosūtīt citiem.";
 
