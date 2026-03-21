@@ -992,7 +992,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Prefer Xcode Cloud CI_COMMIT env var, fall back to git\nif [ -n \"${CI_COMMIT}\" ]; then\n  SHA=$(echo \"${CI_COMMIT}\" | cut -c1-7)\nelse\n  SHA=$(git -C \"${SRCROOT}\" rev-parse --short HEAD 2>/dev/null || echo \"unknown\")\nfi\nif ! git -C \"${SRCROOT}\" diff --quiet HEAD 2>/dev/null; then\n  SHA=\"${SHA}-dirty\"\nfi\n/usr/libexec/PlistBuddy -c \"Add :GITCommitSHA string ${SHA}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\" 2>/dev/null || \\\n/usr/libexec/PlistBuddy -c \"Set :GITCommitSHA ${SHA}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n";
+			shellScript = "SHA=$(git -C \"${SRCROOT}\" rev-parse --short HEAD 2>/dev/null || echo \"unknown\")\nif ! git -C \"${SRCROOT}\" diff --quiet HEAD 2>/dev/null; then\n  SHA=\"${SHA}-dirty\"\nfi\n/usr/libexec/PlistBuddy -c \"Add :GITCommitSHA string ${SHA}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\" 2>/dev/null || \\\n/usr/libexec/PlistBuddy -c \"Set :GITCommitSHA ${SHA}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1338,7 +1338,7 @@
 				DEVELOPMENT_TEAM = FN5YR78T7X;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1403,7 +1403,7 @@
 				DEVELOPMENT_TEAM = FN5YR78T7X;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
