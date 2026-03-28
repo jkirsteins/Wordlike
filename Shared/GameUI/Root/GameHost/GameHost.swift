@@ -1,3 +1,4 @@
+import DatadogRUM
 import GameController
 import SwiftUI
 
@@ -8,12 +9,14 @@ private enum ActiveSheet {
 }
 
 extension ActiveSheet: Identifiable {
-    var id: Self { self }
+    var id: Self {
+        self
+    }
 }
 
 /// Represents a game of a given languages, with its
 /// own stats separate from other games.
-struct GameHost: View {
+struct GameHost: View { // swiftlint:disable:this type_body_length
     @AppStateStorage var dailyState: DailyState?
 
     @AppStateStorage var stats: Stats
@@ -38,7 +41,7 @@ struct GameHost: View {
     let locale: GameLocale
     let title: LocalizedStringKey
 
-    /* Propogated via preferences from the underlying EditableRow. */
+    /** Propogated via preferences from the underlying EditableRow. */
     @StateObject var toastMessageCenter = ToastMessageCenter()
 
     init(_ locale: GameLocale, seed: Int? = nil) {
@@ -143,7 +146,7 @@ struct GameHost: View {
 
     @Environment(\.rootGeometry) var rootGeometry: GeometryProxy?
 
-    /* Sometimes the view appears to go out of bounds of
+    /** Sometimes the view appears to go out of bounds of
      the screen. Sometimes after rotation (on a device),
      or (in Swift Playgrounds) when first opening the LV view.
 
@@ -151,7 +154,7 @@ struct GameHost: View {
      so we can set that as the max.
 
      Not clear if this definitively solves the issue, but
-     the problem seems to be less prevalent.*/
+     the problem seems to be less prevalent. */
     var body: some View {
         ZStack(alignment: .top) {
             VStack(alignment: .center) {
@@ -187,6 +190,7 @@ struct GameHost: View {
             }
         }
         .environment(\.gameLocale, locale)
+        .trackRUMView(name: "Game")
     }
 
     /// This is called when a row was edited/submitted.
@@ -198,11 +202,22 @@ struct GameHost: View {
         let newSubmitted = newRows.submittedCount
         let newState: DailyState.State = newSubmitted > 0 ? .inProgress : .notStarted
 
+        let isFirstSubmission = dailyState.state == .notStarted && newSubmitted > 0
+        let submissionDate = isFirstSubmission ? Date() : dailyState.firstSubmissionDate
+
+        if isFirstSubmission {
+            Analytics.shared.trackAction(
+                name: "game.started",
+                attributes: ["game_locale": locale.fileBaseName]
+            )
+        }
+
         self.dailyState = DailyState(
             expected: dailyState.expected,
             date: dailyState.date,
             rows: newRows,
-            state: newState
+            state: newState,
+            firstSubmissionDate: submissionDate
         )
     }
 
@@ -220,7 +235,8 @@ struct GameHost: View {
                 state: .finished(
                     isTallied: true,
                     isWon: state.isWon
-                )
+                ),
+                firstSubmissionDate: dailyState.firstSubmissionDate
             )
         }
 
@@ -246,10 +262,29 @@ struct GameHost: View {
                  we can show some messages while
                  the tiles are finishing animating. */
 
+                let durationSeconds: String? = dailyState.firstSubmissionDate.map {
+                    "\(Int(Date().timeIntervalSince($0)))"
+                }
+
                 if !newState.isWon {
+                    var attrs = ["game_locale": locale.fileBaseName]
+                    if let dur = durationSeconds { attrs["game.duration_seconds"] = dur }
+                    Analytics.shared.trackAction(
+                        name: "game.lost",
+                        attributes: attrs
+                    )
                     // When losing, show the word
                     toastMessageCenter.set(LocalizedStringKey(dailyState.expected.displayValue))
                 } else {
+                    var attrs = [
+                        "game_locale": locale.fileBaseName,
+                        "attempts": "\(newState.submittedRows)",
+                    ]
+                    if let dur = durationSeconds { attrs["game.duration_seconds"] = dur }
+                    Analytics.shared.trackAction(
+                        name: "game.won",
+                        attributes: attrs
+                    )
                     // When winning, show a flavor message
                     let message: LocalizedStringKey?
 
@@ -316,7 +351,7 @@ struct GameHost: View {
         return game.keyboardHints
     }
 
-    @ViewBuilder var bodyUnconstrained: some View {
+    var bodyUnconstrained: some View {
         VStack {
             if debugViz {
                 if turnDataToDisplay != nil {
@@ -329,12 +364,12 @@ struct GameHost: View {
             if let game = turnDataToDisplay {
                 ZStack {
                     #if os(iOS)
-                    /// Allow input from keyboard
-                    /// on iPad and macOS Catalyst
-                    ///
-                    /// Put behind other views to not
-                    /// obscure input (that can break
-                    /// context menus e.g.)
+                    // Allow input from keyboard
+                    // on iPad and macOS Catalyst
+                    //
+                    // Put behind other views to not
+                    // obscure input (that can break
+                    // context menus e.g.)
                     HardwareKeyboardInput(
                         focusRequests: globalTapCount
                     )

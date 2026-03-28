@@ -4,9 +4,9 @@ import XCTest
 final class WordListTests: XCTestCase {
     // MARK: - Unwinnable day tests (should FAIL before fix)
 
-    func testLvWordOnDec3_2025_isPlayable() {
+    func testLvWordOnDec3_2025_isPlayable() throws {
         let counter = DailyTurnCounter(start: WordValidator.MAR_22_2022)
-        let date = Calendar.current.date(from: DateComponents(year: 2025, month: 12, day: 3))!
+        let date = try XCTUnwrap(Calendar.current.date(from: DateComponents(year: 2025, month: 12, day: 3)))
         let ti = counter.turnIndex(at: date, in: .current)
 
         let answers = WordValidator.loadAnswers(seed: 14_384_982_345, locale: .lv_LV(simplified: false))
@@ -14,9 +14,9 @@ final class WordListTests: XCTestCase {
         XCTAssertEqual(word.count, 5, "Dec 3, 2025 lv word must be 5 letters, got '\(word)'")
     }
 
-    func testFrWordOnJun24_2023_isPlayable() {
+    func testFrWordOnJun24_2023_isPlayable() throws {
         let counter = DailyTurnCounter(start: WordValidator.MAR_22_2022)
-        let date = Calendar.current.date(from: DateComponents(year: 2023, month: 6, day: 24))!
+        let date = try XCTUnwrap(Calendar.current.date(from: DateComponents(year: 2023, month: 6, day: 24)))
         let ti = counter.turnIndex(at: date, in: .current)
 
         let answers = WordValidator.loadAnswers(seed: 14_384_982_345, locale: .fr_FR)
@@ -24,9 +24,9 @@ final class WordListTests: XCTestCase {
         XCTAssertEqual(word.count, 5, "Jun 24, 2023 fr word must be 5 letters, got '\(word)'")
     }
 
-    func testEnGBWordOnDec3_2025_isPlayable() {
+    func testEnGBWordOnDec3_2025_isPlayable() throws {
         let counter = DailyTurnCounter(start: WordValidator.MAR_22_2022)
-        let date = Calendar.current.date(from: DateComponents(year: 2025, month: 12, day: 3))!
+        let date = try XCTUnwrap(Calendar.current.date(from: DateComponents(year: 2025, month: 12, day: 3)))
         let ti = counter.turnIndex(at: date, in: .current)
 
         let answers = WordValidator.loadAnswers(seed: 14_384_982_345, locale: .en_GB)
@@ -36,9 +36,9 @@ final class WordListTests: XCTestCase {
 
     // MARK: - Snapshot tests
 
-    func testLvWordOnMar1_2026() {
+    func testLvWordOnMar1_2026() throws {
         let counter = DailyTurnCounter(start: WordValidator.MAR_22_2022)
-        let date = Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 1))!
+        let date = try XCTUnwrap(Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 1)))
         let ti = counter.turnIndex(at: date, in: .current)
 
         let answers = WordValidator.loadAnswers(seed: 14_384_982_345, locale: .lv_LV(simplified: false))
@@ -46,9 +46,9 @@ final class WordListTests: XCTestCase {
         XCTAssertEqual(word, "KOPNE")
     }
 
-    func testLvStartOfGen1() {
+    func testLvStartOfGen1() throws {
         let counter = DailyTurnCounter(start: WordValidator.MAR_22_2022)
-        let date = Calendar.current.date(from: DateComponents(year: 2028, month: 10, day: 16))!
+        let date = try XCTUnwrap(Calendar.current.date(from: DateComponents(year: 2028, month: 10, day: 16)))
         let ti = counter.turnIndex(at: date, in: .current)
 
         let answers = WordValidator.loadAnswers(seed: 14_384_982_345, locale: .lv_LV(simplified: false))
@@ -56,9 +56,9 @@ final class WordListTests: XCTestCase {
         XCTAssertEqual(word, "MANGA")
     }
 
-    func testFrWordOnMar1_2026() {
+    func testFrWordOnMar1_2026() throws {
         let counter = DailyTurnCounter(start: WordValidator.MAR_22_2022)
-        let date = Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 1))!
+        let date = try XCTUnwrap(Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 1)))
         let ti = counter.turnIndex(at: date, in: .current)
 
         let answers = WordValidator.loadAnswers(seed: 14_384_982_345, locale: .fr_FR)

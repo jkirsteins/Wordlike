@@ -248,6 +248,18 @@
 		E7F29C9D2837DB3D005792DA /* WordTreeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29BA02837DB3C005792DA /* WordTreeTests.swift */; };
 		E7F29C9E2837DB3D005792DA /* WordTreeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29BA02837DB3C005792DA /* WordTreeTests.swift */; };
 		E7F8F8CD2837DF8C001435E0 /* ConfettiView in Frameworks */ = {isa = PBXBuildFile; productRef = E7F8F8CC2837DF8C001435E0 /* ConfettiView */; };
+		DD1A2B3C4D5E6F7A8B9C0D04 /* DatadogSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A2B3C4D5E6F7A8B9C0D03 /* DatadogSetup.swift */; };
+		DD1A2B3C4D5E6F7A8B9C0D05 /* DatadogSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A2B3C4D5E6F7A8B9C0D03 /* DatadogSetup.swift */; };
+		DD1A2B3C4D5E6F7A8B9C0D07 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A2B3C4D5E6F7A8B9C0D06 /* AnalyticsService.swift */; };
+		DD1A2B3C4D5E6F7A8B9C0D08 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A2B3C4D5E6F7A8B9C0D06 /* AnalyticsService.swift */; };
+		DD1A2B3C4D5E6F7A8B9C0D0A /* MockAnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A2B3C4D5E6F7A8B9C0D09 /* MockAnalyticsService.swift */; };
+		DD1A2B3C4D5E6F7A8B9C0D0C /* AnalyticsServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A2B3C4D5E6F7A8B9C0D0B /* AnalyticsServiceTests.swift */; };
+		DD1A2B3C4D5E6F7A8B9C0D14 /* DatadogCore in Frameworks */ = {isa = PBXBuildFile; productRef = DD1A2B3C4D5E6F7A8B9C0D11 /* DatadogCore */; };
+		DD1A2B3C4D5E6F7A8B9C0D15 /* DatadogRUM in Frameworks */ = {isa = PBXBuildFile; productRef = DD1A2B3C4D5E6F7A8B9C0D12 /* DatadogRUM */; };
+		DD1A2B3C4D5E6F7A8B9C0D16 /* DatadogCrashReporting in Frameworks */ = {isa = PBXBuildFile; productRef = DD1A2B3C4D5E6F7A8B9C0D13 /* DatadogCrashReporting */; };
+		DD1A2B3C4D5E6F7A8B9C0D1A /* DatadogCore in Frameworks */ = {isa = PBXBuildFile; productRef = DD1A2B3C4D5E6F7A8B9C0D17 /* DatadogCore */; };
+		DD1A2B3C4D5E6F7A8B9C0D1B /* DatadogRUM in Frameworks */ = {isa = PBXBuildFile; productRef = DD1A2B3C4D5E6F7A8B9C0D18 /* DatadogRUM */; };
+		DD1A2B3C4D5E6F7A8B9C0D1C /* DatadogCrashReporting in Frameworks */ = {isa = PBXBuildFile; productRef = DD1A2B3C4D5E6F7A8B9C0D19 /* DatadogCrashReporting */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -268,6 +280,11 @@
 		AA1B3C4D5E6F7A8B9C0D1E2A /* StatsTransfer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsTransfer.swift; sourceTree = "<group>"; };
 		AA1B3C4D5E6F7A8B9C0D1E3A /* StatsFileDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsFileDocument.swift; sourceTree = "<group>"; };
 		BB2C4D5E6F7A8B9C0D2E1A01 /* BuildInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildInfo.swift; sourceTree = "<group>"; };
+		DD1A2B3C4D5E6F7A8B9C0D01 /* Datadog.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Datadog.xcconfig; sourceTree = "<group>"; };
+		DD1A2B3C4D5E6F7A8B9C0D03 /* DatadogSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatadogSetup.swift; sourceTree = "<group>"; };
+		DD1A2B3C4D5E6F7A8B9C0D06 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
+		DD1A2B3C4D5E6F7A8B9C0D09 /* MockAnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnalyticsService.swift; sourceTree = "<group>"; };
+		DD1A2B3C4D5E6F7A8B9C0D0B /* AnalyticsServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsServiceTests.swift; sourceTree = "<group>"; };
 		E70D81FE2837E16100D4F2FF /* NativeTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeTypes.swift; sourceTree = "<group>"; };
 		E70D82012837E3D500D4F2FF /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		E70D82032837EDC100D4F2FF /* NSColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSColorExtensions.swift; sourceTree = "<group>"; };
@@ -433,6 +450,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E70D82072837F57B00D4F2FF /* ConfettiView in Frameworks */,
+				DD1A2B3C4D5E6F7A8B9C0D14 /* DatadogCore in Frameworks */,
+				DD1A2B3C4D5E6F7A8B9C0D15 /* DatadogRUM in Frameworks */,
+				DD1A2B3C4D5E6F7A8B9C0D16 /* DatadogCrashReporting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,16 +461,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7F8F8CD2837DF8C001435E0 /* ConfettiView in Frameworks */,
+				DD1A2B3C4D5E6F7A8B9C0D1A /* DatadogCore in Frameworks */,
+				DD1A2B3C4D5E6F7A8B9C0D1B /* DatadogRUM in Frameworks */,
+				DD1A2B3C4D5E6F7A8B9C0D1C /* DatadogCrashReporting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DD1A2B3C4D5E6F7A8B9C0D02 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				DD1A2B3C4D5E6F7A8B9C0D01 /* Datadog.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		54F19358FBE91FD053D2394F /* WordlikeTests */ = {
 			isa = PBXGroup;
 			children = (
 				3965C6264DE72A75AACC4F40 /* WordListTests.swift */,
+				DD1A2B3C4D5E6F7A8B9C0D09 /* MockAnalyticsService.swift */,
+				DD1A2B3C4D5E6F7A8B9C0D0B /* AnalyticsServiceTests.swift */,
 			);
 			path = WordlikeTests;
 			sourceTree = SOURCE_ROOT;
@@ -474,6 +507,7 @@
 		E7F299542837DAB9005792DA = {
 			isa = PBXGroup;
 			children = (
+				DD1A2B3C4D5E6F7A8B9C0D02 /* Config */,
 				E75D4298289D15080036E7EC /* SimpleWordGame--iOS--Info.plist */,
 				E7346324283931AB00265F8F /* SimpleWordGame (iOS).entitlements */,
 				E7F29B3A2837DB3B005792DA /* gh_screenshot.png */,
@@ -503,6 +537,8 @@
 				E7F29B0C2837DB3A005792DA /* SimpleWordGame (iOS)-Bridging-Header.h */,
 				E7F29B0D2837DB3A005792DA /* SimpleWordGame (macOS)-Bridging-Header.h */,
 				BB2C4D5E6F7A8B9C0D2E1A01 /* BuildInfo.swift */,
+				DD1A2B3C4D5E6F7A8B9C0D03 /* DatadogSetup.swift */,
+				DD1A2B3C4D5E6F7A8B9C0D06 /* AnalyticsService.swift */,
 				E70D81FE2837E16100D4F2FF /* NativeTypes.swift */,
 				E73463252839323700265F8F /* Media.xcassets */,
 			);
@@ -851,6 +887,9 @@
 			name = "SimpleWordGame (iOS)";
 			packageProductDependencies = (
 				E70D82062837F57B00D4F2FF /* ConfettiView */,
+				DD1A2B3C4D5E6F7A8B9C0D11 /* DatadogCore */,
+				DD1A2B3C4D5E6F7A8B9C0D12 /* DatadogRUM */,
+				DD1A2B3C4D5E6F7A8B9C0D13 /* DatadogCrashReporting */,
 			);
 			productName = "SimpleWordGame (iOS)";
 			productReference = E7F299612837DABB005792DA /* Wordlike.app */;
@@ -871,6 +910,9 @@
 			name = "SimpleWordGame (macOS)";
 			packageProductDependencies = (
 				E7F8F8CC2837DF8C001435E0 /* ConfettiView */,
+				DD1A2B3C4D5E6F7A8B9C0D17 /* DatadogCore */,
+				DD1A2B3C4D5E6F7A8B9C0D18 /* DatadogRUM */,
+				DD1A2B3C4D5E6F7A8B9C0D19 /* DatadogCrashReporting */,
 			);
 			productName = "SimpleWordGame (macOS)";
 			productReference = E7F299672837DABB005792DA /* Wordlike.app */;
@@ -909,6 +951,7 @@
 			mainGroup = E7F299542837DAB9005792DA;
 			packageReferences = (
 				E7F8F8CB2837DF8C001435E0 /* XCRemoteSwiftPackageReference "confetti-view" */,
+				DD1A2B3C4D5E6F7A8B9C0D10 /* XCRemoteSwiftPackageReference "dd-sdk-ios" */,
 			);
 			productRefGroup = E7F299622837DABB005792DA /* Products */;
 			projectDirPath = "";
@@ -992,7 +1035,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "SHA=$(git -C \"${SRCROOT}\" rev-parse --short HEAD 2>/dev/null || echo \"unknown\")\nif ! git -C \"${SRCROOT}\" diff --quiet HEAD 2>/dev/null; then\n  SHA=\"${SHA}-dirty\"\nfi\n/usr/libexec/PlistBuddy -c \"Add :GITCommitSHA string ${SHA}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\" 2>/dev/null || \\\n/usr/libexec/PlistBuddy -c \"Set :GITCommitSHA ${SHA}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n";
+			shellScript = "SHA=$(git -C \"${SRCROOT}\" rev-parse --short HEAD 2>/dev/null || echo \"unknown\")\nif ! git -C \"${SRCROOT}\" diff --quiet HEAD 2>/dev/null; then\n  SHA=\"${SHA}-dirty\"\nfi\n/usr/libexec/PlistBuddy -c \"Add :GITCommitSHA string ${SHA}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\" 2>/dev/null || \\\n/usr/libexec/PlistBuddy -c \"Set :GITCommitSHA ${SHA}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n\nif [ -n \"${CI_PULL_REQUEST_SOURCE_BRANCH:-}\" ]; then\n  BRANCH=\"${CI_PULL_REQUEST_SOURCE_BRANCH}\"\nelif [ -n \"${CI_BRANCH:-}\" ]; then\n  BRANCH=\"${CI_BRANCH}\"\nelif [ -n \"${CI_TAG:-}\" ]; then\n  BRANCH=\"tag: ${CI_TAG}\"\nelse\n  BRANCH=$(git -C \"${SRCROOT}\" rev-parse --abbrev-ref HEAD 2>/dev/null || echo \"unknown\")\nfi\n/usr/libexec/PlistBuddy -c \"Add :GITBranch string ${BRANCH}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\" 2>/dev/null || \\\n/usr/libexec/PlistBuddy -c \"Set :GITBranch ${BRANCH}\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1002,6 +1045,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				03D30B87D0FD66F0A0EFD682 /* WordListTests.swift in Sources */,
+				DD1A2B3C4D5E6F7A8B9C0D0A /* MockAnalyticsService.swift in Sources */,
+				DD1A2B3C4D5E6F7A8B9C0D0C /* AnalyticsServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1054,6 +1099,8 @@
 				E7F29C9D2837DB3D005792DA /* WordTreeTests.swift in Sources */,
 				E70D81FF2837E16100D4F2FF /* NativeTypes.swift in Sources */,
 				BB2C4D5E6F7A8B9C0D2E1A02 /* BuildInfo.swift in Sources */,
+				DD1A2B3C4D5E6F7A8B9C0D04 /* DatadogSetup.swift in Sources */,
+				DD1A2B3C4D5E6F7A8B9C0D07 /* AnalyticsService.swift in Sources */,
 				E7F29BF72837DB3C005792DA /* Palette.swift in Sources */,
 				E7F29C6B2837DB3D005792DA /* TileBackground.swift in Sources */,
 				E7F29BAF2837DB3C005792DA /* TurnCounter_Env.swift in Sources */,
@@ -1168,6 +1215,8 @@
 				E7F29C9E2837DB3D005792DA /* WordTreeTests.swift in Sources */,
 				E70D82002837E16100D4F2FF /* NativeTypes.swift in Sources */,
 				BB2C4D5E6F7A8B9C0D2E1A03 /* BuildInfo.swift in Sources */,
+				DD1A2B3C4D5E6F7A8B9C0D05 /* DatadogSetup.swift in Sources */,
+				DD1A2B3C4D5E6F7A8B9C0D08 /* AnalyticsService.swift in Sources */,
 				E7F29BF82837DB3C005792DA /* Palette.swift in Sources */,
 				E7F29C6C2837DB3D005792DA /* TileBackground.swift in Sources */,
 				E7F29BB02837DB3C005792DA /* TurnCounter_Env.swift in Sources */,
@@ -1424,6 +1473,7 @@
 		};
 		E7F299732837DABB005792DA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD1A2B3C4D5E6F7A8B9C0D01 /* Datadog.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1433,7 +1483,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
@@ -1451,7 +1501,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.66;
 				PRODUCT_BUNDLE_IDENTIFIER = org.janiskirsteins.SimpleWordGame;
 				PRODUCT_NAME = Wordlike;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1468,6 +1518,7 @@
 		};
 		E7F299742837DABB005792DA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD1A2B3C4D5E6F7A8B9C0D01 /* Datadog.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1477,7 +1528,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
@@ -1495,7 +1546,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.66;
 				PRODUCT_BUNDLE_IDENTIFIER = org.janiskirsteins.SimpleWordGame;
 				PRODUCT_NAME = Wordlike;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1631,6 +1682,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		DD1A2B3C4D5E6F7A8B9C0D10 /* XCRemoteSwiftPackageReference "dd-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/DataDog/dd-sdk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1643,6 +1702,36 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E7F8F8CB2837DF8C001435E0 /* XCRemoteSwiftPackageReference "confetti-view" */;
 			productName = ConfettiView;
+		};
+		DD1A2B3C4D5E6F7A8B9C0D11 /* DatadogCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DD1A2B3C4D5E6F7A8B9C0D10 /* XCRemoteSwiftPackageReference "dd-sdk-ios" */;
+			productName = DatadogCore;
+		};
+		DD1A2B3C4D5E6F7A8B9C0D12 /* DatadogRUM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DD1A2B3C4D5E6F7A8B9C0D10 /* XCRemoteSwiftPackageReference "dd-sdk-ios" */;
+			productName = DatadogRUM;
+		};
+		DD1A2B3C4D5E6F7A8B9C0D13 /* DatadogCrashReporting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DD1A2B3C4D5E6F7A8B9C0D10 /* XCRemoteSwiftPackageReference "dd-sdk-ios" */;
+			productName = DatadogCrashReporting;
+		};
+		DD1A2B3C4D5E6F7A8B9C0D17 /* DatadogCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DD1A2B3C4D5E6F7A8B9C0D10 /* XCRemoteSwiftPackageReference "dd-sdk-ios" */;
+			productName = DatadogCore;
+		};
+		DD1A2B3C4D5E6F7A8B9C0D18 /* DatadogRUM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DD1A2B3C4D5E6F7A8B9C0D10 /* XCRemoteSwiftPackageReference "dd-sdk-ios" */;
+			productName = DatadogRUM;
+		};
+		DD1A2B3C4D5E6F7A8B9C0D19 /* DatadogCrashReporting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DD1A2B3C4D5E6F7A8B9C0D10 /* XCRemoteSwiftPackageReference "dd-sdk-ios" */;
+			productName = DatadogCrashReporting;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

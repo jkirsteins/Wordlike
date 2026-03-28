@@ -1,7 +1,7 @@
 import SwiftUI
 
-// This is more a "game mode" than just a locale
-// E.g. lv_LV contains game mode config.
+/// This is more a "game mode" than just a locale
+/// E.g. lv_LV contains game mode config.
 enum GameLocale {
     case unknown
     case ee_EE

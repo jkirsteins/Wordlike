@@ -23,4 +23,8 @@ enum BuildInfo {
         }
         return gitSHARaw
     }
+
+    static var gitBranch: String {
+        Bundle.main.infoDictionary?["GITBranch"] as? String ?? "unknown"
+    }
 }

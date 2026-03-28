@@ -1,4 +1,5 @@
 import ConfettiView
+import DatadogRUM
 import SwiftUI
 
 struct ShareButtonStyle: ButtonStyle {
@@ -30,7 +31,7 @@ struct StatsView: View {
 
     @AppStateStorage(SettingsView.HIDE_FIRST_ROW_KEY) var shouldHideFirstRow: Bool = false
 
-    // For sizing the horizontal stats bars
+    /// For sizing the horizontal stats bars
     @State var maxBarWidth: CGFloat = 0
 
     @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -43,7 +44,7 @@ struct StatsView: View {
     // TODO: duplicated with GameHostView
     @State var nextWordIn: String = "..."
 
-    // Share sheet
+    /// Share sheet
     @State var isSharing: Bool = false
 
     #if os(iOS)
@@ -169,6 +170,10 @@ struct StatsView: View {
                         Divider().frame(maxHeight: 88)
 
                         Button(action: {
+                            Analytics.shared.trackAction(
+                                name: "game.shared",
+                                attributes: ["game_locale": state.expected.locale.fileBaseName]
+                            )
                             self.isSharing.toggle()
                         }, label: {
                             HStack {
@@ -209,6 +214,7 @@ struct StatsView: View {
             _ in
             self.recalculateNextWord()
         }
+        .trackRUMView(name: "Stats")
         .navigationTitle("Statistics")
     }
 }

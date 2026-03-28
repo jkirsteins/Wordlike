@@ -1,10 +1,6 @@
 import SwiftUI
 
 struct WordModel: Hashable, Codable, Equatable, CustomDebugStringConvertible {
-    static func == (lhs: WordModel, rhs: WordModel) -> Bool {
-        lhs.word == rhs.word
-    }
-
     enum CodingKeys: String, CodingKey {
         case word
     }

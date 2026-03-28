@@ -92,6 +92,7 @@ iOSInjectionProject/
 .swiftpm
 
 *secrets.xcconfig*
+Config/Datadog.xcconfig
 .DS_Store
 .claude/worktrees
 .claude
