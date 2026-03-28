@@ -91,7 +91,7 @@ struct FlippableTile<Revealed: View>: View {
             }
     }
 
-    @ViewBuilder var nonJumpingBody: some View {
+    var nonJumpingBody: some View {
         VStack {
             if revealedObject == nil {
                 Tile(model: letter)

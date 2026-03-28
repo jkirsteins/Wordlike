@@ -8,7 +8,9 @@ struct LazyView<Content: View>: View {
         self.build = build
     }
 
-    var body: some View { build() }
+    var body: some View {
+        build()
+    }
 }
 
 /// Creates a standardized NavigationLink

@@ -33,8 +33,7 @@ struct ScreenshotMakerView: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> ScreenshotMaker {
-        let view = ScreenshotMaker(frame: CGRect.zero)
-        return view
+        return ScreenshotMaker(frame: CGRect.zero)
     }
 
     func updateUIView(_ uiView: ScreenshotMaker, context: Context) {

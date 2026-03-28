@@ -1,6 +1,6 @@
 import SwiftUI
 
-/*
+/**
 
  This can be used to generate screenshots for different
  device configurations. It should also work with
@@ -208,8 +208,13 @@ struct MockOrientationConfig: Equatable, Hashable {
         width / height
     }
 
-    var pixelWidth: Double { width * scaleFactor }
-    var pixelHeight: Double { height * scaleFactor }
+    var pixelWidth: Double {
+        width * scaleFactor
+    }
+
+    var pixelHeight: Double {
+        height * scaleFactor
+    }
 
     var isPortrait: Bool {
         width < height
@@ -257,7 +262,7 @@ struct MockDeviceConfig: Equatable, Hashable, Identifiable {
         ) // only portrait
     }
 
-    /* For size class source-of-truth see:
+    /** For size class source-of-truth see:
      https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/adaptivity-and-layout/
      */
     let sizeClasses: SizeClassDeviceConfig
@@ -266,8 +271,8 @@ struct MockDeviceConfig: Equatable, Hashable, Identifiable {
         Self.mandatoryScreenshotConfigs.contains(self)
     }
 
-    // Mandatory screenshots:
-    // https://help.apple.com/app-store-connect/#/devd274dd925
+    /// Mandatory screenshots:
+    /// https://help.apple.com/app-store-connect/#/devd274dd925
     static let mandatoryScreenshotConfigs: [MockDeviceConfig] = [
         .inch65_iPhone12ProMax,
         .inch55_iPhone8Plus,

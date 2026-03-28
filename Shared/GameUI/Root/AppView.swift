@@ -1,3 +1,4 @@
+import DatadogRUM
 import SwiftUI
 
 #if os(iOS)
@@ -10,7 +11,9 @@ private enum ActiveSheet {
 }
 
 extension ActiveSheet: Identifiable {
-    var id: Self { self }
+    var id: Self {
+        self
+    }
 }
 
 struct AppView: View {
@@ -36,7 +39,7 @@ struct AppView: View {
     @State var tapDelegate: GlobalTapDelegate? = nil
     #endif
 
-    // For sharing summary of the progress
+    /// For sharing summary of the progress
     @State var isSharing: Bool = false
     #if os(iOS)
     @State var shareItems: [UIActivityItemSource] = []
@@ -81,6 +84,7 @@ struct AppView: View {
 
     var body: some View {
         innerBody
+            .trackRUMView(name: "LanguageSelection")
             .onChange(of: scenePhase) { _ in
                 // Experimental
                 // CloudStorageSync.shared.synchronize()
@@ -91,10 +95,11 @@ struct AppView: View {
     }
 
     #if os(macOS)
-    func toggleSidebar() { NSApp.keyWindow?.firstResponder?.tryToPerform(
-        #selector(NSSplitViewController.toggleSidebar(_:)),
-        with: nil
-    )
+    func toggleSidebar() {
+        NSApp.keyWindow?.firstResponder?.tryToPerform(
+            #selector(NSSplitViewController.toggleSidebar(_:)),
+            with: nil
+        )
     }
     #endif
 

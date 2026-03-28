@@ -52,15 +52,15 @@ struct AnimationCompletionObserverModifier<Value: VectorArithmetic>: AnimatableM
             return
         }
 
-        /// Dispatching is needed to take the next runloop for the completion callback.
-        /// This prevents errors like "Modifying state during view update, this will cause undefined behavior."
+        // Dispatching is needed to take the next runloop for the completion callback.
+        // This prevents errors like "Modifying state during view update, this will cause undefined behavior."
         DispatchQueue.main.async {
             self.completion()
         }
     }
 
     func body(content: Content) -> some View {
-        /// We're not really modifying the view so we can directly return the original input value.
+        // We're not really modifying the view so we can directly return the original input value.
         return content
     }
 }

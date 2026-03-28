@@ -58,7 +58,7 @@ extension View {
 }
 
 extension View {
-    /* NOTE: BE CAREFUL ON iOS14
+    /** NOTE: BE CAREFUL ON iOS14
      The fallback on iOS14 is to use .sheet() modifier.
 
      This will break, if safeSharingSheet() is invoked on the same

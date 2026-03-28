@@ -4,5 +4,11 @@
 <dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>DatadogClientToken</key>
+	<string>$(DD_CLIENT_TOKEN)</string>
+	<key>DatadogApplicationID</key>
+	<string>$(DD_APPLICATION_ID)</string>
+	<key>DatadogSite</key>
+	<string>$(DD_SITE)</string>
 </dict>
 </plist>

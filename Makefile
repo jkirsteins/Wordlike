@@ -1,6 +1,6 @@
 PBXPROJ := SimpleWordGame.xcodeproj/project.pbxproj
 
-.PHONY: lint format setup test version bump-build bump-patch bump-minor bump-major
+.PHONY: lint format setup test version bump-patch bump-minor bump-major
 
 # Run SwiftLint
 lint:
@@ -10,8 +10,13 @@ lint:
 format:
 	swiftformat .
 
-# Install pre-commit hooks
+# Install pre-commit hooks and copy config templates
 setup:
+	@if [ ! -f Config/Datadog.xcconfig ]; then \
+		mkdir -p Config; \
+		cp Config/Datadog.xcconfig.template Config/Datadog.xcconfig; \
+		echo "Created Config/Datadog.xcconfig from template — fill in your Datadog credentials."; \
+	fi
 	@if command -v pre-commit >/dev/null 2>&1; then \
 		pre-commit install; \
 		echo "Pre-commit hooks installed."; \
@@ -33,13 +38,6 @@ version:
 	@v=$$(grep 'MARKETING_VERSION' $(PBXPROJ) | head -1 | sed 's/.*= *//;s/ *;//'); \
 	b=$$(grep 'CURRENT_PROJECT_VERSION' $(PBXPROJ) | head -1 | sed 's/.*= *//;s/ *;//'); \
 	echo "$$v ($$b)"
-
-# Bump build number (e.g. 13 -> 14)
-bump-build:
-	@b=$$(grep 'CURRENT_PROJECT_VERSION' $(PBXPROJ) | head -1 | sed 's/.*= *//;s/ *;//'); \
-	new=$$((b + 1)); \
-	sed -i '' "s/CURRENT_PROJECT_VERSION = $$b;/CURRENT_PROJECT_VERSION = $$new;/g" $(PBXPROJ); \
-	echo "Build: $$b -> $$new"
 
 # Bump patch version (e.g. 1.0.2 -> 1.0.3) and reset build to 1
 bump-patch:

@@ -50,7 +50,7 @@ extension GameState {
     }
 
     /// Submit key
-    func submit(
+    func submit( // swiftlint:disable:this function_body_length
         validator: WordValidator,
         hardMode: Bool,
         toastMessageCenter: ToastMessageCenter
@@ -93,6 +93,10 @@ extension GameState {
                 attemptCount: current.attemptCount + 1
             )
 
+            Analytics.shared.trackAction(
+                name: "game.invalid_word",
+                attributes: ["game_locale": expected.locale.fileBaseName]
+            )
             rows[currentIx] = updatedRow
             return
         }
@@ -107,5 +111,12 @@ extension GameState {
             attemptCount: 0
         )
         rows[currentIx] = submitted
+        Analytics.shared.trackAction(
+            name: "game.row_submitted",
+            attributes: [
+                "game_locale": expected.locale.fileBaseName,
+                "attempt_number": "\(currentIx + 1)",
+            ]
+        )
     }
 }

@@ -1,3 +1,4 @@
+import DatadogRUM
 import GameController
 import SwiftUI
 
@@ -8,12 +9,14 @@ private enum ActiveSheet {
 }
 
 extension ActiveSheet: Identifiable {
-    var id: Self { self }
+    var id: Self {
+        self
+    }
 }
 
 /// Represents a game of a given languages, with its
 /// own stats separate from other games.
-struct GameHost: View {
+struct GameHost: View { // swiftlint:disable:this type_body_length
     @AppStateStorage var dailyState: DailyState?
 
     @AppStateStorage var stats: Stats
@@ -38,7 +41,7 @@ struct GameHost: View {
     let locale: GameLocale
     let title: LocalizedStringKey
 
-    /* Propogated via preferences from the underlying EditableRow. */
+    /** Propogated via preferences from the underlying EditableRow. */
     @StateObject var toastMessageCenter = ToastMessageCenter()
 
     init(_ locale: GameLocale, seed: Int? = nil) {
@@ -143,7 +146,7 @@ struct GameHost: View {
 
     @Environment(\.rootGeometry) var rootGeometry: GeometryProxy?
 
-    /* Sometimes the view appears to go out of bounds of
+    /** Sometimes the view appears to go out of bounds of
      the screen. Sometimes after rotation (on a device),
      or (in Swift Playgrounds) when first opening the LV view.
 
@@ -151,7 +154,7 @@ struct GameHost: View {
      so we can set that as the max.
 
      Not clear if this definitively solves the issue, but
-     the problem seems to be less prevalent.*/
+     the problem seems to be less prevalent. */
     var body: some View {
         ZStack(alignment: .top) {
             VStack(alignment: .center) {
@@ -187,6 +190,7 @@ struct GameHost: View {
             }
         }
         .environment(\.gameLocale, locale)
+        .trackRUMView(name: "Game")
     }
 
     /// This is called when a row was edited/submitted.
@@ -247,9 +251,20 @@ struct GameHost: View {
                  the tiles are finishing animating. */
 
                 if !newState.isWon {
+                    Analytics.shared.trackAction(
+                        name: "game.lost",
+                        attributes: ["game_locale": locale.fileBaseName]
+                    )
                     // When losing, show the word
                     toastMessageCenter.set(LocalizedStringKey(dailyState.expected.displayValue))
                 } else {
+                    Analytics.shared.trackAction(
+                        name: "game.won",
+                        attributes: [
+                            "game_locale": locale.fileBaseName,
+                            "attempts": "\(newState.submittedRows)",
+                        ]
+                    )
                     // When winning, show a flavor message
                     let message: LocalizedStringKey?
 
@@ -316,7 +331,7 @@ struct GameHost: View {
         return game.keyboardHints
     }
 
-    @ViewBuilder var bodyUnconstrained: some View {
+    var bodyUnconstrained: some View {
         VStack {
             if debugViz {
                 if turnDataToDisplay != nil {
@@ -329,12 +344,12 @@ struct GameHost: View {
             if let game = turnDataToDisplay {
                 ZStack {
                     #if os(iOS)
-                    /// Allow input from keyboard
-                    /// on iPad and macOS Catalyst
-                    ///
-                    /// Put behind other views to not
-                    /// obscure input (that can break
-                    /// context menus e.g.)
+                    // Allow input from keyboard
+                    // on iPad and macOS Catalyst
+                    //
+                    // Put behind other views to not
+                    // obscure input (that can break
+                    // context menus e.g.)
                     HardwareKeyboardInput(
                         focusRequests: globalTapCount
                     )

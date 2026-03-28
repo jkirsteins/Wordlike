@@ -3,7 +3,9 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct StatsFileDocument: FileDocument {
-    static var readableContentTypes: [UTType] { [.json] }
+    static var readableContentTypes: [UTType] {
+        [.json]
+    }
 
     let document: StatsExportDocument
 
