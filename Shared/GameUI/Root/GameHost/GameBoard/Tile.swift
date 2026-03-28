@@ -114,8 +114,7 @@ struct Tile<Background: View>: View {
 
     var randRotate: Double {
         let x = maxd * drand48()
-        let r = (maxd / 2.0) - x
-        return r
+        return (maxd / 2.0) - x
     }
 
     var body: some View {

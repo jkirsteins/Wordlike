@@ -5,7 +5,9 @@ private enum ActiveSheet {
 }
 
 extension ActiveSheet: Identifiable {
-    var id: Self { self }
+    var id: Self {
+        self
+    }
 }
 
 enum FlagAssets {
@@ -350,7 +352,7 @@ struct NavigationList: View {
         }
     }
 
-    @ViewBuilder var body: some View {
+    var body: some View {
         innerBody
         #if os(iOS)
         /* We don't need the title bar taking a lot
@@ -420,6 +422,12 @@ struct NavigationList: View {
                                     .environment(\.globalTapCount, globalTapCount)
                                     .environment(\.debug, outerDebug || envDebug)
                                     .environment(\.palette, palette)
+                                    .onAppear {
+                                        Analytics.shared.trackAction(
+                                            name: "language.switched",
+                                            attributes: ["game_locale": gameLoc.fileBaseName]
+                                        )
+                                    }
                                 }
                                 .padding()
                             )

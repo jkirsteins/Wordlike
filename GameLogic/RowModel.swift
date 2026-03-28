@@ -161,7 +161,7 @@ struct RowModel: Equatable, Codable, Identifiable {
         return expected[pos]
     }
 
-    /* Yellow budget is:
+    /** Yellow budget is:
      total_occurences - known_occurences - yellow_occurences_at_lower_ix
      */
     func yellowBudget(for attempt: WordModel, at atIx: Int) -> Int {

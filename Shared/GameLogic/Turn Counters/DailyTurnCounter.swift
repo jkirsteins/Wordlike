@@ -6,7 +6,7 @@ import SwiftUI
 /// It should be used through
 /// `CalendarDailyTurnCounter.current`
 class DailyTurnCounter {
-    // Start of the turn
+    /// Start of the turn
     let start: Date
 
     init(start: Date) {

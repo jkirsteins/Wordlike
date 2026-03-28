@@ -65,7 +65,10 @@ extension Color {
         return Color(red: r, green: g, blue: b)
     }
 
-    var uiColor: UIColor { .init(self) }
+    var uiColor: UIColor {
+        .init(self)
+    }
+
     typealias RGBA = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
     var rgba: RGBA? {
         var (r, g, b, a): RGBA = (0, 0, 0, 0)

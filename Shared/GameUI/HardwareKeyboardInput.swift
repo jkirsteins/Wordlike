@@ -139,9 +139,7 @@ struct HardwareKeyboardInput: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> InternalView {
-        let result = InternalView(owner: self)
-
-        return result
+        return InternalView(owner: self)
     }
 
     class Coordinator {}

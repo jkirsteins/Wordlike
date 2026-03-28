@@ -195,7 +195,7 @@ struct RowModel: Equatable, Codable, Identifiable {
 
     let budgetCache = BudgetCacheHolder()
 
-    /* Yellow budget is:
+    /** Yellow budget is:
      total_occurences - known_occurences - yellow_occurences_at_lower_ix
      */
     func yellowBudget(for attempt: WordModel, at atIx: Int) -> Int {
@@ -212,7 +212,7 @@ struct RowModel: Equatable, Codable, Identifiable {
         return val
     }
 
-    /* Do not invoke this in a view body (only u se it to set state at
+    /** Do not invoke this in a view body (only u se it to set state at
      points where you know the model has changed. */
     func calcYellowBudget(for attempt: WordModel, at atIx: Int) -> Int {
         var total = 0

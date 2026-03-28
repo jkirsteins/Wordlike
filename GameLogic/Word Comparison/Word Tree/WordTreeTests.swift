@@ -76,12 +76,11 @@ struct InternalWordTreeTestView: View {
                         var reason: String? = nil
                         _ = w.add(word: "svīka")
                         _ = w.add(word: "švīka")
-                        let found = w.contains(
+                        return w.contains(
                             word: word,
                             mustMatch: nil,
                             reason: &reason
                         )
-                        return found
                     }
                 ) { data in
                     Text("Retrieved word: \(data?.displayValue ?? "none")").testColor(good: data != nil)
@@ -305,9 +304,9 @@ struct InternalWordTreeTestView: View {
                 Text(verbatim: "Reason: \(data.1 ?? "none")").testColor(good: data.1 == "Guess must contain B")
             }
 
-            /// Test the speed of the lookup to notice
-            /// regressions (and historically, it was
-            /// helpful to compare with a naive list lookup)
+            // Test the speed of the lookup to notice
+            // regressions (and historically, it was
+            // helpful to compare with a naive list lookup)
             Test("Basic speed test", { () ->
                     // success / seconds
                     (Bool, Double)

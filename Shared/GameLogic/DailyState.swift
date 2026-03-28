@@ -55,8 +55,8 @@ extension DailyState: Codable, Equatable {
 
 public struct DailyState: RawRepresentable {
     enum State: Codable, Equatable {
-        // Transient value for moving from `isTallied` to
-        // `state` serialization
+        /// Transient value for moving from `isTallied` to
+        /// `state` serialization
         case unknown
 
         case notStarted

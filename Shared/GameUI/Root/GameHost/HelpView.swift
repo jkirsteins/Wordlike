@@ -1,3 +1,4 @@
+import DatadogRUM
 import SwiftUI
 
 struct WrongExampleWord: View {
@@ -140,6 +141,7 @@ struct HelpView: View {
             Text("A new word is available every day.").fontWeight(.bold)
         }
         .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.portrait.width)
+        .trackRUMView(name: "Help")
         .navigationTitle("How to play")
     }
 

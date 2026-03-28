@@ -1,6 +1,6 @@
 import SwiftUI
 
-// AppStateStorageNew supports iCloud but is experimental
+/// AppStateStorageNew supports iCloud but is experimental
 typealias AppStateStorage = AppStateStorageOld
 
 typealias AppStateStorageOld = AppStateStorage15
@@ -11,7 +11,7 @@ protocol CloudConflictResolver {
 
 extension Optional: CloudConflictResolver where Wrapped: CloudConflictResolver {
     func resolve(against other: Any) -> Any {
-        guard let other = other as? Optional<Wrapped> else {
+        guard let other = other as? Wrapped? else {
             return self as Any
         }
 

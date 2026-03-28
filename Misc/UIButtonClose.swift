@@ -4,7 +4,7 @@ struct UIButtonClose: UIViewRepresentable {
     let action: () -> Void
 
     func makeUIView(context: Context) -> UIButton {
-        let button = UIButton(
+        return UIButton(
             type: .close,
             primaryAction: UIAction(
                 title: "Close",
@@ -13,8 +13,6 @@ struct UIButtonClose: UIViewRepresentable {
                 }
             )
         )
-
-        return button
     }
 
     func updateUIView(_ button: UIButton, context: Context) {}

@@ -1,3 +1,4 @@
+import DatadogRUM
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -6,14 +7,16 @@ private enum ActiveSheet {
 }
 
 extension ActiveSheet: Identifiable {
-    var id: Self { self }
+    var id: Self {
+        self
+    }
 }
 
 struct SettingsView: View {
-    // iCloud "Hide my e-mail" address
+    /// iCloud "Hide my e-mail" address
     static let feedbackEmail = "adorables.ambassade_0z@icloud.com"
 
-    // Min width for right-hand widgets
+    /// Min width for right-hand widgets
     static let minRightWidth = CGFloat(0)
 
     #if os(iOS)
@@ -67,6 +70,12 @@ struct SettingsView: View {
                         .font(.caption)
                 }
             }
+            .onChange(of: isHighContrast) { newValue in
+                Analytics.shared.trackAction(
+                    name: "settings.high_contrast_toggled",
+                    attributes: ["enabled": "\(newValue)"]
+                )
+            }
         }
     }
 
@@ -78,6 +87,12 @@ struct SettingsView: View {
                     Text("Any revealed hints must be used in subsequent guesses.")
                         .font(.caption)
                 }
+            }
+            .onChange(of: isHardMode) { newValue in
+                Analytics.shared.trackAction(
+                    name: "settings.hard_mode_toggled",
+                    attributes: ["enabled": "\(newValue)"]
+                )
             }
 
             Toggle(isOn: $isSimplifiedLatvianKeyboard) {
@@ -377,6 +392,7 @@ struct SettingsView: View {
 
             versionInfoSection
         }
+        .trackRUMView(name: "Settings")
         .navigationTitle("Settings")
         .fileImporter(
             isPresented: $showImporter,

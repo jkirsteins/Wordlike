@@ -58,21 +58,21 @@ public class CloudStorageSync: ObservableObject {
         }
     }
 
-    // Note:
-    // As per the documentation of NSUbiquitousKeyValueStore.synchronize,
-    // it is not nessesary to call .synchronize all the time.
-    //
-    // However, during developement, I very often quit or relaunch an app via Xcode debugger.
-    // This causes the app to be killed before in-memory changes are persisted to disk.
-    //
-    // By excessively calling .synchronize() all the time, changes are persisted to disk.
-    // This way, when working with Xcode, changes aren't constantly being reverted.
+    /// Note:
+    /// As per the documentation of NSUbiquitousKeyValueStore.synchronize,
+    /// it is not nessesary to call .synchronize all the time.
+    ///
+    /// However, during developement, I very often quit or relaunch an app via Xcode debugger.
+    /// This causes the app to be killed before in-memory changes are persisted to disk.
+    ///
+    /// By excessively calling .synchronize() all the time, changes are persisted to disk.
+    /// This way, when working with Xcode, changes aren't constantly being reverted.
     func synchronize() {
         ubiquitousKvs.synchronize()
     }
 }
 
-// Wrap calls to NSUbiquitousKeyValueStore
+/// Wrap calls to NSUbiquitousKeyValueStore
 extension CloudStorageSync {
     public func object(forKey key: String) -> Any? {
         ubiquitousKvs.object(forKey: key)

@@ -1,5 +1,5 @@
-/// https://github.com/xavierLowmiller/AppStorage/blob/main/Sources/AppStorage/AppStorage.swift
-///
+// https://github.com/xavierLowmiller/AppStorage/blob/main/Sources/AppStorage/AppStorage.swift
+//
 import SwiftUI
 
 /// A property wrapper type that reflects a value from `UserDefaults` and
