@@ -202,11 +202,22 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
         let newSubmitted = newRows.submittedCount
         let newState: DailyState.State = newSubmitted > 0 ? .inProgress : .notStarted
 
+        let isFirstSubmission = dailyState.state == .notStarted && newSubmitted > 0
+        let submissionDate = isFirstSubmission ? Date() : dailyState.firstSubmissionDate
+
+        if isFirstSubmission {
+            Analytics.shared.trackAction(
+                name: "game.started",
+                attributes: ["game_locale": locale.fileBaseName]
+            )
+        }
+
         self.dailyState = DailyState(
             expected: dailyState.expected,
             date: dailyState.date,
             rows: newRows,
-            state: newState
+            state: newState,
+            firstSubmissionDate: submissionDate
         )
     }
 
@@ -224,7 +235,8 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                 state: .finished(
                     isTallied: true,
                     isWon: state.isWon
-                )
+                ),
+                firstSubmissionDate: dailyState.firstSubmissionDate
             )
         }
 
@@ -250,20 +262,28 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                  we can show some messages while
                  the tiles are finishing animating. */
 
+                let durationSeconds: String? = dailyState.firstSubmissionDate.map {
+                    "\(Int(Date().timeIntervalSince($0)))"
+                }
+
                 if !newState.isWon {
+                    var attrs = ["game_locale": locale.fileBaseName]
+                    if let dur = durationSeconds { attrs["game.duration_seconds"] = dur }
                     Analytics.shared.trackAction(
                         name: "game.lost",
-                        attributes: ["game_locale": locale.fileBaseName]
+                        attributes: attrs
                     )
                     // When losing, show the word
                     toastMessageCenter.set(LocalizedStringKey(dailyState.expected.displayValue))
                 } else {
+                    var attrs = [
+                        "game_locale": locale.fileBaseName,
+                        "attempts": "\(newState.submittedRows)",
+                    ]
+                    if let dur = durationSeconds { attrs["game.duration_seconds"] = dur }
                     Analytics.shared.trackAction(
                         name: "game.won",
-                        attributes: [
-                            "game_locale": locale.fileBaseName,
-                            "attempts": "\(newState.submittedRows)",
-                        ]
+                        attributes: attrs
                     )
                     // When winning, show a flavor message
                     let message: LocalizedStringKey?

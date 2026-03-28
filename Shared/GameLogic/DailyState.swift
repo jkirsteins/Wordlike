@@ -22,6 +22,7 @@ extension DailyState: Codable, Equatable {
         case rows
         case isTallied // deprecated
         case state
+        case firstSubmissionDate
     }
 
     public init(from decoder: Decoder) throws {
@@ -42,6 +43,8 @@ extension DailyState: Codable, Equatable {
         } else {
             state = (try? values.decode(DailyState.State.self, forKey: .state)) ?? .inProgress
         }
+
+        firstSubmissionDate = try? values.decodeIfPresent(Date.self, forKey: .firstSubmissionDate)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -50,6 +53,7 @@ extension DailyState: Codable, Equatable {
         try container.encode(date, forKey: .date)
         try container.encode(rows, forKey: .rows)
         try container.encode(state, forKey: .state)
+        try container.encodeIfPresent(firstSubmissionDate, forKey: .firstSubmissionDate)
     }
 }
 
@@ -83,6 +87,9 @@ public struct DailyState: RawRepresentable {
 
     let rows: [RowModel]
 
+    /// When the user submitted their first guess (for duration tracking).
+    let firstSubmissionDate: Date?
+
     var isWon: Bool {
         rows.isWon(expected: expected)
     }
@@ -91,11 +98,12 @@ public struct DailyState: RawRepresentable {
         rows.isFinished(expected: expected)
     }
 
-    init(expected: WordModel, date: Date, rows: [RowModel], state: State) {
+    init(expected: WordModel, date: Date, rows: [RowModel], state: State, firstSubmissionDate: Date? = nil) {
         self.expected = expected
         self.date = date
         self.rows = rows
         self.state = state
+        self.firstSubmissionDate = firstSubmissionDate
     }
 
     init(expected: WordModel) {
@@ -104,8 +112,8 @@ public struct DailyState: RawRepresentable {
         self.rows = (0 ..< GameState.MAX_ROWS).map {
             _ in RowModel(expected: expected)
         }
-
         self.state = .notStarted
+        self.firstSubmissionDate = nil
     }
 
     public init?(rawValue: String) {
