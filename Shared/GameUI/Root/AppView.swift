@@ -1,10 +1,7 @@
 import DatadogRUM
-import SwiftUI
-
-#if os(iOS)
 import LinkPresentation
+import SwiftUI
 import UniformTypeIdentifiers
-#endif
 
 private enum ActiveSheet {
     case settings
@@ -35,17 +32,11 @@ struct AppView: View {
 
     @State var globalTapCount = 0
 
-    #if os(iOS)
     @State var tapDelegate: GlobalTapDelegate? = nil
-    #endif
 
     /// For sharing summary of the progress
     @State var isSharing: Bool = false
-    #if os(iOS)
     @State var shareItems: [UIActivityItemSource] = []
-    #else
-    @State var shareItems: [Any] = []
-    #endif
 
     let listedLocales: [Locale] = [
         .en_US,
@@ -89,19 +80,7 @@ struct AppView: View {
                 // Experimental
                 // CloudStorageSync.shared.synchronize()
             }
-        #if os(macOS)
-            .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.landscape.width)
-        #endif
     }
-
-    #if os(macOS)
-    func toggleSidebar() {
-        NSApp.keyWindow?.firstResponder?.tryToPerform(
-            #selector(NSSplitViewController.toggleSidebar(_:)),
-            with: nil
-        )
-    }
-    #endif
 
     var innerBody: some View {
         NavigationSplitView {
@@ -142,7 +121,6 @@ struct AppView: View {
 
                         let day = turnCounter.turnIndex(at: Date())
                         let title = Bundle.main.displayName
-                        #if os(iOS)
                         self.shareItems = [
                             ShareableString(
                                 (
@@ -150,13 +128,6 @@ struct AppView: View {
                                 ).joined(separator: "\n") + "\n"
                             ),
                         ]
-                        #else
-                        self.shareItems = [
-                            (
-                                ["\(title) \(day)", ""] + lines
-                            ).joined(separator: "\n") + "\n",
-                        ]
-                        #endif
 
                         self.isSharing.toggle()
                     },
@@ -172,17 +143,6 @@ struct AppView: View {
                 EmptyNavWelcomeView()
             }
         }
-        #if os(macOS)
-        .toolbar {
-            ToolbarItem(placement: .status) {
-                Button(action: toggleSidebar, label: {
-                    Image(systemName: "sidebar.left")
-                })
-            }
-        }
-        #endif
-        // TODO: sharing on macOS
-        #if os(iOS)
         /* NOTE: wrapping in background() because otherwise multiple .sheet() modifiers will not work (and safeSharingSheet and safeSheet
          will both evaluate to .sheet() under the hood on iOS14 */
         .background(
@@ -192,14 +152,11 @@ struct AppView: View {
                     shareItems = []
                 })
         )
-        #endif
         .onAppear {
-            #if os(iOS)
             self.tapDelegate = GlobalTapDelegate($globalTapCount)
             UIApplication.shared.addGestureRecognizer(
                 tapDelegate!
             )
-            #endif
         }
         .environment(
             \.globalTapCount,

@@ -319,19 +319,11 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
     }
 
     var leadingToolbarPlacement: ToolbarItemPlacement {
-        #if os(iOS)
         return .navigationBarLeading
-        #else
-        return .automatic
-        #endif
     }
 
     var trailingToolbarPlacement: ToolbarItemPlacement {
-        #if os(iOS)
         return .navigationBarTrailing
-        #else
-        return .automatic
-        #endif
     }
 
     @State var keyboardHints = KeyboardHints()
@@ -363,7 +355,6 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
 
             if let game = turnDataToDisplay {
                 ZStack {
-                    #if os(iOS)
                     // Allow input from keyboard
                     // on iPad and macOS Catalyst
                     //
@@ -374,7 +365,6 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                         focusRequests: globalTapCount
                     )
                     .debugBorder(.red)
-                    #endif
 
                     GameBoard(
                         state: game,
@@ -447,11 +437,7 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                 activeSheet = .help
             }
 
-            #if os(iOS)
             hasHardwareKeyboard = GCKeyboard.coalesced != nil
-            #else
-            hasHardwareKeyboard = true
-            #endif
 
             if let newState = self.dailyState {
                 updateFromLoadedState(newState)

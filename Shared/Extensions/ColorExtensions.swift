@@ -79,14 +79,8 @@ extension Color {
 
     typealias RGBA = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
     var rgba: RGBA? {
-        #if os(macOS)
-        let ciColor = CIColor(color: uiColor)!
-
-        return (ciColor.red, ciColor.green, ciColor.blue, ciColor.alpha)
-        #else
         var (r, g, b, a): RGBA = (0, 0, 0, 0)
         return uiColor.getRed(&r, green: &g, blue: &b, alpha: &a) ? (r, g, b, a) : nil
-        #endif
     }
 
     var hexaRGB: String? {

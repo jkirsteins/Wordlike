@@ -12,16 +12,11 @@ extension ActiveSheet: Identifiable {
 
 enum FlagAssets {
     static func flagFromName(_ name: String) -> NativeImage? {
-        #if os(iOS)
-        // TODO: figure out why UIImage(named:) is pixelated
-        return flagFromName_old(name)
-        #else
-        return NativeImage(named: name)
-        #endif
+        // UIImage(named:) returns pixelated results, so render from PDF
+        return flagFromPDF(name)
     }
 
-    #if os(iOS)
-    static func flagFromName_old(_ name: String) -> NativeImage? {
+    static func flagFromPDF(_ name: String) -> NativeImage? {
         guard let url = Bundle.main.url(
             forResource: name,
             withExtension: "pdf"
@@ -52,7 +47,6 @@ enum FlagAssets {
 
         return img.resized(to: CGSize(width: 500, height: 500))
     }
-    #endif
 
     static func reqFlagFromName(_ name: String) -> NativeImage {
         guard let result = flagFromName(name) else {
@@ -63,7 +57,6 @@ enum FlagAssets {
     }
 }
 
-#if os(iOS)
 class FlagImageLoader: ObservableObject {
     @Published var images: [String: NativeImage] = [:]
 
@@ -76,7 +69,7 @@ class FlagImageLoader: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             var loaded: [String: NativeImage] = [:]
             for name in Self.flagNames {
-                if let img = FlagAssets.flagFromName_old(name) {
+                if let img = FlagAssets.flagFromPDF(name) {
                     loaded[name] = img
                 }
             }
@@ -86,7 +79,6 @@ class FlagImageLoader: ObservableObject {
         }
     }
 }
-#endif
 
 struct Flag: View {
     @Environment(\.gameLocale) var gameLocale: GameLocale
@@ -97,7 +89,6 @@ struct Flag: View {
 
     static let aspectRatio = 21.0 / 15.0
 
-    #if os(iOS)
     @ObservedObject private var loader = FlagImageLoader.shared
 
     var flagName: String? {
@@ -121,23 +112,6 @@ struct Flag: View {
                 .onAppear { loader.loadIfNeeded() }
         }
     }
-
-    #elseif os(macOS)
-    var body: some View {
-        let image: NativeImage = {
-            switch locale.identifier {
-            case Locale.en_GB.identifier: return NativeImage(named: "GB") ?? NativeImage()
-            case Locale.en_US.identifier: return NativeImage(named: "US") ?? NativeImage()
-            case Locale.fr_FR.identifier: return NativeImage(named: "FR") ?? NativeImage()
-            case Locale.lv_LV.identifier: return NativeImage(named: "LV") ?? NativeImage()
-            default: return NativeImage()
-            }
-        }()
-        Image(nsImage: image)
-            .resizable()
-            .aspectRatio(21.0 / 15.0, contentMode: .fit)
-    }
-    #endif
 }
 
 struct TileFlag: View {
@@ -217,19 +191,13 @@ struct LanguageRow: View {
 
     @Environment(\.palette) var palette: Palette
 
-    #if os(iOS)
     @Environment(\.verticalSizeClass) var vsc: UserInterfaceSizeClass?
-    #endif
 
     var shouldShowCaption: Bool {
-        #if os(iOS)
         if let vsc = vsc, vsc != .compact {
             return true
         }
         return false
-        #else
-        return true
-        #endif
     }
 
     var body: some View {
@@ -354,44 +322,34 @@ struct NavigationList: View {
 
     var body: some View {
         innerBody
-        #if os(iOS)
-        /* We don't need the title bar taking a lot
-         of space (e.g. on iPhone SE it's borderline
-         enough). But we do need the titlebar for the buttons.*/
-        .navigationBarTitleDisplayMode(.inline)
-        #endif
-        .padding(16)
-        /* We need to cap max width for iPad portrait
-         mode*/
-        .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.portrait.width)
+            /* We don't need the title bar taking a lot
+             of space (e.g. on iPhone SE it's borderline
+             enough). But we do need the titlebar for the buttons.*/
+            .navigationBarTitleDisplayMode(.inline)
+            .padding(16)
+            /* We need to cap max width for iPad portrait
+             mode*/
+            .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.portrait.width)
     }
 
-    #if os(iOS)
     @Environment(\.verticalSizeClass) var vsc: UserInterfaceSizeClass?
-    #endif
 
     var isCompactHeight: Bool {
-        #if os(iOS)
         if let vsc = vsc, vsc == .compact {
             return true
         }
-        #endif
 
         return false
     }
 
     var navigationBarTrailing: ToolbarItemPlacement {
-        #if os(iOS)
         return .navigationBarTrailing
-        #else
-        return .automatic
-        #endif
     }
 
     /// When changing the `innerBody` be sure
     /// to verify the aspect ratio visual tests for
     /// different sizes.
-    @ViewBuilder var innerBody: some View {
+    var innerBody: some View {
         VStack(alignment: .leading, spacing: 48) {
             if !isCompactHeight {
                 VStack(alignment: .center) {
@@ -446,32 +404,30 @@ struct NavigationList: View {
                 .debugBorder(.green)
         }
         .debugBorder(.red)
-        #if os(iOS)
-            .onAppear { FlagImageLoader.shared.loadIfNeeded() }
-        #endif
-            .toolbar {
-                ToolbarItem(placement: navigationBarTrailing) {
-                    Button(
-                        action: {
-                            gearCallback()
-                        },
-                        label: {
-                            Label(
-                                "Settings",
-                                systemImage: "gear"
-                            )
-                        }
-                    )
-                    .safeTint(.primary)
-                    .contextMenu {
-                        Button {
-                            self.outerDebug.toggle()
-                        } label: {
-                            Label("Toggle debug mode", systemImage: "hammer")
-                        }
+        .onAppear { FlagImageLoader.shared.loadIfNeeded() }
+        .toolbar {
+            ToolbarItem(placement: navigationBarTrailing) {
+                Button(
+                    action: {
+                        gearCallback()
+                    },
+                    label: {
+                        Label(
+                            "Settings",
+                            systemImage: "gear"
+                        )
+                    }
+                )
+                .safeTint(.primary)
+                .contextMenu {
+                    Button {
+                        self.outerDebug.toggle()
+                    } label: {
+                        Label("Toggle debug mode", systemImage: "hammer")
                     }
                 }
             }
+        }
     }
 }
 
@@ -480,9 +436,7 @@ struct Footer: View {
 
     @AppStateStorage(SettingsView.HARD_MODE_KEY) var isHardMode: Bool = false
 
-    #if os(iOS)
     @Environment(\.verticalSizeClass) var vsc: UserInterfaceSizeClass?
-    #endif
 
     @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY) var isSimplifiedLatvianKeyboard: Bool = false
 
@@ -523,11 +477,9 @@ struct Footer: View {
     }
 
     var isCompactVertically: Bool {
-        #if os(iOS)
         if let vsc = vsc, vsc == .compact {
             return true
         }
-        #endif
 
         return false
     }
@@ -548,9 +500,7 @@ struct Footer: View {
                         if !isCompactVertically {
                             Text("Share a summary for every game you have completed today.")
                                 .multilineTextAlignment(.center)
-                            #if os(iOS)
                                 .fixedSize(horizontal: false, vertical: true)
-                            #endif
                                 .font(.caption)
                         }
                     }

@@ -1,6 +1,5 @@
 import SwiftUI
 
-#if os(iOS)
 struct UIButtonClose: UIViewRepresentable {
     let action: () -> Void
 
@@ -23,19 +22,6 @@ struct UIButtonClose: UIViewRepresentable {
     func updateUIView(_ button: UIButton, context: Context) {}
 }
 
-#elseif os(macOS)
-struct UIButtonClose: View {
-    let action: () -> Void
-
-    var body: some View {
-        Button("Close") {
-            action()
-        }
-    }
-}
-#endif
-
-#if os(iOS) || os(macOS)
 struct UIButtonClose_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
@@ -55,4 +41,3 @@ struct UIButtonClose_Previews: PreviewProvider {
         }.preferredColorScheme(.light)
     }
 }
-#endif
