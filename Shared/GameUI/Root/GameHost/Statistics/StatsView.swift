@@ -37,8 +37,8 @@ struct StatsView: View {
     @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     @Environment(\.palette) var palette: Palette
-
     @Environment(\.turnCounter) var turnCounter: TurnCounter
+    @Environment(\.now) var now: () -> Date
 
     // Timer sets this to hh:mm:ss until next word
     // TODO: duplicated with GameHostView
@@ -55,7 +55,7 @@ struct StatsView: View {
 
     /// Recalculate the hh:mm:ss string until next turn
     func recalculateNextWord() {
-        let remaining = turnCounter.remainingTtl(at: Date())
+        let remaining = turnCounter.remainingTtl(at: now())
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute, .second]
         formatter.unitsStyle = .positional

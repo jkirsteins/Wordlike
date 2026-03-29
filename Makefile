@@ -29,7 +29,7 @@ setup:
 test:
 	xcodebuild test \
 		-scheme "SimpleWordGame (iOS)" \
-		-destination 'platform=iOS Simulator,name=iPhone 16e Test' \
+		-destination 'platform=iOS Simulator,name=iPhone Air' \
 		-configuration Debug \
 		-only-testing:WordlikeTests \
 		-quiet

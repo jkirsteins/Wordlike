@@ -45,6 +45,7 @@ repos:
         language: script
         pass_filenames: false
         always_run: true
+        stages: [pre-push]
 
       - id: check-warnings
         name: Check for compiler warnings
@@ -80,11 +81,3 @@ repos:
         entry: Scripts/check-worktree-clean.sh
         pass_filenames: false
         always_run: true
-
-      - id: snapshot-tests
-        name: Run snapshot tests
-        entry: Scripts/run-snapshot-tests.sh
-        language: script
-        pass_filenames: false
-        always_run: true
-        stages: [pre-push]

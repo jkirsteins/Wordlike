@@ -3,24 +3,6 @@ import SwiftUI
 @testable import Wordlike
 import XCTest
 
-private struct FixedTurnCounter: TurnCounter {
-    func remainingTtl(at now: Date) -> TimeInterval {
-        3600
-    }
-
-    func point(_ first: Date, isInPrecedingPeriodFrom second: Date) -> Bool {
-        false
-    }
-
-    func isFresh(_ stateRef: Date, at now: Date) -> Bool {
-        true
-    }
-
-    func turnIndex(at now: Date) -> Int {
-        0
-    }
-}
-
 final class StatsViewSnapshotTests: XCTestCase {
     /// Lost game: all 6 rows submitted, none matching expected.
     /// isCompleted == true (shows answer + link), isWon == false (no confetti).
@@ -60,7 +42,7 @@ final class StatsViewSnapshotTests: XCTestCase {
             ),
         ],
         isTallied: false,
-        date: Date()
+        date: Date(timeIntervalSince1970: 0)
     )
 
     private static let sampleStats = Stats(
@@ -68,11 +50,26 @@ final class StatsViewSnapshotTests: XCTestCase {
         guessDistribution: [0, 1, 3, 2, 1, 0], lastWinAt: nil
     )
 
+    /// Noon UTC on a fixed date - gives a deterministic 12:00:00 countdown.
+    private static let fixedNoon: Date = {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "UTC")!
+        return cal.date(
+            from: DateComponents(year: 2025, month: 6, day: 15, hour: 12)
+        )!
+    }()
+
+    private static let utcTurnCounter: TurnCounter = CalendarDailyTurnCounter(
+        start: WordValidator.MAR_22_2022,
+        cal: .gregorianUtc
+    )
+
     @MainActor
     func testStatsViewAfterLoss() {
         let view = StatsView(stats: Self.sampleStats, state: Self.lostState)
             .environment(\.palette, LightPalette2())
-            .environment(\.turnCounter, FixedTurnCounter())
+            .environment(\.turnCounter, Self.utcTurnCounter)
+            .environment(\.now) { Self.fixedNoon }
             .environment(\.locale, .init(identifier: "en_US"))
 
         let hc = UIHostingController(rootView: view)
