@@ -39,6 +39,14 @@ repos:
         # Exclude gen 0 answer files — loadRaw() depends on their exact layout
         exclude: '^Resources/[a-zA-Z-]+_A\.txt$'
 
+      - id: clean-repo
+        name: Clean working tree
+        entry: Scripts/check-repo-clean.sh
+        language: script
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+
       - id: wordlike-tests
         name: Run WordlikeTests
         entry: Scripts/run-tests.sh

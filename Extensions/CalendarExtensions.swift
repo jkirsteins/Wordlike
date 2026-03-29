@@ -1,20 +1,17 @@
-// Extensions useful for TurnCounter implementations.
-
 import SwiftUI
 
 extension Date {
-    /** Use Calendar.current because
-     we want to rollover at local-timezone midnight
-     not UTC */
+    /// Returns the start of the next day (midnight) in the given calendar.
     func startOfNextDay(in cal: Calendar) -> Date {
-        return cal.nextDate(
+        cal.nextDate(
             after: self,
-            matching: DateComponents(hour: 0, minute: 0), matchingPolicy: .nextTimePreservingSmallerComponents
+            matching: DateComponents(hour: 0, minute: 0),
+            matchingPolicy: .nextTimePreservingSmallerComponents
         )!
     }
 
     func secondsUntilTheNextDay(in cal: Calendar) -> TimeInterval {
-        return startOfNextDay(in: cal).timeIntervalSince(self)
+        startOfNextDay(in: cal).timeIntervalSince(self)
     }
 }
 
