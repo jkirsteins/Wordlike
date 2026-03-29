@@ -95,4 +95,7 @@ iOSInjectionProject/
 Config/Datadog.xcconfig
 .DS_Store
 .claude/worktrees
-.claude
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/rum-report/
