@@ -8,7 +8,7 @@ final class AnalyticsServiceTests: XCTestCase {
         mock.trackAction(name: "test.action", attributes: ["key": "value"])
         XCTAssertEqual(mock.trackedActions.count, 1)
         XCTAssertEqual(mock.trackedActions[0].name, "test.action")
-        XCTAssertEqual(mock.trackedActions[0].attributes["key"], "value")
+        XCTAssertEqual(mock.trackedActions[0].attributes["key"] as? String, "value")
     }
 
     func testMockRecordsErrors() {
@@ -17,7 +17,7 @@ final class AnalyticsServiceTests: XCTestCase {
         XCTAssertEqual(mock.trackedErrors.count, 1)
         XCTAssertEqual(mock.trackedErrors[0].message, "Something failed")
         XCTAssertEqual(mock.trackedErrors[0].source, "test")
-        XCTAssertEqual(mock.trackedErrors[0].attributes["code"], "500")
+        XCTAssertEqual(mock.trackedErrors[0].attributes["code"] as? String, "500")
     }
 
     func testHasActionHelper() {

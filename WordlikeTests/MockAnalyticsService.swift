@@ -3,13 +3,13 @@ import Foundation
 
 struct TrackedAction {
     let name: String
-    let attributes: [String: String]
+    let attributes: [String: any Encodable]
 }
 
 struct TrackedError {
     let message: String
     let source: String
-    let attributes: [String: String]
+    let attributes: [String: any Encodable]
 }
 
 final class MockAnalyticsService: AnalyticsService, @unchecked Sendable {
@@ -24,11 +24,11 @@ final class MockAnalyticsService: AnalyticsService, @unchecked Sendable {
         _trackedErrors
     }
 
-    func trackAction(name: String, attributes: [String: String]) {
+    func trackAction(name: String, attributes: [String: any Encodable]) {
         _trackedActions.append(TrackedAction(name: name, attributes: attributes))
     }
 
-    func trackError(message: String, source: String, attributes: [String: String]) {
+    func trackError(message: String, source: String, attributes: [String: any Encodable]) {
         _trackedErrors.append(TrackedError(message: message, source: source, attributes: attributes))
     }
 

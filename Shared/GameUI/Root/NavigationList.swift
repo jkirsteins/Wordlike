@@ -381,9 +381,19 @@ struct NavigationList: View {
                                     .environment(\.debug, outerDebug || envDebug)
                                     .environment(\.palette, palette)
                                     .onAppear {
+                                        var attrs: [String: any Encodable] = [
+                                            "game_locale": gameLoc.fileBaseName,
+                                        ]
+                                        if !DatadogSetup.hasTrackedFirstInteraction {
+                                            DatadogSetup.hasTrackedFirstInteraction = true
+                                            let elapsedMs = Int(
+                                                Date().timeIntervalSince(DatadogSetup.launchDate) * 1000
+                                            )
+                                            attrs["time_to_first_interaction_ms"] = elapsedMs
+                                        }
                                         Analytics.shared.trackAction(
                                             name: "language.switched",
-                                            attributes: ["game_locale": gameLoc.fileBaseName]
+                                            attributes: attrs
                                         )
                                     }
                                 }

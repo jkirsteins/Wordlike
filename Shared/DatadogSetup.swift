@@ -6,7 +6,17 @@ import Foundation
 
 @MainActor
 enum DatadogSetup {
+    private(set) static var launchDate = Date()
+    static var hasTrackedFirstInteraction = false
+
     static func initialize() {
+        // Force lazy static initialization at launch time
+        _ = launchDate
+
+        let analyticsEnabled = UserDefaults.standard.object(
+            forKey: SettingsView.ANALYTICS_ENABLED_KEY
+        ) as? Bool ?? true
+
         guard let clientToken = Bundle.main.infoDictionary?["DatadogClientToken"] as? String,
               let applicationID = Bundle.main.infoDictionary?["DatadogApplicationID"] as? String,
               let site = Bundle.main.infoDictionary?["DatadogSite"] as? String,
@@ -29,7 +39,7 @@ enum DatadogSetup {
                 site: datadogSite(from: site),
                 service: "wordlike"
             ),
-            trackingConsent: .granted
+            trackingConsent: analyticsEnabled ? .granted : .notGranted
         )
 
         RUM.enable(

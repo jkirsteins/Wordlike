@@ -262,12 +262,12 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                  we can show some messages while
                  the tiles are finishing animating. */
 
-                let durationSeconds: String? = dailyState.firstSubmissionDate.map {
-                    "\(Int(Date().timeIntervalSince($0)))"
+                let durationSeconds: Int? = dailyState.firstSubmissionDate.map {
+                    Int(Date().timeIntervalSince($0))
                 }
 
                 if !newState.isWon {
-                    var attrs = ["game_locale": locale.fileBaseName]
+                    var attrs: [String: any Encodable] = ["game_locale": locale.fileBaseName]
                     if let dur = durationSeconds { attrs["game.duration_seconds"] = dur }
                     Analytics.shared.trackAction(
                         name: "game.lost",
@@ -276,7 +276,7 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                     // When losing, show the word
                     toastMessageCenter.set(LocalizedStringKey(dailyState.expected.displayValue))
                 } else {
-                    var attrs = [
+                    var attrs: [String: any Encodable] = [
                         "game_locale": locale.fileBaseName,
                         "attempts": "\(newState.submittedRows)",
                     ]

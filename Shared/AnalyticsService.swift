@@ -2,17 +2,17 @@ import DatadogRUM
 import Foundation
 
 protocol AnalyticsService: Sendable {
-    func trackAction(name: String, attributes: [String: String])
-    func trackError(message: String, source: String, attributes: [String: String])
+    func trackAction(name: String, attributes: [String: any Encodable])
+    func trackError(message: String, source: String, attributes: [String: any Encodable])
 }
 
 struct NoOpAnalyticsService: AnalyticsService {
-    func trackAction(name: String, attributes: [String: String]) {}
-    func trackError(message: String, source: String, attributes: [String: String]) {}
+    func trackAction(name: String, attributes: [String: any Encodable]) {}
+    func trackError(message: String, source: String, attributes: [String: any Encodable]) {}
 }
 
 struct DatadogAnalyticsService: AnalyticsService {
-    func trackAction(name: String, attributes: [String: String]) {
+    func trackAction(name: String, attributes: [String: any Encodable]) {
         RUMMonitor.shared().addAction(
             type: .custom,
             name: name,
@@ -20,7 +20,7 @@ struct DatadogAnalyticsService: AnalyticsService {
         )
     }
 
-    func trackError(message: String, source: String, attributes: [String: String]) {
+    func trackError(message: String, source: String, attributes: [String: any Encodable]) {
         var attrs = attributes
         attrs["error.source"] = source
         RUMMonitor.shared().addError(

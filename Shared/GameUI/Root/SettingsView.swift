@@ -1,3 +1,4 @@
+import DatadogCore
 import DatadogRUM
 import SwiftUI
 import UniformTypeIdentifiers
@@ -34,6 +35,7 @@ struct SettingsView: View {
     static let SIMPLIFIED_LATVIAN_KEYBOARD_KEY = "cfg.isSimplifiedLatvianKeyboard"
     static let HARD_MODE_KEY = "cfg.isHardMode"
     static let HIDE_FIRST_ROW_KEY = "cfg.hideFirstRow"
+    static let ANALYTICS_ENABLED_KEY = "cfg.analyticsEnabled"
 
     @Environment(\.debug) var debug: Bool
 
@@ -46,6 +48,8 @@ struct SettingsView: View {
     @AppStateStorage(SettingsView.HIDE_FIRST_ROW_KEY) var shouldHideFirstRow: Bool = false
 
     @AppStateStorage(SettingsView.HARD_MODE_KEY) var isHardMode: Bool = false
+
+    @AppStateStorage(SettingsView.ANALYTICS_ENABLED_KEY) var isAnalyticsEnabled: Bool = true
 
     @AppStateStorage("turnState.en") var dailyStateEn: DailyState? = nil
 
@@ -131,6 +135,21 @@ struct SettingsView: View {
                 Spacer()
                 Button("Import") { showImportConfirm = true }
                     .frame(minWidth: Self.minRightWidth)
+            }
+        }
+    }
+
+    var analyticsSettings: some View {
+        HStack {
+            Toggle(isOn: $isAnalyticsEnabled) {
+                VStack(alignment: .leading) {
+                    Text("Analytics")
+                    Text("Help improve Wordlike by sending anonymous usage data.")
+                        .font(.caption)
+                }
+            }
+            .onChange(of: isAnalyticsEnabled) { newValue in
+                Datadog.set(trackingConsent: newValue ? .granted : .notGranted)
             }
         }
     }
@@ -378,6 +397,10 @@ struct SettingsView: View {
 
             Divider()
 
+            analyticsSettings
+
+            Divider()
+
             feedbackSettings
 
             Divider()
@@ -411,11 +434,21 @@ struct SettingsView: View {
                 } catch {
                     importSuccess = false
                     importMessage = NSLocalizedString("Could not import stats. The file may be invalid.", comment: "")
+                    Analytics.shared.trackError(
+                        message: "Stats import failed: \(error.localizedDescription)",
+                        source: "stats_import",
+                        attributes: ["error_type": String(describing: type(of: error))]
+                    )
                 }
                 showImportAlert = true
-            case .failure:
+            case let .failure(error):
                 importSuccess = false
                 importMessage = NSLocalizedString("Could not import stats. The file may be invalid.", comment: "")
+                Analytics.shared.trackError(
+                    message: "Stats file picker failed: \(error.localizedDescription)",
+                    source: "stats_import",
+                    attributes: ["error_type": String(describing: type(of: error))]
+                )
                 showImportAlert = true
             }
         }
