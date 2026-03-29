@@ -19,7 +19,8 @@ setup:
 	fi
 	@if command -v pre-commit >/dev/null 2>&1; then \
 		pre-commit install; \
-		echo "Pre-commit hooks installed."; \
+		pre-commit install --hook-type pre-push; \
+		echo "Pre-commit and pre-push hooks installed."; \
 	else \
 		echo "warning: pre-commit not found. Install with: brew install pre-commit"; \
 	fi
@@ -28,7 +29,7 @@ setup:
 test:
 	xcodebuild test \
 		-scheme "SimpleWordGame (iOS)" \
-		-destination 'platform=macOS,variant=Mac Catalyst' \
+		-destination 'platform=iOS Simulator,name=iPhone 16e Test' \
 		-configuration Debug \
 		-only-testing:WordlikeTests \
 		-quiet

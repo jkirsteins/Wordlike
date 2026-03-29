@@ -99,6 +99,7 @@ struct StatsView: View {
 
                         if let defUrl = state.expected.word.displayValue.definitionUrl(in: state.expected.locale) {
                             Link("See definition", destination: defUrl)
+                                .tint(palette.rightPlaceFill)
                         }
                     }
                 }
