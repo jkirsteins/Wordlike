@@ -99,3 +99,5 @@ Config/Datadog.xcconfig
 !.claude/skills/
 .claude/skills/*
 !.claude/skills/rum-report/
+
+.hotcoldplans/

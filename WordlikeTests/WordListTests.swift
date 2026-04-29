@@ -66,6 +66,20 @@ final class WordListTests: XCTestCase {
         XCTAssertEqual(word, "PLOMB")
     }
 
+    /// TDD anchor for the iOS<->web parity bug on 2026-04-28 (lv).
+    /// iOS is ground truth; this snapshot pins iOS's current answer so that
+    /// any drift in iOS-side word-selection is caught, and so the web side
+    /// has a known target value to converge on.
+    func testLvWordOnApr28_2026() throws {
+        let counter = DailyTurnCounter(start: WordValidator.MAR_22_2022)
+        let date = try XCTUnwrap(Calendar.current.date(from: DateComponents(year: 2026, month: 4, day: 28)))
+        let ti = counter.turnIndex(at: date, in: .current)
+
+        let answers = WordValidator.loadAnswers(seed: 14_384_982_345, locale: .lv_LV(simplified: false))
+        let word = answers[ti % answers.count]
+        XCTAssertEqual(word, "STOPS")
+    }
+
     // MARK: - Answer words must be guessable
 
     func testAllAnswerWordsAreInGuessDictionary() {
