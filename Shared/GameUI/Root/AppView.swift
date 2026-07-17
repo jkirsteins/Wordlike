@@ -39,9 +39,6 @@ struct AppView: View {
     @State var shareItems: [UIActivityItemSource] = []
 
     let listedLocales: [Locale] = [
-        .en_US,
-        .en_GB,
-        .fr_FR,
         .lv_LV,
     ]
 
@@ -115,7 +112,17 @@ struct AppView: View {
                             return "\(flag) \(tries)\(isHardMode ? "*" : " ")\t\(rowSnippet)"
                         }.filter { $0 != nil }.map { $0! }
 
-                        guard !lines.isEmpty else {
+                        var allLines = lines
+                        if Daily18Storage.isFinishedToday(),
+                           let daily18 = Daily18Storage.storedState()
+                        {
+                            let squares = Daily18Share
+                                .squares(for: daily18.marks)
+                                .replacingOccurrences(of: "\n", with: " ")
+                            allLines.append("🇱🇻 \(daily18.score)/18\t\(squares)")
+                        }
+
+                        guard !allLines.isEmpty else {
                             return
                         }
 
@@ -124,7 +131,7 @@ struct AppView: View {
                         self.shareItems = [
                             ShareableString(
                                 (
-                                    ["\(title) \(day)", ""] + lines
+                                    ["\(title) \(day)", ""] + allLines
                                 ).joined(separator: "\n") + "\n"
                             ),
                         ]

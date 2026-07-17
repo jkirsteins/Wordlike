@@ -487,6 +487,10 @@ struct Footer: View {
     }
 
     var isSharingDisabled: Bool {
+        if Daily18Storage.isFinishedToday() {
+            return false
+        }
+
         for loc in Locale.supportedLocales {
             guard let gl = gameLocale(loc) else {
                 continue

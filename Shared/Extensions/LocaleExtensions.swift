@@ -1,8 +1,10 @@
 import SwiftUI
 
 extension Locale {
+    /// Locales shown in the main menu. EN/GB/FR are hidden (not
+    /// removed): their code, resources, and stats remain intact.
     static var supportedLocales: [Locale] {
-        [.en_US, .en_GB, .fr_FR, .lv_LV]
+        [.lv_LV]
     }
 
     var flag: String {
