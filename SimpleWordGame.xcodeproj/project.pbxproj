@@ -83,6 +83,7 @@
 		D180000000000000000002F /* Daily18StorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D180000000000000000002E /* Daily18StorageTests.swift */; };
 		D18000000000000000000035 /* Daily18ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000034 /* Daily18ResultsView.swift */; };
 		D18000000000000000000037 /* Daily18StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000036 /* Daily18StatsView.swift */; };
+		D18000000000000000000039 /* Daily18Row.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000038 /* Daily18Row.swift */; };
 		E7F29BF52837DB3C005792DA /* DarkHCPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B3C2837DB3B005792DA /* DarkHCPalette.swift */; };
 		E7F29BF72837DB3C005792DA /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B3D2837DB3B005792DA /* Palette.swift */; };
 		E7F29BF92837DB3C005792DA /* _PaletteInternalTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B3E2837DB3B005792DA /* _PaletteInternalTestView.swift */; };
@@ -281,6 +282,7 @@
 		D180000000000000000002E /* Daily18StorageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Daily18StorageTests.swift; sourceTree = "<group>"; };
 		D18000000000000000000034 /* Daily18ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Daily18ResultsView.swift; sourceTree = "<group>"; };
 		D18000000000000000000036 /* Daily18StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Daily18StatsView.swift; sourceTree = "<group>"; };
+		D18000000000000000000038 /* Daily18Row.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Daily18Row.swift; sourceTree = "<group>"; };
 		E7F29B392837DB3B005792DA /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E7F29B3A2837DB3B005792DA /* gh_screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gh_screenshot.png; sourceTree = "<group>"; };
 		E7F29B3C2837DB3B005792DA /* DarkHCPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarkHCPalette.swift; sourceTree = "<group>"; };
@@ -432,6 +434,7 @@
 				D18000000000000000000032 /* Daily18GameView.swift */,
 				D18000000000000000000034 /* Daily18ResultsView.swift */,
 				D18000000000000000000036 /* Daily18StatsView.swift */,
+				D18000000000000000000038 /* Daily18Row.swift */,
 			);
 			path = Daily18;
 			sourceTree = "<group>";
@@ -1062,6 +1065,7 @@
 				E762615A28467630000A80FC /* DoubleExtensions.swift in Sources */,
 				E7F29C552837DB3D005792DA /* SettingsView.swift in Sources */,
 				E7F29C912837DB3D005792DA /* Stats.swift in Sources */,
+				D18000000000000000000039 /* Daily18Row.swift in Sources */,
 				AA1B3C4D5E6F7A8B9C0D1E4A /* StatsTransfer.swift in Sources */,
 				AA1B3C4D5E6F7A8B9C0D1E6A /* StatsFileDocument.swift in Sources */,
 				E7F29C052837DB3C005792DA /* LightPalette.swift in Sources */,
