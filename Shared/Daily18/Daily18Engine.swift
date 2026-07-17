@@ -14,6 +14,17 @@ final class Daily18Engine: ObservableObject {
     /// Increments on every rejected submission (drives the shake).
     @Published private(set) var rejectionCount = 0
 
+    /// Ticks left in the post-timeout reveal of the correct word.
+    /// While positive, input is ignored and the view shows the answer.
+    @Published private(set) var revealSecondsLeft = 0
+
+    /// How long the missed word's answer stays on screen.
+    static let revealDuration = 3
+
+    var isRevealing: Bool {
+        revealSecondsLeft > 0
+    }
+
     init(
         puzzle: Daily18Puzzle,
         state: Daily18State,
@@ -51,6 +62,7 @@ final class Daily18Engine: ObservableObject {
 
     func placeLetter(circleIndex: Int) {
         guard state.phase == .inProgress,
+              !isRevealing,
               currentScramble.indices.contains(circleIndex),
               !placed.contains(circleIndex)
         else {
@@ -65,16 +77,26 @@ final class Daily18Engine: ObservableObject {
     }
 
     func removeLast() {
-        guard state.phase == .inProgress, !placed.isEmpty else { return }
+        guard state.phase == .inProgress, !isRevealing, !placed.isEmpty else { return }
         placed.removeLast()
     }
 
     func tick(now: Date = Date()) {
         guard state.phase == .inProgress else { return }
+
+        if isRevealing {
+            revealSecondsLeft -= 1
+            if revealSecondsLeft <= 0 {
+                advance(now: now)
+            }
+            return
+        }
+
         state.remainingSeconds -= 1
         if state.remainingSeconds <= 0 {
             state.marks[state.currentIndex] = .failed
-            advance(now: now)
+            placed = []
+            revealSecondsLeft = Self.revealDuration
         }
     }
 
@@ -95,6 +117,7 @@ final class Daily18Engine: ObservableObject {
 
     private func advance(now: Date) {
         placed = []
+        revealSecondsLeft = 0
         if state.currentIndex + 1 >= wordCount {
             state.phase = .finished
             state.finishedAt = now

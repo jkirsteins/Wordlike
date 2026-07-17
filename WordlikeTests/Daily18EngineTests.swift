@@ -81,13 +81,77 @@ final class Daily18EngineTests: XCTestCase {
         XCTAssertEqual(engine.placed, [1])
     }
 
-    func testTimeoutFailsWordAndAdvances() {
+    func testTimeoutFailsWordAndRevealsBeforeAdvancing() {
         let engine = makeEngine()
         engine.start()
         for _ in 0 ..< Daily18State.timePerWord {
             engine.tick()
         }
         XCTAssertEqual(engine.state.marks[0], .failed)
+        XCTAssertTrue(engine.isRevealing)
+        XCTAssertEqual(engine.state.currentIndex, 0)
+
+        for _ in 0 ..< Daily18Engine.revealDuration {
+            engine.tick()
+        }
+        XCTAssertFalse(engine.isRevealing)
+        XCTAssertEqual(engine.state.currentIndex, 1)
+        XCTAssertEqual(engine.state.remainingSeconds, Daily18State.timePerWord)
+    }
+
+    func testInputIgnoredDuringReveal() {
+        let engine = makeEngine()
+        engine.start()
+        for _ in 0 ..< Daily18State.timePerWord {
+            engine.tick()
+        }
+        XCTAssertTrue(engine.isRevealing)
+
+        engine.placeLetter(circleIndex: 0)
+        XCTAssertTrue(engine.placed.isEmpty)
+        engine.removeLast()
+        XCTAssertTrue(engine.placed.isEmpty)
+    }
+
+    func testTimeoutOnLastWordRevealsThenFinishes() {
+        let engine = makeEngine()
+        engine.start()
+        place(engine, "SALA")
+        for _ in 0 ..< Daily18State.timePerWord {
+            engine.tick()
+        }
+        XCTAssertTrue(engine.isRevealing)
+        XCTAssertEqual(engine.state.phase, .inProgress)
+
+        for _ in 0 ..< Daily18Engine.revealDuration {
+            engine.tick()
+        }
+        XCTAssertEqual(engine.state.phase, .finished)
+        XCTAssertEqual(engine.state.score, 1)
+    }
+
+    func testResumeAfterDeathMidRevealRevealsAgainThenAdvances() {
+        // Simulates process death during the reveal: the persisted state
+        // has the failed mark and an expired timer, but currentIndex has
+        // not advanced yet. A fresh engine must not get stuck.
+        var state = Daily18State(day: 0)
+        state.marks = Array(repeating: .pending, count: 2)
+        state.phase = .inProgress
+        state.marks[0] = .failed
+        state.remainingSeconds = 0
+        let puzzle = Daily18Puzzle(
+            words: ["SALA", "MĀJA"],
+            scrambles: [["L", "A", "S", "A"], ["A", "M", "J", "Ā"]]
+        )
+        let engine = Daily18Engine(
+            puzzle: puzzle,
+            state: state,
+            isAccepted: { _ in false }
+        )
+
+        for _ in 0 ..< (1 + Daily18Engine.revealDuration) {
+            engine.tick()
+        }
         XCTAssertEqual(engine.state.currentIndex, 1)
         XCTAssertEqual(engine.state.remainingSeconds, Daily18State.timePerWord)
     }

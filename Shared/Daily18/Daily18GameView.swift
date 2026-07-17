@@ -110,7 +110,7 @@ struct Daily18GameView: View {
                     Image(systemName: "delete.left")
                         .font(.title2)
                 }
-                .disabled(engine.placed.isEmpty)
+                .disabled(engine.placed.isEmpty || engine.isRevealing)
                 .safeTint(.primary)
 
                 Spacer(minLength: 0)
@@ -126,28 +126,53 @@ struct Daily18GameView: View {
         .onChange(of: engine.rejectionCount) { _ in
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         }
+        .onChange(of: engine.revealSecondsLeft) { secondsLeft in
+            if secondsLeft == Daily18Engine.revealDuration {
+                UINotificationFeedbackGenerator().notificationOccurred(.error)
+            }
+        }
+    }
+
+    static let revealColor = Color.red.opacity(0.85)
+
+    func slotBorder(letter: String?, revealing: Bool) -> Color {
+        if revealing {
+            return Self.revealColor
+        }
+        if letter == nil {
+            return Color.secondary.opacity(0.5)
+        }
+        return palette.rightPlaceStroke
     }
 
     func slotRow(width: CGFloat) -> some View {
         let count = max(1, engine.currentScramble.count)
         let side = min(52, (width - CGFloat(count + 1) * 6) / CGFloat(count))
+        let revealing = engine.isRevealing
+        let letters: [String?] = revealing
+            ? Array(engine.currentTarget).map { String($0) }
+            : slotLetters
 
         return HStack(spacing: 6) {
-            ForEach(Array(slotLetters.enumerated()), id: \.offset) { _, letter in
+            ForEach(Array(letters.enumerated()), id: \.offset) { index, letter in
                 ZStack {
                     RoundedRectangle(cornerRadius: 6)
                         .strokeBorder(
-                            letter == nil
-                                ? Color.secondary.opacity(0.5)
-                                : palette.rightPlaceStroke,
+                            slotBorder(letter: letter, revealing: revealing),
                             lineWidth: 1.5
                         )
                     if let letter = letter {
                         Text(verbatim: letter)
                             .font(.system(size: side * 0.5, weight: .bold))
+                            .foregroundColor(revealing ? Self.revealColor : .primary)
+                            .transition(.scale.combined(with: .opacity))
                     }
                 }
                 .frame(width: side, height: side)
+                .animation(
+                    .easeOut(duration: 0.25).delay(Double(index) * 0.15),
+                    value: revealing
+                )
             }
         }
         .onTapGesture {
@@ -189,6 +214,7 @@ struct Daily18GameView: View {
             }
             .frame(width: side, height: side)
         }
-        .disabled(isUsed)
+        .disabled(isUsed || engine.isRevealing)
+        .opacity(engine.isRevealing ? 0.4 : 1)
     }
 }
