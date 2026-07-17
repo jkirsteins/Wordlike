@@ -1124,6 +1124,7 @@ mēdīt
 mērce
 mēris
 mērkt
+mērot
 mērīt
 mēsls
 mētra
