@@ -56,6 +56,17 @@
 		E7F29BE72837DB3C005792DA /* fr_G.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B342837DB3B005792DA /* fr_G.txt */; };
 		E7F29BED2837DB3C005792DA /* lv_G.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B372837DB3B005792DA /* lv_G.txt */; };
 		E7F29BEF2837DB3C005792DA /* lv_A.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7F29B382837DB3B005792DA /* lv_A.txt */; };
+		D18000000000000000000002 /* lv18_A4.txt in Resources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000001 /* lv18_A4.txt */; };
+		D18000000000000000000004 /* lv18_A5.txt in Resources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000003 /* lv18_A5.txt */; };
+		D18000000000000000000006 /* lv18_A6.txt in Resources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000005 /* lv18_A6.txt */; };
+		D18000000000000000000008 /* lv18_A7.txt in Resources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000007 /* lv18_A7.txt */; };
+		D1800000000000000000000A /* lv18_A8.txt in Resources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000009 /* lv18_A8.txt */; };
+		D1800000000000000000000C /* lv18_D4.txt in Resources */ = {isa = PBXBuildFile; fileRef = D1800000000000000000000B /* lv18_D4.txt */; };
+		D1800000000000000000000E /* lv18_D5.txt in Resources */ = {isa = PBXBuildFile; fileRef = D1800000000000000000000D /* lv18_D5.txt */; };
+		D18000000000000000000010 /* lv18_D6.txt in Resources */ = {isa = PBXBuildFile; fileRef = D1800000000000000000000F /* lv18_D6.txt */; };
+		D18000000000000000000012 /* lv18_D7.txt in Resources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000011 /* lv18_D7.txt */; };
+		D18000000000000000000014 /* lv18_D8.txt in Resources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000013 /* lv18_D8.txt */; };
+		D18000000000000000000016 /* Daily18WordListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000015 /* Daily18WordListTests.swift */; };
 		E7F29BF52837DB3C005792DA /* DarkHCPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B3C2837DB3B005792DA /* DarkHCPalette.swift */; };
 		E7F29BF72837DB3C005792DA /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B3D2837DB3B005792DA /* Palette.swift */; };
 		E7F29BF92837DB3C005792DA /* _PaletteInternalTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B3E2837DB3B005792DA /* _PaletteInternalTestView.swift */; };
@@ -227,6 +238,17 @@
 		E7F29B362837DB3B005792DA /* british_spellings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = british_spellings.json; sourceTree = "<group>"; };
 		E7F29B372837DB3B005792DA /* lv_G.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv_G.txt; sourceTree = "<group>"; };
 		E7F29B382837DB3B005792DA /* lv_A.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv_A.txt; sourceTree = "<group>"; };
+		D18000000000000000000001 /* lv18_A4.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv18_A4.txt; sourceTree = "<group>"; };
+		D18000000000000000000003 /* lv18_A5.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv18_A5.txt; sourceTree = "<group>"; };
+		D18000000000000000000005 /* lv18_A6.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv18_A6.txt; sourceTree = "<group>"; };
+		D18000000000000000000007 /* lv18_A7.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv18_A7.txt; sourceTree = "<group>"; };
+		D18000000000000000000009 /* lv18_A8.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv18_A8.txt; sourceTree = "<group>"; };
+		D1800000000000000000000B /* lv18_D4.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv18_D4.txt; sourceTree = "<group>"; };
+		D1800000000000000000000D /* lv18_D5.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv18_D5.txt; sourceTree = "<group>"; };
+		D1800000000000000000000F /* lv18_D6.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv18_D6.txt; sourceTree = "<group>"; };
+		D18000000000000000000011 /* lv18_D7.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv18_D7.txt; sourceTree = "<group>"; };
+		D18000000000000000000013 /* lv18_D8.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lv18_D8.txt; sourceTree = "<group>"; };
+		D18000000000000000000015 /* Daily18WordListTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Daily18WordListTests.swift; sourceTree = "<group>"; };
 		E7F29B392837DB3B005792DA /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E7F29B3A2837DB3B005792DA /* gh_screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gh_screenshot.png; sourceTree = "<group>"; };
 		E7F29B3C2837DB3B005792DA /* DarkHCPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarkHCPalette.swift; sourceTree = "<group>"; };
@@ -351,6 +373,7 @@
 			isa = PBXGroup;
 			children = (
 				3965C6264DE72A75AACC4F40 /* WordListTests.swift */,
+				D18000000000000000000015 /* Daily18WordListTests.swift */,
 				DD1A2B3C4D5E6F7A8B9C0D09 /* MockAnalyticsService.swift */,
 				DD1A2B3C4D5E6F7A8B9C0D0B /* AnalyticsServiceTests.swift */,
 				DD1A2B3C4D5E6F7A8B9C0D1F /* StatsViewSnapshotTests.swift */,
@@ -470,6 +493,16 @@
 				E7F29B362837DB3B005792DA /* british_spellings.json */,
 				E7F29B372837DB3B005792DA /* lv_G.txt */,
 				E7F29B382837DB3B005792DA /* lv_A.txt */,
+				D18000000000000000000001 /* lv18_A4.txt */,
+				D18000000000000000000003 /* lv18_A5.txt */,
+				D18000000000000000000005 /* lv18_A6.txt */,
+				D18000000000000000000007 /* lv18_A7.txt */,
+				D18000000000000000000009 /* lv18_A8.txt */,
+				D1800000000000000000000B /* lv18_D4.txt */,
+				D1800000000000000000000D /* lv18_D5.txt */,
+				D1800000000000000000000F /* lv18_D6.txt */,
+				D18000000000000000000011 /* lv18_D7.txt */,
+				D18000000000000000000013 /* lv18_D8.txt */,
 				E736C9B3283FE64A001F2C2C /* Localizable.strings */,
 				E762614B28400839000A80FC /* InfoPlist.strings */,
 				696502C42459128E8BD9E688 /* lv_A_1.txt */,
@@ -808,6 +841,16 @@
 				E7F29BE32837DB3C005792DA /* fr_A.txt in Resources */,
 				E762614828400839000A80FC /* InfoPlist.strings in Resources */,
 				E7F29BEF2837DB3C005792DA /* lv_A.txt in Resources */,
+				D18000000000000000000002 /* lv18_A4.txt in Resources */,
+				D18000000000000000000004 /* lv18_A5.txt in Resources */,
+				D18000000000000000000006 /* lv18_A6.txt in Resources */,
+				D18000000000000000000008 /* lv18_A7.txt in Resources */,
+				D1800000000000000000000A /* lv18_A8.txt in Resources */,
+				D1800000000000000000000C /* lv18_D4.txt in Resources */,
+				D1800000000000000000000E /* lv18_D5.txt in Resources */,
+				D18000000000000000000010 /* lv18_D6.txt in Resources */,
+				D18000000000000000000012 /* lv18_D7.txt in Resources */,
+				D18000000000000000000014 /* lv18_D8.txt in Resources */,
 				E7F29BD32837DB3C005792DA /* en-GB_G.txt in Resources */,
 				E7626157284022F7000A80FC /* GB.pdf in Resources */,
 				E7F29BDB2837DB3C005792DA /* en-GB_A.txt in Resources */,
@@ -852,6 +895,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03D30B87D0FD66F0A0EFD682 /* WordListTests.swift in Sources */,
+				D18000000000000000000016 /* Daily18WordListTests.swift in Sources */,
 				DD1A2B3C4D5E6F7A8B9C0D0A /* MockAnalyticsService.swift in Sources */,
 				DD1A2B3C4D5E6F7A8B9C0D0C /* AnalyticsServiceTests.swift in Sources */,
 				DD1A2B3C4D5E6F7A8B9C0D20 /* StatsViewSnapshotTests.swift in Sources */,
