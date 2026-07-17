@@ -7,7 +7,7 @@ struct Daily18ProgressCaption: View {
     @Environment(\.palette) var palette: Palette
 
     var caption: (Text, Color) {
-        let today = Daily18Storage.makeTurnCounter().turnIndex(at: Date())
+        let today = max(0, Daily18Storage.makeTurnCounter().turnIndex(at: Date()))
 
         guard storedState.day == today, storedState.phase != .notStarted else {
             return (Text("Not started"), Color.primary)

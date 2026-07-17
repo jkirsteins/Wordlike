@@ -22,6 +22,6 @@ enum Daily18Storage {
     static func isFinishedToday(at now: Date = Date()) -> Bool {
         guard let state = storedState() else { return false }
         return state.phase == .finished
-            && state.day == makeTurnCounter().turnIndex(at: now)
+            && state.day == max(0, makeTurnCounter().turnIndex(at: now))
     }
 }

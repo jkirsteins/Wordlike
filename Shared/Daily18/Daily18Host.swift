@@ -50,14 +50,21 @@ struct Daily18Host: View {
                     engine: engine,
                     turnCounter: turnCounter,
                     storedState: $storedState,
-                    stats: $stats
+                    stats: $stats,
+                    onStale: {
+                        loader.engine = nil
+                        loader.load(
+                            day: max(0, turnCounter.turnIndex(at: Date())),
+                            resuming: nil
+                        )
+                    }
                 )
             } else {
                 ProgressView()
             }
         }
         .onAppear {
-            let today = turnCounter.turnIndex(at: Date())
+            let today = max(0, turnCounter.turnIndex(at: Date()))
             loader.load(
                 day: today,
                 resuming: storedState.day == today ? storedState : nil
@@ -76,6 +83,10 @@ struct Daily18FlowView: View {
     @Binding var storedState: Daily18State
     @Binding var stats: Daily18Stats
 
+    /// Called instead of starting when the day has rolled over while the
+    /// pre-game screen was open, so the host can reload today's puzzle.
+    let onStale: () -> Void
+
     var body: some View {
         Group {
             switch engine.state.phase {
@@ -83,6 +94,11 @@ struct Daily18FlowView: View {
                 Daily18PreGameView(
                     day: engine.state.day,
                     startAction: {
+                        let now = max(0, turnCounter.turnIndex(at: Date()))
+                        guard now == engine.state.day else {
+                            onStale()
+                            return
+                        }
                         engine.start()
                         Analytics.shared.trackAction(
                             name: "game.started",
@@ -105,10 +121,13 @@ struct Daily18FlowView: View {
         .onReceive(engine.$state) { newState in
             storedState = newState
 
-            if newState.phase == .finished, !newState.isTallied {
+            if newState.phase == .finished, !newState.isTallied,
+               stats.lastTalliedDay != newState.day
+            {
                 let score = newState.score
                 stats = stats.update(
                     score: score,
+                    day: newState.day,
                     finishedAt: newState.finishedAt ?? Date(),
                     with: turnCounter
                 )

@@ -11,7 +11,7 @@ struct Daily18ProgressGrid: View {
         case .solved:
             return palette.rightPlaceFill
         case .failed:
-            return palette.wrongLetterFill
+            return Color.red.opacity(0.85)
         case .pending:
             return palette.wrongLetterFill.opacity(0.3)
         }
@@ -53,7 +53,7 @@ struct Daily18GameView: View {
 
     @Environment(\.palette) var palette: Palette
 
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var slotLetters: [String?] {
         let scramble = engine.currentScramble

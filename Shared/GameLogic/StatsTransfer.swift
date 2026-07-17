@@ -19,6 +19,11 @@ struct StatsExportDocument: Codable {
 }
 
 enum StatsTransfer {
+    /// Locales included in export/import. Deliberately broader than
+    /// `Locale.supportedLocales` (menu-visible locales only) so that
+    /// hidden EN/GB/FR Wordle stats and turn states still round-trip.
+    private static let exportLocales: [Locale] = [.en_US, .en_GB, .fr_FR, .lv_LV]
+
     private static var dateFormatter: DateFormatter {
         let f = DateFormatter()
         f.dateFormat = "yyyy-MM-dd"
@@ -30,7 +35,7 @@ enum StatsTransfer {
     static func buildExport() -> StatsExportDocument {
         var exportStats: [String: ExportableStats] = [:]
 
-        for locale in Locale.supportedLocales {
+        for locale in exportLocales {
             let key = "stats.\(locale.fileBaseName)"
             guard let raw = UserDefaults.standard.string(forKey: key),
                   let stats = Stats(rawValue: raw),
@@ -49,7 +54,7 @@ enum StatsTransfer {
         }
 
         var turnStates: [String: DailyState] = [:]
-        for locale in Locale.supportedLocales {
+        for locale in exportLocales {
             let key = "turnState.\(locale.fileBaseName)"
             if let raw = UserDefaults.standard.string(forKey: key),
                let state = DailyState(rawValue: raw),

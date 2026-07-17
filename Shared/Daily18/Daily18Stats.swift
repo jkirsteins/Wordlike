@@ -11,6 +11,10 @@ struct Daily18Stats: RawRepresentable {
     let maxTrophyStreak: Int
     let perfectDays: Int
     let lastTrophyAt: Date?
+    /// Day index of the last tally applied, guarding against
+    /// double-counting if the process dies between updating stats and
+    /// marking the engine state tallied.
+    let lastTalliedDay: Int?
 
     init(
         played: Int,
@@ -18,7 +22,8 @@ struct Daily18Stats: RawRepresentable {
         trophyStreak: Int,
         maxTrophyStreak: Int,
         perfectDays: Int,
-        lastTrophyAt: Date?
+        lastTrophyAt: Date?,
+        lastTalliedDay: Int?
     ) {
         self.played = played
         self.scoreDistribution = scoreDistribution
@@ -26,6 +31,7 @@ struct Daily18Stats: RawRepresentable {
         self.maxTrophyStreak = maxTrophyStreak
         self.perfectDays = perfectDays
         self.lastTrophyAt = lastTrophyAt
+        self.lastTalliedDay = lastTalliedDay
     }
 
     init() {
@@ -35,9 +41,10 @@ struct Daily18Stats: RawRepresentable {
         self.maxTrophyStreak = 0
         self.perfectDays = 0
         self.lastTrophyAt = nil
+        self.lastTalliedDay = nil
     }
 
-    func update(score: Int, finishedAt: Date, with counter: TurnCounter) -> Daily18Stats {
+    func update(score: Int, day: Int, finishedAt: Date, with counter: TurnCounter) -> Daily18Stats {
         let isTrophy = score >= Self.trophyThreshold
 
         let streakable: Bool
@@ -64,7 +71,8 @@ struct Daily18Stats: RawRepresentable {
             trophyStreak: newStreak,
             maxTrophyStreak: max(newStreak, maxTrophyStreak),
             perfectDays: perfectDays + (score == Daily18State.wordCount ? 1 : 0),
-            lastTrophyAt: isTrophy ? finishedAt : lastTrophyAt
+            lastTrophyAt: isTrophy ? finishedAt : lastTrophyAt,
+            lastTalliedDay: day
         )
     }
 
@@ -110,6 +118,7 @@ extension Daily18Stats: Codable, Equatable {
         case maxTrophyStreak
         case perfectDays
         case lastTrophyAt
+        case lastTalliedDay
     }
 
     init(from decoder: Decoder) throws {
@@ -120,6 +129,7 @@ extension Daily18Stats: Codable, Equatable {
         self.maxTrophyStreak = try values.decode(Int.self, forKey: .maxTrophyStreak)
         self.perfectDays = try values.decode(Int.self, forKey: .perfectDays)
         self.lastTrophyAt = try values.decodeIfPresent(Date.self, forKey: .lastTrophyAt)
+        self.lastTalliedDay = try values.decodeIfPresent(Int.self, forKey: .lastTalliedDay)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -130,6 +140,7 @@ extension Daily18Stats: Codable, Equatable {
         try container.encode(maxTrophyStreak, forKey: .maxTrophyStreak)
         try container.encode(perfectDays, forKey: .perfectDays)
         try container.encodeIfPresent(lastTrophyAt, forKey: .lastTrophyAt)
+        try container.encodeIfPresent(lastTalliedDay, forKey: .lastTalliedDay)
     }
 }
 
