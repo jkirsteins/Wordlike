@@ -163,3 +163,7 @@
 
 "Top %lld%% of players today" = "Šodien esi starp labākajiem %lld%% spēlētāju";
 "No trophy earned today" = "Šodien trofeja nav nopelnīta";
+
+"Word %lld of 18" = "Vārds %lld no 18";
+"Play" = "Spēlēt";
+"You found %lld of 18 words!" = "Tu atradi %lld no 18 vārdiem!";

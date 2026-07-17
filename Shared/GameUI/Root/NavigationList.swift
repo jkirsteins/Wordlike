@@ -168,8 +168,6 @@ struct ProgressLabel: View {
             Text(caption.0)
                 .font(.caption)
                 .foregroundColor(caption.1)
-        } else {
-            EmptyView()
         }
     }
 }

@@ -164,3 +164,7 @@
 
 "Top %lld%% of players today" = "Top %lld %% des joueurs aujourd'hui";
 "No trophy earned today" = "Pas de trophée aujourd'hui";
+
+"Word %lld of 18" = "Mot %lld sur 18";
+"Play" = "Jouer";
+"You found %lld of 18 words!" = "Vous avez trouvé %lld mots sur 18 !";
