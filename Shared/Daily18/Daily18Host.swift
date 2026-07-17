@@ -95,7 +95,11 @@ struct Daily18FlowView: View {
             case .inProgress:
                 Daily18GameView(engine: engine)
             case .finished:
-                Daily18ResultsPlaceholder(state: engine.state)
+                Daily18ResultsView(
+                    state: engine.state,
+                    stats: stats,
+                    turnCounter: turnCounter
+                )
             }
         }
         .onReceive(engine.$state) { newState in
@@ -155,27 +159,6 @@ struct Daily18PreGameView: View {
             .buttonStyle(.borderedProminent)
 
             Spacer()
-        }
-    }
-}
-
-/// Temporary results screen; replaced by Daily18ResultsView in a
-/// follow-up task.
-struct Daily18ResultsPlaceholder: View {
-    let state: Daily18State
-
-    var body: some View {
-        VStack(spacing: 16) {
-            Daily18ProgressGrid(marks: state.marks)
-                .frame(maxWidth: 280)
-            Text(
-                String(
-                    format: NSLocalizedString("You found %lld of 18 words!", comment: ""),
-                    state.score
-                )
-            )
-            .font(.title2)
-            .fontWeight(.bold)
         }
     }
 }

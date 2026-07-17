@@ -168,3 +168,10 @@
 "Word %lld of 18" = "Mot %lld sur 18";
 "Play" = "Jouer";
 "You found %lld of 18 words!" = "Vous avez trouvé %lld mots sur 18 !";
+
+"Share score" = "Partager le score";
+"Challenge friend" = "Défier un ami";
+"Next puzzle in %@" = "Prochain puzzle dans %@";
+"Trophy streak" = "Série de trophées";
+"Perfect days" = "Jours parfaits";
+"Max streak" = "Série max";

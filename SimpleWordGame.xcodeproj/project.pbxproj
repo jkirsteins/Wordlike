@@ -81,6 +81,8 @@
 		D18000000000000000000033 /* Daily18GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000032 /* Daily18GameView.swift */; };
 		D1800000000000000000002A /* Daily18ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1800000000000000000002B /* Daily18ShareTests.swift */; };
 		D180000000000000000002F /* Daily18StorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D180000000000000000002E /* Daily18StorageTests.swift */; };
+		D18000000000000000000035 /* Daily18ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000034 /* Daily18ResultsView.swift */; };
+		D18000000000000000000037 /* Daily18StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18000000000000000000036 /* Daily18StatsView.swift */; };
 		E7F29BF52837DB3C005792DA /* DarkHCPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B3C2837DB3B005792DA /* DarkHCPalette.swift */; };
 		E7F29BF72837DB3C005792DA /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B3D2837DB3B005792DA /* Palette.swift */; };
 		E7F29BF92837DB3C005792DA /* _PaletteInternalTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F29B3E2837DB3B005792DA /* _PaletteInternalTestView.swift */; };
@@ -277,6 +279,8 @@
 		D18000000000000000000032 /* Daily18GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Daily18GameView.swift; sourceTree = "<group>"; };
 		D1800000000000000000002B /* Daily18ShareTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Daily18ShareTests.swift; sourceTree = "<group>"; };
 		D180000000000000000002E /* Daily18StorageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Daily18StorageTests.swift; sourceTree = "<group>"; };
+		D18000000000000000000034 /* Daily18ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Daily18ResultsView.swift; sourceTree = "<group>"; };
+		D18000000000000000000036 /* Daily18StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Daily18StatsView.swift; sourceTree = "<group>"; };
 		E7F29B392837DB3B005792DA /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E7F29B3A2837DB3B005792DA /* gh_screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gh_screenshot.png; sourceTree = "<group>"; };
 		E7F29B3C2837DB3B005792DA /* DarkHCPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarkHCPalette.swift; sourceTree = "<group>"; };
@@ -426,6 +430,8 @@
 				D180000000000000000002C /* Daily18Storage.swift */,
 				D18000000000000000000030 /* Daily18Host.swift */,
 				D18000000000000000000032 /* Daily18GameView.swift */,
+				D18000000000000000000034 /* Daily18ResultsView.swift */,
+				D18000000000000000000036 /* Daily18StatsView.swift */,
 			);
 			path = Daily18;
 			sourceTree = "<group>";
@@ -970,6 +976,8 @@
 				D180000000000000000002D /* Daily18Storage.swift in Sources */,
 				D18000000000000000000031 /* Daily18Host.swift in Sources */,
 				D18000000000000000000033 /* Daily18GameView.swift in Sources */,
+				D18000000000000000000035 /* Daily18ResultsView.swift in Sources */,
+				D18000000000000000000037 /* Daily18StatsView.swift in Sources */,
 				E7F29C212837DB3C005792DA /* GameLocale.swift in Sources */,
 				E7F29C872837DB3D005792DA /* TurnCounter.swift in Sources */,
 				E7F29C892837DB3D005792DA /* CalendarDailyTurnCounter.swift in Sources */,
