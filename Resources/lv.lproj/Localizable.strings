@@ -158,5 +158,8 @@
 "Analytics" = "Analītika";
 "Help improve Wordlike by sending anonymous usage data." = "Palīdziet uzlabot Wordlike, nosūtot anonīmus lietošanas datus.";
 
+"%lld/18 words found" = "Atrasti %lld/18 vārdi";
+"Can you beat my score?" = "Vai vari pārspēt manu rezultātu?";
+
 "Top %lld%% of players today" = "Šodien esi starp labākajiem %lld%% spēlētāju";
 "No trophy earned today" = "Šodien trofeja nav nopelnīta";

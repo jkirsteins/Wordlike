@@ -159,5 +159,8 @@
 "Analytics" = "Analyse des données";
 "Help improve Wordlike by sending anonymous usage data." = "Contribuez à améliorer Wordlike en envoyant des données d'utilisation anonymes.";
 
+"%lld/18 words found" = "%lld/18 mots trouvés";
+"Can you beat my score?" = "Peux-tu battre mon score ?";
+
 "Top %lld%% of players today" = "Top %lld %% des joueurs aujourd'hui";
 "No trophy earned today" = "Pas de trophée aujourd'hui";
