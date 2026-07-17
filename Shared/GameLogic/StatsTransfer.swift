@@ -14,6 +14,8 @@ struct StatsExportDocument: Codable {
     let exportDate: String
     let stats: [String: ExportableStats]
     let turnStates: [String: DailyState]?
+    let daily18Stats: Daily18Stats?
+    let daily18State: Daily18State?
 }
 
 enum StatsTransfer {
@@ -57,11 +59,26 @@ enum StatsTransfer {
             }
         }
 
+        var daily18Stats: Daily18Stats?
+        if let raw = UserDefaults.standard.string(forKey: Daily18Storage.statsKey),
+           let parsed = Daily18Stats(rawValue: raw),
+           parsed.played > 0
+        {
+            daily18Stats = parsed
+        }
+
+        var daily18State: Daily18State?
+        if let state = Daily18Storage.storedState(), state.phase == .finished {
+            daily18State = state
+        }
+
         return StatsExportDocument(
             version: 1,
             exportDate: dateFormatter.string(from: Date()),
             stats: exportStats,
-            turnStates: turnStates.isEmpty ? nil : turnStates
+            turnStates: turnStates.isEmpty ? nil : turnStates,
+            daily18Stats: daily18Stats,
+            daily18State: daily18State
         )
     }
 
@@ -95,6 +112,22 @@ enum StatsTransfer {
                 guard Calendar.current.isDateInToday(dailyState.date) else { continue }
                 UserDefaults.standard.set(dailyState.rawValue, forKey: "turnState.\(localeKey)")
             }
+        }
+
+        if let daily18Stats = document.daily18Stats {
+            UserDefaults.standard.set(
+                daily18Stats.rawValue,
+                forKey: Daily18Storage.statsKey
+            )
+        }
+
+        if let daily18State = document.daily18State,
+           daily18State.day == Daily18Storage.makeTurnCounter().turnIndex(at: Date())
+        {
+            UserDefaults.standard.set(
+                daily18State.rawValue,
+                forKey: Daily18Storage.stateKey
+            )
         }
     }
 

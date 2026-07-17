@@ -100,4 +100,42 @@ final class Daily18StatsTests: XCTestCase {
         XCTAssertEqual(Daily18TrophyTier.emoji(forScore: 10), "🏅")
         XCTAssertEqual(Daily18TrophyTier.emoji(forScore: 0), "💔")
     }
+
+    func testExportIncludesDaily18() {
+        let stats = Daily18Stats().update(
+            score: 12,
+            finishedAt: Date(timeIntervalSince1970: 50),
+            with: counter
+        )
+        UserDefaults.standard.set(stats.rawValue, forKey: Daily18Storage.statsKey)
+        defer { UserDefaults.standard.removeObject(forKey: Daily18Storage.statsKey) }
+
+        let document = StatsTransfer.buildExport()
+        XCTAssertEqual(document.daily18Stats, stats)
+    }
+
+    func testImportRestoresDaily18Stats() throws {
+        UserDefaults.standard.removeObject(forKey: Daily18Storage.statsKey)
+        let stats = Daily18Stats().update(
+            score: 18,
+            finishedAt: Date(timeIntervalSince1970: 50),
+            with: counter
+        )
+        let document = StatsExportDocument(
+            version: 1,
+            exportDate: "2026-07-17",
+            stats: [:],
+            turnStates: nil,
+            daily18Stats: stats,
+            daily18State: nil
+        )
+
+        try StatsTransfer.performImport(from: document)
+        defer { UserDefaults.standard.removeObject(forKey: Daily18Storage.statsKey) }
+
+        let restored = Daily18Stats(
+            rawValue: UserDefaults.standard.string(forKey: Daily18Storage.statsKey) ?? ""
+        )
+        XCTAssertEqual(restored, stats)
+    }
 }
