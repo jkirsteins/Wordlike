@@ -86,7 +86,14 @@ struct Daily18Stats: RawRepresentable {
     }
 
     var rawValue: String {
-        guard let data = try? JSONEncoder().encode(self),
+        // `.sortedKeys` makes the JSON deterministic across separate encode
+        // calls. Without it, `Daily18Stats`'s `Equatable` conformance
+        // resolves to the stdlib's `RawRepresentable`-default `==` (which
+        // compares `rawValue` strings), and unordered JSON keys would make
+        // that comparison flaky for logically-equal values.
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        guard let data = try? encoder.encode(self),
               let string = String(data: data, encoding: .utf8)
         else {
             return "{}"
