@@ -158,3 +158,6 @@
 
 "Analytics" = "Analyse des données";
 "Help improve Wordlike by sending anonymous usage data." = "Contribuez à améliorer Wordlike en envoyant des données d'utilisation anonymes.";
+
+"Top %lld%% of players today" = "Top %lld %% des joueurs aujourd'hui";
+"No trophy earned today" = "Pas de trophée aujourd'hui";
