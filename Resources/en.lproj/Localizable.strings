@@ -158,3 +158,20 @@
 
 "Analytics" = "Analytics";
 "Help improve Wordlike by sending anonymous usage data." = "Help improve Wordlike by sending anonymous usage data.";
+
+"%lld/18 words found" = "%lld/18 words found";
+"Can you beat my score?" = "Can you beat my score?";
+
+"Top %lld%% of players today" = "Top %lld%% of players today";
+"No trophy earned today" = "No trophy earned today";
+
+"Word %lld of 18" = "Word %lld of 18";
+"Play" = "Play";
+"You found %lld of 18 words!" = "You found %lld of 18 words!";
+
+"Share score" = "Share score";
+"Challenge friend" = "Challenge friend";
+"Next puzzle in %@" = "Next puzzle in %@";
+"Trophy streak" = "Trophy streak";
+"Perfect days" = "Perfect days";
+"Max streak" = "Max streak";

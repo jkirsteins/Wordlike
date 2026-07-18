@@ -168,8 +168,6 @@ struct ProgressLabel: View {
             Text(caption.0)
                 .font(.caption)
                 .foregroundColor(caption.1)
-        } else {
-            EmptyView()
         }
     }
 }
@@ -407,6 +405,27 @@ struct NavigationList: View {
                         .buttonStyle(LanguageRowButtonStyle())
                     }
                 }
+
+                NavigationLink(destination: {
+                    LazyView(
+                        Daily18Host()
+                            .environment(\.palette, palette)
+                            .environment(\.debug, outerDebug || envDebug)
+                            .padding()
+                            .onAppear {
+                                Analytics.shared.trackAction(
+                                    name: "language.switched",
+                                    attributes: [
+                                        "game_locale": Daily18Host.gameLocaleAttribute,
+                                    ]
+                                )
+                            }
+                    )
+                }, label: {
+                    Daily18Row()
+                        .environment(\.gameLocale, .lv_LV(simplified: false))
+                })
+                .buttonStyle(LanguageRowButtonStyle())
             }
             .debugBorder(.red)
 
@@ -468,6 +487,10 @@ struct Footer: View {
     }
 
     var isSharingDisabled: Bool {
+        if Daily18Storage.isFinishedToday() {
+            return false
+        }
+
         for loc in Locale.supportedLocales {
             guard let gl = gameLocale(loc) else {
                 continue
