@@ -41,7 +41,9 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
     @State fileprivate var activeSheet: ActiveSheet? = nil
 
     let locale: GameLocale
-    let title: LocalizedStringKey
+    /// App name (localized via InfoPlist.strings, e.g. "Vārdulis" in Latvian).
+    /// Not the game language: the language is not what the title is about.
+    let title = Bundle.main.displayName
 
     /** Propogated via preferences from the underlying EditableRow. */
     @StateObject var toastMessageCenter = ToastMessageCenter()
@@ -78,7 +80,6 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
         )
 
         self.locale = locale
-        self.title = locale.localeDisplayName
     }
 
     /// Index of current turn (at time of invocation)
@@ -561,6 +562,10 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
         }
         .navigationTitle(title)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                CompactLogo()
+                    .accessibilityLabel(title)
+            }
             ToolbarItem(placement: leadingToolbarPlacement) {
                 Button(
                     action: {

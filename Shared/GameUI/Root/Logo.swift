@@ -111,6 +111,31 @@ private struct LatvianLogo: View {
     }
 }
 
+/// Single-row logo spelling the (localized) app name, sized for a
+/// navigation bar where there is more width than height.
+struct CompactLogo: View {
+    private static let spacing = CGFloat(2)
+    private static let maxTile = CGFloat(28)
+    private static let maxWidth = CGFloat(200)
+
+    private let letters = Array(Bundle.main.displayName).map { String($0) }
+
+    private var tileSize: CGFloat {
+        let count = CGFloat(max(letters.count, 1))
+        let fit = (Self.maxWidth - Self.spacing * (count - 1)) / count
+        return min(Self.maxTile, fit)
+    }
+
+    var body: some View {
+        HStack(spacing: Self.spacing) {
+            ForEach(Array(letters.enumerated()), id: \.offset) { item in
+                AgitatedTile(item.element)
+                    .frame(width: tileSize, height: tileSize)
+            }
+        }
+    }
+}
+
 struct Logo: View {
     @Environment(\.locale) var locale: Locale
 
