@@ -16,7 +16,7 @@ class CalendarDailyTurnCounter: TurnCounter {
     }
 
     static func current(start: Date) -> TurnCounter {
-        return CalendarDailyTurnCounter(start: start, cal: Calendar.current)
+        return CalendarDailyTurnCounter(start: start, cal: Calendar.autoupdatingCurrent)
     }
 
     func remainingTtl(at now: Date) -> TimeInterval {

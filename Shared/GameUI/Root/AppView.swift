@@ -13,6 +13,11 @@ extension ActiveSheet: Identifiable {
     }
 }
 
+/// Root of the app. It opens directly into the Latvian game.
+///
+/// The language menu (`NavigationList`, `LinkToGame`) is parked and
+/// not part of the user-facing flow, but is kept in the project in case
+/// other languages return.
 struct AppView: View {
     let turnCounter = CalendarDailyTurnCounter.current(
         start: WordValidator.MAR_22_2022
@@ -34,124 +39,41 @@ struct AppView: View {
 
     @State var tapDelegate: GlobalTapDelegate? = nil
 
-    /// For sharing summary of the progress
-    @State var isSharing: Bool = false
-    @State var shareItems: [UIActivityItemSource] = []
-
-    let listedLocales: [Locale] = [
-        .en_US,
-        .en_GB,
-        .fr_FR,
-        .lv_LV,
-    ]
-
-    func gameLocale(_ loc: Locale) -> GameLocale? {
-        switch loc.identifier {
-        case Locale.en_US.identifier: return .en_US
-        case Locale.en_GB.identifier: return .en_GB
-        case Locale.fr_FR.identifier: return .fr_FR
-        case Locale.lv_LV.identifier: return .lv_LV(simplified: false)
-        case Locale.ee_EE.identifier: return .ee_EE
-        default:
-            return nil
-        }
-    }
-
-    @Environment(\.scenePhase) var scenePhase
-
-    var testbody: some View {
-        FlippableTile(
-            letter: TileModel(letter: "A", state: .wrongLetter),
-            flipped: TileModel(letter: "B", state: .rightPlace),
-            tag: 0,
-            jumpIx: nil,
-            midCallback: {},
-            flipCallback: {},
-            jumpCallback: { _ in },
-            duration: 3,
-            jumpDuration: 3
-        )
-    }
-
     var body: some View {
         innerBody
-            .trackRUMView(name: "LanguageSelection")
-            .onChange(of: scenePhase) { _ in
-                // Experimental
-                // CloudStorageSync.shared.synchronize()
-            }
+            .trackRUMView(name: "Game")
     }
 
     var innerBody: some View {
-        NavigationSplitView {
+        NavigationStack {
             PaletteSetterView {
-                NavigationList(
-                    shareCallback: {
-                        let lines = self.listedLocales.map {
-                            (loc: Locale) -> String? in
-                            guard let gl = gameLocale(loc) else { return nil }
-
-                            let ds: DailyState? = AppStateStorage(wrappedValue: nil, gl.turnStateKey, store: nil)
-                                .wrappedValue
-
-                            guard let ds = ds,
-                                  ds.isFinished == true,
-                                  let lastRow = ds.rows.lastSubmitted,
-                                  let rowSnippet = lastRow.shareSnippet,
-                                  turnCounter.isFresh(ds.date, at: Date())
-                            else { return nil }
-
-                            let flag = gl.flag
-
-                            let tries: String
-                            if ds.isWon {
-                                tries = "\(ds.rows.submittedCount)/6"
-                            } else {
-                                tries = "X/6"
-                            }
-
-                            let isHardMode = ds.rows.checkHardMode(expected: WordModel(characters: ds.expected.word))
-
-                            return "\(flag) \(tries)\(isHardMode ? "*" : " ")\t\(rowSnippet)"
-                        }.filter { $0 != nil }.map { $0! }
-
-                        guard !lines.isEmpty else {
-                            return
-                        }
-
-                        let day = turnCounter.turnIndex(at: Date())
-                        let title = Bundle.main.displayName
-                        self.shareItems = [
-                            ShareableString(
-                                (
-                                    ["\(title) \(day)", ""] + lines
-                                ).joined(separator: "\n") + "\n"
-                            ),
-                        ]
-
-                        self.isSharing.toggle()
-                    },
-                    gearCallback: {
-                        self.activeSheet = .settings
-                    },
-                    outerDebug: $innerDebug,
-                    isSharing: $isSharing
-                )
+                GeometryReader { gr in
+                    GameHost(.lv_LV(simplified: isSimplifiedLatvianKeyboard))
+                        .environment(\.rootGeometry, gr)
+                        .onAppear(perform: trackFirstInteraction)
+                }
+                .padding()
             }
-        } detail: {
-            PaletteSetterView {
-                EmptyNavWelcomeView()
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(
+                        action: { activeSheet = .settings },
+                        label: {
+                            Label("Settings", systemImage: "gear")
+                        }
+                    )
+                    .safeTint(.primary)
+                    .contextMenu {
+                        Button {
+                            innerDebug.toggle()
+                        } label: {
+                            Label("Toggle debug mode", systemImage: "hammer")
+                        }
+                    }
+                }
             }
         }
-        /* NOTE: wrapping in background() because otherwise multiple .sheet() modifiers will not work (and safeSharingSheet and safeSheet
-         will both evaluate to .sheet() under the hood on iOS14 */
-        .background(
-            EmptyView()
-                .safeSharingSheet(isSharing: $isSharing, activityItems: $shareItems, callback: {
-                    isSharing = false
-                    shareItems = []
-                })
-        )
         .onAppear {
             self.tapDelegate = GlobalTapDelegate($globalTapCount)
             UIApplication.shared.addGestureRecognizer(
@@ -162,8 +84,7 @@ struct AppView: View {
             \.globalTapCount,
             $globalTapCount
         )
-        /* NOTE: wrapping in background() because otherwise multiple .sheet() modifiers will not work (and safeSharingSheet and safeSheet
-         */
+        /* NOTE: wrapping in background() because otherwise multiple .sheet() modifiers will not work */
         .background(
             EmptyView().safeSheet(
                 item: $activeSheet, onDismiss: {
@@ -178,6 +99,20 @@ struct AppView: View {
         )
         .environment(\.turnCounter, turnCounter)
         .environment(\.debug, innerDebug || outerDebug)
+    }
+
+    private func trackFirstInteraction() {
+        var attrs: [String: any Encodable] = [
+            "game_locale": GameLocale.lv_LV(simplified: false).fileBaseName,
+        ]
+        if !DatadogSetup.hasTrackedFirstInteraction {
+            DatadogSetup.hasTrackedFirstInteraction = true
+            let elapsedMs = Int(
+                Date().timeIntervalSince(DatadogSetup.launchDate) * 1000
+            )
+            attrs["time_to_first_interaction_ms"] = elapsedMs
+        }
+        Analytics.shared.trackAction(name: "language.switched", attributes: attrs)
     }
 }
 

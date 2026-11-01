@@ -158,3 +158,5 @@
 
 "Analytics" = "Analytics";
 "Help improve Wordlike by sending anonymous usage data." = "Help improve Wordlike by sending anonymous usage data.";
+
+"Daily reminder body" = "Hey, don't forget - you haven't finished your word today!";

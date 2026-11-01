@@ -1,3 +1,4 @@
+import Combine
 import DatadogRUM
 import GameController
 import SwiftUI
@@ -33,6 +34,7 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
     @StateObject var game: GameState = .init()
 
     @Environment(\.turnCounter) var turnCounter: TurnCounter
+    @Environment(\.scenePhase) var scenePhase
     @Environment(\.debug) var debugViz: Bool
     @Environment(\.palette) var palette: Palette
 
@@ -242,6 +244,9 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
 
         stats = stats.update(from: game, with: turnCounter)
 
+        // Without this, the day rollover would tally this game a second time.
+        game.isTallied = true
+
         if activeSheet == nil {
             activeSheet = .stats
         }
@@ -304,6 +309,35 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                     }
                 }
             }
+        }
+    }
+
+    /// If the saved state belongs to a previous day, closes it out
+    /// (breaking the streak if it was not finished) and starts today's word.
+    func checkForRollover(at now: Date) {
+        guard let dailyState = dailyState,
+              // Answer might not be available before validator has initialized
+              let answer = validator.answer(at: turnCounter.turnIndex(at: now)),
+              !turnCounter.isFresh(dailyState.date, at: now)
+        else { return }
+
+        if !dailyState.state.isTallied {
+            stats = stats.update(from: game, with: turnCounter)
+        }
+
+        // A stats sheet left open would show the new, empty game.
+        if activeSheet == .stats {
+            activeSheet = nil
+        }
+
+        self.dailyState = DailyState(expected: answer)
+    }
+
+    /// Asks for notification permission (if not asked yet), then
+    /// schedules the evening reminders.
+    func requestNotificationsAndSchedule() {
+        DailyReminder.requestAuthorization {
+            DailyReminder.reschedule(dailyState: dailyState, turnCounter: turnCounter)
         }
     }
 
@@ -435,6 +469,8 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
         .onAppear {
             if shouldShowHelp {
                 activeSheet = .help
+            } else {
+                requestNotificationsAndSchedule()
             }
 
             hasHardwareKeyboard = GCKeyboard.coalesced != nil
@@ -465,6 +501,8 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
             newState in
             guard let newState = newState else { return }
 
+            DailyReminder.reschedule(dailyState: newState, turnCounter: turnCounter)
+
             let isFresh = turnCounter.isFresh(
                 game.date, at: Date()
             )
@@ -488,18 +526,15 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                 }
             }
 
-            guard let dailyState = self.dailyState else {
-                return
-            }
-
-            if // Answer might not be available before
-                // validator has initialized
-                let answer = validator.answer(at: turnIndex),
-                !turnCounter.isFresh(dailyState.date, at: newTime)
-            {
-                stats = stats.update(from: game, with: turnCounter)
-                self.dailyState = DailyState(expected: answer)
-            }
+            checkForRollover(at: newTime)
+        }
+        .onChange(of: scenePhase) { phase in
+            guard phase == .active else { return }
+            // The timer does not fire in the background, so check right away
+            // to avoid showing (or accepting input on) yesterday's board.
+            recalculateNextWord()
+            checkForRollover(at: Date())
+            DailyReminder.reschedule(dailyState: dailyState, turnCounter: turnCounter)
         }
         .safeSheet(
             item: $activeSheet,
@@ -508,6 +543,8 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                 // sheet to ever be dismissed
                 if shouldShowHelp {
                     shouldShowHelp = false
+                    // Ask for notification permission after the intro, not over it
+                    requestNotificationsAndSchedule()
                 }
             }
         ) { item in

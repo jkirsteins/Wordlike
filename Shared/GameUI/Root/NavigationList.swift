@@ -66,14 +66,15 @@ class FlagImageLoader: ObservableObject {
 
     func loadIfNeeded() {
         guard images.isEmpty else { return }
-        DispatchQueue.global(qos: .userInitiated).async {
+        let names = Self.flagNames
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             var loaded: [String: NativeImage] = [:]
-            for name in Self.flagNames {
+            for name in names {
                 if let img = FlagAssets.flagFromPDF(name) {
                     loaded[name] = img
                 }
             }
-            DispatchQueue.main.async { [weak self] in
+            DispatchQueue.main.async {
                 self?.images = loaded
             }
         }
@@ -168,8 +169,6 @@ struct ProgressLabel: View {
             Text(caption.0)
                 .font(.caption)
                 .foregroundColor(caption.1)
-        } else {
-            EmptyView()
         }
     }
 }
