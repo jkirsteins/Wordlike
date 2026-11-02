@@ -3,16 +3,6 @@ import LinkPresentation
 import SwiftUI
 import UniformTypeIdentifiers
 
-private enum ActiveSheet {
-    case settings
-}
-
-extension ActiveSheet: Identifiable {
-    var id: Self {
-        self
-    }
-}
-
 /// Root of the app. It opens directly into the Latvian game.
 ///
 /// The language menu (`NavigationList`, `LinkToGame`) is parked and
@@ -30,8 +20,6 @@ struct AppView: View {
 
     /// Outer debug can be set by e.g. MockDevice etc.
     @Environment(\.debug) var outerDebug: Bool
-
-    @State fileprivate var activeSheet: ActiveSheet? = nil
 
     @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY) var isSimplifiedLatvianKeyboard: Bool = false
 
@@ -55,24 +43,6 @@ struct AppView: View {
                 .padding()
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(
-                        action: { activeSheet = .settings },
-                        label: {
-                            Label("Settings", systemImage: "gear")
-                        }
-                    )
-                    .safeTint(.primary)
-                    .contextMenu {
-                        Button {
-                            innerDebug.toggle()
-                        } label: {
-                            Label("Toggle debug mode", systemImage: "hammer")
-                        }
-                    }
-                }
-            }
         }
         .onAppear {
             self.tapDelegate = GlobalTapDelegate($globalTapCount)
@@ -84,21 +54,9 @@ struct AppView: View {
             \.globalTapCount,
             $globalTapCount
         )
-        /* NOTE: wrapping in background() because otherwise multiple .sheet() modifiers will not work */
-        .background(
-            EmptyView().safeSheet(
-                item: $activeSheet, onDismiss: {
-                    // nothing to do on dismiss
-                }, { item in
-                    switch item {
-                    case .settings:
-                        SettingsView()
-                    }
-                }
-            )
-        )
         .environment(\.turnCounter, turnCounter)
         .environment(\.debug, innerDebug || outerDebug)
+        .environment(\.toggleDebug) { innerDebug.toggle() }
     }
 
     private func trackFirstInteraction() {

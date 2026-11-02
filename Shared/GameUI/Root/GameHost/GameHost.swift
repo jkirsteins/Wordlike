@@ -35,6 +35,7 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
 
     @Environment(\.turnCounter) var turnCounter: TurnCounter
     @Environment(\.scenePhase) var scenePhase
+    @Environment(\.toggleDebug) var toggleDebug
     @Environment(\.debug) var debugViz: Bool
     @Environment(\.palette) var palette: Palette
 
@@ -562,24 +563,14 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
         }
         .navigationTitle(title)
         .toolbar {
+            // One control on each side keeps the logo centered on screen.
             ToolbarItem(placement: .principal) {
                 CompactLogo()
                     .accessibilityLabel(title)
+                    // Hidden developer shortcut (replaces the old gear long-press)
+                    .onLongPressGesture(perform: toggleDebug)
             }
             ToolbarItem(placement: leadingToolbarPlacement) {
-                Button(
-                    action: {
-                        activeSheet = .help
-                    },
-                    label: {
-                        Label(
-                            "Help",
-                            systemImage: "questionmark.circle"
-                        )
-                    }
-                )
-            }
-            ToolbarItem(placement: trailingToolbarPlacement) {
                 Button(
                     action: {
                         activeSheet = .stats
@@ -591,6 +582,22 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                         )
                     }
                 )
+            }
+            ToolbarItem(placement: trailingToolbarPlacement) {
+                Menu {
+                    Button {
+                        activeSheet = .help
+                    } label: {
+                        Label("How to play", systemImage: "questionmark.circle")
+                    }
+                    Button {
+                        activeSheet = .settings
+                    } label: {
+                        Label("Settings", systemImage: "gear")
+                    }
+                } label: {
+                    Label("Menu", systemImage: "ellipsis.circle")
+                }
             }
         }
     }
