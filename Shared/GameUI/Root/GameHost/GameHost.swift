@@ -407,6 +407,10 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                         earlyCompleted: turnCompletedBeforeAnimations,
                         completed: turnCompletedAfterAnimations
                     )
+                    /* A new game (e.g. the day rolled over while the app stayed
+                     open) must not reuse the previous game's board, which keeps
+                     its own reveal/flip state. */
+                    .id(game.id)
                     .onChange(of: game.rows, perform: turnStateChanged)
                     .contentShape(Rectangle())
                 }

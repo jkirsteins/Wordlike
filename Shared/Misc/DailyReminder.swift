@@ -14,6 +14,10 @@ enum DailyReminder {
     static let minute = 0
     static let daysAhead = 7
 
+    /// Tests switch this off so they neither prompt for permission nor
+    /// schedule real notifications.
+    static var isEnabled = true
+
     /// Pure planner: when should reminders fire?
     static func fireDates(
         now: Date,
@@ -66,6 +70,11 @@ enum DailyReminder {
     /// Asks for permission (the system prompts only the first time),
     /// then calls `completion` on the main queue regardless of the answer.
     static func requestAuthorization(completion: @escaping () -> Void) {
+        guard isEnabled else {
+            DispatchQueue.main.async(execute: completion)
+            return
+        }
+
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in
             DispatchQueue.main.async(execute: completion)
         }
@@ -79,6 +88,8 @@ enum DailyReminder {
         now: Date = Date(),
         calendar: Calendar = .autoupdatingCurrent
     ) {
+        guard isEnabled else { return }
+
         let finished = isTodayFinished(dailyState, turnCounter: turnCounter, now: now)
         let dates = fireDates(now: now, calendar: calendar, isTodayFinished: finished)
         let center = UNUserNotificationCenter.current()

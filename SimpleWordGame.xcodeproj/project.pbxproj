@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD1A2B3C4D5E6F7A8B9C0D34 /* DayRolloverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A2B3C4D5E6F7A8B9C0D35 /* DayRolloverTests.swift */; };
 		DD1A2B3C4D5E6F7A8B9C0D30 /* DailyReminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A2B3C4D5E6F7A8B9C0D31 /* DailyReminder.swift */; };
 		DD1A2B3C4D5E6F7A8B9C0D32 /* DailyReminderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A2B3C4D5E6F7A8B9C0D33 /* DailyReminderTests.swift */; };
 		BB2C4D5E6F7A8B9C0D2E1A02 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2C4D5E6F7A8B9C0D2E1A01 /* BuildInfo.swift */; };
@@ -157,6 +158,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DD1A2B3C4D5E6F7A8B9C0D35 /* DayRolloverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayRolloverTests.swift; sourceTree = "<group>"; };
 		DD1A2B3C4D5E6F7A8B9C0D31 /* DailyReminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyReminder.swift; sourceTree = "<group>"; };
 		DD1A2B3C4D5E6F7A8B9C0D33 /* DailyReminderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyReminderTests.swift; sourceTree = "<group>"; };
 		3965C6264DE72A75AACC4F40 /* WordListTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WordListTests.swift; sourceTree = "<group>"; };
@@ -356,6 +358,7 @@
 			children = (
 				3965C6264DE72A75AACC4F40 /* WordListTests.swift */,
 				DD1A2B3C4D5E6F7A8B9C0D33 /* DailyReminderTests.swift */,
+				DD1A2B3C4D5E6F7A8B9C0D35 /* DayRolloverTests.swift */,
 				DD1A2B3C4D5E6F7A8B9C0D09 /* MockAnalyticsService.swift */,
 				DD1A2B3C4D5E6F7A8B9C0D0B /* AnalyticsServiceTests.swift */,
 				DD1A2B3C4D5E6F7A8B9C0D1F /* StatsViewSnapshotTests.swift */,
@@ -859,6 +862,7 @@
 			files = (
 				03D30B87D0FD66F0A0EFD682 /* WordListTests.swift in Sources */,
 				DD1A2B3C4D5E6F7A8B9C0D32 /* DailyReminderTests.swift in Sources */,
+				DD1A2B3C4D5E6F7A8B9C0D34 /* DayRolloverTests.swift in Sources */,
 				DD1A2B3C4D5E6F7A8B9C0D0A /* MockAnalyticsService.swift in Sources */,
 				DD1A2B3C4D5E6F7A8B9C0D0C /* AnalyticsServiceTests.swift in Sources */,
 				DD1A2B3C4D5E6F7A8B9C0D20 /* StatsViewSnapshotTests.swift in Sources */,
