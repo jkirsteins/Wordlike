@@ -1,3 +1,4 @@
+import UserNotifications
 @testable import Wordlike
 import XCTest
 
@@ -71,5 +72,14 @@ final class DailyReminderTests: XCTestCase {
         XCTAssertFalse(DailyReminder.isTodayFinished(finishedYesterday, turnCounter: counter, now: now))
         XCTAssertFalse(DailyReminder.isTodayFinished(inProgress, turnCounter: counter, now: now))
         XCTAssertFalse(DailyReminder.isTodayFinished(nil, turnCounter: counter, now: now))
+    }
+
+    func testNotificationsAreShownWhileAppIsOpen() {
+        DailyReminder.installForegroundPresentation()
+
+        let center = UNUserNotificationCenter.current()
+        XCTAssertTrue(center.delegate === DailyReminder.presenter)
+        XCTAssertTrue(ReminderPresenter.options.contains(.banner))
+        XCTAssertTrue(ReminderPresenter.options.contains(.sound))
     }
 }

@@ -4,6 +4,7 @@ import SwiftUI
 struct Wordlike: App {
     init() {
         DatadogSetup.initialize()
+        DailyReminder.installForegroundPresentation()
     }
 
     @SceneBuilder var body: some Scene {

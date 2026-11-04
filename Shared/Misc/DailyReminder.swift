@@ -1,6 +1,20 @@
 import SwiftUI
 import UserNotifications
 
+/// Makes notifications show as banners (with sound) even while the app is open.
+/// iOS suppresses them in the foreground unless the app opts in.
+final class ReminderPresenter: NSObject, UNUserNotificationCenterDelegate {
+    static let options: UNNotificationPresentationOptions = [.banner, .sound]
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler(Self.options)
+    }
+}
+
 /// Schedules the evening "you haven't finished your word today"
 /// local notifications.
 ///
@@ -13,6 +27,14 @@ enum DailyReminder {
     static let hour = 20
     static let minute = 0
     static let daysAhead = 7
+
+    /// Kept alive here because `UNUserNotificationCenter` only holds its delegate weakly.
+    static let presenter = ReminderPresenter()
+
+    /// Call once at launch, before the app finishes starting.
+    static func installForegroundPresentation() {
+        UNUserNotificationCenter.current().delegate = presenter
+    }
 
     /// Tests switch this off so they neither prompt for permission nor
     /// schedule real notifications.
