@@ -24,8 +24,8 @@ final class ReminderPresenter: NSObject, UNUserNotificationCenterDelegate {
 /// is not opened.
 enum DailyReminder {
     static let idPrefix = "dailyReminder."
-    static let hour = 20
-    static let minute = 0
+    static let hour = 15 // TEMP test time, restore to 20
+    static let minute = 30 // TEMP test time, restore to 0
     static let daysAhead = 7
 
     /// Kept alive here because `UNUserNotificationCenter` only holds its delegate weakly.

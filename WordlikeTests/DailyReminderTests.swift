@@ -15,7 +15,7 @@ final class DailyReminderTests: XCTestCase {
 
     func testMorningUnfinishedSchedulesTodayAndSixMore() throws {
         let now = try date(2026, 11, 1, 9, 0)
-        let dates = DailyReminder.fireDates(now: now, calendar: cal, isTodayFinished: false)
+        let dates = DailyReminder.fireDates(now: now, calendar: cal, isTodayFinished: false, hour: 20, minute: 0)
 
         XCTAssertEqual(dates.count, 7)
         XCTAssertEqual(dates.first, try date(2026, 11, 1, 20, 0))
@@ -24,7 +24,7 @@ final class DailyReminderTests: XCTestCase {
 
     func testAfterReminderTimeStartsTomorrow() throws {
         let now = try date(2026, 11, 1, 20, 30)
-        let dates = DailyReminder.fireDates(now: now, calendar: cal, isTodayFinished: false)
+        let dates = DailyReminder.fireDates(now: now, calendar: cal, isTodayFinished: false, hour: 20, minute: 0)
 
         XCTAssertEqual(dates.count, 6)
         XCTAssertEqual(dates.first, try date(2026, 11, 2, 20, 0))
@@ -32,7 +32,7 @@ final class DailyReminderTests: XCTestCase {
 
     func testFinishedTodaySkipsToday() throws {
         let now = try date(2026, 11, 1, 9, 0)
-        let dates = DailyReminder.fireDates(now: now, calendar: cal, isTodayFinished: true)
+        let dates = DailyReminder.fireDates(now: now, calendar: cal, isTodayFinished: true, hour: 20, minute: 0)
 
         XCTAssertEqual(dates.count, 6)
         XCTAssertEqual(dates.first, try date(2026, 11, 2, 20, 0))
@@ -41,7 +41,7 @@ final class DailyReminderTests: XCTestCase {
     func testStaysAtLocalTimeAcrossDstChange() throws {
         // Europe/Riga leaves summer time on 2026-10-25
         let now = try date(2026, 10, 23, 9, 0)
-        let dates = DailyReminder.fireDates(now: now, calendar: cal, isTodayFinished: false)
+        let dates = DailyReminder.fireDates(now: now, calendar: cal, isTodayFinished: false, hour: 20, minute: 0)
 
         for fire in dates {
             let parts = cal.dateComponents([.hour, .minute], from: fire)
