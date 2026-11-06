@@ -82,4 +82,10 @@ final class DailyReminderTests: XCTestCase {
         XCTAssertTrue(ReminderPresenter.options.contains(.banner))
         XCTAssertTrue(ReminderPresenter.options.contains(.sound))
     }
+
+    func testReminderIsTimeSensitiveAndBadges() {
+        let content = DailyReminder.makeContent()
+        XCTAssertEqual(content.interruptionLevel, .timeSensitive)
+        XCTAssertEqual(content.badge, 1)
+    }
 }

@@ -24,8 +24,8 @@ final class ReminderPresenter: NSObject, UNUserNotificationCenterDelegate {
 /// is not opened.
 enum DailyReminder {
     static let idPrefix = "dailyReminder."
-    static let hour = 15 // TEMP test time, restore to 20
-    static let minute = 30 // TEMP test time, restore to 0
+    static let hour = 13 // TEMP test time, restore to 21
+    static let minute = 0
     static let daysAhead = 7
 
     /// Kept alive here because `UNUserNotificationCenter` only holds its delegate weakly.
@@ -97,9 +97,21 @@ enum DailyReminder {
             return
         }
 
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in
             DispatchQueue.main.async(execute: completion)
         }
+    }
+
+    /// The notification itself: time sensitive (breaks through Focus) and
+    /// badges the app icon until the word is finished.
+    static func makeContent() -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.title = Bundle.main.displayName
+        content.body = NSLocalizedString("Daily reminder body", comment: "")
+        content.sound = .default
+        content.badge = 1
+        content.interruptionLevel = .timeSensitive
+        return content
     }
 
     /// Replaces all pending reminders based on the current state.
@@ -116,6 +128,14 @@ enum DailyReminder {
         let dates = fireDates(now: now, calendar: calendar, isTodayFinished: finished)
         let center = UNUserNotificationCenter.current()
 
+        if finished {
+            // Nothing left to remind about: drop the badge and any reminder still in the tray.
+            center.setBadgeCount(0)
+            center.removeDeliveredNotifications(
+                withIdentifiers: [identifier(for: now, calendar: calendar)]
+            )
+        }
+
         center.getNotificationSettings { settings in
             let allowed = settings.authorizationStatus == .authorized
                 || settings.authorizationStatus == .provisional
@@ -126,10 +146,7 @@ enum DailyReminder {
                 center.removePendingNotificationRequests(withIdentifiers: stale)
 
                 for date in dates {
-                    let content = UNMutableNotificationContent()
-                    content.title = Bundle.main.displayName
-                    content.body = NSLocalizedString("Daily reminder body", comment: "")
-                    content.sound = .default
+                    let content = makeContent()
 
                     let parts = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
                     let trigger = UNCalendarNotificationTrigger(dateMatching: parts, repeats: false)
