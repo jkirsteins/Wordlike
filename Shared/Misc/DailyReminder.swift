@@ -23,9 +23,15 @@ final class ReminderPresenter: NSObject, UNUserNotificationCenterDelegate {
 /// so the user is still reminded on following days even if the app
 /// is not opened.
 enum DailyReminder {
+    struct Time: Equatable {
+        let hour: Int
+        let minute: Int
+    }
+
     static let idPrefix = "dailyReminder."
-    static let hour = 13 // TEMP test time, restore to 21
-    static let minute = 0
+
+    /// Local times at which an unfinished word is reminded about each day.
+    static let times = [Time(hour: 13, minute: 0), Time(hour: 22, minute: 30)]
     static let daysAhead = 7
 
     /// Kept alive here because `UNUserNotificationCenter` only holds its delegate weakly.
@@ -45,26 +51,29 @@ enum DailyReminder {
         now: Date,
         calendar: Calendar,
         isTodayFinished: Bool,
-        hour: Int = DailyReminder.hour,
-        minute: Int = DailyReminder.minute,
+        times: [Time] = DailyReminder.times,
         days: Int = DailyReminder.daysAhead
     ) -> [Date] {
         let startOfToday = calendar.startOfDay(for: now)
 
-        return (0 ..< days).compactMap { offset -> Date? in
-            if offset == 0, isTodayFinished { return nil }
+        return (0 ..< days).flatMap { offset -> [Date] in
+            if offset == 0, isTodayFinished { return [] }
 
-            guard let day = calendar.date(byAdding: .day, value: offset, to: startOfToday),
-                  let fire = calendar.date(
-                      bySettingHour: hour,
-                      minute: minute,
-                      second: 0,
-                      of: day
-                  ),
-                  fire > now
-            else { return nil }
+            guard let day = calendar.date(byAdding: .day, value: offset, to: startOfToday) else {
+                return []
+            }
 
-            return fire
+            return times.compactMap { time -> Date? in
+                guard let fire = calendar.date(
+                    bySettingHour: time.hour,
+                    minute: time.minute,
+                    second: 0,
+                    of: day
+                ), fire > now
+                else { return nil }
+
+                return fire
+            }
         }
     }
 
@@ -79,14 +88,24 @@ enum DailyReminder {
     }
 
     static func identifier(for date: Date, calendar: Calendar) -> String {
-        let parts = calendar.dateComponents([.year, .month, .day], from: date)
+        let parts = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
         return String(
-            format: "%@%04d-%02d-%02d",
+            format: "%@%04d-%02d-%02d-%02d%02d",
             idPrefix,
             parts.year ?? 0,
             parts.month ?? 0,
-            parts.day ?? 0
+            parts.day ?? 0,
+            parts.hour ?? 0,
+            parts.minute ?? 0
         )
+    }
+
+    /// Identifiers of all of today's reminders (whether or not they already fired).
+    static func todaysIdentifiers(now: Date, calendar: Calendar, times: [Time] = DailyReminder.times) -> [String] {
+        times.compactMap { time in
+            calendar.date(bySettingHour: time.hour, minute: time.minute, second: 0, of: now)
+                .map { identifier(for: $0, calendar: calendar) }
+        }
     }
 
     /// Asks for permission (the system prompts only the first time),
@@ -132,7 +151,7 @@ enum DailyReminder {
             // Nothing left to remind about: drop the badge and any reminder still in the tray.
             center.setBadgeCount(0)
             center.removeDeliveredNotifications(
-                withIdentifiers: [identifier(for: now, calendar: calendar)]
+                withIdentifiers: todaysIdentifiers(now: now, calendar: calendar)
             )
         }
 
