@@ -58,6 +58,16 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         session ?? AppLanguage(rawValue: stored)
     }
 
+    /// What should be pinned for this session when the saved default changes (in Settings).
+    ///
+    /// Changing the default must not change what is on screen: the language being
+    /// played stays until the next launch. If a language was already picked for
+    /// this session it stays; otherwise the previous default is kept. On first
+    /// launch there is no previous default, so nothing is pinned.
+    static func sessionAfterDefaultChange(session: AppLanguage?, previousDefault: String) -> AppLanguage? {
+        session ?? AppLanguage(rawValue: previousDefault)
+    }
+
     /// The saved default, if the user has chosen one.
     static func storedDefault(in defaults: UserDefaults = .standard) -> AppLanguage? {
         defaults.string(forKey: defaultKey).flatMap { AppLanguage(rawValue: $0) }

@@ -67,4 +67,22 @@ final class AppLanguageTests: XCTestCase {
         XCTAssertNil(AppLanguage.latvian.seed)
         XCTAssertNil(AppLanguage.french.seed)
     }
+
+    // MARK: - Changing the default must not change what is on screen
+
+    func testChangingDefaultKeepsTheLanguageOnScreen() {
+        // Playing the default (Latvian), then changing the default to French:
+        // Latvian stays on screen until the next launch.
+        XCTAssertEqual(AppLanguage.sessionAfterDefaultChange(session: nil, previousDefault: "lv"), .latvian)
+    }
+
+    func testChangingDefaultKeepsASessionLanguage() {
+        // Switched to French from the menu, then changed the default: still French.
+        XCTAssertEqual(AppLanguage.sessionAfterDefaultChange(session: .french, previousDefault: "lv"), .french)
+    }
+
+    func testFirstLaunchPickPinsNothing() {
+        // No previous default: the freshly picked default is simply shown.
+        XCTAssertNil(AppLanguage.sessionAfterDefaultChange(session: nil, previousDefault: ""))
+    }
 }

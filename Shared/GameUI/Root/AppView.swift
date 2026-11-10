@@ -31,6 +31,9 @@ struct AppView: View {
 
     @State var isSwitchingLanguage = false
 
+    /// The default as of the last change, to keep showing it when the default is changed.
+    @State var previousDefaultID: String = UserDefaults.standard.string(forKey: AppLanguage.defaultKey) ?? ""
+
     @State var globalTapCount = 0
 
     @State var tapDelegate: GlobalTapDelegate? = nil
@@ -78,10 +81,14 @@ struct AppView: View {
                 tapDelegate!
             )
         }
-        .onChange(of: defaultLanguageID) { _ in
-            // The default was changed (Settings): show it right away,
-            // and remind about its word instead.
-            sessionLanguage = nil
+        .onChange(of: defaultLanguageID) { newID in
+            // The default was changed (Settings). It applies from the next launch:
+            // keep the language on screen, and remind about the new default's word.
+            sessionLanguage = AppLanguage.sessionAfterDefaultChange(
+                session: sessionLanguage,
+                previousDefault: previousDefaultID
+            )
+            previousDefaultID = newID
             DailyReminder.rescheduleForDefaultLanguage(turnCounter: turnCounter)
         }
         .sheet(isPresented: $isSwitchingLanguage) {
