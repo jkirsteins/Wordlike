@@ -59,7 +59,7 @@ struct AppView: View {
             // A different language is a different game: rebuild it from scratch.
             .id(language)
         } else {
-            LanguagePicker(prompt: "Choose your language") { chosen in
+            LanguagePicker(prompt: "Default language") { chosen in
                 defaultLanguageID = chosen.rawValue
             }
         }
