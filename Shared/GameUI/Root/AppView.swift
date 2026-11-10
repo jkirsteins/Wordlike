@@ -23,24 +23,52 @@ struct AppView: View {
 
     @AppStateStorage(SettingsView.SIMPLIFIED_LATVIAN_KEYBOARD_KEY) var isSimplifiedLatvianKeyboard: Bool = false
 
+    /// The language the app opens into. Empty until the user has chosen one.
+    @AppStorage(AppLanguage.defaultKey) var defaultLanguageID: String = ""
+
+    /// A language picked from the menu for this session only (the default is unchanged).
+    @State var sessionLanguage: AppLanguage? = nil
+
+    @State var isSwitchingLanguage = false
+
     @State var globalTapCount = 0
 
     @State var tapDelegate: GlobalTapDelegate? = nil
+
+    /// What to show; `nil` means no language is chosen yet.
+    var language: AppLanguage? {
+        AppLanguage.resolve(stored: defaultLanguageID, session: sessionLanguage)
+    }
 
     var body: some View {
         innerBody
             .trackRUMView(name: "Game")
     }
 
+    @ViewBuilder var content: some View {
+        if let language = language {
+            GeometryReader { gr in
+                GameHost(
+                    language.gameLocale(simplifiedLatvianKeyboard: isSimplifiedLatvianKeyboard),
+                    seed: language.seed
+                )
+                .environment(\.rootGeometry, gr)
+                .onAppear { trackFirstInteraction(language) }
+            }
+            .padding()
+            // A different language is a different game: rebuild it from scratch.
+            .id(language)
+        } else {
+            LanguagePicker(prompt: "Choose your language") { chosen in
+                defaultLanguageID = chosen.rawValue
+            }
+        }
+    }
+
     var innerBody: some View {
         NavigationStack {
             PaletteSetterView {
-                GeometryReader { gr in
-                    GameHost(.lv_LV(simplified: isSimplifiedLatvianKeyboard))
-                        .environment(\.rootGeometry, gr)
-                        .onAppear(perform: trackFirstInteraction)
-                }
-                .padding()
+                content
             }
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -50,6 +78,21 @@ struct AppView: View {
                 tapDelegate!
             )
         }
+        .onChange(of: defaultLanguageID) { _ in
+            // The default was changed (Settings): show it right away,
+            // and remind about its word instead.
+            sessionLanguage = nil
+            DailyReminder.rescheduleForDefaultLanguage(turnCounter: turnCounter)
+        }
+        .sheet(isPresented: $isSwitchingLanguage) {
+            PaletteSetterView {
+                LanguagePicker(prompt: "Switch language", selected: language) { chosen in
+                    sessionLanguage = chosen
+                    isSwitchingLanguage = false
+                }
+            }
+            .environment(\.turnCounter, turnCounter)
+        }
         .environment(
             \.globalTapCount,
             $globalTapCount
@@ -57,11 +100,12 @@ struct AppView: View {
         .environment(\.turnCounter, turnCounter)
         .environment(\.debug, innerDebug || outerDebug)
         .environment(\.toggleDebug) { innerDebug.toggle() }
+        .environment(\.switchLanguage) { isSwitchingLanguage = true }
     }
 
-    private func trackFirstInteraction() {
+    private func trackFirstInteraction(_ language: AppLanguage) {
         var attrs: [String: any Encodable] = [
-            "game_locale": GameLocale.lv_LV(simplified: false).fileBaseName,
+            "game_locale": language.rawValue,
         ]
         if !DatadogSetup.hasTrackedFirstInteraction {
             DatadogSetup.hasTrackedFirstInteraction = true

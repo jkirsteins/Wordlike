@@ -161,3 +161,8 @@
 "Daily reminder body" = "Hei, neaizmirsti - šodienas vārds vēl nav atminēts!";
 
 "Menu" = "Izvēlne";
+
+"Choose your language" = "Izvēlies valodu";
+"Switch language" = "Mainīt valodu";
+"Default language" = "Noklusējuma valoda";
+"The game opens in this language." = "Spēle vienmēr atvērsies šajā valodā.";

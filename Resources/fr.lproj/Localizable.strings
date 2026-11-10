@@ -162,3 +162,8 @@
 "Daily reminder body" = "Hé, n'oublie pas : tu n'as pas encore trouvé le mot du jour !";
 
 "Menu" = "Menu";
+
+"Choose your language" = "Choisissez votre langue";
+"Switch language" = "Changer de langue";
+"Default language" = "Langue par défaut";
+"The game opens in this language." = "Le jeu s'ouvre toujours dans cette langue.";

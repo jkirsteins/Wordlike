@@ -133,6 +133,15 @@ enum DailyReminder {
         return content
     }
 
+    /// Reminds about the default language's word, whichever language is on screen.
+    /// With no default chosen yet there is nothing to remind about.
+    static func rescheduleForDefaultLanguage(turnCounter: TurnCounter) {
+        guard let language = AppLanguage.storedDefault() else { return }
+        let state = UserDefaults.standard.string(forKey: language.turnStateKey)
+            .flatMap { DailyState(rawValue: $0) }
+        reschedule(dailyState: state, turnCounter: turnCounter)
+    }
+
     /// Replaces all pending reminders based on the current state.
     /// Does nothing if notifications are not allowed.
     static func reschedule(

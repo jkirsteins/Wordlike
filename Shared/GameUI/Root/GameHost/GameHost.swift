@@ -36,6 +36,7 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
     @Environment(\.turnCounter) var turnCounter: TurnCounter
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.toggleDebug) var toggleDebug
+    @Environment(\.switchLanguage) var switchLanguage
     @Environment(\.debug) var debugViz: Bool
     @Environment(\.palette) var palette: Palette
 
@@ -339,7 +340,7 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
     /// schedules the evening reminders.
     func requestNotificationsAndSchedule() {
         DailyReminder.requestAuthorization {
-            DailyReminder.reschedule(dailyState: dailyState, turnCounter: turnCounter)
+            DailyReminder.rescheduleForDefaultLanguage(turnCounter: turnCounter)
         }
     }
 
@@ -507,7 +508,7 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
             newState in
             guard let newState = newState else { return }
 
-            DailyReminder.reschedule(dailyState: newState, turnCounter: turnCounter)
+            DailyReminder.rescheduleForDefaultLanguage(turnCounter: turnCounter)
 
             let isFresh = turnCounter.isFresh(
                 game.date, at: Date()
@@ -540,7 +541,7 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
             // to avoid showing (or accepting input on) yesterday's board.
             recalculateNextWord()
             checkForRollover(at: Date())
-            DailyReminder.reschedule(dailyState: dailyState, turnCounter: turnCounter)
+            DailyReminder.rescheduleForDefaultLanguage(turnCounter: turnCounter)
         }
         .safeSheet(
             item: $activeSheet,
@@ -589,6 +590,11 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
             }
             ToolbarItem(placement: trailingToolbarPlacement) {
                 Menu {
+                    Button {
+                        switchLanguage()
+                    } label: {
+                        Label("Switch language", systemImage: "globe")
+                    }
                     Button {
                         activeSheet = .help
                     } label: {
