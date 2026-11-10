@@ -37,6 +37,8 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.toggleDebug) var toggleDebug
     @Environment(\.switchLanguage) var switchLanguage
+
+    @ObservedObject private var flags = FlagImageLoader.shared
     @Environment(\.debug) var debugViz: Bool
     @Environment(\.palette) var palette: Palette
 
@@ -481,6 +483,7 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
             }
 
             hasHardwareKeyboard = GCKeyboard.coalesced != nil
+            flags.loadIfNeeded()
 
             if let newState = self.dailyState {
                 updateFromLoadedState(newState)
@@ -593,7 +596,15 @@ struct GameHost: View { // swiftlint:disable:this type_body_length
                     Button {
                         switchLanguage()
                     } label: {
-                        Label("Switch language", systemImage: "globe")
+                        // Menus show this as title, subtitle and icon: the language
+                        // being played is shown by its name and flag.
+                        Text("Switch language")
+                        Text(locale.localeDisplayName)
+                        if let icon = flags.menuIcon(for: locale.nativeLocale) {
+                            Image(uiImage: icon)
+                        } else {
+                            Image(systemName: "globe")
+                        }
                     }
                     Button {
                         activeSheet = .help

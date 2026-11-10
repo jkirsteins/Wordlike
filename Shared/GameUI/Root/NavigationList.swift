@@ -48,6 +48,17 @@ enum FlagAssets {
         return img.resized(to: CGSize(width: 500, height: 500))
     }
 
+    /// Name of the flag asset for a game locale, if there is one.
+    static func assetName(for locale: Locale) -> String? {
+        switch locale.identifier {
+        case Locale.en_GB.identifier: return "GB"
+        case Locale.en_US.identifier: return "US"
+        case Locale.fr_FR.identifier: return "FR"
+        case Locale.lv_LV.identifier: return "LV"
+        default: return nil
+        }
+    }
+
     static func reqFlagFromName(_ name: String) -> NativeImage {
         guard let result = flagFromName(name) else {
             fatalError("Flag \(name) not found")
@@ -63,6 +74,17 @@ class FlagImageLoader: ObservableObject {
     static let shared = FlagImageLoader()
 
     private static let flagNames = ["GB", "US", "LV", "FR"]
+
+    /// Small full-color flag for use as a menu item icon (menus tint
+    /// images unless they are marked as original).
+    func menuIcon(for locale: Locale) -> NativeImage? {
+        guard let name = FlagAssets.assetName(for: locale), let image = images[name] else {
+            return nil
+        }
+        return image
+            .resized(to: CGSize(width: 24, height: 24 / Flag.aspectRatio))
+            .withRenderingMode(.alwaysOriginal)
+    }
 
     func loadIfNeeded() {
         guard images.isEmpty else { return }
@@ -93,13 +115,7 @@ struct Flag: View {
     @ObservedObject private var loader = FlagImageLoader.shared
 
     var flagName: String? {
-        switch locale.identifier {
-        case Locale.en_GB.identifier: return "GB"
-        case Locale.en_US.identifier: return "US"
-        case Locale.fr_FR.identifier: return "FR"
-        case Locale.lv_LV.identifier: return "LV"
-        default: return nil
-        }
+        FlagAssets.assetName(for: locale)
     }
 
     var body: some View {
