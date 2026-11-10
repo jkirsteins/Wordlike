@@ -8,41 +8,53 @@ struct LanguagePicker: View {
     let onSelect: (AppLanguage) -> Void
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 32) {
-                Logo()
-                    .frame(maxWidth: .infinity, minHeight: 130)
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 40) {
+                    Logo()
+                        .frame(maxWidth: .infinity, minHeight: 130)
 
-                Text(prompt)
-                    .font(.headline)
-                    .multilineTextAlignment(.center)
+                    VStack(spacing: 16) {
+                        Text(prompt)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
 
-                VStack(spacing: 8) {
-                    ForEach(AppLanguage.allCases) { language in
-                        Button {
-                            onSelect(language)
-                        } label: {
-                            HStack {
-                                LanguageRow()
-                                    .environment(
-                                        \.gameLocale,
-                                        language.gameLocale(simplifiedLatvianKeyboard: false)
-                                    )
-                                if language == selected {
-                                    Image(systemName: "checkmark")
-                                        .foregroundColor(.accentColor)
-                                }
+                        VStack(spacing: 8) {
+                            ForEach(AppLanguage.allCases) { language in
+                                row(for: language)
                             }
                         }
-                        .buttonStyle(LanguageRowButtonStyle())
                     }
                 }
+                .padding(16)
+                .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.portrait.width)
+                .frame(maxWidth: .infinity)
+                // At least a full screen tall, so the content sits in the middle
+                // instead of hugging the top (it scrolls if it ever gets taller).
+                .frame(minHeight: geometry.size.height)
             }
-            .padding(16)
-            .frame(maxWidth: MockDeviceConfig.inch65_iPhone12ProMax.portrait.width)
-            .frame(maxWidth: .infinity)
         }
         .onAppear { FlagImageLoader.shared.loadIfNeeded() }
+    }
+
+    private func row(for language: AppLanguage) -> some View {
+        Button {
+            onSelect(language)
+        } label: {
+            HStack {
+                LanguageRow()
+                    .environment(
+                        \.gameLocale,
+                        language.gameLocale(simplifiedLatvianKeyboard: false)
+                    )
+                if language == selected {
+                    Image(systemName: "checkmark")
+                        .foregroundColor(.accentColor)
+                }
+            }
+        }
+        .buttonStyle(LanguageRowButtonStyle())
     }
 }
 
